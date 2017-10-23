@@ -1,6 +1,4 @@
 resources:
-
-resources:
 - name: ras-party-source
   type: git
   source:
@@ -47,7 +45,6 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/django-oauth2-test.git
-    branch: tbl109-pipelines
 
 - name: ras-integration-tests-source
   type: git
@@ -273,11 +270,46 @@ jobs:
   plan:
   - get: django-oauth2-test-source
     trigger: true
+#    Create git_info file for info end point
+  - task: git_info
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: paasmule/curl-ssl-git
+          tag: "latest"
+      inputs:
+        - name: django-oauth2-test-source
+      outputs:
+        - name: django-oauth2-test-source-git-info
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          cd django-oauth2-test-source
+          branch=$(git rev-parse --abbrev-ref HEAD)
+          url=$(git config --get remote.origin.url)
+          commit=$(git rev-parse HEAD)
+          repo=$(basename `git rev-parse --show-toplevel`)
+          when=`date --utc +%FT%TZ`
+          output=git_info
+          echo '{' > ${output}
+          echo   \"origin\": \"${url}\", >> ${output}
+          echo   \"commit\": \"${commit}\", >> ${output}
+          echo   \"branch\": \"${branch}\", >> ${output}
+          echo   \"name\": \"${repo}\", >> ${output}
+          echo   \"built\": \"${when}\" >> ${output}
+          echo '}' >> ${output}
+          cd ..
+          cp -r django-oauth2-test-source/* django-oauth2-test-source-git-info
+
   - put: cf-resource-dev
     params:
       current_app_name: concourse-django-oauth2-test.dev
-      manifest: django-oauth2-test-source/manifest.yml
-      path: django-oauth2-test-source
+      manifest: django-oauth2-test-source-git-info/manifest.yml
+      path: django-oauth2-test-source-git-info
       environment_variables:
         CSRF_ENABLED: "True"
         DEBUG: "False"
@@ -319,6 +351,22 @@ jobs:
   - get: ras-collection-instrument-source
     passed: [ras-collection-instrument-dev-deploy]
     trigger: true
+  - task: build_test
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: python
+          tag: "latest"
+      inputs:
+        - name: ras-integration-tests-source
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          echo "Passed"
 
 - name: ras-party-test-deploy
   plan:
@@ -544,11 +592,45 @@ jobs:
   - get: django-oauth2-test-source
     passed: [ras-integration-tests]
     trigger: true
+#    Create git_info file for info end point
+  - task: git_info
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: paasmule/curl-ssl-git
+          tag: "latest"
+      inputs:
+        - name: django-oauth2-test-source
+      outputs:
+        - name: django-oauth2-test-source-git-info
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          cd django-oauth2-test-source
+          branch=$(git rev-parse --abbrev-ref HEAD)
+          url=$(git config --get remote.origin.url)
+          commit=$(git rev-parse HEAD)
+          repo=$(basename `git rev-parse --show-toplevel`)
+          when=`date --utc +%FT%TZ`
+          output=git_info
+          echo '{' > ${output}
+          echo   \"origin\": \"${url}\", >> ${output}
+          echo   \"commit\": \"${commit}\", >> ${output}
+          echo   \"branch\": \"${branch}\", >> ${output}
+          echo   \"name\": \"${repo}\", >> ${output}
+          echo   \"built\": \"${when}\" >> ${output}
+          echo '}' >> ${output}
+          cd ..
+          cp -r django-oauth2-test-source/* django-oauth2-test-source-git-info
   - put: cf-resource-test
     params:
       current_app_name: concourse-django-oauth2-test.test
-      manifest: django-oauth2-test-source/manifest.yml
-      path: django-oauth2-test-source
+      manifest: django-oauth2-test-source-git-info/manifest.yml
+      path: django-oauth2-test-source-git-info
       environment_variables:
         CSRF_ENABLED: "True"
         DEBUG: "False"
