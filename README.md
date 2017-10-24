@@ -8,5 +8,5 @@ CI/CD pipeline for RAS services.
 
 1. Copy `secrets.yml.example` to `secrets.yml`
 1. Assign values to all secret variables
-1. Login to concourse `fly -t lite login -c $CONCOURSE_HOST`
+1. Login to concourse `fly -t lite login -c http://localhost:8080`
 1. Deploy the pipeline `./deploy-pipeline.sh`
