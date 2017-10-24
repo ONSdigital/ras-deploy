@@ -10,3 +10,4 @@ CI/CD pipeline for RAS services.
 1. Assign values to all secret variables
 1. Login to concourse `fly -t lite login -c http://localhost:8080`
 1. Deploy the pipeline `./deploy-pipeline.sh`
+1. Go to [ras-deploy](http://localhost:8080/teams/main/pipelines/ras-deploy)
