@@ -3,19 +3,19 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-party.git
-    branch: tbl109-pipelines
+    branch: master
 
 - name: ras-secure-message-source
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-secure-message.git
-    branch: tbl109-pipelines
+    branch: master
 
 - name: ras-backstage-source
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-backstage.git
-    branch: tbl109-pipelines
+    branch: master
 
 - name: ras-backstage-ui-source
   type: git
@@ -27,19 +27,19 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-api-gateway.git
-    branch: tbl109-pipelines
+    branch: master
 
 - name: ras-collection-instrument-source
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-collection-instrument.git
-    branch: tbl109-pipelines
+    branch: master
 
 - name: ras-frontstage-source
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-frontstage.git
-    branch: tbl109-pipelines
+    branch: master
 
 - name: django-oauth2-test-source
   type: git
@@ -84,17 +84,17 @@ jobs:
       environment_variables:
         SECURITY_USER_NAME: {{dev_security_user_name}}
         SECURITY_USER_PASSWORD: {{dev_security_user_password}}
-        case-service.host: 'casesvc-dev.apps.devtest.onsclofo.uk'
+        case-service.host: 'casesvc-dev.{{cf_apps_domain}}'
         case-service.port: '80'
-        collectionexercise-service.host: 'collectionexercisesvc-dev.apps.devtest.onsclofo.uk'
+        collectionexercise-service.host: 'collectionexercisesvc-dev.{{cf_apps_domain}}'
         collectionexercise-service.port: '80'
-        survey-service.host: 'surveysvc-dev.apps.devtest.onsclofo.uk'
+        survey-service.host: 'surveysvc-dev.{{cf_apps_domain}}'
         survey-service.port: '80'
-        oauth2-service.host: 'concourse-django-oauth2-testdev.apps.devtest.onsclofo.uk'
+        oauth2-service.host: 'concourse-django-oauth2-testdev.{{cf_apps_domain}}'
         oauth2-service.port: '80'
-        iac-service.host: 'iacsvc-dev.apps.devtest.onsclofo.uk'
+        iac-service.host: 'iacsvc-dev.{{cf_apps_domain}}'
         iac-service.port: '80'
-        frontstage-service.host: 'ras-frontstage-dev.apps.devtest.onsclofo.uk'
+        frontstage-service.host: 'ras-frontstage-dev.{{cf_apps_domain}}'
         frontstage-service.port: '80'
         feature.send_email_to_gov_notify: 'false'
         gov-uk-notify-service.gov_notify_api_key: {{notify_api_key}}
@@ -121,7 +121,7 @@ jobs:
         NOTIFY_VIA_GOV_NOTIFY: '1'
         ONS_ENV: 'dev'
         RAS_PARTY_SERVICE_PORT: '80'
-        RAS_PARTY_SERVICE_HOST: 'concourse-ras-partydev.apps.devtest.onsclofo.uk'
+        RAS_PARTY_SERVICE_HOST: 'concourse-ras-partydev.{{cf_apps_domain}}'
         RAS_SM_PATH: '/home/vcap/app'
         SECURITY_USER_NAME: {{dev_security_user_name}}
         SECURITY_USER_PASSWORD: {{dev_security_user_password}}
@@ -140,19 +140,19 @@ jobs:
       environment_variables:
         SECURITY_USER_NAME: {{dev_security_user_name}}
         SECURITY_USER_PASSWORD: {{dev_security_user_password}}
-        case-service.host: 'casesvc-dev.apps.devtest.onsclofo.uk'
+        case-service.host: 'casesvc-dev.{{cf_apps_domain}}'
         case-service.port: '80'
-        collectionexercise-service.host: 'collectionexercisesvc-dev.apps.devtest.onsclofo.uk'
+        collectionexercise-service.host: 'collectionexercisesvc-dev.{{cf_apps_domain}}'
         collectionexercise-service.port: '80'
-        survey-service.host: 'surveysvc-dev.apps.devtest.onsclofo.uk'
+        survey-service.host: 'surveysvc-dev.{{cf_apps_domain}}'
         survey-service.port: '80'
-        oauth2-service.host: 'concourse-django-oauth2-testdev.apps.devtest.onsclofo.uk'
+        oauth2-service.host: 'concourse-django-oauth2-testdev.{{cf_apps_domain}}'
         oauth2-service.port: '80'
-        party-service.host: 'concourse-ras-partydev.apps.devtest.onsclofo.uk'
+        party-service.host: 'concourse-ras-partydev.{{cf_apps_domain}}'
         party-service.port: '80'
-        secure-message-service.host: 'concourse-ras-secure-messagedev.apps.devtest.onsclofo.uk'
+        secure-message-service.host: 'concourse-ras-secure-messagedev.{{cf_apps_domain}}'
         secure-message-service.port: '80'
-        collection-instrument-service.host: 'ras-collection-instrument-dev.apps.devtest.onsclofo.uk'
+        collection-instrument-service.host: 'ras-collection-instrument-dev.{{cf_apps_domain}}'
         collection-instrument-service.port: '80'
 
 - name: ras-backstage-ui-dev-deploy
@@ -180,25 +180,25 @@ jobs:
       path: ras-api-gateway-source
       environment_variables:
         ONS_ENV: 'dev'
-        RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: 'concourse-ras-collection-instrumentdev.apps.devtest.onsclofo.uk'
+        RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: 'concourse-ras-collection-instrumentdev.{{cf_apps_domain}}'
         RAS_COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
-        RAS_PARTY_SERVICE_HOST: 'concourse-ras-partydev.apps.devtest.onsclofo.uk'
+        RAS_PARTY_SERVICE_HOST: 'concourse-ras-partydev.{{cf_apps_domain}}'
         RAS_PARTY_SERVICE_PORT: '80'
-        RAS_SECURE_MESSAGING_SERVICE_HOST: 'concourse-ras-secure-messagedev.apps.devtest.onsclofo.uk'
+        RAS_SECURE_MESSAGING_SERVICE_HOST: 'concourse-ras-secure-messagedev.{{cf_apps_domain}}'
         RAS_SECURE_MESSAGING_SERVICE_PORT: '80'
-        RM_ACTION_SERVICE_HOST: 'actionsvc-dev.apps.devtest.onsclofo.uk'
+        RM_ACTION_SERVICE_HOST: 'actionsvc-dev.{{cf_apps_domain}}'
         RM_ACTION_SERVICE_PORT: '80'
-        RM_CASE_SERVICE_HOST: 'casesvc-dev.apps.devtest.onsclofo.uk'
+        RM_CASE_SERVICE_HOST: 'casesvc-dev.{{cf_apps_domain}}'
         RM_CASE_SERVICE_PORT: '80'
-        RM_COLLECTIONEXERCISE_SERVICE_HOST: 'collectionexercisesvc-dev.apps.devtest.onsclofo.uk'
+        RM_COLLECTIONEXERCISE_SERVICE_HOST: 'collectionexercisesvc-dev.{{cf_apps_domain}}'
         RM_COLLECTIONEXERCISE_SERVICE_PORT: '80'
-        RM_IAC_SERVICE_HOST: 'iacsvc-dev.apps.devtest.onsclofo.uk'
+        RM_IAC_SERVICE_HOST: 'iacsvc-dev.{{cf_apps_domain}}'
         RM_IAC_SERVICE_PORT: '80'
-        RM_NOTIFY_GATEWAY_SERVICE_HOST: 'notifygatewaysvc-dev.apps.devtest.onsclofo.uk'
+        RM_NOTIFY_GATEWAY_SERVICE_HOST: 'notifygatewaysvc-dev.{{cf_apps_domain}}'
         RM_NOTIFY_GATEWAY_SERVICE_PORT: '80'
-        RM_SAMPLE_SERVICE_HOST: 'samplesvc-dev.apps.devtest.onsclofo.uk'
+        RM_SAMPLE_SERVICE_HOST: 'samplesvc-dev.{{cf_apps_domain}}'
         RM_SAMPLE_SERVICE_PORT: '80'
-        RM_SURVEY_SURVEY_HOST: 'surveysvc-dev.apps.devtest.onsclofo.uk'
+        RM_SURVEY_SURVEY_HOST: 'surveysvc-dev.{{cf_apps_domain}}'
         RM_SURVEY_SURVEY_PORT: '80'
         SECURITY_USER_NAME: {{dev_security_user_name}}
         SECURITY_USER_PASSWORD: {{dev_security_user_password}}
@@ -213,9 +213,9 @@ jobs:
       manifest: ras-collection-instrument-source/manifest.yml
       path: ras-collection-instrument-source
       environment_variables:
-        API_GATEWAY_CASE_URL: 'http://concourse-ras-api-gatewaydev.apps.devtest.onsclofo.uk:80/cases/'
-        API_GATEWAY_COLLECTION_EXERCISE_URL: 'http://concourse-ras-api-gatewaydev.apps.devtest.onsclofo.uk:80/collectionexercises/'
-        API_HOST: 'concourse-ras-api-gatewaydev.apps.devtest.onsclofo.uk'
+        API_GATEWAY_CASE_URL: 'http://concourse-ras-api-gatewaydev.{{cf_apps_domain}}:80/cases/'
+        API_GATEWAY_COLLECTION_EXERCISE_URL: 'http://concourse-ras-api-gatewaydev.{{cf_apps_domain}}:80/collectionexercises/'
+        API_HOST: 'concourse-ras-api-gatewaydev.{{cf_apps_domain}}'
         API_PORT: '80'
         ONS_ENV: 'dev'
         RABBITMQ_AMQP: {{dev_rabbitmq_amqp}}
@@ -232,37 +232,37 @@ jobs:
       manifest: ras-frontstage-source/manifest.yml
       path: ras-frontstage-source
       environment_variables:
-        API_GATEWAY_AGGREGATED_SURVEYS_URL: 'http://concourse-ras-api-gatewaydev.apps.devtest.onsclofo.uk/api/1.0.0/surveys/'
-        API_GATEWAY_COLLECTION_INSTRUMENT_URL: 'http://concourse-ras-api-gatewaydev.apps.devtest.onsclofo.uk/collection-instrument-api/1.0.2/'
-        API_GATEWAY_PARTY_URL: 'http://concourse-ras-api-gatewaydev.apps.devtest.onsclofo.uk/party-api/1.0.4/'
-        API_GATEWAY_SURVEYS_URL: 'http://concourse-ras-api-gatewaydev.apps.devtest.onsclofo.uk/surveys/'
+        API_GATEWAY_AGGREGATED_SURVEYS_URL: 'http://concourse-ras-api-gatewaydev.{{cf_apps_domain}}/api/1.0.0/surveys/'
+        API_GATEWAY_COLLECTION_INSTRUMENT_URL: 'http://concourse-ras-api-gatewaydev.{{cf_apps_domain}}/collection-instrument-api/1.0.2/'
+        API_GATEWAY_PARTY_URL: 'http://concourse-ras-api-gatewaydev.{{cf_apps_domain}}/party-api/1.0.4/'
+        API_GATEWAY_SURVEYS_URL: 'http://concourse-ras-api-gatewaydev.{{cf_apps_domain}}/surveys/'
         DEV_PORT: '8080'
         JWT_ALGORITHM: 'HS256'
         JWT_SECRET: {{dev_secret_key}}
         ONS_ENV: 'test'
-        ONS_OAUTH_HOST: 'concourse-django-oauth2-testdev.apps.devtest.onsclofo.uk'
+        ONS_OAUTH_HOST: 'concourse-django-oauth2-testdev.{{cf_apps_domain}}'
         ONS_OAUTH_PROTOCOL: 'http'
-        RAS_API_GATEWAY_SERVICE_HOST: 'concourse-ras-api-gatewaydev.apps.devtest.onsclofo.uk'
+        RAS_API_GATEWAY_SERVICE_HOST: 'concourse-ras-api-gatewaydev.{{cf_apps_domain}}'
         RAS_API_GATEWAY_SERVICE_PORT: '80'
-        RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: 'concourse-ras-collection-instrumentdev.apps.devtest.onsclofo.uk'
+        RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: 'concourse-ras-collection-instrumentdev.{{cf_apps_domain}}'
         RAS_COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
         RAS_FRONTSTAGE_CLIENT_ID: 'ons@ons.gov'
         RAS_FRONTSTAGE_CLIENT_SECRET: 'password'
         RAS_FRONTSTAGE_LOGGING_LEVEL: 'DEBUG'
-        RAS_PARTY_SERVICE_HOST: 'concourse-ras-partydev.apps.devtest.onsclofo.uk'
+        RAS_PARTY_SERVICE_HOST: 'concourse-ras-partydev.{{cf_apps_domain}}'
         RAS_PARTY_SERVICE_PORT: '80'
-        RAS_SECURE_MESSAGE_SERVICE_HOST: 'concourse-ras-secure-messagedev.apps.devtest.onsclofo.uk'
+        RAS_SECURE_MESSAGE_SERVICE_HOST: 'concourse-ras-secure-messagedev.{{cf_apps_domain}}'
         RAS_SECURE_MESSAGE_SERVICE_PORT: '80'
-        RM_CASE_SERVICE_HOST: 'casesvc-test.apps.devtest.onsclofo.uk'
+        RM_CASE_SERVICE_HOST: 'casesvc-test.{{cf_apps_domain}}'
         RM_CASE_SERVICE_PORT: '80'
-        RM_COLLECTION_EXERCISE_SERVICE_HOST: 'collectionexercisesvc-test.apps.devtest.onsclofo.uk'
+        RM_COLLECTION_EXERCISE_SERVICE_HOST: 'collectionexercisesvc-test.{{cf_apps_domain}}'
         RM_COLLECTION_EXERCISE_SERVICE_PORT: '80'
-        RM_IAC_SERVICE_HOST: 'iacsvc-test.apps.devtest.onsclofo.uk'
+        RM_IAC_SERVICE_HOST: 'iacsvc-test.{{cf_apps_domain}}'
         RM_IAC_SERVICE_PORT: '80'
-        RM_SURVEY_SERVICE_HOST: 'surveysvc-test.apps.devtest.onsclofo.uk'
+        RM_SURVEY_SERVICE_HOST: 'surveysvc-test.{{cf_apps_domain}}'
         RM_SURVEY_SERVICE_PORT: '80'
         SECRET_KEY: {{dev_secret_key}}
-        SM_URL: 'http://concourse-ras-api-gatewaydev.apps.devtest.onsclofo.uk'
+        SM_URL: 'http://concourse-ras-api-gatewaydev.{{cf_apps_domain}}'
         SECURITY_USER_NAME: {{dev_security_user_name}}
         SECURITY_USER_PASSWORD: {{dev_security_user_password}}
 
@@ -381,19 +381,19 @@ jobs:
       environment_variables:
         SECURITY_USER_NAME: {{test_security_user_name}}
         SECURITY_USER_PASSWORD: {{test_security_user_password}}
-        case-service.host: 'casesvc-test.apps.devtest.onsclofo.uk'
+        case-service.host: 'casesvc-test.{{cf_apps_domain}}'
         case-service.port: '80'
-        collectionexercise-service.host: 'collectionexercisesvc-test.apps.devtest.onsclofo.uk'
+        collectionexercise-service.host: 'collectionexercisesvc-test.{{cf_apps_domain}}'
         collectionexercise-service.port: '80'
-        survey-service.host: 'surveysvc-test.apps.devtest.onsclofo.uk'
+        survey-service.host: 'surveysvc-test.{{cf_apps_domain}}'
         survey-service.port: '80'
-        oauth2-service.host: 'concourse-django-oauth2-testtest.apps.devtest.onsclofo.uk'
+        oauth2-service.host: 'concourse-django-oauth2-testtest.{{cf_apps_domain}}'
         oauth2-service.port: '80'
-        iac-service.host: 'iacsvc-test.apps.devtest.onsclofo.uk'
+        iac-service.host: 'iacsvc-test.{{cf_apps_domain}}'
         iac-service.port: '80'
-        frontstage-service.host: 'concourse-ras-frontstagetest.apps.devtest.onsclofo.uk'
+        frontstage-service.host: 'concourse-ras-frontstagetest.{{cf_apps_domain}}'
         frontstage-service.port: '80'
-        api-gateway.host: 'concourse-ras-api-gatewaytest.apps.devtest.onsclofo.uk'
+        api-gateway.host: 'concourse-ras-api-gatewaytest.{{cf_apps_domain}}'
         frontstage-service.port: '80'
         features.gateway_registration: 'true'
         feature.send_email_to_gov_notify: 'true'
@@ -424,7 +424,7 @@ jobs:
         NOTIFY_VIA_LOGGING: '1'
         ONS_ENV: 'test'
         RAS_PARTY_SERVICE_PORT: '80'
-        RAS_PARTY_SERVICE_HOST: 'concourse-ras-partytest.apps.devtest.onsclofo.uk'
+        RAS_PARTY_SERVICE_HOST: 'concourse-ras-partytest.{{cf_apps_domain}}'
         RAS_SM_PATH: '/home/vcap/app'
         SECURITY_USER_NAME: {{test_security_user_name}}
         SECURITY_USER_PASSWORD: {{test_security_user_password}}
@@ -444,26 +444,26 @@ jobs:
       environment_variables:
         SECURITY_USER_NAME: {{test_security_user_name}}
         SECURITY_USER_PASSWORD: {{test_security_user_password}}
-        case-service.host: 'casesvc-test.apps.devtest.onsclofo.uk'
+        case-service.host: 'casesvc-test.{{cf_apps_domain}}'
         case-service.port: '80'
-        collectionexercise-service.host: 'collectionexercisesvc-test.apps.devtest.onsclofo.uk'
+        collectionexercise-service.host: 'collectionexercisesvc-test.{{cf_apps_domain}}'
         collectionexercise-service.port: '80'
-        survey-service.host: 'surveysvc-test.apps.devtest.onsclofo.uk'
+        survey-service.host: 'surveysvc-test.{{cf_apps_domain}}'
         survey-service.port: '80'
-        oauth2-service.host: 'concourse-django-oauth2-testtest.apps.devtest.onsclofo.uk'
+        oauth2-service.host: 'concourse-django-oauth2-testtest.{{cf_apps_domain}}'
         oauth2-service.port: '80'
-        iac-service.host: 'iacsvc-test.apps.devtest.onsclofo.uk'
+        iac-service.host: 'iacsvc-test.{{cf_apps_domain}}'
         iac-service.port: '80'
-        frontstage-service.host: 'concourse-ras-frontstagetest.apps.devtest.onsclofo.uk'
+        frontstage-service.host: 'concourse-ras-frontstagetest.{{cf_apps_domain}}'
         frontstage-service.port: '80'
-        api-gateway.host: 'concourse-ras-api-gatewaytest.apps.devtest.onsclofo.uk'
+        api-gateway.host: 'concourse-ras-api-gatewaytest.{{cf_apps_domain}}'
         api-gateway.port: '80'
         features.gateway_registration: 'true'
-        party-service.host: 'concourse-ras-partytest.apps.devtest.onsclofo.uk'
+        party-service.host: 'concourse-ras-partytest.{{cf_apps_domain}}'
         party-service.port: '80'
-        secure-message-service.host: 'concourse-ras-secure-messagetest.apps.devtest.onsclofo.uk'
+        secure-message-service.host: 'concourse-ras-secure-messagetest.{{cf_apps_domain}}'
         secure-message-service.port: '80'
-        collection-instrument-service.host: 'ras-collection-instrument-test.apps.devtest.onsclofo.uk'
+        collection-instrument-service.host: 'ras-collection-instrument-test.{{cf_apps_domain}}'
         collection-instrument-service.port: '80'
         SECRET_KEY: {{test_secret_key}}
 
@@ -494,25 +494,25 @@ jobs:
       path: ras-api-gateway-source
       environment_variables:
         ONS_ENV: 'test'
-        RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: 'concourse-ras-collection-instrumenttest.apps.devtest.onsclofo.uk'
+        RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: 'concourse-ras-collection-instrumenttest.{{cf_apps_domain}}'
         RAS_COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
-        RAS_PARTY_SERVICE_HOST: 'concourse-ras-partytest.apps.devtest.onsclofo.uk'
+        RAS_PARTY_SERVICE_HOST: 'concourse-ras-partytest.{{cf_apps_domain}}'
         RAS_PARTY_SERVICE_PORT: '80'
-        RAS_SECURE_MESSAGING_SERVICE_HOST: 'concourse-ras-secure-messagetest.apps.devtest.onsclofo.uk'
+        RAS_SECURE_MESSAGING_SERVICE_HOST: 'concourse-ras-secure-messagetest.{{cf_apps_domain}}'
         RAS_SECURE_MESSAGING_SERVICE_PORT: '80'
-        RM_ACTION_SERVICE_HOST: 'actionsvc-test.apps.devtest.onsclofo.uk'
+        RM_ACTION_SERVICE_HOST: 'actionsvc-test.{{cf_apps_domain}}'
         RM_ACTION_SERVICE_PORT: '80'
-        RM_CASE_SERVICE_HOST: 'casesvc-test.apps.devtest.onsclofo.uk'
+        RM_CASE_SERVICE_HOST: 'casesvc-test.{{cf_apps_domain}}'
         RM_CASE_SERVICE_PORT: '80'
-        RM_COLLECTIONEXERCISE_SERVICE_HOST: 'collectionexercisesvc-test.apps.devtest.onsclofo.uk'
+        RM_COLLECTIONEXERCISE_SERVICE_HOST: 'collectionexercisesvc-test.{{cf_apps_domain}}'
         RM_COLLECTIONEXERCISE_SERVICE_PORT: '80'
-        RM_IAC_SERVICE_HOST: 'iacsvc-test.apps.devtest.onsclofo.uk'
+        RM_IAC_SERVICE_HOST: 'iacsvc-test.{{cf_apps_domain}}'
         RM_IAC_SERVICE_PORT: '80'
-        RM_NOTIFY_GATEWAY_SERVICE_HOST: 'notifygatewaysvc-test.apps.devtest.onsclofo.uk'
+        RM_NOTIFY_GATEWAY_SERVICE_HOST: 'notifygatewaysvc-test.{{cf_apps_domain}}'
         RM_NOTIFY_GATEWAY_SERVICE_PORT: '80'
-        RM_SAMPLE_SERVICE_HOST: 'samplesvc-test.apps.devtest.onsclofo.uk'
+        RM_SAMPLE_SERVICE_HOST: 'samplesvc-test.{{cf_apps_domain}}'
         RM_SAMPLE_SERVICE_PORT: '80'
-        RM_SURVEY_SURVEY_HOST: 'surveysvc-test.apps.devtest.onsclofo.uk'
+        RM_SURVEY_SURVEY_HOST: 'surveysvc-test.{{cf_apps_domain}}'
         RM_SURVEY_SURVEY_PORT: '80'
         SECURITY_USER_NAME: {{test_security_user_name}}
         SECURITY_USER_PASSWORD: {{test_security_user_password}}
@@ -529,10 +529,10 @@ jobs:
       manifest: ras-collection-instrument-source/manifest.yml
       path: ras-collection-instrument-source
       environment_variables:
-        API_GATEWAY_CASE_URL: 'http://concourse-ras-api-gatewaytest.apps.devtest.onsclofo.uk:80/cases/'
-        API_GATEWAY_COLLECTION_EXERCISE_URL: 'http://concourse-ras-api-gatewaytest.apps.devtest.onsclofo.uk:80/collectionexercises/'
-        API_GATEWAY_SURVEY_SERVICE_URL: 'http://concourse-ras-api-gatewaytest.apps.devtest.onsclofo.uk:80/surveys/'
-        API_HOST: 'concourse-ras-api-gatewaytest.apps.devtest.onsclofo.uk'
+        API_GATEWAY_CASE_URL: 'http://concourse-ras-api-gatewaytest.{{cf_apps_domain}}:80/cases/'
+        API_GATEWAY_COLLECTION_EXERCISE_URL: 'http://concourse-ras-api-gatewaytest.{{cf_apps_domain}}:80/collectionexercises/'
+        API_GATEWAY_SURVEY_SERVICE_URL: 'http://concourse-ras-api-gatewaytest.{{cf_apps_domain}}:80/surveys/'
+        API_HOST: 'concourse-ras-api-gatewaytest.{{cf_apps_domain}}'
         API_PORT: '80'
         ONS_ENV: 'test'
         RABBITMQ_AMQP: {{test_rabbitmq_amqp}}
@@ -553,37 +553,37 @@ jobs:
       manifest: ras-frontstage-source/manifest.yml
       path: ras-frontstage-source
       environment_variables:
-        API_GATEWAY_AGGREGATED_SURVEYS_URL: 'http://concourse-ras-api-gatewaytest.apps.devtest.onsclofo.uk/api/1.0.0/surveys/'
-        API_GATEWAY_COLLECTION_INSTRUMENT_URL: 'http://concourse-ras-api-gatewaytest.apps.devtest.onsclofo.uk/collection-instrument-api/1.0.2/'
-        API_GATEWAY_PARTY_URL: 'http://concourse-ras-api-gatewaytest.apps.devtest.onsclofo.uk/party-api/1.0.4/'
-        API_GATEWAY_SURVEYS_URL: 'http://concourse-ras-api-gatewaytest.apps.devtest.onsclofo.uk/surveys/'
+        API_GATEWAY_AGGREGATED_SURVEYS_URL: 'http://concourse-ras-api-gatewaytest.{{cf_apps_domain}}/api/1.0.0/surveys/'
+        API_GATEWAY_COLLECTION_INSTRUMENT_URL: 'http://concourse-ras-api-gatewaytest.{{cf_apps_domain}}/collection-instrument-api/1.0.2/'
+        API_GATEWAY_PARTY_URL: 'http://concourse-ras-api-gatewaytest.{{cf_apps_domain}}/party-api/1.0.4/'
+        API_GATEWAY_SURVEYS_URL: 'http://concourse-ras-api-gatewaytest.{{cf_apps_domain}}/surveys/'
         DEV_PORT: '8080'
         JWT_ALGORITHM: 'HS256'
         JWT_SECRET: {{test_secret_key}}
         ONS_ENV: 'test'
-        ONS_OAUTH_HOST: 'concourse-django-oauth2-testtest.apps.devtest.onsclofo.uk'
+        ONS_OAUTH_HOST: 'concourse-django-oauth2-testtest.{{cf_apps_domain}}'
         ONS_OAUTH_PROTOCOL: 'http'
-        RAS_API_GATEWAY_SERVICE_HOST: 'concourse-ras-api-gatewaytest.apps.devtest.onsclofo.uk'
+        RAS_API_GATEWAY_SERVICE_HOST: 'concourse-ras-api-gatewaytest.{{cf_apps_domain}}'
         RAS_API_GATEWAY_SERVICE_PORT: '80'
-        RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: 'concourse-ras-collection-instrumenttest.apps.devtest.onsclofo.uk'
+        RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: 'concourse-ras-collection-instrumenttest.{{cf_apps_domain}}'
         RAS_COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
         RAS_FRONTSTAGE_CLIENT_ID: 'ons@ons.gov'
         RAS_FRONTSTAGE_CLIENT_SECRET: 'password'
         RAS_FRONTSTAGE_LOGGING_LEVEL: 'DEBUG'
-        RAS_PARTY_SERVICE_HOST: 'concourse-ras-partytest.apps.devtest.onsclofo.uk'
+        RAS_PARTY_SERVICE_HOST: 'concourse-ras-partytest.{{cf_apps_domain}}'
         RAS_PARTY_SERVICE_PORT: '80'
-        RAS_SECURE_MESSAGE_SERVICE_HOST: 'concourse-ras-secure-messagetest.apps.devtest.onsclofo.uk'
+        RAS_SECURE_MESSAGE_SERVICE_HOST: 'concourse-ras-secure-messagetest.{{cf_apps_domain}}'
         RAS_SECURE_MESSAGE_SERVICE_PORT: '80'
-        RM_CASE_SERVICE_HOST: 'casesvc-test.apps.devtest.onsclofo.uk'
+        RM_CASE_SERVICE_HOST: 'casesvc-test.{{cf_apps_domain}}'
         RM_CASE_SERVICE_PORT: '80'
-        RM_COLLECTION_EXERCISE_SERVICE_HOST: 'collectionexercisesvc-test.apps.devtest.onsclofo.uk'
+        RM_COLLECTION_EXERCISE_SERVICE_HOST: 'collectionexercisesvc-test.{{cf_apps_domain}}'
         RM_COLLECTION_EXERCISE_SERVICE_PORT: '80'
-        RM_IAC_SERVICE_HOST: 'iacsvc-test.apps.devtest.onsclofo.uk'
+        RM_IAC_SERVICE_HOST: 'iacsvc-test.{{cf_apps_domain}}'
         RM_IAC_SERVICE_PORT: '80'
-        RM_SURVEY_SERVICE_HOST: 'surveysvc-test.apps.devtest.onsclofo.uk'
+        RM_SURVEY_SERVICE_HOST: 'surveysvc-test.{{cf_apps_domain}}'
         RM_SURVEY_SERVICE_PORT: '80'
         SECRET_KEY: {{test_secret_key}}
-        SM_URL: 'http://concourse-ras-api-gatewaytest.apps.devtest.onsclofo.uk'
+        SM_URL: 'http://concourse-ras-api-gatewaytest.{{cf_apps_domain}}'
         SECURITY_USER_NAME: {{test_security_user_name}}
         SECURITY_USER_PASSWORD: {{test_security_user_password}}
 
@@ -642,4 +642,3 @@ jobs:
         TESTING: "False"
         SECURITY_USER_NAME: {{test_security_user_name}}
         SECURITY_USER_PASSWORD: {{test_security_user_password}}
-
