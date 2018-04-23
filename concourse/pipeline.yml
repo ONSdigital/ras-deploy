@@ -1,0 +1,103 @@
+---
+resource_types:
+- name: cf-cli-resource
+  type: docker-image
+  source:
+    repository: nulldriver/cf-cli-resource
+    tag: latest
+
+resources:
+- name: ras-party-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-party.git
+    branch: master
+
+- name: cf-cli-resource-ci
+  type: cf-cli-resource
+  source:
+    api: {{cloudfoundry_api}}
+    username: {{cloudfoundry_email}}
+    password: {{cloudfoundry_password}}
+    org: rmras
+    space: concourse-ci
+    skip_cert_check: true
+
+- name: cf-resource-ci
+  type: cf
+  source:
+    api: {{cloudfoundry_api}}
+    username: {{cloudfoundry_email}}
+    password: {{cloudfoundry_password}}
+    organization: rmras
+    space: concourse-ci
+    skip_cert_check: true
+
+jobs:
+#- name: ras-party-unit-tests
+#  plan:
+#  - get: ras-party-source
+#    trigger: true
+#  - task: run-unit-tests
+#    config:
+#      platform: linux
+#      image_resource:
+#        type: docker-image
+#        source:
+#          repository: sdcplatform/python-pipenv-chrome
+#      inputs:
+#      - name: ras-party-source
+#      params:
+#        DATABASE_URI: sqlite://
+#      run:
+#        path: sh
+#        dir: ras-party-source
+#        args:
+#        - -exc
+#        - |
+#          # Download quickfix for pipenv check error
+#          pip install --upgrade --pre pipenv
+#
+#          echo $DATABASE_URI
+#
+#          pipenv install --dev
+#          make test
+
+- name: ras-party-ci-deploy
+  plan:
+  - get: ras-party-source
+    trigger: true
+  - put: create-database
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: ras-party-db
+      timeout: 300
+      wait_for_service: true
+  - put: push-app
+    resource: cf-resource-ci
+    params:
+      current_app_name: ras-party-ci-migration
+      manifest: ras-party-source/manifest.yml
+      path: ras-party-source
+      environment_variables:
+        SECURITY_USER_NAME: {{dev_security_user_name}}
+        SECURITY_USER_PASSWORD: {{dev_security_user_password}}
+        case-service.host: 'casesvc-ci-migration.{{cf_apps_domain}}'
+        case-service.port: '80'
+        collectionexercise-service.host: 'collectionexercisesvc-ci-migration.{{cf_apps_domain}}'
+        collectionexercise-service.port: '80'
+        survey-service.host: 'surveysvc-ci-migration.{{cf_apps_domain}}'
+        survey-service.port: '80'
+        oauth2-service.host: 'concourse-django-oauth2-ci-migration.{{cf_apps_domain}}'
+        oauth2-service.port: '80'
+        iac-service.host: 'iacsvc-ci-migration.{{cf_apps_domain}}'
+        iac-service.port: '80'
+        frontstage-service.host: 'ras-frontstage-ci-migration.{{cf_apps_domain}}'
+        frontstage-service.port: '80'
+        feature.send_email_to_gov_notify: 'false'
+        gov-uk-notify-service.gov_notify_api_key: {{notify_api_key}}
+        gov-uk-notify-service.gov_notify_template_id: '53c59576-8c3b-4298-99d1-b245ddd28500'
+        gov-uk-notify-service.gov_notify_service_id: 'ce3674b1-7b08-4377-a6a7-05b5722d4ea5'
