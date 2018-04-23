@@ -234,6 +234,8 @@ jobs:
         CASE_SERVICE_PORT: '80'
         COLLECTION_EXERCISE_HOST: 'concourse-rm-collection-exercise-service-dev.apps.devtest.onsclofo.uk'
         COLLECTION_EXERCISE_PORT: '80'
+        PARTY_SERVICE_HOST: 'concourse-ras-party-dev.apps.devtest.onsclofo.uk'
+        PARTY_SERVICE_PORT: '80'
         JSON_SECRET_KEYS: ((dev_json_secret_keys))
         ONS_CRYPTOKEY: ((dev_collection_instrument_encryption_key))
         RABBITMQ_AMQP_COLLECTION_INSTRUMENT: ((dev_rabbitmq_amqp_collection_instrument))
@@ -871,6 +873,7 @@ jobs:
         DJANGO_OAUTH_DATABASE_URI: ((DJANGO_OAUTH_DATABASE_URI))
         PARTY_DATABASE_URI: ((PARTY_DATABASE_URI))
         SECURE_MESSAGE_DATABASE_URI: ((SECURE_MESSAGE_DATABASE_URI))
+        COLLECTION_INSTRUMENT_DATABASE_URI: ((COLLECTION_INSTRUMENT_DATABASE_URI))
         RESPONSE_OPERATIONS_UI_HOST: 'concourse-response-operations-ui-dev.apps.devtest.onsclofo.uk'
         RESPONSE_OPERATIONS_UI_PORT: '80'
         ACTION_SERVICE_HOST: 'concourse-rm-action-service-dev.apps.devtest.onsclofo.uk'
@@ -1025,6 +1028,8 @@ jobs:
         CASE_SERVICE_PORT: '80'
         COLLECTION_EXERCISE_HOST: 'concourse-collectionexercisesvc-ci.apps.devtest.onsclofo.uk'
         COLLECTION_EXERCISE_PORT: '80'
+        PARTY_SERVICE_HOST: 'concourse-ras-party-ci.apps.devtest.onsclofo.uk'
+        PARTY_SERVICE_PORT: '80'
         JSON_SECRET_KEYS: ((ci_json_secret_keys))
         ONS_CRYPTOKEY: ((ci_collection_instrument_encryption_key))
         RABBITMQ_AMQP_COLLECTION_INSTRUMENT: ((ci_rabbitmq_amqp_collection_instrument))
