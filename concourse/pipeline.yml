@@ -6,6 +6,7 @@ resource_types:
     repository: nulldriver/cf-cli-resource
     tag: latest
 
+### START MICROSERVICE REPOS
 resources:
 - name: ras-party-source
   type: git
@@ -18,6 +19,13 @@ resources:
   source:
     uri: https://github.com/ONSdigital/ras-secure-message.git
     branch: master
+
+- name: ras-backstage-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-backstage.git
+    branch: master
+### END MICROSERVICE REPOS
 
 - name: cf-cli-resource-ci
   type: cf-cli-resource
@@ -97,7 +105,7 @@ jobs:
         collectionexercise-service.port: '80'
         survey-service.host: 'surveysvc-ci-migration.{{cf_apps_domain}}'
         survey-service.port: '80'
-        oauth2-service.host: 'concourse-django-oauth2-ci-migration.{{cf_apps_domain}}'
+        oauth2-service.host: 'django-oauth2-ci-migration.{{cf_apps_domain}}'
         oauth2-service.port: '80'
         iac-service.host: 'iacsvc-ci-migration.{{cf_apps_domain}}'
         iac-service.port: '80'
@@ -123,7 +131,7 @@ jobs:
       wait_for_service: true
   - put: cf-resource-ci
     params:
-      current_app_name: concourse-ras-secure-message-ci-migration
+      current_app_name: ras-secure-message-ci-migration
       manifest: ras-secure-message-source/manifest.yml
       path: ras-secure-message-source
       environment_variables:
@@ -143,3 +151,30 @@ jobs:
         SECURITY_USER_PASSWORD: {{ci_security_user_password}}
         SMS_LOG_LEVEL: 'DEBUG'
         SM_JWT_ENCRYPT: '0'
+
+- name: ras-backstage-ci-deploy
+  plan:
+  - get: ras-backstage-source
+    trigger: true
+  - put: cf-resource-ci
+    params:
+      current_app_name: ras-backstage-ci-migration
+      manifest: ras-backstage-source/manifest.yml
+      path: ras-backstage-source
+      environment_variables:
+        SECURITY_USER_NAME: {{ci_security_user_name}}
+        SECURITY_USER_PASSWORD: {{ci_security_user_password}}
+        case-service.host: 'casesvc-ci-migration.{{cf_apps_domain}}'
+        case-service.port: '80'
+        collectionexercise-service.host: 'collectionexercisesvc-ci-migration.{{cf_apps_domain}}'
+        collectionexercise-service.port: '80'
+        survey-service.host: 'surveysvc-ci-migration.{{cf_apps_domain}}'
+        survey-service.port: '80'
+        oauth2-service.host: 'django-oauth2-ci-migration.{{cf_apps_domain}}'
+        oauth2-service.port: '80'
+        party-service.host: 'ras-party-ci-migration.{{cf_apps_domain}}'
+        party-service.port: '80'
+        secure-message-service.host: 'ras-secure-message-ci-migration.{{cf_apps_domain}}'
+        secure-message-service.port: '80'
+        collection-instrument-service.host: 'ras-collection-instrument-ci-migration.{{cf_apps_domain}}'
+        collection-instrument-service.port: '80'
