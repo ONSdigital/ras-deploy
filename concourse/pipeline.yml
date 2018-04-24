@@ -42,7 +42,76 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-frontstage-api.git
-    branch: create-manifiest
+    branch: master
+
+- name: django-oauth2-test-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/django-oauth2-test.git
+
+- name: response-operations-ui-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/response-operations-ui.git
+
+#- name: rm-action-service-source
+#  type: git
+#  source:
+#    uri: https://github.com/ONSdigital/rm-action-service.git
+#    branch: consistent-artifact-name
+#
+#- name: rm-actionexporter-service-source
+#  type: git
+#  source:
+#    uri: https://github.com/ONSdigital/rm-actionexporter-service.git
+#    branch: consistent-artifact-name
+#
+#- name: rm-case-service-source
+#  type: git
+#  source:
+#    uri: https://github.com/ONSdigital/rm-case-service.git
+#    branch: consistent-artifact-name
+#
+#- name: rm-collection-exercise-service-source
+#  type: git
+#  source:
+#    uri: https://github.com/ONSdigital/rm-collection-exercise-service.git
+#    branch: consistent-artifact-name
+#
+#- name: iac-service-source
+#  type: git
+#  source:
+#    uri: git@github.com:ONSdigital/iac-service.git
+#    branch: consistent-artifact-name
+#    private_key: ((git_key))
+#
+#- name: rm-notify-gateway-source
+#  type: git
+#  source:
+#    uri: https://github.com/ONSdigital/rm-notify-gateway.git
+#    branch: consistent-artifact-name
+#
+#- name: rm-sample-service-source
+#  type: git
+#  source:
+#    uri: https://github.com/ONSdigital/rm-sample-service.git
+#    branch: consistent-artifact-name
+#
+#- name: rm-sdx-gateway-source
+#  type: git
+#  source:
+#    uri: https://github.com/ONSdigital/rm-sdx-gateway.git
+#    branch: consistent-artifact-name
+#
+#- name: rm-survey-service-source
+#  type: git
+#  source:
+#    uri: https://github.com/ONSdigital/rm-survey-service.git
+#
+#- name: sdc-uaa-source
+#  type: git
+#  source:
+#    uri: https://github.com/ONSdigital/sdc-uaa.git
 ### END MICROSERVICE REPOS
 
 - name: cf-cli-resource-ci
@@ -253,7 +322,7 @@ jobs:
       service: elasticache-broker
       plan: small
       service_instance: rm-redis
-      timeout: 300
+      timeout: 600
       wait_for_service: true
   - put: cf-resource-ci
     params:
@@ -302,3 +371,89 @@ jobs:
         RM_SURVEY_SERVICE_PORT: '80'
         SECURITY_USER_NAME: ((ci_security_user_name))
         SECURITY_USER_PASSWORD: ((ci_security_user_password))
+
+- name: django-oauth2-test-ci-deploy
+  plan:
+  - get: django-oauth2-test-source
+    trigger: true
+  - put: create-database
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: oauth-db
+      timeout: 300
+      wait_for_service: true
+  # Create git_info file for info end point
+  - task: git-info
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: paasmule/curl-ssl-git
+          tag: "latest"
+      inputs:
+        - name: django-oauth2-test-source
+      outputs:
+        - name: django-oauth2-test-source-git-info
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          cd django-oauth2-test-source
+          branch=$(git rev-parse --abbrev-ref HEAD)
+          url=$(git config --get remote.origin.url)
+          commit=$(git rev-parse HEAD)
+          repo=$(basename `git rev-parse --show-toplevel`)
+          when=`date --utc +%FT%TZ`
+          output=git_info
+          echo '{' > ${output}
+          echo   \"origin\": \"${url}\", >> ${output}
+          echo   \"commit\": \"${commit}\", >> ${output}
+          echo   \"branch\": \"${branch}\", >> ${output}
+          echo   \"name\": \"${repo}\", >> ${output}
+          echo   \"built\": \"${when}\" >> ${output}
+          echo '}' >> ${output}
+          cd ..
+          cp -r django-oauth2-test-source/* django-oauth2-test-source-git-info
+  - put: cf-resource-ci
+    params:
+      current_app_name: django-oauth2-test-ci-migration
+      manifest: django-oauth2-test-source-git-info/manifest.yml
+      path: django-oauth2-test-source-git-info
+      environment_variables:
+        CSRF_ENABLED: 'True'
+        DEBUG: 'False'
+        DJANGO_SETTINGS_MODULE: 'proj.settings.cloud_foundry_settings'
+        OAUTH2_SUPER_USER: ((ci_oauth2_super_user))
+        OAUTH2_SUPER_USER_EMAIL: ((ci_oauth2_super_user_email))
+        OAUTH2_SUPER_USER_PASSWORD: ((ci_oauth2_super_user_password))
+        SECRET_KEY: ((ci_jwt_secret))
+        TESTING: 'False'
+        SECURITY_USER_NAME: ((ci_security_user_name))
+        SECURITY_USER_PASSWORD: ((ci_security_user_password))
+
+- name: response-operations-ui-ci-deploy
+  plan:
+  - get: response-operations-ui-source
+    trigger: true
+  - put: create-redis
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: elasticache-broker
+      plan: small
+      service_instance: ras-redis
+      timeout: 600
+      wait_for_service: true
+  - put: cf-resource-ci
+    params:
+      current_app_name: response-operations-ui-ci-migration
+      manifest: response-operations-ui-source/manifest.yml
+      path: response-operations-ui-source
+      environment_variables:
+        BACKSTAGE_API_URL: 'http://ras-backstage-ci-migration.apps.devtest.onsclofo.uk/backstage-api'
+        REDIS_SERVICE: ras-redis
