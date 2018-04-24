@@ -54,30 +54,30 @@ resources:
   source:
     uri: https://github.com/ONSdigital/response-operations-ui.git
 
-#- name: rm-action-service-source
-#  type: git
-#  source:
-#    uri: https://github.com/ONSdigital/rm-action-service.git
-#    branch: consistent-artifact-name
-#
-#- name: rm-actionexporter-service-source
-#  type: git
-#  source:
-#    uri: https://github.com/ONSdigital/rm-actionexporter-service.git
-#    branch: consistent-artifact-name
-#
-#- name: rm-case-service-source
-#  type: git
-#  source:
-#    uri: https://github.com/ONSdigital/rm-case-service.git
-#    branch: consistent-artifact-name
-#
-#- name: rm-collection-exercise-service-source
-#  type: git
-#  source:
-#    uri: https://github.com/ONSdigital/rm-collection-exercise-service.git
-#    branch: consistent-artifact-name
-#
+- name: rm-action-service-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-action-service.git
+    branch: consistent-artifact-name
+
+- name: rm-actionexporter-service-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-actionexporter-service.git
+    branch: consistent-artifact-name
+
+- name: rm-case-service-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-case-service.git
+    branch: consistent-artifact-name
+
+- name: rm-collection-exercise-service-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-collection-exercise-service.git
+    branch: consistent-artifact-name
+
 #- name: iac-service-source
 #  type: git
 #  source:
@@ -457,3 +457,309 @@ jobs:
       environment_variables:
         BACKSTAGE_API_URL: 'http://ras-backstage-ci-migration.apps.devtest.onsclofo.uk/backstage-api'
         REDIS_SERVICE: ras-redis
+
+- name: rm-action-service-ci-deploy
+  plan:
+  - get: rm-action-service-source
+    trigger: true
+  - put: create-database
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: rm-pg-db
+      timeout: 300
+      wait_for_service: true
+  - put: create-redis
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: elasticache-broker
+      plan: small
+      service_instance: rm-redis
+      timeout: 600
+      wait_for_service: true
+  - put: create-rabbitmq
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: rabbitmq
+      plan: standard
+      service_instance: rm-rabbitmq
+      timeout: 300
+      wait_for_service: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-action-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-action-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-action-service-source/pom.xml
+          cp -r rm-action-service-source/target/ .
+  - put: cf-resource-ci
+    params:
+      current_app_name: rm-action-service-ci-migration
+      manifest: rm-action-service-source/manifest-no-envs.yml
+      path: target/actionsvc.jar
+      environment_variables:
+        partySvc_connectionConfig_host: 'ras-party-ci-migration.apps.devtest.onsclofo.uk'
+        partySvc_connectionConfig_port: '80'
+        partySvc_connectionConfig_scheme: 'http'
+        partySvc_connectionConfig_username: ((ci_security_user_name))
+        partySvc_connectionConfig_password: ((ci_security_user_password))
+        collectionExerciseSvc_connectionConfig_host: 'rm-collection-exercise-service-ci-migration.apps.devtest.onsclofo.uk'
+        collectionExerciseSvc_connectionConfig_port: '80'
+        collectionExerciseSvc_connectionConfig_scheme: 'http'
+        collectionExerciseSvc_connectionConfig_username: ((ci_security_user_name))
+        collectionExerciseSvc_connectionConfig_password: ((ci_security_user_password))
+        caseSvc_connectionConfig_host: 'rm-case-service-ci-migration.apps.devtest.onsclofo.uk'
+        caseSvc_connectionConfig_port: '80'
+        caseSvc_connectionConfig_scheme: 'http'
+        caseSvc_connectionConfig_username: ((ci_security_user_name))
+        caseSvc_connectionConfig_password: ((ci_security_user_password))
+        surveySvc_connectionConfig_host: 'rm-survey-service-ci-migration.apps.devtest.onsclofo.uk'
+        surveySvc_connectionConfig_port: '80'
+        surveySvc_connectionConfig_scheme: 'http'
+        surveySvc_connectionConfig_username: ((ci_security_user_name))
+        surveySvc_connectionConfig_password: ((ci_security_user_password))
+        endpoints_enabled: 'false'
+        security_user_name: ((ci_security_user_name))
+        security_user_password: ((ci_security_user_password))
+
+- name: rm-actionexporter-service-ci-deploy
+  plan:
+  - get: rm-actionexporter-service-source
+    trigger: true
+  - put: create-database
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: rm-pg-db
+      timeout: 300
+      wait_for_service: true
+  - put: create-redis
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: elasticache-broker
+      plan: small
+      service_instance: rm-redis
+      timeout: 600
+      wait_for_service: true
+  - put: create-rabbitmq
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: rabbitmq
+      plan: standard
+      service_instance: rm-rabbitmq
+      timeout: 300
+      wait_for_service: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-actionexporter-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-actionexporter-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-actionexporter-service-source/pom.xml
+          cp -r rm-actionexporter-service-source/target/ .
+  - put: cf-resource-ci
+    params:
+      current_app_name: rm-actionexporter-service-ci-migration
+      manifest: rm-actionexporter-service-source/manifest.yml
+      path: target/actionexportersvc.jar
+      environment_variables:
+        endpoints_enabled: 'false'
+        exportSchedule_cronExpression: '0 * * * * ?'
+        security_user_name: ((ci_security_user_name))
+        security_user_password: ((ci_security_user_password))
+        sftp_host: ((sftp_host))
+        sftp_password: ((actionexporter_sftp_password))
+        sftp_port: '22'
+        sftp_username: ((actionexporter_sftp_username))
+
+- name: rm-case-service-ci-deploy
+  plan:
+  - get: rm-case-service-source
+    trigger: true
+  - put: create-database
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: rm-pg-db
+      timeout: 300
+      wait_for_service: true
+  - put: create-redis
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: elasticache-broker
+      plan: small
+      service_instance: rm-redis
+      timeout: 600
+      wait_for_service: true
+  - put: create-rabbitmq
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: rabbitmq
+      plan: standard
+      service_instance: rm-rabbitmq
+      timeout: 300
+      wait_for_service: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-case-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-case-service-source/.travis.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
+          cp -r rm-case-service-source/target/ .
+  - put: cf-resource-ci
+    params:
+      current_app_name: rm-case-service-ci-migration
+      manifest: rm-case-service-source/manifest-no-envs.yml
+      path: target/casesvc.jar
+      environment_variables:
+        actionSvc_connectionConfig_host: 'rm-action-service-ci-migration.apps.devtest.onsclofo.uk'
+        actionSvc_connectionConfig_password: ((ci_security_user_password))
+        actionSvc_connectionConfig_port: '80'
+        actionSvc_connectionConfig_scheme: 'http'
+        actionSvc_connectionConfig_username: ((ci_security_user_name))
+        collectionExerciseSvc_connectionConfig_host: 'rm-collection-exercise-service-ci-migration.apps.devtest.onsclofo.uk'
+        collectionExerciseSvc_connectionConfig_password: ((ci_security_user_password))
+        collectionExerciseSvc_connectionConfig_port: '80'
+        collectionExerciseSvc_connectionConfig_scheme: 'http'
+        collectionExerciseSvc_connectionConfig_username: ((ci_security_user_name))
+        endpoints_enabled: 'false'
+        internetAccessCodeSvc_connectionConfig_host: 'iac-service-ci-migration.apps.devtest.onsclofo.uk'
+        internetAccessCodeSvc_connectionConfig_password: ((ci_security_user_password))
+        internetAccessCodeSvc_connectionConfig_port: '80'
+        internetAccessCodeSvc_connectionConfig_scheme: 'http'
+        internetAccessCodeSvc_connectionConfig_username: ((ci_security_user_name))
+        security_user_name: ((ci_security_user_name))
+        security_user_password: ((ci_security_user_password))
+
+- name: rm-collection-exercise-ci-deploy
+  plan:
+  - get: rm-collection-exercise-service-source
+    trigger: true
+  - put: create-database
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: rm-pg-db
+      timeout: 300
+      wait_for_service: true
+  - put: create-redis
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: elasticache-broker
+      plan: small
+      service_instance: rm-redis
+      timeout: 600
+      wait_for_service: true
+  - put: create-rabbitmq
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: rabbitmq
+      plan: standard
+      service_instance: rm-rabbitmq
+      timeout: 300
+      wait_for_service: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-collection-exercise-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-collection-exercise-service-source/pom.xml
+          cp -r rm-collection-exercise-service-source/target/ .
+  - put: cf-resource-ci
+    params:
+      current_app_name: rm-collection-exercise-service-ci-migration
+      manifest: rm-collection-exercise-service-source/manifest-no-envs.yml
+      path: target/collectionexercisesvc.jar
+      environment_variables:
+        collectionInstrumentSvc_connectionConfig_host: 'ras-collection-instrument-ci-migration.apps.devtest.onsclofo.uk'
+        collectionInstrumentSvc_connectionConfig_password: ((ci_security_user_password))
+        collectionInstrumentSvc_connectionConfig_port: '80'
+        collectionInstrumentSvc_connectionConfig_scheme: 'http'
+        collectionInstrumentSvc_connectionConfig_username: ((ci_security_user_name))
+        endpoints_enabled: 'false'
+        partySvc_connectionConfig_host: 'ras-party-ci-migration.apps.devtest.onsclofo.uk'
+        partySvc_connectionConfig_password: ((ci_security_user_password))
+        partySvc_connectionConfig_port: '80'
+        partySvc_connectionConfig_scheme: 'http'
+        partySvc_connectionConfig_username: ((ci_security_user_name))
+        sampleSvc_connectionConfig_host: 'rm-sample-service-ci-migration.apps.devtest.onsclofo.uk'
+        sampleSvc_connectionConfig_password: ((ci_security_user_password))
+        sampleSvc_connectionConfig_port: '80'
+        sampleSvc_connectionConfig_scheme: 'http'
+        sampleSvc_connectionConfig_username: ((ci_security_user_name))
+        security_user_name: ((ci_security_user_name))
+        security_user_password: ((ci_security_user_password))
+        surveySvc_connectionConfig_host: concourse-rm-survey-service-dev.apps.devtest.onsclofo.uk
+        surveySvc_connectionConfig_password: ((ci_security_user_password))
+        surveySvc_connectionConfig_port: '80'
+        surveySvc_connectionConfig_scheme: 'http'
+        surveySvc_connectionConfig_username: ((ci_security_user_name))
+        SCHEDULES_VALIDATION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
+        SCHEDULES_DISTRIBUTION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
