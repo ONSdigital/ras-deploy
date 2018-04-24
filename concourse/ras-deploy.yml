@@ -3,72 +3,126 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-party.git
-    branch: master
 
 - name: ras-secure-message-source
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-secure-message.git
-    branch: master
 
 - name: ras-backstage-source
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-backstage.git
-    branch: master
-
-- name: ras-backstage-ui-source
-  type: git
-  source:
-    uri: https://github.com/ONSdigital/ras-backstage-ui.git
-    branch: tbl109-pipelines
-
-- name: ras-api-gateway-source
-  type: git
-  source:
-    uri: https://github.com/ONSdigital/ras-api-gateway.git
-    branch: master
 
 - name: ras-collection-instrument-source
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-collection-instrument.git
-    branch: master
 
 - name: ras-frontstage-source
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-frontstage.git
-    branch: master
+
+- name: ras-frontstage-api-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-frontstage-api.git
+    branch: create-manifiest
 
 - name: django-oauth2-test-source
   type: git
   source:
     uri: https://github.com/ONSdigital/django-oauth2-test.git
 
-- name: ras-integration-tests-source
+- name: response-operations-ui-source
   type: git
   source:
-    uri: https://github.com/ONSdigital/ras-integration-tests.git
+    uri: https://github.com/ONSdigital/response-operations-ui.git
+
+- name: rm-action-service-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-action-service.git
+    branch: consistent-artifact-name
+
+- name: rm-actionexporter-service-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-actionexporter-service.git
+    branch: consistent-artifact-name
+
+- name: rm-case-service-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-case-service.git
+    branch: consistent-artifact-name
+
+- name: rm-collection-exercise-service-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-collection-exercise-service.git
+    branch: consistent-artifact-name
+
+- name: iac-service-source
+  type: git
+  source:
+    uri: git@github.com:ONSdigital/iac-service.git
+    branch: consistent-artifact-name
+    private_key: ((git_key))
+
+- name: rm-notify-gateway-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-notify-gateway.git
+    branch: consistent-artifact-name
+
+- name: rm-sample-service-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-sample-service.git
+    branch: consistent-artifact-name
+
+- name: rm-sdx-gateway-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-sdx-gateway.git
+    branch: consistent-artifact-name
+
+- name: rm-survey-service-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-survey-service.git
+
+- name: sdc-uaa-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/sdc-uaa.git
+
+- name: rasrm-acceptance-tests-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rasrm-acceptance-tests.git
+    branch: changing-docker-for-ci
 
 - name: cf-resource-dev
   type: cf
   source:
-    api: {{cloudfoundry_api}}
-    username: {{cloudfoundry_email}}
-    password: {{cloudfoundry_password}}
+    api: ((cloudfoundry_api))
+    username: ((cloudfoundry_email))
+    password: ((cloudfoundry_password))
     organization: rmras
     space: dev
     skip_cert_check: true
 
-- name: cf-resource-test
+- name: cf-resource-ci
   type: cf
   source:
-    api: {{cloudfoundry_api}}
-    username: {{cloudfoundry_email}}
-    password: {{cloudfoundry_password}}
+    api: ((cloudfoundry_api))
+    username: ((cloudfoundry_email))
+    password: ((cloudfoundry_password))
     organization: rmras
-    space: test
+    space: ci
     skip_cert_check: true
 
 jobs:
@@ -78,28 +132,28 @@ jobs:
     trigger: true
   - put: cf-resource-dev
     params:
-      current_app_name: concourse-ras-party.dev
+      current_app_name: concourse-ras-party-dev
       manifest: ras-party-source/manifest.yml
       path: ras-party-source
       environment_variables:
-        SECURITY_USER_NAME: {{dev_security_user_name}}
-        SECURITY_USER_PASSWORD: {{dev_security_user_password}}
-        case-service.host: 'casesvc-dev.{{cf_apps_domain}}'
-        case-service.port: '80'
-        collectionexercise-service.host: 'collectionexercisesvc-dev.{{cf_apps_domain}}'
-        collectionexercise-service.port: '80'
-        survey-service.host: 'surveysvc-dev.{{cf_apps_domain}}'
-        survey-service.port: '80'
-        oauth2-service.host: 'concourse-django-oauth2-testdev.{{cf_apps_domain}}'
-        oauth2-service.port: '80'
-        iac-service.host: 'iacsvc-dev.{{cf_apps_domain}}'
-        iac-service.port: '80'
-        frontstage-service.host: 'ras-frontstage-dev.{{cf_apps_domain}}'
-        frontstage-service.port: '80'
-        feature.send_email_to_gov_notify: 'false'
-        gov-uk-notify-service.gov_notify_api_key: {{notify_api_key}}
-        gov-uk-notify-service.gov_notify_template_id: '53c59576-8c3b-4298-99d1-b245ddd28500'
-        gov-uk-notify-service.gov_notify_service_id: 'ce3674b1-7b08-4377-a6a7-05b5722d4ea5'
+        RAS_CASE_SERVICE_HOST: 'concourse-rm-case-service-dev.apps.devtest.onsclofo.uk'
+        RAS_CASE_SERVICE_PORT: '80'
+        RAS_COLLEX_SERVICE_HOST: 'concourse-rm-collection-exercise-service-dev.apps.devtest.onsclofo.uk'
+        RAS_COLLEX_SERVICE_PORT: '80'
+        RAS_IAC_SERVICE_HOST: 'concourse-iac-service-dev.apps.devtest.onsclofo.uk'
+        RAS_IAC_SERVICE_PORT: '80'
+        RAS_NOTIFY_SERVICE_URL: 'http://concourse-rm-notify-gateway-dev.apps.devtest.onsclofo.uk/emails/'
+        RAS_OAUTH_SERVICE_HOST: 'concourse-django-oauth2-test-dev.apps.devtest.onsclofo.uk'
+        RAS_OAUTH_SERVICE_PORT: '80'
+        RAS_PUBLIC_WEBSITE_HOST: 'concourse-ras-frontstage-dev.apps.devtest.onsclofo.uk'
+        RAS_PUBLIC_WEBSITE_PORT: '80'
+        RAS_SURVEY_SERVICE_HOST: 'concourse-rm-survey-service-dev.apps.devtest.onsclofo.uk'
+        RAS_SURVEY_SERVICE_PORT: '80'
+        RAS_NOTIFY_CONFIRM_PASSWORD_CHANGE_TEMPLATE: 'ba41c152-ad96-4255-9456-9e42de83f510'
+        RAS_NOTIFY_EMAIL_VERIFICATION_TEMPLATE: '53c59576-8c3b-4298-99d1-b245ddd28500'
+        RAS_NOTIFY_REQUEST_PASSWORD_CHANGE_TEMPLATE: 'c45c59ff-7771-4de4-a66b-ce50b108390a'
+        SECURITY_USER_NAME: ((dev_security_user_name))
+        SECURITY_USER_PASSWORD: ((dev_security_user_password))
 
 - name: ras-secure-message-dev-deploy
   plan:
@@ -107,26 +161,28 @@ jobs:
     trigger: true
   - put: cf-resource-dev
     params:
-      current_app_name: concourse-ras-secure-message.dev
+      current_app_name: concourse-ras-secure-message-dev
       manifest: ras-secure-message-source/manifest.yml
       path: ras-secure-message-source
       environment_variables:
-        DEV_PORT: '8080'
         JWT_ALGORITHM: 'HS256'
-        JWT_SECRET: {{dev_secret_key}}
-        NOFITY_CASE_SERVICE: '1'
-        NOTIFICATION_API_KEY: {{notify_api_key}}
-        SERVICE_ID: 'aa1de51c-955b-4d83-83b2-d266525feacd'
+        JWT_SECRET: ((dev_jwt_secret))
+        NOTIFICATION_API_KEY: ((notify_api_key))
         NOTIFICATION_TEMPLATE_ID: 'f6404844-a994-428c-a5d7-45a4e1cfff4b'
         NOTIFY_VIA_GOV_NOTIFY: '1'
-        ONS_ENV: 'dev'
+        RM_NOTIFY_GATEWAY_URL: 'http://concourse-rm-notify-gateway-dev.apps.devtest.onsclofo.uk/emails/'
+        RAS_PARTY_SERVICE_HOST: 'concourse-ras-party-dev.apps.devtest.onsclofo.uk'
         RAS_PARTY_SERVICE_PORT: '80'
-        RAS_PARTY_SERVICE_HOST: 'concourse-ras-partydev.{{cf_apps_domain}}'
+        RM_CASE_SERVICE_HOST: 'concourse-rm-case-service-dev.apps.devtest.onsclofo.uk'
+        RM_CASE_SERVICE_PORT: '80'
         RAS_SM_PATH: '/home/vcap/app'
-        SECURITY_USER_NAME: {{dev_security_user_name}}
-        SECURITY_USER_PASSWORD: {{dev_security_user_password}}
-        SMS_LOG_LEVEL: 'DEBUG'
-        SM_JWT_ENCRYPT: '0'
+        SECURITY_USER_NAME: ((dev_security_user_name))
+        SECURITY_USER_PASSWORD: ((dev_security_user_password))
+        SERVICE_ID: 'ce3674b1-7b08-4377-a6a7-05b5722d4ea5'
+        UAA_URL: 'http://uaa-dev.apps.devtest.onsclofo.uk'
+        CLIENT_ID: 'secure_message'
+        CLIENT_SECRET: ((dev_secure_message_client_secret))
+        USE_UAA: '1'
 
 - name: ras-backstage-dev-deploy
   plan:
@@ -134,74 +190,35 @@ jobs:
     trigger: true
   - put: cf-resource-dev
     params:
-      current_app_name: concourse-ras-backstage.dev
+      current_app_name: concourse-ras-backstage-dev
       manifest: ras-backstage-source/manifest.yml
       path: ras-backstage-source
       environment_variables:
-        SECURITY_USER_NAME: {{dev_security_user_name}}
-        SECURITY_USER_PASSWORD: {{dev_security_user_password}}
-        case-service.host: 'casesvc-dev.{{cf_apps_domain}}'
-        case-service.port: '80'
-        collectionexercise-service.host: 'collectionexercisesvc-dev.{{cf_apps_domain}}'
-        collectionexercise-service.port: '80'
-        survey-service.host: 'surveysvc-dev.{{cf_apps_domain}}'
-        survey-service.port: '80'
-        oauth2-service.host: 'concourse-django-oauth2-testdev.{{cf_apps_domain}}'
-        oauth2-service.port: '80'
-        party-service.host: 'concourse-ras-partydev.{{cf_apps_domain}}'
-        party-service.port: '80'
-        secure-message-service.host: 'concourse-ras-secure-messagedev.{{cf_apps_domain}}'
-        secure-message-service.port: '80'
-        collection-instrument-service.host: 'ras-collection-instrument-dev.{{cf_apps_domain}}'
-        collection-instrument-service.port: '80'
-
-- name: ras-backstage-ui-dev-deploy
-  plan:
-  - get: ras-backstage-ui-source
-    trigger: true
-  - put: cf-resource-dev
-    params:
-      current_app_name: concourse-ras-backstage-ui.dev
-      manifest: ras-backstage-ui-source/manifest.yml
-      path: ras-backstage-ui-source
-      environment_variables:
-        ONS_ENV: 'dev'
-        SECURITY_USER_NAME: {{dev_security_user_name}}
-        SECURITY_USER_PASSWORD: {{dev_security_user_password}}
-
-- name: ras-api-gateway-dev-deploy
-  plan:
-  - get: ras-api-gateway-source
-    trigger: true
-  - put: cf-resource-dev
-    params:
-      current_app_name: concourse-ras-api-gateway.dev
-      manifest: ras-api-gateway-source/manifest.yml
-      path: ras-api-gateway-source
-      environment_variables:
-        ONS_ENV: 'dev'
-        RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: 'concourse-ras-collection-instrumentdev.{{cf_apps_domain}}'
+        RAS_SECURE_MESSAGING_JWT_SECRET: ((dev_jwt_secret))
+        RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: 'concourse-ras-collection-instrument-dev.apps.devtest.onsclofo.uk'
         RAS_COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
-        RAS_PARTY_SERVICE_HOST: 'concourse-ras-partydev.{{cf_apps_domain}}'
+        RAS_OAUTH_SERVICE_HOST: 'concourse-django-oauth2-test-dev.apps.devtest.onsclofo.uk'
+        RAS_OAUTH_SERVICE_PORT: '80'
+        RAS_PARTY_SERVICE_HOST: 'concourse-ras-party-dev.apps.devtest.onsclofo.uk'
         RAS_PARTY_SERVICE_PORT: '80'
-        RAS_SECURE_MESSAGING_SERVICE_HOST: 'concourse-ras-secure-messagedev.{{cf_apps_domain}}'
+        RAS_SECURE_MESSAGING_SERVICE_HOST: 'concourse-ras-secure-message-dev.apps.devtest.onsclofo.uk'
         RAS_SECURE_MESSAGING_SERVICE_PORT: '80'
-        RM_ACTION_SERVICE_HOST: 'actionsvc-dev.{{cf_apps_domain}}'
-        RM_ACTION_SERVICE_PORT: '80'
-        RM_CASE_SERVICE_HOST: 'casesvc-dev.{{cf_apps_domain}}'
+        RM_CASE_SERVICE_HOST: 'concourse-rm-case-service-dev.apps.devtest.onsclofo.uk'
         RM_CASE_SERVICE_PORT: '80'
-        RM_COLLECTIONEXERCISE_SERVICE_HOST: 'collectionexercisesvc-dev.{{cf_apps_domain}}'
-        RM_COLLECTIONEXERCISE_SERVICE_PORT: '80'
-        RM_IAC_SERVICE_HOST: 'iacsvc-dev.{{cf_apps_domain}}'
+        RM_COLLECTION_EXERCISE_SERVICE_HOST: 'concourse-rm-collection-exercise-service-dev.apps.devtest.onsclofo.uk'
+        RM_COLLECTION_EXERCISE_SERVICE_PORT: '80'
+        RM_IAC_SERVICE_HOST: 'concourse-iac-service-dev.apps.devtest.onsclofo.uk'
         RM_IAC_SERVICE_PORT: '80'
-        RM_NOTIFY_GATEWAY_SERVICE_HOST: 'notifygatewaysvc-dev.{{cf_apps_domain}}'
-        RM_NOTIFY_GATEWAY_SERVICE_PORT: '80'
-        RM_SAMPLE_SERVICE_HOST: 'samplesvc-dev.{{cf_apps_domain}}'
+        RM_SAMPLE_SERVICE_HOST: 'concourse-rm-sample-service-dev.apps.devtest.onsclofo.uk'
         RM_SAMPLE_SERVICE_PORT: '80'
-        RM_SURVEY_SURVEY_HOST: 'surveysvc-dev.{{cf_apps_domain}}'
-        RM_SURVEY_SURVEY_PORT: '80'
-        SECURITY_USER_NAME: {{dev_security_user_name}}
-        SECURITY_USER_PASSWORD: {{dev_security_user_password}}
+        RM_SURVEY_SERVICE_HOST: 'concourse-rm-survey-service-dev.apps.devtest.onsclofo.uk'
+        RM_SURVEY_SERVICE_PORT: '80'
+        SECURITY_USER_NAME: ((dev_security_user_name))
+        SECURITY_USER_PASSWORD: ((dev_security_user_password))
+        UAA_CLIENT_ID: 'ras_backstage'
+        UAA_CLIENT_SECRET: ((dev_backstage_client_secret))
+        UAA_SERVICE_URL: 'http://uaa-dev.apps.devtest.onsclofo.uk'
+        USE_UAA: '1'
 
 - name: ras-collection-instrument-dev-deploy
   plan:
@@ -209,18 +226,24 @@ jobs:
     trigger: true
   - put: cf-resource-dev
     params:
-      current_app_name: concourse-ras-collection-instrument.dev
+      current_app_name: concourse-ras-collection-instrument-dev
       manifest: ras-collection-instrument-source/manifest.yml
       path: ras-collection-instrument-source
       environment_variables:
-        API_GATEWAY_CASE_URL: 'http://concourse-ras-api-gatewaydev.{{cf_apps_domain}}:80/cases/'
-        API_GATEWAY_COLLECTION_EXERCISE_URL: 'http://concourse-ras-api-gatewaydev.{{cf_apps_domain}}:80/collectionexercises/'
-        API_HOST: 'concourse-ras-api-gatewaydev.{{cf_apps_domain}}'
-        API_PORT: '80'
-        ONS_ENV: 'dev'
-        RABBITMQ_AMQP: {{dev_rabbitmq_amqp}}
-        SECURITY_USER_NAME: {{dev_security_user_name}}
-        SECURITY_USER_PASSWORD: {{dev_security_user_password}}
+        CASE_SERVICE_HOST: 'concourse-rm-case-service-dev.apps.devtest.onsclofo.uk'
+        CASE_SERVICE_PORT: '80'
+        COLLECTION_EXERCISE_HOST: 'concourse-rm-collection-exercise-service-dev.apps.devtest.onsclofo.uk'
+        COLLECTION_EXERCISE_PORT: '80'
+        PARTY_SERVICE_HOST: 'concourse-ras-party-dev.apps.devtest.onsclofo.uk'
+        PARTY_SERVICE_PORT: '80'
+        JSON_SECRET_KEYS: ((dev_json_secret_keys))
+        ONS_CRYPTOKEY: ((dev_collection_instrument_encryption_key))
+        RABBITMQ_AMQP_COLLECTION_INSTRUMENT: ((dev_rabbitmq_amqp_collection_instrument))
+        RABBITMQ_AMQP_SURVEY_RESPONSE: ((dev_rabbitmq_amqp_survey_response))
+        RM_SURVEY_SERVICE_HOST: 'concourse-rm-survey-service-dev.apps.devtest.onsclofo.uk'
+        RM_SURVEY_SERVICE_PORT: '80'
+        SECURITY_USER_NAME: ((dev_security_user_name))
+        SECURITY_USER_PASSWORD: ((dev_security_user_password))
 
 - name: ras-frontstage-dev-deploy
   plan:
@@ -228,49 +251,57 @@ jobs:
     trigger: true
   - put: cf-resource-dev
     params:
-      current_app_name: concourse-ras-frontstage.dev
+      current_app_name: concourse-ras-frontstage-dev
       manifest: ras-frontstage-source/manifest.yml
       path: ras-frontstage-source
       environment_variables:
-        API_GATEWAY_AGGREGATED_SURVEYS_URL: 'http://concourse-ras-api-gatewaydev.{{cf_apps_domain}}/api/1.0.0/surveys/'
-        API_GATEWAY_COLLECTION_INSTRUMENT_URL: 'http://concourse-ras-api-gatewaydev.{{cf_apps_domain}}/collection-instrument-api/1.0.2/'
-        API_GATEWAY_PARTY_URL: 'http://concourse-ras-api-gatewaydev.{{cf_apps_domain}}/party-api/1.0.4/'
-        API_GATEWAY_SURVEYS_URL: 'http://concourse-ras-api-gatewaydev.{{cf_apps_domain}}/surveys/'
-        DEV_PORT: '8080'
-        JWT_ALGORITHM: 'HS256'
-        JWT_SECRET: {{dev_secret_key}}
-        ONS_ENV: 'test'
-        ONS_OAUTH_HOST: 'concourse-django-oauth2-testdev.{{cf_apps_domain}}'
-        ONS_OAUTH_PROTOCOL: 'http'
-        RAS_API_GATEWAY_SERVICE_HOST: 'concourse-ras-api-gatewaydev.{{cf_apps_domain}}'
-        RAS_API_GATEWAY_SERVICE_PORT: '80'
-        RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: 'concourse-ras-collection-instrumentdev.{{cf_apps_domain}}'
-        RAS_COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
-        RAS_FRONTSTAGE_CLIENT_ID: 'ons@ons.gov'
-        RAS_FRONTSTAGE_CLIENT_SECRET: 'password'
-        RAS_FRONTSTAGE_LOGGING_LEVEL: 'DEBUG'
-        RAS_PARTY_SERVICE_HOST: 'concourse-ras-partydev.{{cf_apps_domain}}'
-        RAS_PARTY_SERVICE_PORT: '80'
-        RAS_SECURE_MESSAGE_SERVICE_HOST: 'concourse-ras-secure-messagedev.{{cf_apps_domain}}'
+        JWT_SECRET: ((dev_jwt_secret))
+        RAS_FRONTSTAGE_API_HOST: 'concourse-ras-frontstage-api-dev.apps.devtest.onsclofo.uk'
+        RAS_FRONTSTAGE_API_PORT: '80'
+        RAS_SECURE_MESSAGE_SERVICE_HOST: 'concourse-ras-secure-message-dev.apps.devtest.onsclofo.uk'
         RAS_SECURE_MESSAGE_SERVICE_PORT: '80'
-        RM_CASE_SERVICE_HOST: 'casesvc-test.{{cf_apps_domain}}'
+        SECRET_KEY: ((dev_enrolement_code_encryption_key))
+        SECURITY_USER_NAME: ((dev_security_user_name))
+        SECURITY_USER_PASSWORD: ((dev_security_user_password))
+
+- name: ras-frontstage-api-dev-deploy
+  plan:
+  - get: ras-frontstage-api-source
+    trigger: true
+  - put: cf-resource-dev
+    params:
+      current_app_name: concourse-ras-frontstage-api-dev
+      manifest: ras-frontstage-api-source/manifest.yml
+      path: ras-frontstage-api-source
+      environment_variables:
+        DJANGO_CLIENT_ID: 'ons@ons.gov'
+        DJANGO_CLIENT_SECRET: 'password'
+        EQ_URL: 'https://eq-test/session?token='
+        JSON_SECRET_KEYS: ((dev_json_secret_keys))
+        RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: 'concourse-ras-collection-instrument-dev.apps.devtest.onsclofo.uk'
+        RAS_COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
+        RAS_OAUTH_SERVICE_HOST: 'concourse-django-oauth2-test-dev.apps.devtest.onsclofo.uk'
+        RAS_OAUTH_SERVICE_PORT: '80'
+        RAS_PARTY_SERVICE_HOST: 'concourse-ras-party-dev.apps.devtest.onsclofo.uk'
+        RAS_PARTY_SERVICE_PORT: '80'
+        RAS_SECURE_MESSAGE_SERVICE_HOST: 'concourse-ras-secure-message-dev.apps.devtest.onsclofo.uk'
+        RAS_SECURE_MESSAGE_SERVICE_PORT: '80'
+        RM_CASE_SERVICE_HOST: 'concourse-rm-case-service-dev.apps.devtest.onsclofo.uk'
         RM_CASE_SERVICE_PORT: '80'
-        RM_COLLECTION_EXERCISE_SERVICE_HOST: 'collectionexercisesvc-test.{{cf_apps_domain}}'
+        RM_COLLECTION_EXERCISE_SERVICE_HOST: 'concourse-rm-collection-exercise-service-dev.apps.devtest.onsclofo.uk'
         RM_COLLECTION_EXERCISE_SERVICE_PORT: '80'
-        RM_IAC_SERVICE_HOST: 'iacsvc-test.{{cf_apps_domain}}'
+        RM_IAC_SERVICE_HOST: 'concourse-iac-service-dev.apps.devtest.onsclofo.uk'
         RM_IAC_SERVICE_PORT: '80'
-        RM_SURVEY_SERVICE_HOST: 'surveysvc-test.{{cf_apps_domain}}'
+        RM_SURVEY_SERVICE_HOST: 'concourse-rm-survey-service-dev.apps.devtest.onsclofo.uk'
         RM_SURVEY_SERVICE_PORT: '80'
-        SECRET_KEY: {{dev_secret_key}}
-        SM_URL: 'http://concourse-ras-api-gatewaydev.{{cf_apps_domain}}'
-        SECURITY_USER_NAME: {{dev_security_user_name}}
-        SECURITY_USER_PASSWORD: {{dev_security_user_password}}
+        SECURITY_USER_NAME: ((dev_security_user_name))
+        SECURITY_USER_PASSWORD: ((dev_security_user_password))
 
 - name: django-oauth2-test-dev-deploy
   plan:
   - get: django-oauth2-test-source
     trigger: true
-#    Create git_info file for info end point
+  # Create git_info file for info end point
   - task: git_info
     config:
       platform: linux
@@ -304,28 +335,473 @@ jobs:
           echo '}' >> ${output}
           cd ..
           cp -r django-oauth2-test-source/* django-oauth2-test-source-git-info
-
   - put: cf-resource-dev
     params:
-      current_app_name: concourse-django-oauth2-test.dev
+      current_app_name: concourse-django-oauth2-test-dev
       manifest: django-oauth2-test-source-git-info/manifest.yml
       path: django-oauth2-test-source-git-info
       environment_variables:
-        CSRF_ENABLED: "True"
-        DEBUG: "False"
-        DJANGO_SETTINGS_MODULE: proj.settings.cloud_foundry_settings
-        OAUTH2_SUPER_USER: {{dev_oauth2_super_user}}
-        OAUTH2_SUPER_USER_EMAIL: {{dev_oauth2_super_user_email}}
-        OAUTH2_SUPER_USER_PASSWORD: {{dev_oauth2_super_user_password}}
-        SECRET_KEY: {{dev_secret_key}}
-        TESTING: "False"
-        SECURITY_USER_NAME: {{dev_security_user_name}}
-        SECURITY_USER_PASSWORD: {{dev_security_user_password}}
+        CSRF_ENABLED: 'True'
+        DEBUG: 'False'
+        DJANGO_SETTINGS_MODULE: 'proj.settings.cloud_foundry_settings'
+        OAUTH2_SUPER_USER: ((dev_oauth2_super_user))
+        OAUTH2_SUPER_USER_EMAIL: ((dev_oauth2_super_user_email))
+        OAUTH2_SUPER_USER_PASSWORD: ((dev_oauth2_super_user_password))
+        SECRET_KEY: ((dev_jwt_secret))
+        TESTING: 'False'
+        SECURITY_USER_NAME: ((dev_security_user_name))
+        SECURITY_USER_PASSWORD: ((dev_security_user_password))
 
-
-- name: ras-integration-tests
+- name: response-operations-ui-dev-deploy
   plan:
-  - get: ras-integration-tests-source
+  - get: response-operations-ui-source
+    trigger: true
+  - put: cf-resource-dev
+    params:
+      current_app_name: concourse-response-operations-ui-dev
+      manifest: response-operations-ui-source/manifest.yml
+      path: response-operations-ui-source
+      environment_variables:
+        BACKSTAGE_API_URL: 'http://concourse-ras-backstage-dev.apps.devtest.onsclofo.uk/backstage-api'
+        REDIS_SERVICE: ras-redis
+
+- name: rm-action-service-dev-deploy
+  plan:
+  - get: rm-action-service-source
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-action-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-action-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-action-service-source/pom.xml
+          cp -r rm-action-service-source/target/ .
+  - put: cf-resource-dev
+    params:
+      current_app_name: concourse-rm-action-service-dev
+      manifest: rm-action-service-source/manifest-no-envs.yml
+      path: target/actionsvc.jar
+      environment_variables:
+        partySvc_connectionConfig_host: 'concourse-ras-party-dev.apps.devtest.onsclofo.uk'
+        partySvc_connectionConfig_port: '80'
+        partySvc_connectionConfig_scheme: 'http'
+        partySvc_connectionConfig_username: ((dev_security_user_name))
+        partySvc_connectionConfig_password: ((dev_security_user_password))
+        collectionExerciseSvc_connectionConfig_host: 'concourse-rm-collection-exercise-service-dev.apps.devtest.onsclofo.uk'
+        collectionExerciseSvc_connectionConfig_port: '80'
+        collectionExerciseSvc_connectionConfig_scheme: 'http'
+        collectionExerciseSvc_connectionConfig_username: ((dev_security_user_name))
+        collectionExerciseSvc_connectionConfig_password: ((dev_security_user_password))
+        caseSvc_connectionConfig_host: 'concourse-rm-case-service-dev.apps.devtest.onsclofo.uk'
+        caseSvc_connectionConfig_port: '80'
+        caseSvc_connectionConfig_scheme: 'http'
+        caseSvc_connectionConfig_username: ((dev_security_user_name))
+        caseSvc_connectionConfig_password: ((dev_security_user_password))
+        surveySvc_connectionConfig_host: 'concourse-rm-survey-service-dev.apps.devtest.onsclofo.uk'
+        surveySvc_connectionConfig_port: '80'
+        surveySvc_connectionConfig_scheme: 'http'
+        surveySvc_connectionConfig_username: ((dev_security_user_name))
+        surveySvc_connectionConfig_password: ((dev_security_user_password))
+        endpoints_enabled: 'false'
+        security_user_name: ((dev_security_user_name))
+        security_user_password: ((dev_security_user_password))
+
+- name: rm-actionexporter-service-dev-deploy
+  plan:
+  - get: rm-actionexporter-service-source
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-actionexporter-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-actionexporter-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-actionexporter-service-source/pom.xml
+          cp -r rm-actionexporter-service-source/target/ .
+  - put: cf-resource-dev
+    params:
+      current_app_name: concourse-rm-actionexporter-service-dev
+      manifest: rm-actionexporter-service-source/manifest.yml
+      path: target/actionexportersvc.jar
+      environment_variables:
+        endpoints_enabled: 'false'
+        exportSchedule_cronExpression: '0 * * * * ?'
+        security_user_name: ((dev_security_user_name))
+        security_user_password: ((dev_security_user_password))
+        sftp_host: ((sftp_host))
+        sftp_password: ((actionexporter_sftp_password))
+        sftp_port: '22'
+        sftp_username: ((actionexporter_sftp_username))
+
+- name: rm-case-service-dev-deploy
+  plan:
+  - get: rm-case-service-source
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-case-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-case-service-source/.travis.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
+          cp -r rm-case-service-source/target/ .
+  - put: cf-resource-dev
+    params:
+      current_app_name: concourse-rm-case-service-dev
+      manifest: rm-case-service-source/manifest-no-envs.yml
+      path: target/casesvc.jar
+      environment_variables:
+        actionSvc_connectionConfig_host: 'concourse-rm-action-service-dev.apps.devtest.onsclofo.uk'
+        actionSvc_connectionConfig_password: ((dev_security_user_password))
+        actionSvc_connectionConfig_port: '80'
+        actionSvc_connectionConfig_scheme: 'http'
+        actionSvc_connectionConfig_username: ((dev_security_user_name))
+        collectionExerciseSvc_connectionConfig_host: 'concourse-rm-collection-exercise-service-dev.apps.devtest.onsclofo.uk'
+        collectionExerciseSvc_connectionConfig_password: ((dev_security_user_password))
+        collectionExerciseSvc_connectionConfig_port: '80'
+        collectionExerciseSvc_connectionConfig_scheme: 'http'
+        collectionExerciseSvc_connectionConfig_username: ((dev_security_user_name))
+        endpoints_enabled: 'false'
+        internetAccessCodeSvc_connectionConfig_host: 'concourse-iac-service-dev.apps.devtest.onsclofo.uk'
+        internetAccessCodeSvc_connectionConfig_password: ((dev_security_user_password))
+        internetAccessCodeSvc_connectionConfig_port: '80'
+        internetAccessCodeSvc_connectionConfig_scheme: 'http'
+        internetAccessCodeSvc_connectionConfig_username: ((dev_security_user_name))
+        security_user_name: ((dev_security_user_name))
+        security_user_password: ((dev_security_user_password))
+
+- name: rm-collection-exercise-dev-deploy
+  plan:
+  - get: rm-collection-exercise-service-source
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-collection-exercise-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-collection-exercise-service-source/pom.xml
+          cp -r rm-collection-exercise-service-source/target/ .
+  - put: cf-resource-dev
+    params:
+      current_app_name: concourse-rm-collection-exercise-service-dev
+      manifest: rm-collection-exercise-service-source/manifest-no-envs.yml
+      path: target/collectionexercisesvc.jar
+      environment_variables:
+        collectionInstrumentSvc_connectionConfig_host: 'concourse-ras-collection-instrument-dev.apps.devtest.onsclofo.uk'
+        collectionInstrumentSvc_connectionConfig_password: ((dev_security_user_password))
+        collectionInstrumentSvc_connectionConfig_port: '80'
+        collectionInstrumentSvc_connectionConfig_scheme: 'http'
+        collectionInstrumentSvc_connectionConfig_username: ((dev_security_user_name))
+        endpoints_enabled: 'false'
+        partySvc_connectionConfig_host: 'concourse-ras-party-dev.apps.devtest.onsclofo.uk'
+        partySvc_connectionConfig_password: ((dev_security_user_password))
+        partySvc_connectionConfig_port: '80'
+        partySvc_connectionConfig_scheme: 'http'
+        partySvc_connectionConfig_username: ((dev_security_user_name))
+        sampleSvc_connectionConfig_host: 'concourse-rm-sample-service-dev.apps.devtest.onsclofo.uk'
+        sampleSvc_connectionConfig_password: ((dev_security_user_password))
+        sampleSvc_connectionConfig_port: '80'
+        sampleSvc_connectionConfig_scheme: 'http'
+        sampleSvc_connectionConfig_username: ((dev_security_user_name))
+        security_user_name: ((dev_security_user_name))
+        security_user_password: ((dev_security_user_password))
+        surveySvc_connectionConfig_host: concourse-rm-survey-service-dev.apps.devtest.onsclofo.uk
+        surveySvc_connectionConfig_password: ((dev_security_user_password))
+        surveySvc_connectionConfig_port: '80'
+        surveySvc_connectionConfig_scheme: 'http'
+        surveySvc_connectionConfig_username: ((dev_security_user_name))
+        SCHEDULES_VALIDATION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
+        SCHEDULES_DISTRIBUTION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
+
+- name: iac-service-dev-deploy
+  plan:
+  - get: iac-service-source
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: iac-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings iac-service-source/.travis.settings.xml install -Ddockerfile.skip -f iac-service-source/pom.xml
+          cp -r iac-service-source/target/ .
+  - put: cf-resource-dev
+    params:
+      current_app_name: concourse-iac-service-dev
+      manifest: iac-service-source/manifest-no-envs.yml
+      path: target/iacsvc.jar
+      environment_variables:
+        caseSvc_connectionConfig_host: 'concourse-rm-case-service-dev.apps.devtest.onsclofo.uk'
+        caseSvc_connectionConfig_password: ((dev_security_user_password))
+        caseSvc_connectionConfig_port: '80'
+        caseSvc_connectionConfig_scheme: 'http'
+        caseSvc_connectionConfig_username: ((dev_security_user_name))
+        endpoints_enabled: 'false'
+        security_user_name: ((dev_security_user_name))
+        security_user_password: ((dev_security_user_password))
+
+- name: rm-notify-gateway-dev-deploy
+  plan:
+  - get: rm-notify-gateway-source
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-notify-gateway-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-notify-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-notify-gateway-source/pom.xml
+          cp -r rm-notify-gateway-source/target/ .
+  - put: cf-resource-dev
+    params:
+      current_app_name: concourse-rm-notify-gateway-dev
+      manifest: rm-notify-gateway-source/manifest.yml
+      path: target/notifygatewaysvc.jar
+      environment_variables:
+        endpoints_enabled: 'false'
+        notify_apiKey: ((notify_api_key))
+        notify_censusUacSmsTemplateId: '966731dc-ef2e-41ad-a828-8cdd95c81ebc'
+        notify_enabled: 'false'
+        notify_onsSurveysRasEmailReminderTemplateId: '19a0aa89-797f-4a34-ad54-267fd581f2ef'
+        security_user_name: ((dev_security_user_name))
+        security_user_password: ((dev_security_user_password))
+
+- name: rm-sample-service-dev-deploy
+  plan:
+  - get: rm-sample-service-source
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-sample-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-sample-service-source/.travis.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
+          cp -r rm-sample-service-source/target/ .
+  - put: cf-resource-dev
+    params:
+      current_app_name: concourse-rm-sample-service-dev
+      manifest: rm-sample-service-source/manifest-no-envs.yml
+      path: target/samplesvc.jar
+      environment_variables:
+        endpoints_enabled: 'false'
+        exportSchedule_cronExpression: '0 0/5 * * * ?'
+        partySvc_connectionConfig_host: 'concourse-ras-party-dev.apps.devtest.onsclofo.uk'
+        partySvc_connectionConfig_password: ((dev_security_user_password))
+        partySvc_connectionConfig_port: '80'
+        partySvc_connectionConfig_scheme: 'http'
+        partySvc_connectionConfig_username: ((dev_security_user_name))
+        security_user_name: ((dev_security_user_name))
+        security_user_password: ((dev_security_user_password))
+        sftp_host: ((sftp_host))
+        sftp_password: ((sample_sftp_password))
+        sftp_port: '22'
+        sftp_username: ((sample_sftp_username))
+
+- name: rm-sdx-gateway-dev-deploy
+  plan:
+  - get: rm-sdx-gateway-source
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-sdx-gateway-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-sdx-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-sdx-gateway-source/pom.xml
+          cp -r rm-sdx-gateway-source/target/ .
+  - put: cf-resource-dev
+    params:
+      current_app_name: concourse-rm-sdx-gateway-dev
+      manifest: rm-sdx-gateway-source/manifest.yml
+      path: target/sdxgatewaysvc.jar
+      environment_variables:
+        endpoints_enabled: 'false'
+        security_user_name: ((dev_security_user_name))
+        security_user_password: ((dev_security_user_password))
+
+- name: rm-survey-service-dev-deploy
+  plan:
+  - get: rm-survey-service-source
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: golang
+      inputs:
+        - name: rm-survey-service-source
+      outputs:
+        - name: rm-survey-service-build
+          path: rm-survey-service
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mkdir -p /go/src/github.com/ONSdigital/
+          cp -r rm-survey-service-source /go/src/github.com/ONSdigital/rm-survey-service
+          make -C /go/src/github.com/ONSdigital/rm-survey-service
+          cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
+  - put: cf-resource-dev
+    params:
+      current_app_name: concourse-rm-survey-service-dev
+      manifest: rm-survey-service-source/manifest.yml
+      path: rm-survey-service-build
+      environment_variables:
+        security_user_name: ((dev_security_user_name))
+        security_user_password: ((dev_security_user_password))
+
+- name: sdc-uaa-dev-deploy
+  plan:
+  - get: sdc-uaa-source
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: sdcplatform/maven-cf-cli-docker
+      inputs:
+        - name: sdc-uaa-source
+      outputs:
+        - name: sdc-uaa-build
+          path: sdc-uaa-build
+      params:
+        UAA_PRIVATE_KEY: ((dev_uaa_private_key))
+        UAA_CERTIFICATE: ((dev_uaa_certificate))
+        UAA_PRIVATE_KEY_PASSWORD: ((dev_uaa_private_key_password))
+        JENKINS_CF_USERNAME: ((cloudfoundry_email))
+        JENKINS_CF_PASSWORD: ((cloudfoundry_password))
+        API_ENDPOINT: ((cloudfoundry_api))
+        ORG: rmras
+        SPACE: dev
+        UAA_ID: ((dev_uaa_id))
+        UAA_SECRET: ((dev_uaa_secret))
+        UAA_JWT_SIGNING_KEY: ((dev_uaa_jwt_signing_key))
+        UAA_JWT_VERIFICATION_KEY: ((dev_uaa_jwt_verification_key))
+        UAA_URL: 'http://uaa-dev.apps.devtest.onsclofo.uk'
+        LOGIN_URL: 'http://uaa-dev.apps.devtest.onsclofo.uk'
+        ZONE_URL: 'uaa-dev.apps.devtest.onsclofo.uk'
+        ADMIN_SECRET: ((dev_uaa_admin_secret))
+        LOGIN_SECRET: ((dev_uaa_login_secret))
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          (cd sdc-uaa-source && ls && sh deploy-uaa-pre-steps.sh dev)
+          mvn install -f sdc-uaa-source/pom.xml
+          cp -r sdc-uaa-source/* sdc-uaa-build
+  - put: cf-resource-dev
+    params:
+      current_app_name: concourse-sdc-uaa-dev
+      manifest: sdc-uaa-build/uaa-cf-application.yml
+
+- name: rasrm-acceptance-tests
+  plan:
+  - get: rasrm-acceptance-tests-source
     trigger: true
   - get: ras-party-source
     passed: [ras-party-dev-deploy]
@@ -336,14 +812,14 @@ jobs:
   - get: ras-frontstage-source
     passed: [ras-frontstage-dev-deploy]
     trigger: true
-  - get: ras-api-gateway-source
-    passed: [ras-api-gateway-dev-deploy]
-    trigger: true
-  - get: ras-backstage-ui-source
-    passed: [ras-backstage-ui-dev-deploy]
+  - get: ras-frontstage-api-source
+    passed: [ras-frontstage-api-dev-deploy]
     trigger: true
   - get: django-oauth2-test-source
     passed: [django-oauth2-test-dev-deploy]
+    trigger: true
+  - get: response-operations-ui-source
+    passed: [response-operations-ui-dev-deploy]
     trigger: true
   - get: ras-secure-message-source
     passed: [ras-secure-message-dev-deploy]
@@ -351,248 +827,276 @@ jobs:
   - get: ras-collection-instrument-source
     passed: [ras-collection-instrument-dev-deploy]
     trigger: true
-  - task: build_test
+  - get: rm-action-service-source
+    passed: [rm-action-service-dev-deploy]
+    trigger: true
+  - get: rm-actionexporter-service-source
+    passed: [rm-actionexporter-service-dev-deploy]
+    trigger: true
+  - get: rm-case-service-source
+    passed: [rm-case-service-dev-deploy]
+    trigger: true
+  - get: rm-collection-exercise-service-source
+    passed: [rm-collection-exercise-dev-deploy]
+    trigger: true
+  - get: iac-service-source
+    passed: [iac-service-dev-deploy]
+    trigger: true
+  - get: rm-notify-gateway-source
+    passed: [rm-notify-gateway-dev-deploy]
+    trigger: true
+  - get: rm-sample-service-source
+    passed: [rm-sample-service-dev-deploy]
+    trigger: true
+  - get: rm-sdx-gateway-source
+    passed: [rm-sdx-gateway-dev-deploy]
+    trigger: true
+  - get: rm-survey-service-source
+    passed: [rm-survey-service-dev-deploy]
+    trigger: true
+  - get: sdc-uaa-source
+    passed: [sdc-uaa-dev-deploy]
+    trigger: true
+  - task: acceptance_test
+    privileged: true
     config:
       platform: linux
       image_resource:
         type: docker-image
         source:
-          repository: python
+          repository: sdcplatform/python-pipenv-chrome
           tag: "latest"
       inputs:
-        - name: ras-integration-tests-source
+        - name: rasrm-acceptance-tests-source
+      params:
+        DATABASE_URI: ((DATABASE_URI))
+        DJANGO_OAUTH_DATABASE_URI: ((DJANGO_OAUTH_DATABASE_URI))
+        PARTY_DATABASE_URI: ((PARTY_DATABASE_URI))
+        SECURE_MESSAGE_DATABASE_URI: ((SECURE_MESSAGE_DATABASE_URI))
+        COLLECTION_INSTRUMENT_DATABASE_URI: ((COLLECTION_INSTRUMENT_DATABASE_URI))
+        RESPONSE_OPERATIONS_UI_HOST: 'concourse-response-operations-ui-dev.apps.devtest.onsclofo.uk'
+        RESPONSE_OPERATIONS_UI_PORT: '80'
+        ACTION_SERVICE_HOST: 'concourse-rm-action-service-dev.apps.devtest.onsclofo.uk'
+        ACTION_SERVICE_PORT: '80'
+        ACTION_EXPORTER_HOST: 'concourse-rm-actionexporter-service-dev.apps.devtest.onsclofo.uk'
+        ACTION_EXPORTER_PORT: '80'
+        BACKSTAGE_SERVICE_HOST: 'concourse-ras-backstage-dev.apps.devtest.onsclofo.uk'
+        BACKSTAGE_SERVICE_PORT: '80'
+        CASE_SERVICE_HOST: 'concourse-rm-case-service-dev.apps.devtest.onsclofo.uk'
+        CASE_SERVICE_PORT: '80'
+        COLLECTION_EXERCISE_SERVICE_HOST: 'concourse-rm-collection-exercise-service-dev.apps.devtest.onsclofo.uk'
+        COLLECTION_EXERCISE_SERVICE_PORT: '80'
+        COLLECTION_INSTRUMENT_SERVICE_HOST: 'concourse-ras-collection-instrument-dev.apps.devtest.onsclofo.uk'
+        COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
+        DJANGO_SERVICE_HOST: 'concourse-django-oauth2-test-dev.apps.devtest.onsclofo.uk'
+        DJANGO_SERVICE_PORT: '80'
+        FRONTSTAGE_API_SERVICE_HOST: 'concourse-ras-frontstage-api-dev.apps.devtest.onsclofo.uk'
+        FRONTSTAGE_API_SERVICE_PORT: '80'
+        FRONTSTAGE_SERVICE_HOST: 'concourse-ras-frontstage-dev.apps.devtest.onsclofo.uk'
+        FRONTSTAGE_SERVICE_PORT: '80'
+        IAC_SERVICE_HOST: 'concourse-iac-service-dev.apps.devtest.onsclofo.uk'
+        IAC_SERVICE_PORT: '80'
+        NOTIFY_GATEWAY_SERVICE_HOST: 'concourse-rm-notify-gateway-dev.apps.devtest.onsclofo.uk'
+        NOTIFY_GATEWAY_SERVICE_PORT: '80'
+        PARTY_SERVICE_HOST: 'concourse-ras-party-dev.apps.devtest.onsclofo.uk'
+        PARTY_SERVICE_PORT: '80'
+        RESPONSE_OPERATIONS_UI_HOST: 'concourse-response-operations-ui-dev.apps.devtest.onsclofo.uk'
+        RESPONSE_OPERATIONS_UI_PORT: '80'
+        SAMPLE_SERVICE_HOST: 'concourse-rm-sample-service-dev.apps.devtest.onsclofo.uk'
+        SAMPLE_SERVICE_PORT: '80'
+        SECURE_MESSAGE_SERVICE_HOST: 'concourse-ras-secure-message-dev.apps.devtest.onsclofo.uk'
+        SECURE_MESSAGE_SERVICE_PORT: '80'
+        SURVEY_SERVICE_HOST: 'concourse-rm-survey-service-dev.apps.devtest.onsclofo.uk'
+        SURVEY_SERVICE_PORT: '80'
+        SECURITY_USER_NAME: ((dev_security_user_name))
+        SECURITY_USER_PASSWORD: ((dev_security_user_password))
       run:
         path: sh
         args:
         - -exc
         - |
-          echo "Passed"
+          pipenv install --dev
+          make setup wait_for_services acceptance_tests
+        dir: rasrm-acceptance-tests-source
 
-- name: ras-party-test-deploy
+- name: ras-party-ci-deploy
   plan:
   - get: ras-party-source
-    passed: [ras-integration-tests]
+    passed: [rasrm-acceptance-tests]
     trigger: true
-  - put: cf-resource-test
+  - put: cf-resource-ci
     params:
-      current_app_name: concourse-ras-party.test
+      current_app_name: concourse-ras-party-ci
       manifest: ras-party-source/manifest.yml
       path: ras-party-source
       environment_variables:
-        SECURITY_USER_NAME: {{test_security_user_name}}
-        SECURITY_USER_PASSWORD: {{test_security_user_password}}
-        case-service.host: 'casesvc-test.{{cf_apps_domain}}'
-        case-service.port: '80'
-        collectionexercise-service.host: 'collectionexercisesvc-test.{{cf_apps_domain}}'
-        collectionexercise-service.port: '80'
-        survey-service.host: 'surveysvc-test.{{cf_apps_domain}}'
-        survey-service.port: '80'
-        oauth2-service.host: 'concourse-django-oauth2-testtest.{{cf_apps_domain}}'
-        oauth2-service.port: '80'
-        iac-service.host: 'iacsvc-test.{{cf_apps_domain}}'
-        iac-service.port: '80'
-        frontstage-service.host: 'concourse-ras-frontstagetest.{{cf_apps_domain}}'
-        frontstage-service.port: '80'
-        api-gateway.host: 'concourse-ras-api-gatewaytest.{{cf_apps_domain}}'
-        frontstage-service.port: '80'
-        features.gateway_registration: 'true'
-        feature.send_email_to_gov_notify: 'true'
-        gov-uk-notify-service.gov_notify_api_key: {{notify_api_key}}
-        gov-uk-notify-service.gov_notify_template_id: '53c59576-8c3b-4298-99d1-b245ddd28500'
-        gov-uk-notify-service.gov_notify_service_id: 'ce3674b1-7b08-4377-a6a7-05b5722d4ea5'
-        PUBLIC_EMAIL_VERIFICATION_URL: 'www.ons.gov.uk/surveys/get-started'
-        SECRET_KEY: 'aardvark'
-        EMAIL_TOKEN_SALT: 'sdc'
+        RAS_CASE_SERVICE_HOST: 'concourse-rm-case-service-ci.apps.devtest.onsclofo.uk'
+        RAS_CASE_SERVICE_PORT: '80'
+        RAS_COLLEX_SERVICE_HOST: 'concourse-collectionexercisesvc-ci.apps.devtest.onsclofo.uk'
+        RAS_COLLEX_SERVICE_PORT: '80'
+        RAS_IAC_SERVICE_HOST: 'concourse-iac-service-ci.apps.devtest.onsclofo.uk'
+        RAS_IAC_SERVICE_PORT: '80'
+        RAS_NOTIFY_SERVICE_URL: 'http://concourse-rm-notify-gateway-ci.apps.devtest.onsclofo.uk/emails/'
+        RAS_OAUTH_SERVICE_HOST: 'concourse-ras-django-ci.apps.devtest.onsclofo.uk'
+        RAS_OAUTH_SERVICE_PORT: '80'
+        RAS_PUBLIC_WEBSITE_HOST: 'concourse-ras-frontstage-ci.apps.devtest.onsclofo.uk'
+        RAS_PUBLIC_WEBSITE_PORT: '80'
+        RAS_SURVEY_SERVICE_HOST: 'concourse-rm-survey-service-ci.apps.devtest.onsclofo.uk'
+        RAS_SURVEY_SERVICE_PORT: '80'
+        RAS_NOTIFY_CONFIRM_PASSWORD_CHANGE_TEMPLATE: 'ba41c152-ad96-4255-9456-9e42de83f510'
+        RAS_NOTIFY_EMAIL_VERIFICATION_TEMPLATE: '53c59576-8c3b-4298-99d1-b245ddd28500'
+        RAS_NOTIFY_REQUEST_PASSWORD_CHANGE_TEMPLATE: 'c45c59ff-7771-4de4-a66b-ce50b108390a'
+        SECURITY_USER_NAME: ((ci_security_user_name))
+        SECURITY_USER_PASSWORD: ((ci_security_user_password))
 
-- name: ras-secure-message-test-deploy
+- name: ras-secure-message-ci-deploy
   plan:
   - get: ras-secure-message-source
-    passed: [ras-integration-tests]
+    passed: [rasrm-acceptance-tests]
     trigger: true
-  - put: cf-resource-test
+  - put: cf-resource-ci
     params:
-      current_app_name: concourse-ras-secure-message.test
+      current_app_name: ras-secure-message-ci
       manifest: ras-secure-message-source/manifest.yml
       path: ras-secure-message-source
       environment_variables:
-        DEV_PORT: '8080'
-        NOFITY_CASE_SERVICE: '1'
-        NOTIFICATION_API_KEY: {{notify_api_key}}
-        SERVICE_ID: 'aa1de51c-955b-4d83-83b2-d266525feacd'
+        JWT_ALGORITHM: 'HS256'
+        JWT_SECRET: ((ci_jwt_secret))
+        NOTIFICATION_API_KEY: ((notify_api_key))
         NOTIFICATION_TEMPLATE_ID: 'f6404844-a994-428c-a5d7-45a4e1cfff4b'
         NOTIFY_VIA_GOV_NOTIFY: '1'
-        NOTIFY_VIA_LOGGING: '1'
-        ONS_ENV: 'test'
+        RAS_PARTY_SERVICE_HOST: 'concourse-ras-party-ci.apps.devtest.onsclofo.uk'
         RAS_PARTY_SERVICE_PORT: '80'
-        RAS_PARTY_SERVICE_HOST: 'concourse-ras-partytest.{{cf_apps_domain}}'
         RAS_SM_PATH: '/home/vcap/app'
-        SECURITY_USER_NAME: {{test_security_user_name}}
-        SECURITY_USER_PASSWORD: {{test_security_user_password}}
-        SMS_LOG_LEVEL: 'DEBUG'
-        SM_JWT_ENCRYPT: '0'
+        SECURITY_USER_NAME: ((ci_security_user_name))
+        SECURITY_USER_PASSWORD: ((ci_security_user_password))
+        SERVICE_ID: 'ce3674b1-7b08-4377-a6a7-05b5722d4ea5'
+        UAA_URL: 'http://uaa-ci.apps.devtest.onsclofo.uk'
+        CLIENT_ID: 'secure_message'
+        CLIENT_SECRET: ((ci_secure_message_client_secret))
+        USE_UAA: '1'
 
-- name: ras-backstage-test-deploy
+- name: ras-backstage-ci-deploy
   plan:
   - get: ras-backstage-source
-    passed: [ras-integration-tests]
+    passed: [rasrm-acceptance-tests]
     trigger: true
-  - put: cf-resource-test
+  - put: cf-resource-ci
     params:
-      current_app_name: concourse-ras-backstage.test
+      current_app_name: concourse-ras-backstage-ci
       manifest: ras-backstage-source/manifest.yml
       path: ras-backstage-source
       environment_variables:
-        SECURITY_USER_NAME: {{test_security_user_name}}
-        SECURITY_USER_PASSWORD: {{test_security_user_password}}
-        case-service.host: 'casesvc-test.{{cf_apps_domain}}'
-        case-service.port: '80'
-        collectionexercise-service.host: 'collectionexercisesvc-test.{{cf_apps_domain}}'
-        collectionexercise-service.port: '80'
-        survey-service.host: 'surveysvc-test.{{cf_apps_domain}}'
-        survey-service.port: '80'
-        oauth2-service.host: 'concourse-django-oauth2-testtest.{{cf_apps_domain}}'
-        oauth2-service.port: '80'
-        iac-service.host: 'iacsvc-test.{{cf_apps_domain}}'
-        iac-service.port: '80'
-        frontstage-service.host: 'concourse-ras-frontstagetest.{{cf_apps_domain}}'
-        frontstage-service.port: '80'
-        api-gateway.host: 'concourse-ras-api-gatewaytest.{{cf_apps_domain}}'
-        api-gateway.port: '80'
-        features.gateway_registration: 'true'
-        party-service.host: 'concourse-ras-partytest.{{cf_apps_domain}}'
-        party-service.port: '80'
-        secure-message-service.host: 'concourse-ras-secure-messagetest.{{cf_apps_domain}}'
-        secure-message-service.port: '80'
-        collection-instrument-service.host: 'ras-collection-instrument-test.{{cf_apps_domain}}'
-        collection-instrument-service.port: '80'
-        SECRET_KEY: {{test_secret_key}}
-
-- name: ras-backstage-ui-test-deploy
-  plan:
-  - get: ras-backstage-ui-source
-    passed: [ras-integration-tests]
-    trigger: true
-  - put: cf-resource-test
-    params:
-      current_app_name: concourse-ras-backstage-ui.test
-      manifest: ras-backstage-ui-source/manifest.yml
-      path: ras-backstage-ui-source
-      environment_variables:
-        ONS_ENV: 'test'
-        SECURITY_USER_NAME: {{test_security_user_name}}
-        SECURITY_USER_PASSWORD: {{test_security_user_password}}
-
-- name: ras-api-gateway-test-deploy
-  plan:
-  - get: ras-api-gateway-source
-    passed: [ras-integration-tests]
-    trigger: true
-  - put: cf-resource-test
-    params:
-      current_app_name: concourse-ras-api-gateway.test
-      manifest: ras-api-gateway-source/manifest.yml
-      path: ras-api-gateway-source
-      environment_variables:
-        ONS_ENV: 'test'
-        RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: 'concourse-ras-collection-instrumenttest.{{cf_apps_domain}}'
+        RAS_SECURE_MESSAGING_JWT_SECRET: ((ci_jwt_secret))
+        RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: 'concourse-ras-collection-instrument-ci.apps.devtest.onsclofo.uk'
         RAS_COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
-        RAS_PARTY_SERVICE_HOST: 'concourse-ras-partytest.{{cf_apps_domain}}'
+        RAS_OAUTH_SERVICE_HOST: 'concourse-ras-django-ci.apps.devtest.onsclofo.uk'
+        RAS_OAUTH_SERVICE_PORT: '80'
+        RAS_PARTY_SERVICE_HOST: 'concourse-ras-party-ci.apps.devtest.onsclofo.uk'
         RAS_PARTY_SERVICE_PORT: '80'
-        RAS_SECURE_MESSAGING_SERVICE_HOST: 'concourse-ras-secure-messagetest.{{cf_apps_domain}}'
+        RAS_SECURE_MESSAGING_SERVICE_HOST: 'concourse-ras-secure-message-ci.apps.devtest.onsclofo.uk'
         RAS_SECURE_MESSAGING_SERVICE_PORT: '80'
-        RM_ACTION_SERVICE_HOST: 'actionsvc-test.{{cf_apps_domain}}'
-        RM_ACTION_SERVICE_PORT: '80'
-        RM_CASE_SERVICE_HOST: 'casesvc-test.{{cf_apps_domain}}'
+        RM_CASE_SERVICE_HOST: 'concourse-rm-case-service-ci.apps.devtest.onsclofo.uk'
         RM_CASE_SERVICE_PORT: '80'
-        RM_COLLECTIONEXERCISE_SERVICE_HOST: 'collectionexercisesvc-test.{{cf_apps_domain}}'
-        RM_COLLECTIONEXERCISE_SERVICE_PORT: '80'
-        RM_IAC_SERVICE_HOST: 'iacsvc-test.{{cf_apps_domain}}'
+        RM_COLLECTION_EXERCISE_SERVICE_HOST: 'concourse-collectionexercisesvc-ci.apps.devtest.onsclofo.uk'
+        RM_COLLECTION_EXERCISE_SERVICE_PORT: '80'
+        RM_IAC_SERVICE_HOST: 'concourse-iac-service-ci.apps.devtest.onsclofo.uk'
         RM_IAC_SERVICE_PORT: '80'
-        RM_NOTIFY_GATEWAY_SERVICE_HOST: 'notifygatewaysvc-test.{{cf_apps_domain}}'
-        RM_NOTIFY_GATEWAY_SERVICE_PORT: '80'
-        RM_SAMPLE_SERVICE_HOST: 'samplesvc-test.{{cf_apps_domain}}'
+        RM_SAMPLE_SERVICE_HOST: 'concourse-rm-sample-service-ci.apps.devtest.onsclofo.uk'
         RM_SAMPLE_SERVICE_PORT: '80'
-        RM_SURVEY_SURVEY_HOST: 'surveysvc-test.{{cf_apps_domain}}'
-        RM_SURVEY_SURVEY_PORT: '80'
-        SECURITY_USER_NAME: {{test_security_user_name}}
-        SECURITY_USER_PASSWORD: {{test_security_user_password}}
-        LOG_FORMAT: 'json'
+        RM_SURVEY_SERVICE_HOST: 'concourse-rm-survey-service-ci.apps.devtest.onsclofo.uk'
+        RM_SURVEY_SERVICE_PORT: '80'
+        SECURITY_USER_NAME: ((ci_security_user_name))
+        SECURITY_USER_PASSWORD: ((ci_security_user_password))
+        UAA_CLIENT_ID: 'ras_backstage'
+        UAA_CLIENT_SECRET: ((ci_backstage_client_secret))
+        UAA_SERVICE_URL: 'http://uaa-ci.apps.devtest.onsclofo.uk'
+        USE_UAA: '1'
 
-- name: ras-collection-instrument-test-deploy
+- name: ras-collection-instrument-ci-deploy
   plan:
   - get: ras-collection-instrument-source
-    passed: [ras-integration-tests]
+    passed: [rasrm-acceptance-tests]
     trigger: true
-  - put: cf-resource-test
+  - put: cf-resource-ci
     params:
-      current_app_name: concourse-ras-collection-instrument.test
+      current_app_name: concourse-ras-collection-instrument-ci
       manifest: ras-collection-instrument-source/manifest.yml
       path: ras-collection-instrument-source
       environment_variables:
-        API_GATEWAY_CASE_URL: 'http://concourse-ras-api-gatewaytest.{{cf_apps_domain}}:80/cases/'
-        API_GATEWAY_COLLECTION_EXERCISE_URL: 'http://concourse-ras-api-gatewaytest.{{cf_apps_domain}}:80/collectionexercises/'
-        API_GATEWAY_SURVEY_SERVICE_URL: 'http://concourse-ras-api-gatewaytest.{{cf_apps_domain}}:80/surveys/'
-        API_HOST: 'concourse-ras-api-gatewaytest.{{cf_apps_domain}}'
-        API_PORT: '80'
-        ONS_ENV: 'test'
-        RABBITMQ_AMQP: {{test_rabbitmq_amqp}}
-        SECURITY_USER_NAME: {{test_security_user_name}}
-        SECURITY_USER_PASSWORD: {{test_security_user_password}}
-        ONS_CRYPTOKEY: {{test_ons_cryptokey}}
-        JSON_SECRET_KEYS: {{test_json_secret_keys}}
-        LOG_FORMAT: 'json'
+        CASE_SERVICE_HOST: 'concourse-rm-case-service-ci.apps.devtest.onsclofo.uk'
+        CASE_SERVICE_PORT: '80'
+        COLLECTION_EXERCISE_HOST: 'concourse-collectionexercisesvc-ci.apps.devtest.onsclofo.uk'
+        COLLECTION_EXERCISE_PORT: '80'
+        PARTY_SERVICE_HOST: 'concourse-ras-party-ci.apps.devtest.onsclofo.uk'
+        PARTY_SERVICE_PORT: '80'
+        JSON_SECRET_KEYS: ((ci_json_secret_keys))
+        ONS_CRYPTOKEY: ((ci_collection_instrument_encryption_key))
+        RABBITMQ_AMQP_COLLECTION_INSTRUMENT: ((ci_rabbitmq_amqp_collection_instrument))
+        RABBITMQ_AMQP_SURVEY_RESPONSE: ((ci_rabbitmq_amqp_survey_response))
+        RM_SURVEY_SERVICE_HOST: 'concourse-rm-survey-service-ci.apps.devtest.onsclofo.uk'
+        RM_SURVEY_SERVICE_PORT: '80'
+        SECURITY_USER_NAME: ((ci_security_user_name))
+        SECURITY_USER_PASSWORD: ((ci_security_user_password))
 
-- name: ras-frontstage-test-deploy
+- name: ras-frontstage-ci-deploy
   plan:
   - get: ras-frontstage-source
-    passed: [ras-integration-tests]
+    passed: [rasrm-acceptance-tests]
     trigger: true
-  - put: cf-resource-test
+  - put: cf-resource-ci
     params:
-      current_app_name: concourse-ras-frontstage.test
+      current_app_name: concourse-ras-frontstage-ci
       manifest: ras-frontstage-source/manifest.yml
       path: ras-frontstage-source
       environment_variables:
-        API_GATEWAY_AGGREGATED_SURVEYS_URL: 'http://concourse-ras-api-gatewaytest.{{cf_apps_domain}}/api/1.0.0/surveys/'
-        API_GATEWAY_COLLECTION_INSTRUMENT_URL: 'http://concourse-ras-api-gatewaytest.{{cf_apps_domain}}/collection-instrument-api/1.0.2/'
-        API_GATEWAY_PARTY_URL: 'http://concourse-ras-api-gatewaytest.{{cf_apps_domain}}/party-api/1.0.4/'
-        API_GATEWAY_SURVEYS_URL: 'http://concourse-ras-api-gatewaytest.{{cf_apps_domain}}/surveys/'
-        DEV_PORT: '8080'
-        JWT_ALGORITHM: 'HS256'
-        JWT_SECRET: {{test_secret_key}}
-        ONS_ENV: 'test'
-        ONS_OAUTH_HOST: 'concourse-django-oauth2-testtest.{{cf_apps_domain}}'
-        ONS_OAUTH_PROTOCOL: 'http'
-        RAS_API_GATEWAY_SERVICE_HOST: 'concourse-ras-api-gatewaytest.{{cf_apps_domain}}'
-        RAS_API_GATEWAY_SERVICE_PORT: '80'
-        RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: 'concourse-ras-collection-instrumenttest.{{cf_apps_domain}}'
-        RAS_COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
-        RAS_FRONTSTAGE_CLIENT_ID: 'ons@ons.gov'
-        RAS_FRONTSTAGE_CLIENT_SECRET: 'password'
-        RAS_FRONTSTAGE_LOGGING_LEVEL: 'DEBUG'
-        RAS_PARTY_SERVICE_HOST: 'concourse-ras-partytest.{{cf_apps_domain}}'
-        RAS_PARTY_SERVICE_PORT: '80'
-        RAS_SECURE_MESSAGE_SERVICE_HOST: 'concourse-ras-secure-messagetest.{{cf_apps_domain}}'
-        RAS_SECURE_MESSAGE_SERVICE_PORT: '80'
-        RM_CASE_SERVICE_HOST: 'casesvc-test.{{cf_apps_domain}}'
-        RM_CASE_SERVICE_PORT: '80'
-        RM_COLLECTION_EXERCISE_SERVICE_HOST: 'collectionexercisesvc-test.{{cf_apps_domain}}'
-        RM_COLLECTION_EXERCISE_SERVICE_PORT: '80'
-        RM_IAC_SERVICE_HOST: 'iacsvc-test.{{cf_apps_domain}}'
-        RM_IAC_SERVICE_PORT: '80'
-        RM_SURVEY_SERVICE_HOST: 'surveysvc-test.{{cf_apps_domain}}'
-        RM_SURVEY_SERVICE_PORT: '80'
-        SECRET_KEY: {{test_secret_key}}
-        SM_URL: 'http://concourse-ras-api-gatewaytest.{{cf_apps_domain}}'
-        SECURITY_USER_NAME: {{test_security_user_name}}
-        SECURITY_USER_PASSWORD: {{test_security_user_password}}
+        JWT_SECRET: ((ci_jwt_secret))
+        RAS_FRONTSTAGE_API_HOST: 'concourse-ras-frontstage-api-ci.apps.devtest.onsclofo.uk'
+        RAS_FRONTSTAGE_API_PORT: '80'
+        SECRET_KEY: ((ci_enrolement_code_encryption_key))
+        SECURITY_USER_NAME: ((ci_security_user_name))
+        SECURITY_USER_PASSWORD: ((ci_security_user_password))
 
-- name: django-oauth2-test-test-deploy
+- name: ras-frontstage-api-ci-deploy
+  plan:
+  - get: ras-frontstage-api-source
+    trigger: true
+    passed: [rasrm-acceptance-tests]
+  - put: cf-resource-ci
+    params:
+      current_app_name: concourse-ras-frontstage-api-ci
+      manifest: ras-frontstage-api-source/manifest.yml
+      path: ras-frontstage-api-source
+      environment_variables:
+        DJANGO_CLIENT_ID: 'ons@ons.gov'
+        DJANGO_CLIENT_SECRET: 'password'
+        EQ_URL: 'https://eq.onsdigital.uk/session?token='
+        JSON_SECRET_KEYS: ((ci_json_secret_keys))
+        RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: 'concourse-ras-collection-instrument-ci.apps.devtest.onsclofo.uk'
+        RAS_COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
+        RAS_OAUTH_SERVICE_HOST: 'concourse-ras-django-ci.apps.devtest.onsclofo.uk'
+        RAS_OAUTH_SERVICE_PORT: '80'
+        RAS_PARTY_SERVICE_HOST: 'concourse-ras-party-ci.apps.devtest.onsclofo.uk'
+        RAS_PARTY_SERVICE_PORT: '80'
+        RAS_SECURE_MESSAGE_SERVICE_HOST: 'concourse-ras-secure-message-ci.apps.devtest.onsclofo.uk'
+        RAS_SECURE_MESSAGE_SERVICE_PORT: '80'
+        RM_CASE_SERVICE_HOST: 'concourse-rm-case-service-ci.apps.devtest.onsclofo.uk'
+        RM_CASE_SERVICE_PORT: '80'
+        RM_COLLECTION_EXERCISE_SERVICE_HOST: 'concourse-collectionexercisesvc-ci.apps.devtest.onsclofo.uk'
+        RM_COLLECTION_EXERCISE_SERVICE_PORT: '80'
+        RM_IAC_SERVICE_HOST: 'concourse-iac-service-ci.apps.devtest.onsclofo.uk'
+        RM_IAC_SERVICE_PORT: '80'
+        RM_SURVEY_SERVICE_HOST: 'concourse-rm-survey-service-ci.apps.devtest.onsclofo.uk'
+        RM_SURVEY_SERVICE_PORT: '80'
+        SECURITY_USER_NAME: ((ci_security_user_name))
+        SECURITY_USER_PASSWORD: ((ci_security_user_password))
+
+- name: django-oauth2-test-ci-deploy
   plan:
   - get: django-oauth2-test-source
-    passed: [ras-integration-tests]
+    passed: [rasrm-acceptance-tests]
     trigger: true
-#    Create git_info file for info end point
+  # Create git_info file for info end point
   - task: git_info
     config:
       platform: linux
@@ -626,19 +1130,479 @@ jobs:
           echo '}' >> ${output}
           cd ..
           cp -r django-oauth2-test-source/* django-oauth2-test-source-git-info
-  - put: cf-resource-test
+
+  - put: cf-resource-ci
     params:
-      current_app_name: concourse-django-oauth2-test.test
+      current_app_name: concourse-django-oauth2-test-ci
       manifest: django-oauth2-test-source-git-info/manifest.yml
       path: django-oauth2-test-source-git-info
       environment_variables:
-        CSRF_ENABLED: "True"
-        DEBUG: "False"
-        DJANGO_SETTINGS_MODULE: proj.settings.cloud_foundry_settings
-        OAUTH2_SUPER_USER: {{test_oauth2_super_user}}
-        OAUTH2_SUPER_USER_EMAIL: {{test_oauth2_super_user_email}}
-        OAUTH2_SUPER_USER_PASSWORD: {{test_oauth2_super_user_password}}
-        SECRET_KEY: {{test_secret_key}}
-        TESTING: "False"
-        SECURITY_USER_NAME: {{test_security_user_name}}
-        SECURITY_USER_PASSWORD: {{test_security_user_password}}
+        CSRF_ENABLED: 'True'
+        DEBUG: 'False'
+        DJANGO_SETTINGS_MODULE: 'proj.settings.cloud_foundry_settings'
+        OAUTH2_SUPER_USER: ((ci_oauth2_super_user))
+        OAUTH2_SUPER_USER_EMAIL: ((ci_oauth2_super_user_email))
+        OAUTH2_SUPER_USER_PASSWORD: ((ci_oauth2_super_user_password))
+        SECRET_KEY: ((ci_jwt_secret))
+        TESTING: 'False'
+        SECURITY_USER_NAME: ((ci_security_user_name))
+        SECURITY_USER_PASSWORD: ((ci_security_user_password))
+
+- name: response-operations-ui-ci-deploy
+  plan:
+  - get: response-operations-ui-source
+    passed: [rasrm-acceptance-tests]
+    trigger: true
+  - put: cf-resource-ci
+    params:
+      current_app_name: concourse-response-operations-ui-ci
+      manifest: response-operations-ui-source/manifest.yml
+      path: response-operations-ui-source
+      environment_variables:
+        BACKSTAGE_API_URL: 'http://concourse-ras-backstage-ci.apps.devtest.onsclofo.uk'
+        REDIS_SERVICE: ras-redis
+
+- name: rm-action-service-ci-deploy
+  plan:
+  - get: rm-action-service-source
+    passed: [rasrm-acceptance-tests]
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-action-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-action-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-action-service-source/pom.xml
+          cp -r rm-action-service-source/target/ .
+  - put: cf-resource-ci
+    params:
+      current_app_name: concourse-rm-action-service-ci
+      manifest: rm-action-service-source/manifest-no-envs.yml
+      path: target/actionsvc.jar
+      environment_variables:
+        partySvc_connectionConfig_host: 'concourse-ras-party-ci.apps.devtest.onsclofo.uk'
+        partySvc_connectionConfig_port: '80'
+        partySvc_connectionConfig_scheme: 'http'
+        partySvc_connectionConfig_username: ((ci_security_user_name))
+        partySvc_connectionConfig_password: ((ci_security_user_password))
+        collectionExerciseSvc_connectionConfig_host: 'concourse-collectionexercisesvc-ci.apps.devtest.onsclofo.uk'
+        collectionExerciseSvc_connectionConfig_port: '80'
+        collectionExerciseSvc_connectionConfig_scheme: 'http'
+        collectionExerciseSvc_connectionConfig_username: ((ci_security_user_name))
+        collectionExerciseSvc_connectionConfig_password: ((ci_security_user_password))
+        caseSvc_connectionConfig_host: 'concourse-rm-case-service-ci.apps.devtest.onsclofo.uk'
+        caseSvc_connectionConfig_port: '80'
+        caseSvc_connectionConfig_scheme: 'http'
+        caseSvc_connectionConfig_username: ((ci_security_user_name))
+        caseSvc_connectionConfig_password: ((ci_security_user_password))
+        surveySvc_connectionConfig_host: 'concourse-rm-survey-service-ci.apps.devtest.onsclofo.uk'
+        surveySvc_connectionConfig_port: '80'
+        surveySvc_connectionConfig_scheme: 'http'
+        surveySvc_connectionConfig_username: ((ci_security_user_name))
+        surveySvc_connectionConfig_password: ((ci_security_user_password))
+        endpoints_enabled: 'false'
+        security_user_name: ((ci_security_user_name))
+        security_user_password: ((ci_security_user_password))
+
+- name: rm-actionexporter-service-ci-deploy
+  plan:
+  - get: rm-actionexporter-service-source
+    passed: [rasrm-acceptance-tests]
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-actionexporter-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-actionexporter-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-actionexporter-service-source/pom.xml
+          cp -r rm-actionexporter-service-source/target/ .
+  - put: cf-resource-ci
+    params:
+      current_app_name: concourse-rm-actionexporter-service-ci
+      manifest: rm-actionexporter-service-source/manifest.yml
+      path: target/actionexportersvc.jar
+      environment_variables:
+        endpoints_enabled: 'false'
+        exportSchedule_cronExpression: '0 * * * * ?'
+        security_user_name: ((ci_security_user_name))
+        security_user_password: ((ci_security_user_password))
+        sftp_host: ((sftp_host))
+        sftp_password: ((actionexporter_sftp_password))
+        sftp_port: '22'
+        sftp_username: ((actionexporter_sftp_username))
+
+- name: rm-case-service-ci-deploy
+  plan:
+  - get: rm-case-service-source
+    passed: [rasrm-acceptance-tests]
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-case-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-case-service-source/.travis.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
+          cp -r rm-case-service-source/target/ .
+  - put: cf-resource-ci
+    params:
+      current_app_name: concourse-rm-case-service-ci
+      manifest: rm-case-service-source/manifest-no-envs.yml
+      path: target/casesvc.jar
+      environment_variables:
+        actionSvc_connectionConfig_host: 'concourse-rm-action-service-ci.apps.devtest.onsclofo.uk'
+        actionSvc_connectionConfig_password: ((ci_security_user_password))
+        actionSvc_connectionConfig_port: '80'
+        actionSvc_connectionConfig_scheme: 'http'
+        actionSvc_connectionConfig_username: ((ci_security_user_name))
+        collectionExerciseSvc_connectionConfig_host: 'concourse-collectionexercisesvc-ci.apps.devtest.onsclofo.uk'
+        collectionExerciseSvc_connectionConfig_password: ((ci_security_user_password))
+        collectionExerciseSvc_connectionConfig_port: '80'
+        collectionExerciseSvc_connectionConfig_scheme: 'http'
+        collectionExerciseSvc_connectionConfig_username: ((ci_security_user_name))
+        endpoints_enabled: 'false'
+        internetAccessCodeSvc_connectionConfig_host: 'concourse-iac-service-ci.apps.devtest.onsclofo.uk'
+        internetAccessCodeSvc_connectionConfig_password: ((ci_security_user_password))
+        internetAccessCodeSvc_connectionConfig_port: '80'
+        internetAccessCodeSvc_connectionConfig_scheme: 'http'
+        internetAccessCodeSvc_connectionConfig_username: ((ci_security_user_name))
+        security_user_name: ((ci_security_user_name))
+        security_user_password: ((ci_security_user_password))
+
+- name: rm-collection-exercise-ci-deploy
+  plan:
+  - get: rm-collection-exercise-service-source
+    passed: [rasrm-acceptance-tests]
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-collection-exercise-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-collection-exercise-service-source/pom.xml
+          cp -r rm-collection-exercise-service-source/target/ .
+  - put: cf-resource-ci
+    params:
+      current_app_name: concourse-rm-collection-exercise-service-ci
+      manifest: rm-collection-exercise-service-source/manifest-no-envs.yml
+      path: target/collectionexercisesvc.jar
+      environment_variables:
+        collectionInstrumentSvc_connectionConfig_host: 'concourse-ras-collection-instrument-ci.apps.devtest.onsclofo.uk'
+        collectionInstrumentSvc_connectionConfig_password: ((ci_security_user_password))
+        collectionInstrumentSvc_connectionConfig_port: '80'
+        collectionInstrumentSvc_connectionConfig_scheme: 'http'
+        collectionInstrumentSvc_connectionConfig_username: ((ci_security_user_name))
+        endpoints_enabled: 'false'
+        partySvc_connectionConfig_host: 'concourse-ras-party-ci.apps.devtest.onsclofo.uk'
+        partySvc_connectionConfig_password: ((ci_security_user_password))
+        partySvc_connectionConfig_port: '80'
+        partySvc_connectionConfig_scheme: 'http'
+        partySvc_connectionConfig_username: ((ci_security_user_name))
+        sampleSvc_connectionConfig_host: 'concourse-rm-sample-service-ci.apps.devtest.onsclofo.uk'
+        sampleSvc_connectionConfig_password: ((ci_security_user_password))
+        sampleSvc_connectionConfig_port: '80'
+        sampleSvc_connectionConfig_scheme: 'http'
+        sampleSvc_connectionConfig_username: ((ci_security_user_name))
+        security_user_name: ((ci_security_user_name))
+        security_user_password: ((ci_security_user_password))
+        surveySvc_connectionConfig_host: 'concourse-rm-survey-service-ci.apps.devtest.onsclofo.uk'
+        surveySvc_connectionConfig_password: ((ci_security_user_password))
+        surveySvc_connectionConfig_port: '80'
+        surveySvc_connectionConfig_scheme: 'http'
+        surveySvc_connectionConfig_username: ((ci_security_user_name))
+
+- name: iac-service-ci-deploy
+  plan:
+  - get: iac-service-source
+    passed: [rasrm-acceptance-tests]
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: iac-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings iac-service-source/.maven.settings.xml install -Ddockerfile.skip -f iac-service-source/pom.xml
+          cp -r iac-service-source/target/ .
+  - put: cf-resource-ci
+    params:
+      current_app_name: concourse-iac-service-ci
+      manifest: iac-service-source/manifest-no-envs.yml
+      path: target/iacsvc.jar
+      environment_variables:
+        caseSvc_connectionConfig_host: 'concourse-rm-case-service-ci.apps.devtest.onsclofo.uk'
+        caseSvc_connectionConfig_password: ((ci_security_user_password))
+        caseSvc_connectionConfig_port: '80'
+        caseSvc_connectionConfig_scheme: 'http'
+        caseSvc_connectionConfig_username: ((ci_security_user_name))
+        endpoints_enabled: 'false'
+        security_user_name: ((ci_security_user_name))
+        security_user_password: ((ci_security_user_password))
+
+- name: rm-notify-gateway-ci-deploy
+  plan:
+  - get: rm-notify-gateway-source
+    passed: [rasrm-acceptance-tests]
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-notify-gateway-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-notify-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-notify-gateway-source/pom.xml
+          cp -r rm-notify-gateway-source/target/ .
+  - put: cf-resource-ci
+    params:
+      current_app_name: concourse-rm-notify-gateway-service-ci
+      manifest: rm-notify-gateway-source/manifest.yml
+      path: target/notifygatewaysvc.jar
+      environment_variables:
+        endpoints_enabled: 'false'
+        notify_apiKey: ((notify_api_key))
+        notify_censusUacSmsTemplateId: '966731dc-ef2e-41ad-a828-8cdd95c81ebc'
+        notify_enabled: 'false'
+        notify_onsSurveysRasEmailReminderTemplateId: '19a0aa89-797f-4a34-ad54-267fd581f2ef'
+        security_user_name: ((ci_security_user_name))
+        security_user_password: ((ci_security_user_password))
+
+- name: rm-sample-service-ci-deploy
+  plan:
+  - get: rm-sample-service-source
+    passed: [rasrm-acceptance-tests]
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-sample-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-sample-service-source/.travis.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
+          cp -r rm-sample-service-source/target/ .
+  - put: cf-resource-ci
+    params:
+      current_app_name: concourse-rm-sample-service-ci
+      manifest: rm-sample-service-source/manifest-no-envs.yml
+      path: target/samplesvc.jar
+      environment_variables:
+        endpoints_enabled: 'false'
+        exportSchedule_cronExpression: '0 0/5 * * * ?'
+        partySvc_connectionConfig_host: 'concourse-ras-party-ci.apps.devtest.onsclofo.uk'
+        partySvc_connectionConfig_password: ((ci_security_user_password))
+        partySvc_connectionConfig_port: '80'
+        partySvc_connectionConfig_scheme: 'http'
+        partySvc_connectionConfig_username: ((ci_security_user_name))
+        security_user_name: ((ci_security_user_name))
+        security_user_password: ((ci_security_user_password))
+        sftp_host: ((sftp_host))
+        sftp_password: ((sample_sftp_password))
+        sftp_port: '22'
+        sftp_username: ((sample_sftp_username))
+        SAMPLE_UNIT_DISTRIBUTION_DELAY_MILLI_SECONDS: '1000'
+
+- name: rm-sdx-gateway-ci-deploy
+  plan:
+  - get: rm-sdx-gateway-source
+    passed: [rasrm-acceptance-tests]
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-sdx-gateway-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-sdx-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-sdx-gateway-source/pom.xml
+          cp -r rm-sdx-gateway-source/target/ .
+  - put: cf-resource-ci
+    params:
+      current_app_name: concourse-rm-sdx-gateway-ci
+      manifest: rm-sdx-gateway-source/manifest.yml
+      path: target/sdxgatewaysvc.jar
+      environment_variables:
+        endpoints_enabled: 'false'
+        security_user_name: ((ci_security_user_name))
+        security_user_password: ((ci_security_user_password))
+
+
+- name: rm-survey-service-ci-deploy
+  plan:
+  - get: rm-survey-service-source
+    passed: [rasrm-acceptance-tests]
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: golang
+      inputs:
+        - name: rm-survey-service-source
+      outputs:
+        - name: rm-survey-service-build
+          path: rm-survey-service
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mkdir -p /go/src/github.com/ONSdigital/
+          cp -r rm-survey-service-source /go/src/github.com/ONSdigital/rm-survey-service
+          make -C /go/src/github.com/ONSdigital/rm-survey-service
+          cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
+  - put: cf-resource-ci
+    params:
+      current_app_name: concourse-rm-survey-service-ci
+      manifest: rm-survey-service-source/manifest.yml
+      path: rm-survey-service-build
+      environment_variables:
+        security_user_name: ((ci_security_user_name))
+        security_user_password: ((ci_security_user_password))
+
+
+- name: sdc-uaa-ci-deploy
+  plan:
+  - get: sdc-uaa-source
+    passed: [rasrm-acceptance-tests]
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: sdcplatform/maven-cf-cli-docker
+      inputs:
+        - name: sdc-uaa-source
+      outputs:
+        - name: sdc-uaa-build
+          path: sdc-uaa-build
+      params:
+        UAA_PRIVATE_KEY: ((ci_uaa_private_key))
+        UAA_CERTIFICATE: ((ci_uaa_certificate))
+        UAA_PRIVATE_KEY_PASSWORD: ((ci_uaa_private_key_password))
+        JENKINS_CF_USERNAME: ((cloudfoundry_email))
+        JENKINS_CF_PASSWORD: ((cloudfoundry_password))
+        API_ENDPOINT: ((cloudfoundry_api))
+        ORG: rmras
+        SPACE: ci
+        UAA_ID: ((ci_uaa_id))
+        UAA_SECRET: ((ci_uaa_secret))
+        UAA_JWT_SIGNING_KEY: ((ci_uaa_jwt_signing_key))
+        UAA_JWT_VERIFICATION_KEY: ((ci_uaa_jwt_verification_key))
+        UAA_URL: 'http://uaa-ci.apps.devtest.onsclofo.uk'
+        LOGIN_URL: 'http://uaa-ci.apps.devtest.onsclofo.uk'
+        ZONE_URL: 'uaa-ci.apps.devtest.onsclofo.uk'
+        ADMIN_SECRET: ((ci_uaa_admin_secret))
+        LOGIN_SECRET: ((ci_uaa_login_secret))
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          (cd sdc-uaa-source && ls && sh deploy-uaa-pre-steps.sh dev)
+          mvn install -f sdc-uaa-source/pom.xml
+          cp -r sdc-uaa-source/* sdc-uaa-build
+  - put: cf-resource-ci
+    params:
+      current_app_name: concourse-sdc-uaa-ci
+      manifest: sdc-uaa-build/uaa-cf-application.yml
