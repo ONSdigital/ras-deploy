@@ -79,47 +79,52 @@ resources:
     branch: consistent-artifact-name
 
 - name: iac-service-source
- type: git
- source:
-   uri: git@github.com:ONSdigital/iac-service.git
-   branch: consistent-artifact-name
-   private_key: ((git_key))
+  type: git
+  source:
+    uri: git@github.com:ONSdigital/iac-service.git
+    branch: consistent-artifact-name
+    private_key: ((git_key))
 
 - name: rm-notify-gateway-source
- type: git
- source:
-   uri: https://github.com/ONSdigital/rm-notify-gateway.git
-   branch: consistent-artifact-name
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-notify-gateway.git
+    branch: consistent-artifact-name
 
 - name: rm-sample-service-source
- type: git
- source:
-   uri: https://github.com/ONSdigital/rm-sample-service.git
-   branch: consistent-artifact-name
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-sample-service.git
+    branch: consistent-artifact-name
 
 - name: rm-sdx-gateway-source
- type: git
- source:
-   uri: https://github.com/ONSdigital/rm-sdx-gateway.git
-   branch: consistent-artifact-name
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-sdx-gateway.git
+    branch: consistent-artifact-name
 
 - name: rm-survey-service-source
- type: git
- source:
-   uri: https://github.com/ONSdigital/rm-survey-service.git
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-survey-service.git
 
 - name: sdc-uaa-source
- type: git
- source:
-   uri: https://github.com/ONSdigital/sdc-uaa.git
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/sdc-uaa.git
 ### END MICROSERVICE REPOS
+
+- name: rasrm-acceptance-tests-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rasrm-acceptance-tests.git
 
 - name: cf-cli-resource-ci
   type: cf-cli-resource
   source:
-    api: {{cloudfoundry_api}}
-    username: {{cloudfoundry_email}}
-    password: {{cloudfoundry_password}}
+    api: ((cloudfoundry_api))
+    username: ((cloudfoundry_email))
+    password: ((cloudfoundry_password))
     org: rmras
     space: concourse-ci
     skip_cert_check: true
@@ -127,9 +132,9 @@ resources:
 - name: cf-resource-ci
   type: cf
   source:
-    api: {{cloudfoundry_api}}
-    username: {{cloudfoundry_email}}
-    password: {{cloudfoundry_password}}
+    api: ((cloudfoundry_api))
+    username: ((cloudfoundry_email))
+    password: ((cloudfoundry_password))
     organization: rmras
     space: concourse-ci
     skip_cert_check: true
@@ -165,6 +170,7 @@ jobs:
 #          make test
 
 - name: ras-party-ci-deploy
+  serial_groups: [ras-party-ci-deploy]
   plan:
   - get: ras-party-source
     trigger: true
@@ -204,6 +210,7 @@ jobs:
         SECURITY_USER_PASSWORD: ((ci_security_user_password))
 
 - name: ras-secure-message-ci-deploy
+  serial_groups: [ras-secure-message-ci-deploy]
   plan:
   - get: ras-secure-message-source
     trigger: true
@@ -242,6 +249,7 @@ jobs:
         USE_UAA: '1'
 
 - name: ras-backstage-ci-deploy
+  serial_groups: [ras-backstage-ci-deploy]
   plan:
   - get: ras-backstage-source
     trigger: true
@@ -278,6 +286,7 @@ jobs:
         USE_UAA: '1'
 
 - name: ras-collection-instrument-ci-deploy
+  serial_groups: [ras-collection-instrument-ci-deploy]
   plan:
   - get: ras-collection-instrument-source
     trigger: true
@@ -312,6 +321,7 @@ jobs:
         SECURITY_USER_PASSWORD: ((ci_security_user_password))
 
 - name: ras-frontstage-ci-deploy
+  serial_groups: [ras-frontstage-ci-deploy]
   plan:
   - get: ras-frontstage-source
     trigger: true
@@ -340,6 +350,7 @@ jobs:
         SECURITY_USER_PASSWORD: ((ci_security_user_password))
 
 - name: ras-frontstage-api-ci-deploy
+  serial_groups: [ras-frontstage-api-ci-deploy]
   plan:
   - get: ras-frontstage-api-source
     trigger: true
@@ -373,6 +384,7 @@ jobs:
         SECURITY_USER_PASSWORD: ((ci_security_user_password))
 
 - name: django-oauth2-test-ci-deploy
+  serial_groups: [django-oauth2-test-ci-deploy]
   plan:
   - get: django-oauth2-test-source
     trigger: true
@@ -437,6 +449,7 @@ jobs:
         SECURITY_USER_PASSWORD: ((ci_security_user_password))
 
 - name: response-operations-ui-ci-deploy
+  serial_groups: [response-operations-ui-ci-deploy]
   plan:
   - get: response-operations-ui-source
     trigger: true
@@ -459,6 +472,7 @@ jobs:
         REDIS_SERVICE: ras-redis
 
 - name: rm-action-service-ci-deploy
+  serial_groups: [rm-action-service-ci-deploy]
   plan:
   - get: rm-action-service-source
     trigger: true
@@ -540,6 +554,7 @@ jobs:
         security_user_password: ((ci_security_user_password))
 
 - name: rm-actionexporter-service-ci-deploy
+  serial_groups: [rm-actionexporter-service-ci-deploy]
   plan:
   - get: rm-actionexporter-service-source
     trigger: true
@@ -606,6 +621,7 @@ jobs:
         sftp_username: ((actionexporter_sftp_username))
 
 - name: rm-case-service-ci-deploy
+  serial_groups: [rm-case-service-ci-deploy]
   plan:
   - get: rm-case-service-source
     trigger: true
@@ -682,6 +698,7 @@ jobs:
         security_user_password: ((ci_security_user_password))
 
 - name: rm-collection-exercise-ci-deploy
+  serial_groups: [rm-collection-exercise-ci-deploy]
   plan:
   - get: rm-collection-exercise-service-source
     trigger: true
@@ -770,6 +787,7 @@ jobs:
 
 
 - name: iac-service-ci-deploy
+  serial_groups: [iac-service-ci-deploy]
   plan:
   - get: iac-service-source
     trigger: true
@@ -781,7 +799,7 @@ jobs:
       plan: shared-psql
       service_instance: rm-pg-db
       timeout: 300
-      wait_for_service: true  
+      wait_for_service: true
   - task: build
     config:
       platform: linux
@@ -818,6 +836,7 @@ jobs:
         security_user_password: ((ci_security_user_password))
 
 - name: rm-notify-gateway-ci-deploy
+  serial_groups: [rm-notify-gateway-ci-deploy]
   plan:
   - get: rm-notify-gateway-source
     trigger: true
@@ -874,6 +893,7 @@ jobs:
         security_user_password: ((ci_security_user_password))
 
 - name: rm-sample-service-ci-deploy
+  serial_groups: [rm-sample-service-ci-deploy]
   plan:
   - get: rm-sample-service-source
     trigger: true
@@ -945,6 +965,7 @@ jobs:
         sftp_username: ((sample_sftp_username))
 
 - name: rm-sdx-gateway-ci-deploy
+  serial_groups: [rm-sdx-gateway-ci-deploy]
   plan:
   - get: rm-sdx-gateway-source
     trigger: true
@@ -997,6 +1018,7 @@ jobs:
         security_user_password: ((ci_security_user_password))
 
 - name: rm-survey-service-ci-deploy
+  serial_groups: [rm-survey-service-ci-deploy]
   plan:
   - get: rm-survey-service-source
     trigger: true
@@ -1040,6 +1062,7 @@ jobs:
         security_user_password: ((ci_security_user_password))
 
 - name: sdc-uaa-ci-deploy
+  serial_groups: [sdc-uaa-ci-deploy]
   plan:
   - get: sdc-uaa-source
     trigger: true
@@ -1085,3 +1108,127 @@ jobs:
     params:
       current_app_name: sdc-uaa-ci-migration
       manifest: sdc-uaa-build/uaa-cf-application.yml
+
+
+- name: rasrm-acceptance-tests
+  serial_groups: [ras-party-ci-deploy, ras-backstage-ci-deploy, ras-frontstage-ci-deploy, ras-frontstage-api-ci-deploy,
+    django-oauth2-test-ci-deploy, response-operations-ui-ci-deploy, ras-secure-message-ci-deploy,
+    ras-collection-instrument-ci-deploy, rm-action-service-ci-deploy, rm-actionexporter-service-ci-deploy,
+    rm-case-service-ci-deploy, rm-collection-exercise-ci-deploy, iac-service-ci-deploy, rm-notify-gateway-ci-deploy,
+    rm-sample-service-ci-deploy, rm-sdx-gateway-ci-deploy, rm-survey-service-ci-deploy, sdc-uaa-ci-deploy]
+  plan:
+  - get: rasrm-acceptance-tests-source
+    trigger: true
+  - get: ras-party-source
+    passed: [ras-party-ci-deploy]
+    trigger: true
+  - get: ras-backstage-source
+    passed: [ras-backstage-ci-deploy]
+    trigger: true
+  - get: ras-frontstage-source
+    passed: [ras-frontstage-ci-deploy]
+    trigger: true
+  - get: ras-frontstage-api-source
+    passed: [ras-frontstage-api-ci-deploy]
+    trigger: true
+  - get: django-oauth2-test-source
+    passed: [django-oauth2-test-ci-deploy]
+    trigger: true
+  - get: response-operations-ui-source
+    passed: [response-operations-ui-ci-deploy]
+    trigger: true
+  - get: ras-secure-message-source
+    passed: [ras-secure-message-ci-deploy]
+    trigger: true
+  - get: ras-collection-instrument-source
+    passed: [ras-collection-instrument-ci-deploy]
+    trigger: true
+  - get: rm-action-service-source
+    passed: [rm-action-service-ci-deploy]
+    trigger: true
+  - get: rm-actionexporter-service-source
+    passed: [rm-actionexporter-service-ci-deploy]
+    trigger: true
+  - get: rm-case-service-source
+    passed: [rm-case-service-ci-deploy]
+    trigger: true
+  - get: rm-collection-exercise-service-source
+    passed: [rm-collection-exercise-ci-deploy]
+    trigger: true
+  - get: iac-service-source
+    passed: [iac-service-ci-deploy]
+    trigger: true
+  - get: rm-notify-gateway-source
+    passed: [rm-notify-gateway-ci-deploy]
+    trigger: true
+  - get: rm-sample-service-source
+    passed: [rm-sample-service-ci-deploy]
+    trigger: true
+  - get: rm-sdx-gateway-source
+    passed: [rm-sdx-gateway-ci-deploy]
+    trigger: true
+  - get: rm-survey-service-source
+    passed: [rm-survey-service-ci-deploy]
+    trigger: true
+  - get: sdc-uaa-source
+    passed: [sdc-uaa-ci-deploy]
+    trigger: true
+  - task: acceptance_test
+    privileged: true
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: sdcplatform/python-pipenv-chrome
+          tag: "latest"
+      inputs:
+        - name: rasrm-acceptance-tests-source
+      params:
+        DATABASE_URI: ((DATABASE_URI))
+        DJANGO_OAUTH_DATABASE_URI: ((DJANGO_OAUTH_DATABASE_URI))
+        PARTY_DATABASE_URI: ((PARTY_DATABASE_URI))
+        SECURE_MESSAGE_DATABASE_URI: ((SECURE_MESSAGE_DATABASE_URI))
+        COLLECTION_INSTRUMENT_DATABASE_URI: ((COLLECTION_INSTRUMENT_DATABASE_URI))
+        ACTION_SERVICE_HOST: 'rm-action-service-ci-migration.apps.devtest.onsclofo.uk'
+        ACTION_SERVICE_PORT: '80'
+        ACTION_EXPORTER_HOST: 'rm-actionexporter-service-ci-migration.apps.devtest.onsclofo.uk'
+        ACTION_EXPORTER_PORT: '80'
+        BACKSTAGE_SERVICE_HOST: 'ras-backstage-ci-migration.apps.devtest.onsclofo.uk'
+        BACKSTAGE_SERVICE_PORT: '80'
+        CASE_SERVICE_HOST: 'rm-case-service-ci-migration.apps.devtest.onsclofo.uk'
+        CASE_SERVICE_PORT: '80'
+        COLLECTION_EXERCISE_SERVICE_HOST: 'rm-collection-exercise-service-ci-migration.apps.devtest.onsclofo.uk'
+        COLLECTION_EXERCISE_SERVICE_PORT: '80'
+        COLLECTION_INSTRUMENT_SERVICE_HOST: 'ras-collection-instrument-ci-migration.apps.devtest.onsclofo.uk'
+        COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
+        DJANGO_SERVICE_HOST: 'django-oauth2-test-ci-migration.apps.devtest.onsclofo.uk'
+        DJANGO_SERVICE_PORT: '80'
+        FRONTSTAGE_API_SERVICE_HOST: 'ras-frontstage-api-ci-migration.apps.devtest.onsclofo.uk'
+        FRONTSTAGE_API_SERVICE_PORT: '80'
+        FRONTSTAGE_SERVICE_HOST: 'ras-frontstage-ci-migration.apps.devtest.onsclofo.uk'
+        FRONTSTAGE_SERVICE_PORT: '80'
+        IAC_SERVICE_HOST: 'iac-service-ci-migration.apps.devtest.onsclofo.uk'
+        IAC_SERVICE_PORT: '80'
+        NOTIFY_GATEWAY_SERVICE_HOST: 'rm-notify-gateway-ci-migration.apps.devtest.onsclofo.uk'
+        NOTIFY_GATEWAY_SERVICE_PORT: '80'
+        PARTY_SERVICE_HOST: 'ras-party-ci-migration.apps.devtest.onsclofo.uk'
+        PARTY_SERVICE_PORT: '80'
+        RESPONSE_OPERATIONS_UI_HOST: 'response-operations-ui-ci-migration.apps.devtest.onsclofo.uk'
+        RESPONSE_OPERATIONS_UI_PORT: '80'
+        SAMPLE_SERVICE_HOST: 'rm-sample-service-ci-migration.apps.devtest.onsclofo.uk'
+        SAMPLE_SERVICE_PORT: '80'
+        SECURE_MESSAGE_SERVICE_HOST: 'ras-secure-message-ci-migration.apps.devtest.onsclofo.uk'
+        SECURE_MESSAGE_SERVICE_PORT: '80'
+        SURVEY_SERVICE_HOST: 'rm-survey-service-ci-migration.apps.devtest.onsclofo.uk'
+        SURVEY_SERVICE_PORT: '80'
+        SECURITY_USER_NAME: ((ci_security_user_name))
+        SECURITY_USER_PASSWORD: ((ci_security_user_password))
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          pipenv install --dev
+          make setup wait_for_services acceptance_tests
+        dir: rasrm-acceptance-tests-source
