@@ -773,7 +773,7 @@ jobs:
         sampleSvc_connectionConfig_username: ((ci_security_user_name))
         security_user_name: ((ci_security_user_name))
         security_user_password: ((ci_security_user_password))
-        surveySvc_connectionConfig_host: concourse-rm-survey-service-dev.apps.devtest.onsclofo.uk
+        surveySvc_connectionConfig_host: 'rm-survey-service-ci-migration.apps.devtest.onsclofo.uk'
         surveySvc_connectionConfig_password: ((ci_security_user_password))
         surveySvc_connectionConfig_port: '80'
         surveySvc_connectionConfig_scheme: 'http'
@@ -1106,7 +1106,7 @@ jobs:
           cp -r sdc-uaa-source/* sdc-uaa-build
   - put: cf-resource-ci
     params:
-      current_app_name: sdc-uaa-ci-migration
+      current_app_name: uaa-ci-migration
       manifest: sdc-uaa-build/uaa-cf-application.yml
 
 
