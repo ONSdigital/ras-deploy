@@ -781,11 +781,6 @@ jobs:
         SCHEDULES_VALIDATION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
         SCHEDULES_DISTRIBUTION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
 
-
-
-
-
-
 - name: iac-service-ci-deploy
   serial_groups: [iac-service-ci-deploy]
   plan:
@@ -1236,6 +1231,35 @@ jobs:
   - get: sdc-uaa-source
     passed: [sdc-uaa-ci-deploy]
     trigger: true
+  - task: get-cf-env-vars
+    config:
+      platform: linux
+      image_resource: 
+        type: docker-image
+        source:
+          repository: governmentpaas/cf-cli
+          tag: latest
+      outputs:
+        - name: env-vars
+      params:
+        CLOUDFOUNDRY_API: ((cloudfoundry_api))
+        CLOUDFOUNDRY_EMAIL: ((cloudfoundry_email))
+        CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
+        CLOUDFOUNDRY_ORG: rmras
+        CLOUDFOUNDRY_SPACE: concourse-ci
+      run:
+          path: sh
+          args:
+          - -exc
+          - |
+            cf login -a "$CLOUDFOUNDRY_API" -u "$CLOUDFOUNDRY_EMAIL" -p "$CLOUDFOUNDRY_PASSWORD" -o "$CLOUDFOUNDRY_ORG" -s "$CLOUDFOUNDRY_SPACE" --skip-ssl-validation
+
+            echo "export DATABASE_URI=$(cf apps | grep rm-case-service-ci-migration | awk '{ print "cf env "$1 }'| bash | grep "postgres://" | awk -F \" '{ print $4 }')" >>env-vars/setenv.sh
+            PARTY_DATABASE_URI=$(cf apps | grep ras-party-ci-migration | awk '{ print "cf env "$1 }'| bash | grep "postgres://" | awk -F \" '{ print $4 }')
+            DJANGO_OAUTH_DATABASE_URI=$(cf apps | grep django-oauth2-test-ci-migration | awk '{ print "cf env "$1 }'| bash | grep "postgres://" | awk -F \" '{ print $4 }')
+            SECURE_MESSAGE_DATABASE_URI=$(cf apps | grep ras-secure-message-ci-migration | awk '{ print "cf env "$1 }'| bash | grep "postgres://" | awk -F \" '{ print $4 }')
+            COLLECTION_INSTRUMENT_DATABASE_URI=$(cf apps | grep ras-collection-instrument-ci-migration | awk '{ print "cf env "$1 }'| bash | grep "postgres://" | awk -F \" '{ print $4 }')
+
   - task: acceptance_test
     privileged: true
     config:
@@ -1247,6 +1271,7 @@ jobs:
           tag: "latest"
       inputs:
         - name: rasrm-acceptance-tests-source
+        - name: env-vars
       params:
         DATABASE_URI: ((DATABASE_URI))
         DJANGO_OAUTH_DATABASE_URI: ((DJANGO_OAUTH_DATABASE_URI))
@@ -1292,6 +1317,7 @@ jobs:
         args:
         - -exc
         - |
+          source env-vars/setenv.sh
           pipenv install --dev
           make setup wait_for_services acceptance_tests
         dir: rasrm-acceptance-tests-source
