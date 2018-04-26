@@ -1255,10 +1255,10 @@ jobs:
             cf login -a "$CLOUDFOUNDRY_API" -u "$CLOUDFOUNDRY_EMAIL" -p "$CLOUDFOUNDRY_PASSWORD" -o "$CLOUDFOUNDRY_ORG" -s "$CLOUDFOUNDRY_SPACE" --skip-ssl-validation
 
             echo "export DATABASE_URI=$(cf apps | grep rm-case-service-ci-migration | awk '{ print "cf env "$1 }'| bash | grep "postgres://" | awk -F \" '{ print $4 }')" >>env-vars/setenv.sh
-            PARTY_DATABASE_URI=$(cf apps | grep ras-party-ci-migration | awk '{ print "cf env "$1 }'| bash | grep "postgres://" | awk -F \" '{ print $4 }')
-            DJANGO_OAUTH_DATABASE_URI=$(cf apps | grep django-oauth2-test-ci-migration | awk '{ print "cf env "$1 }'| bash | grep "postgres://" | awk -F \" '{ print $4 }')
-            SECURE_MESSAGE_DATABASE_URI=$(cf apps | grep ras-secure-message-ci-migration | awk '{ print "cf env "$1 }'| bash | grep "postgres://" | awk -F \" '{ print $4 }')
-            COLLECTION_INSTRUMENT_DATABASE_URI=$(cf apps | grep ras-collection-instrument-ci-migration | awk '{ print "cf env "$1 }'| bash | grep "postgres://" | awk -F \" '{ print $4 }')
+            echo "export PARTY_DATABASE_URI=$(cf apps | grep ras-party-ci-migration | awk '{ print "cf env "$1 }'| bash | grep "postgres://" | awk -F \" '{ print $4 }')" >>env-vars/setenv.sh
+            echo "export DJANGO_OAUTH_DATABASE_URI=$(cf apps | grep django-oauth2-test-ci-migration | awk '{ print "cf env "$1 }'| bash | grep "postgres://" | awk -F \" '{ print $4 }')" >>env-vars/setenv.sh
+            echo "export SECURE_MESSAGE_DATABASE_URI=$(cf apps | grep ras-secure-message-ci-migration | awk '{ print "cf env "$1 }'| bash | grep "postgres://" | awk -F \" '{ print $4 }')" >>env-vars/setenv.sh
+            echo "export COLLECTION_INSTRUMENT_DATABASE_URI=$(cf apps | grep ras-collection-instrument-ci-migration | awk '{ print "cf env "$1 }'| bash | grep "postgres://" | awk -F \" '{ print $4 }')" >>env-vars/setenv.sh
 
   - task: acceptance_test
     privileged: true
@@ -1317,7 +1317,7 @@ jobs:
         args:
         - -exc
         - |
-          source env-vars/setenv.sh
+          source ../env-vars/setenv.sh
           pipenv install --dev
           make setup wait_for_services acceptance_tests
         dir: rasrm-acceptance-tests-source
