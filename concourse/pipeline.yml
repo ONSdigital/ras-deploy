@@ -1273,11 +1273,6 @@ jobs:
         - name: rasrm-acceptance-tests-source
         - name: env-vars
       params:
-        DATABASE_URI: ((DATABASE_URI))
-        DJANGO_OAUTH_DATABASE_URI: ((DJANGO_OAUTH_DATABASE_URI))
-        PARTY_DATABASE_URI: ((PARTY_DATABASE_URI))
-        SECURE_MESSAGE_DATABASE_URI: ((SECURE_MESSAGE_DATABASE_URI))
-        COLLECTION_INSTRUMENT_DATABASE_URI: ((COLLECTION_INSTRUMENT_DATABASE_URI))
         ACTION_SERVICE_HOST: 'rm-action-service-ci-migration.apps.devtest.onsclofo.uk'
         ACTION_SERVICE_PORT: '80'
         ACTION_EXPORTER_HOST: 'rm-actionexporter-service-ci-migration.apps.devtest.onsclofo.uk'
