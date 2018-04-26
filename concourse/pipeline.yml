@@ -243,7 +243,7 @@ jobs:
         SECURITY_USER_NAME: ((ci_security_user_name))
         SECURITY_USER_PASSWORD: ((ci_security_user_password))
         SERVICE_ID: 'ce3674b1-7b08-4377-a6a7-05b5722d4ea5'
-        UAA_URL: 'http://uaa-ci-migration.apps.devtest.onsclofo.uk'
+        UAA_URL: 'http://uaa-concourse-ci.apps.devtest.onsclofo.uk'
         CLIENT_ID: 'secure_message'
         CLIENT_SECRET: ((ci_secure_message_client_secret))
         USE_UAA: '1'
@@ -282,7 +282,7 @@ jobs:
         SECURITY_USER_PASSWORD: ((ci_security_user_password))
         UAA_CLIENT_ID: 'ras_backstage'
         UAA_CLIENT_SECRET: ((ci_backstage_client_secret))
-        UAA_SERVICE_URL: 'http://uaa-ci-migration.apps.devtest.onsclofo.uk'
+        UAA_SERVICE_URL: 'http://uaa-concourse-ci.apps.devtest.onsclofo.uk'
         USE_UAA: '1'
 
 - name: ras-collection-instrument-ci-deploy
@@ -1091,9 +1091,9 @@ jobs:
         UAA_SECRET: ((ci_uaa_secret))
         UAA_JWT_SIGNING_KEY: ((ci_uaa_jwt_signing_key))
         UAA_JWT_VERIFICATION_KEY: ((ci_uaa_jwt_verification_key))
-        UAA_URL: 'http://uaa-ci-migration.apps.devtest.onsclofo.uk'
-        LOGIN_URL: 'http://uaa-ci-migration.apps.devtest.onsclofo.uk'
-        ZONE_URL: 'uaa-ci-migration.apps.devtest.onsclofo.uk'
+        UAA_URL: 'http://uaa-concourse-ci.apps.devtest.onsclofo.uk'
+        LOGIN_URL: 'http://uaa-concourse-ci.apps.devtest.onsclofo.uk'
+        ZONE_URL: 'uaa-concourse-ci.apps.devtest.onsclofo.uk'
         ADMIN_SECRET: ((ci_uaa_admin_secret))
         LOGIN_SECRET: ((ci_uaa_login_secret))
       run:
@@ -1106,8 +1106,71 @@ jobs:
           cp -r sdc-uaa-source/* sdc-uaa-build
   - put: cf-resource-ci
     params:
-      current_app_name: uaa-ci-migration
+      current_app_name: sdc-uaa-ci-migration
       manifest: sdc-uaa-build/uaa-cf-application.yml
+  - task: create-secure-message-client
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: kennethreitz/pipenv
+      inputs:
+        - name: sdc-uaa-source
+      params:
+        SPACE: concourse-ci
+        CLIENT: secure_message
+        PASSWORD: ((ci_secure_message_client_secret))
+        ADMIN_SECRET: ((ci_uaa_admin_secret))
+        UAA_URL: 'uaa-concourse-ci.apps.devtest.onsclofo.uk'
+      run:
+        dir: sdc-uaa-source
+        path: sh
+        args:
+        - './scripts/jenkins/add_client.sh'
+  - task: create-ras-backstage-client
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: kennethreitz/pipenv
+      inputs:
+        - name: sdc-uaa-source
+      params:
+        SPACE: concourse-ci
+        CLIENT: ras_backstage
+        PASSWORD: ((ci_backstage_client_secret))
+        ADMIN_SECRET: ((ci_uaa_admin_secret))
+        UAA_URL: 'uaa-concourse-ci.apps.devtest.onsclofo.uk'
+      run:
+        dir: sdc-uaa-source
+        path: sh
+        args:
+        - './scripts/jenkins/add_client.sh'
+  - task: create-uaa-user
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: kennethreitz/pipenv
+      inputs:
+        - name: sdc-uaa-source
+      params:
+        SPACE: concourse-ci
+        USERNAME: uaa_user
+        PASSWORD: ((ci_uaa_user_password))
+        EMAIL: ons@ons.gov
+        FIRSTNAME: uaa
+        LASTNAME: user
+        ADMIN_SECRET: ((ci_uaa_admin_secret))
+        UAA_URL: 'uaa-concourse-ci.apps.devtest.onsclofo.uk'
+      run:
+        dir: sdc-uaa-source
+        path: sh
+        args:
+        - './scripts/jenkins/add_user.sh'
 
 
 - name: rasrm-acceptance-tests
