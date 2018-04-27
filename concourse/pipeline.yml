@@ -95,6 +95,17 @@ templates:
         timeout: 300
         wait_for_service: true
 
+    create_rm_pg_db: &ci_create_rm_pg_db
+      put: create-database
+      resource: cf-cli-resource-ci
+      params:
+        command: create-service
+        service: rds
+        plan: shared-psql
+        service_instance: rm-pg-db
+        timeout: 300
+        wait_for_service: true
+
 resource_types:
 - name: cf-cli-resource
   type: docker-image
@@ -512,15 +523,7 @@ jobs:
   plan:
   - get: rm-action-service-source
     trigger: true
-  - put: create-database
-    resource: cf-cli-resource-ci
-    params:
-      command: create-service
-      service: rds
-      plan: shared-psql
-      service_instance: rm-pg-db
-      timeout: 300
-      wait_for_service: true
+  - <<: *ci_create_rm_pg_db
   - <<: *ci_create_rm_redis
   - <<: *ci_create_rm_rabbitmq
   - task: build
@@ -578,15 +581,7 @@ jobs:
   plan:
   - get: rm-actionexporter-service-source
     trigger: true
-  - put: create-database
-    resource: cf-cli-resource-ci
-    params:
-      command: create-service
-      service: rds
-      plan: shared-psql
-      service_instance: rm-pg-db
-      timeout: 300
-      wait_for_service: true
+  - <<: *ci_create_rm_pg_db
   - <<: *ci_create_rm_redis
   - <<: *ci_create_rm_rabbitmq
   - task: build
@@ -629,15 +624,7 @@ jobs:
   plan:
   - get: rm-case-service-source
     trigger: true
-  - put: create-database
-    resource: cf-cli-resource-ci
-    params:
-      command: create-service
-      service: rds
-      plan: shared-psql
-      service_instance: rm-pg-db
-      timeout: 300
-      wait_for_service: true
+  - <<: *ci_create_rm_pg_db
   - <<: *ci_create_rm_redis
   - <<: *ci_create_rm_rabbitmq
   - task: build
@@ -690,15 +677,7 @@ jobs:
   plan:
   - get: rm-collection-exercise-service-source
     trigger: true
-  - put: create-database
-    resource: cf-cli-resource-ci
-    params:
-      command: create-service
-      service: rds
-      plan: shared-psql
-      service_instance: rm-pg-db
-      timeout: 300
-      wait_for_service: true
+  - <<: *ci_create_rm_pg_db
   - <<: *ci_create_rm_redis
   - <<: *ci_create_rm_rabbitmq
   - task: build
@@ -758,15 +737,7 @@ jobs:
   plan:
   - get: iac-service-source
     trigger: true
-  - put: create-database
-    resource: cf-cli-resource-ci
-    params:
-      command: create-service
-      service: rds
-      plan: shared-psql
-      service_instance: rm-pg-db
-      timeout: 300
-      wait_for_service: true
+  - <<: *ci_create_rm_pg_db
   - task: build
     config:
       platform: linux
@@ -807,15 +778,7 @@ jobs:
   plan:
   - get: rm-notify-gateway-source
     trigger: true
-  - put: create-database
-    resource: cf-cli-resource-ci
-    params:
-      command: create-service
-      service: rds
-      plan: shared-psql
-      service_instance: rm-pg-db
-      timeout: 300
-      wait_for_service: true
+  - <<: *ci_create_rm_pg_db
   - <<: *ci_create_rm_rabbitmq
   - task: build
     config:
@@ -856,15 +819,7 @@ jobs:
   plan:
   - get: rm-sample-service-source
     trigger: true
-  - put: create-database
-    resource: cf-cli-resource-ci
-    params:
-      command: create-service
-      service: rds
-      plan: shared-psql
-      service_instance: rm-pg-db
-      timeout: 300
-      wait_for_service: true
+  - <<: *ci_create_rm_pg_db
   - <<: *ci_create_rm_redis
   - <<: *ci_create_rm_rabbitmq
   - task: build
@@ -949,15 +904,7 @@ jobs:
   plan:
   - get: rm-survey-service-source
     trigger: true
-  - put: create-database
-    resource: cf-cli-resource-ci
-    params:
-      command: create-service
-      service: rds
-      plan: shared-psql
-      service_instance: rm-pg-db
-      timeout: 300
-      wait_for_service: true
+  - <<: *ci_create_rm_pg_db
   - task: build
     config:
       platform: linux
