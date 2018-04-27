@@ -48,6 +48,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/django-oauth2-test.git
+    branch: exit-shell-script-on-error
 
 - name: response-operations-ui-source
   type: git
@@ -118,6 +119,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/rasrm-acceptance-tests.git
+    branch: fixing-tests-for-concourse
 
 - name: cf-cli-resource-ci
   type: cf-cli-resource
@@ -469,6 +471,9 @@ jobs:
       path: response-operations-ui-source
       environment_variables:
         BACKSTAGE_API_URL: 'http://ras-backstage-ci-migration.apps.devtest.onsclofo.uk/backstage-api'
+        UAA_SERVICE_URL: 'http://uaa-concourse-ci.apps.devtest.onsclofo.uk'
+        SECURE_MESSAGE_URL: 'http://ras-secure-message-ci-migration.apps.devtest.onsclofo.uk'
+        RAS_SECURE_MESSAGING_JWT_SECRET: ((ci_jwt_secret))
         REDIS_SERVICE: ras-redis
 
 - name: rm-action-service-ci-deploy
@@ -1103,6 +1108,7 @@ jobs:
     params:
       current_app_name: sdc-uaa-ci-migration
       manifest: sdc-uaa-build/uaa-cf-application.yml
+      #### EXTRACT ME ####
   - task: create-secure-message-client
     config:
       platform: linux
