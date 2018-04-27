@@ -11,7 +11,7 @@ inputs:
 - name: ras-deploy
 
 outputs:
-- name: env-vars
+- name: cf-database-env-vars
 
 run:
   path: ras-deploy/scripts/get_database_uris.sh

@@ -1,0 +1,16 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: sdcplatform/python-pipenv-chrome
+    tag: "latest"
+
+inputs:
+- name: rasrm-acceptance-tests-source
+- name: cf-database-env-vars
+- name: ras-deploy
+
+run:
+  path: ras-deploy/scripts/rasrm-acceptance-tests/run_acceptance_tests.sh
