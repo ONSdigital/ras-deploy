@@ -7,11 +7,11 @@ cf login -a "$CLOUDFOUNDRY_API" -u "$CLOUDFOUNDRY_EMAIL" -p "$CLOUDFOUNDRY_PASSW
 APPS=$(cf apps | cut -f 1 -d ' ' | tail -n +5)
 for app in $APPS
 do
-	cf delete -fr "$app"
+	cf delete "$app" -f -r
 done
 
 SERVICES=$(cf services | cut -f 1  -d ' ' | tail -n +5)
 for service in $SERVICES
 do
-	cf delete-service -f "$service"
+	cf delete-service "$service" -f
 done
