@@ -236,7 +236,7 @@ resources:
 
 - name: cf-cli-resource-teardown
   type: cf-cli-resource
-  source: &teardown_cf_cli_auth
+  source:
     api: ((cloudfoundry_api))
     username: ((cloudfoundry_email))
     password: ((cloudfoundry_password))
@@ -381,7 +381,7 @@ jobs:
       command: create-service
       service: rds
       plan: shared-psql
-      service_instance: ras-teardown-db
+      service_instance: ras-ci-db
       timeout: 300
       wait_for_service: true
   - put: cf-resource-teardown
