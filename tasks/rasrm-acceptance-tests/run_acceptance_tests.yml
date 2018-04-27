@@ -4,7 +4,7 @@ platform: linux
 image_resource:
   type: docker-image
   source:
-    repository: sdcplatform/python-pipenv-chrome
+    repository: sdcplatform/rasrm-acceptance-tests
     tag: "latest"
 
 inputs:
