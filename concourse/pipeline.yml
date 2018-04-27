@@ -8,6 +8,12 @@ resource_types:
 
 ### START MICROSERVICE REPOS
 resources:
+- name: ras-deploy
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-deploy.git
+    branch: master
+
 - name: ras-party-source
   type: git
   source:
@@ -1181,6 +1187,8 @@ jobs:
     rm-case-service-ci-deploy, rm-collection-exercise-ci-deploy, iac-service-ci-deploy, rm-notify-gateway-ci-deploy,
     rm-sample-service-ci-deploy, rm-sdx-gateway-ci-deploy, rm-survey-service-ci-deploy, sdc-uaa-ci-deploy]
   plan:
+  - get: ras-deploy
+    trigger: true
   - get: rasrm-acceptance-tests-source
     trigger: true
   - get: ras-party-source
@@ -1238,33 +1246,13 @@ jobs:
     passed: [sdc-uaa-ci-deploy]
     trigger: true
   - task: get-cf-env-vars
-    config:
-      platform: linux
-      image_resource: 
-        type: docker-image
-        source:
-          repository: governmentpaas/cf-cli
-          tag: latest
-      outputs:
-        - name: env-vars
-      params:
-        CLOUDFOUNDRY_API: ((cloudfoundry_api))
-        CLOUDFOUNDRY_EMAIL: ((cloudfoundry_email))
-        CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
-        CLOUDFOUNDRY_ORG: rmras
-        CLOUDFOUNDRY_SPACE: concourse-ci
-      run:
-          path: sh
-          args:
-          - -exc
-          - |
-            cf login -a "$CLOUDFOUNDRY_API" -u "$CLOUDFOUNDRY_EMAIL" -p "$CLOUDFOUNDRY_PASSWORD" -o "$CLOUDFOUNDRY_ORG" -s "$CLOUDFOUNDRY_SPACE" --skip-ssl-validation
-
-            echo "export DATABASE_URI=$(cf apps | grep rm-case-service-ci-migration | awk '{ print "cf env "$1 }'| bash | grep "postgres://" | awk -F \" '{ print $4 }')" >>env-vars/setenv.sh
-            echo "export PARTY_DATABASE_URI=$(cf apps | grep ras-party-ci-migration | awk '{ print "cf env "$1 }'| bash | grep "postgres://" | awk -F \" '{ print $4 }')" >>env-vars/setenv.sh
-            echo "export DJANGO_OAUTH_DATABASE_URI=$(cf apps | grep django-oauth2-test-ci-migration | awk '{ print "cf env "$1 }'| bash | grep "postgres://" | awk -F \" '{ print $4 }')" >>env-vars/setenv.sh
-            echo "export SECURE_MESSAGE_DATABASE_URI=$(cf apps | grep ras-secure-message-ci-migration | awk '{ print "cf env "$1 }'| bash | grep "postgres://" | awk -F \" '{ print $4 }')" >>env-vars/setenv.sh
-            echo "export COLLECTION_INSTRUMENT_DATABASE_URI=$(cf apps | grep ras-collection-instrument-ci-migration | awk '{ print "cf env "$1 }'| bash | grep "postgres://" | awk -F \" '{ print $4 }')" >>env-vars/setenv.sh
+    file: ras-deploy/get_database_uris.yml
+    params:
+      cloudfoundry_api: ((cloudfoundry_api))
+      cloudfoundry_email: ((cloudfoundry_email))
+      cloudfoundry_password: ((cloudfoundry_password))
+      cloudfoundry_org: rmras
+      cloudfoundry_space: concourse-ci
 
   - task: acceptance_test
     privileged: true
