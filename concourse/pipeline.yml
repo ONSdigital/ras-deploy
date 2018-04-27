@@ -84,6 +84,17 @@ templates:
         timeout: 600
         wait_for_service: true
 
+    create_rm_rabbitmq: &ci_create_rm_rabbitmq
+      put: create-rm-rabbitmq
+      resource: cf-cli-resource-ci
+      params:
+        command: create-service
+        service: rabbitmq
+        plan: standard
+        service_instance: rm-rabbitmq
+        timeout: 300
+        wait_for_service: true
+
 resource_types:
 - name: cf-cli-resource
   type: docker-image
@@ -511,15 +522,7 @@ jobs:
       timeout: 300
       wait_for_service: true
   - <<: *ci_create_rm_redis
-  - put: create-rabbitmq
-    resource: cf-cli-resource-ci
-    params:
-      command: create-service
-      service: rabbitmq
-      plan: standard
-      service_instance: rm-rabbitmq
-      timeout: 300
-      wait_for_service: true
+  - <<: *ci_create_rm_rabbitmq
   - task: build
     config:
       platform: linux
@@ -585,15 +588,7 @@ jobs:
       timeout: 300
       wait_for_service: true
   - <<: *ci_create_rm_redis
-  - put: create-rabbitmq
-    resource: cf-cli-resource-ci
-    params:
-      command: create-service
-      service: rabbitmq
-      plan: standard
-      service_instance: rm-rabbitmq
-      timeout: 300
-      wait_for_service: true
+  - <<: *ci_create_rm_rabbitmq
   - task: build
     config:
       platform: linux
@@ -644,15 +639,7 @@ jobs:
       timeout: 300
       wait_for_service: true
   - <<: *ci_create_rm_redis
-  - put: create-rabbitmq
-    resource: cf-cli-resource-ci
-    params:
-      command: create-service
-      service: rabbitmq
-      plan: standard
-      service_instance: rm-rabbitmq
-      timeout: 300
-      wait_for_service: true
+  - <<: *ci_create_rm_rabbitmq
   - task: build
     config:
       platform: linux
@@ -713,15 +700,7 @@ jobs:
       timeout: 300
       wait_for_service: true
   - <<: *ci_create_rm_redis
-  - put: create-rabbitmq
-    resource: cf-cli-resource-ci
-    params:
-      command: create-service
-      service: rabbitmq
-      plan: standard
-      service_instance: rm-rabbitmq
-      timeout: 300
-      wait_for_service: true
+  - <<: *ci_create_rm_rabbitmq
   - task: build
     config:
       platform: linux
@@ -837,15 +816,7 @@ jobs:
       service_instance: rm-pg-db
       timeout: 300
       wait_for_service: true
-  - put: create-rabbitmq
-    resource: cf-cli-resource-ci
-    params:
-      command: create-service
-      service: rabbitmq
-      plan: standard
-      service_instance: rm-rabbitmq
-      timeout: 300
-      wait_for_service: true
+  - <<: *ci_create_rm_rabbitmq
   - task: build
     config:
       platform: linux
@@ -895,15 +866,7 @@ jobs:
       timeout: 300
       wait_for_service: true
   - <<: *ci_create_rm_redis
-  - put: create-rabbitmq
-    resource: cf-cli-resource-ci
-    params:
-      command: create-service
-      service: rabbitmq
-      plan: standard
-      service_instance: rm-rabbitmq
-      timeout: 300
-      wait_for_service: true
+  - <<: *ci_create_rm_rabbitmq
   - task: build
     config:
       platform: linux
@@ -950,15 +913,7 @@ jobs:
   - get: rm-sdx-gateway-source
     trigger: true
   - <<: *ci_create_rm_redis
-  - put: create-rabbitmq
-    resource: cf-cli-resource-ci
-    params:
-      command: create-service
-      service: rabbitmq
-      plan: standard
-      service_instance: rm-rabbitmq
-      timeout: 300
-      wait_for_service: true
+  - <<: *ci_create_rm_rabbitmq
   - task: build
     config:
       platform: linux
