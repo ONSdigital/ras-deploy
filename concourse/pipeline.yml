@@ -1245,14 +1245,14 @@ jobs:
   - get: sdc-uaa-source
     passed: [sdc-uaa-ci-deploy]
     trigger: true
-  - task: get-cf-env-vars
-    file: ras-deploy/get_database_uris.yml
+  - task: get-cf-database-uris
+    file: ras-deploy/tasks/get_database_uris.yml
     params:
-      cloudfoundry_api: ((cloudfoundry_api))
-      cloudfoundry_email: ((cloudfoundry_email))
-      cloudfoundry_password: ((cloudfoundry_password))
-      cloudfoundry_org: rmras
-      cloudfoundry_space: concourse-ci
+      CLOUDFOUNDRY_API: ((cloudfoundry_api))
+      CLOUDFOUNDRY_EMAIL: ((cloudfoundry_email))
+      CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
+      CLOUDFOUNDRY_ORG: rmras
+      CLOUDFOUNDRY_SPACE: concourse-ci
 
   - task: acceptance_test
     privileged: true

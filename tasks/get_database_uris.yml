@@ -13,12 +13,5 @@ inputs:
 outputs:
 - name: env-vars
 
-params:
-  CLOUDFOUNDRY_API: ((cloudfoundry_api))
-  CLOUDFOUNDRY_EMAIL: ((cloudfoundry_email))
-  CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
-  CLOUDFOUNDRY_ORG: ((cloudfoundry_org))
-  CLOUDFOUNDRY_SPACE: ((cloudfoundry_space
-
 run:
   path: ras-deploy/scripts/get_database_uris.sh
