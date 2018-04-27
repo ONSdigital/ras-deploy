@@ -8,7 +8,7 @@ image_resource:
     tag: latest
 
 inputs:
-- name: ras-depoy
+- name: ras-deploy
 
 outputs:
 - name: env-vars
