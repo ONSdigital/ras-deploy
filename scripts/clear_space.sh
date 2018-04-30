@@ -10,7 +10,7 @@ do
 	cf delete "$app" -f -r
 done
 
-SERVICES=$(cf services | cut -f 1  -d ' ' | tail -n +5)
+SERVICES=$(cf services | awk '{ print $1 }' | tail -n +5)
 for service in $SERVICES
 do
 	cf delete-service "$service" -f
