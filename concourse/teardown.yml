@@ -375,7 +375,7 @@ jobs:
   - get: teardown-timer
     trigger: true
     passed: [tear-down]
-  - put: create-rm-rabbitmq
+  - put: create-collection-instrument-rabbitmq
     resource: cf-cli-resource-teardown
     params:
       command: create-service
