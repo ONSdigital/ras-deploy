@@ -161,7 +161,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/django-oauth2-test.git
-    branch: exit-shell-script-on-error
+    branch: create-user-script
 
 - name: response-operations-ui-source
   type: git
@@ -491,6 +491,18 @@ jobs:
         OAUTH2_SUPER_USER_PASSWORD: ((ci_oauth2_super_user_password))
         SECRET_KEY: ((ci_jwt_secret))
         TESTING: 'False'
+  - put: create-super-user
+    resource: cf-cli-resource-ci
+    params:
+      command: run-task
+      app_name: django-oauth2-test-ci-migration
+      task_command: "./create_default_user.sh"
+      task_name: create-super-user
+      environment_variables:
+        OAUTH2_SUPER_USER: ((ci_oauth2_super_user))
+        OAUTH2_SUPER_USER_EMAIL: ((ci_oauth2_super_user_email))
+        OAUTH2_SUPER_USER_PASSWORD: ((ci_oauth2_super_user_password))
+
 
 - name: response-operations-ui-ci-deploy
   serial_groups: [response-operations-ui-ci-deploy]

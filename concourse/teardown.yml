@@ -161,7 +161,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/django-oauth2-test.git
-    branch: exit-shell-script-on-error
+    branch: create-user-script
 
 - name: response-operations-ui-source
   type: git
@@ -501,6 +501,17 @@ jobs:
         OAUTH2_SUPER_USER_PASSWORD: ((teardown_oauth2_super_user_password))
         SECRET_KEY: ((teardown_jwt_secret))
         TESTING: 'False'
+  - put: create-super-user
+    resource: cf-cli-resource-teardown
+    params:
+      command: run-task
+      app_name: django-oauth2-test-teardown-migration
+      task_command: "./create_default_user.sh"
+      task_name: create-super-user
+      environment_variables:
+        OAUTH2_SUPER_USER: ((teardown_oauth2_super_user))
+        OAUTH2_SUPER_USER_EMAIL: ((teardown_oauth2_super_user_email))
+        OAUTH2_SUPER_USER_PASSWORD: ((teardown_oauth2_super_user_password))
 
 - name: response-operations-ui-teardown-deploy
   serial_groups: [response-operations-ui-teardown-deploy]
