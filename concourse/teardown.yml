@@ -896,6 +896,7 @@ jobs:
       manifest: rm-sample-service-source/manifest-no-envs.yml
       path: target/samplesvc*.jar
       environment_variables:
+        SAMPLE_UNIT_DISTRIBUTION_DELAY_MILLI_SECONDS: '1000'
         endpoints_enabled: 'false'
         exportSchedule_cronExpression: '0 0/5 * * * ?'
         partySvc_connectionConfig_host: 'ras-party-teardown-migration.apps.devtest.onsclofo.uk'
