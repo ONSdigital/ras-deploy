@@ -13,5 +13,6 @@ done
 SERVICES=$(cf services | awk '{ print $1 }' | tail -n +5)
 for service in $SERVICES
 do
+ cf delete-service-key "$service" "$service"-key  -f
 	cf delete-service "$service" -f
 done
