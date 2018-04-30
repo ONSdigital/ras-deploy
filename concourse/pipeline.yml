@@ -172,50 +172,50 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/rm-action-service.git
-    branch: consistent-artifact-name
+    branch: create-manifiest-no-envs
 
 - name: rm-actionexporter-service-source
   type: git
   source:
     uri: https://github.com/ONSdigital/rm-actionexporter-service.git
-    branch: consistent-artifact-name
+    branch: remove-host-from-manifest
 
 - name: rm-case-service-source
   type: git
   source:
     uri: https://github.com/ONSdigital/rm-case-service.git
-    branch: consistent-artifact-name
+    branch: create-manifiest-no-envs
 
 - name: rm-collection-exercise-service-source
   type: git
   source:
     uri: https://github.com/ONSdigital/rm-collection-exercise-service.git
-    branch: consistent-artifact-name
+    branch: create-manifiest-no-envs
 
 - name: iac-service-source
   type: git
   source:
     uri: git@github.com:ONSdigital/iac-service.git
-    branch: consistent-artifact-name
+    branch: create-manifiest-no-envs
     private_key: ((git_key))
 
 - name: rm-notify-gateway-source
   type: git
   source:
     uri: https://github.com/ONSdigital/rm-notify-gateway.git
-    branch: consistent-artifact-name
+    branch: remove-host-from-manifest
 
 - name: rm-sample-service-source
   type: git
   source:
     uri: https://github.com/ONSdigital/rm-sample-service.git
-    branch: consistent-artifact-name
+    branch: create-manifiest-no-envs
 
 - name: rm-sdx-gateway-source
   type: git
   source:
     uri: https://github.com/ONSdigital/rm-sdx-gateway.git
-    branch: consistent-artifact-name
+    branch: remove-host-from-manifest
 
 - name: rm-survey-service-source
   type: git
@@ -562,7 +562,7 @@ jobs:
     params:
       current_app_name: rm-action-service-ci-migration
       manifest: rm-action-service-source/manifest-no-envs.yml
-      path: target/actionsvc.jar
+      path: target/actionsvc*.jar
       environment_variables:
         partySvc_connectionConfig_host: 'ras-party-ci-migration.apps.devtest.onsclofo.uk'
         partySvc_connectionConfig_port: '80'
@@ -620,7 +620,7 @@ jobs:
     params:
       current_app_name: rm-actionexporter-service-ci-migration
       manifest: rm-actionexporter-service-source/manifest.yml
-      path: target/actionexportersvc.jar
+      path: target/actionexportersvc*.jar
       environment_variables:
         endpoints_enabled: 'false'
         exportSchedule_cronExpression: '0 * * * * ?'
@@ -663,7 +663,7 @@ jobs:
     params:
       current_app_name: rm-case-service-ci-migration
       manifest: rm-case-service-source/manifest-no-envs.yml
-      path: target/casesvc.jar
+      path: target/casesvc*.jar
       environment_variables:
         actionSvc_connectionConfig_host: 'rm-action-service-ci-migration.apps.devtest.onsclofo.uk'
         actionSvc_connectionConfig_password: ((ci_security_user_password))
@@ -716,7 +716,7 @@ jobs:
     params:
       current_app_name: rm-collection-exercise-service-ci-migration
       manifest: rm-collection-exercise-service-source/manifest-no-envs.yml
-      path: target/collectionexercisesvc.jar
+      path: target/collectionexercisesvc*.jar
       environment_variables:
         collectionInstrumentSvc_connectionConfig_host: 'ras-collection-instrument-ci-migration.apps.devtest.onsclofo.uk'
         collectionInstrumentSvc_connectionConfig_password: ((ci_security_user_password))
@@ -774,7 +774,7 @@ jobs:
     params:
       current_app_name: iac-service-ci-migration
       manifest: iac-service-source/manifest-no-envs.yml
-      path: target/iacsvc.jar
+      path: target/iacsvc*.jar
       environment_variables:
         caseSvc_connectionConfig_host: 'rm-case-service-ci-migration.apps.devtest.onsclofo.uk'
         caseSvc_connectionConfig_password: ((ci_security_user_password))
@@ -816,7 +816,7 @@ jobs:
     params:
       current_app_name: rm-notify-gateway-ci-migration
       manifest: rm-notify-gateway-source/manifest.yml
-      path: target/notifygatewaysvc.jar
+      path: target/notifygatewaysvc*.jar
       environment_variables:
         endpoints_enabled: 'false'
         notify_apiKey: ((test_notify_api_key))
@@ -858,7 +858,7 @@ jobs:
     params:
       current_app_name: rm-sample-service-ci-migration
       manifest: rm-sample-service-source/manifest-no-envs.yml
-      path: target/samplesvc.jar
+      path: target/samplesvc*.jar
       environment_variables:
         endpoints_enabled: 'false'
         exportSchedule_cronExpression: '0 0/5 * * * ?'
@@ -905,7 +905,7 @@ jobs:
     params:
       current_app_name: rm-sdx-gateway-ci-migration
       manifest: rm-sdx-gateway-source/manifest.yml
-      path: target/sdxgatewaysvc.jar
+      path: target/sdxgatewaysvc*.jar
       environment_variables:
         endpoints_enabled: 'false'
         security_user_name: ((ci_security_user_name))
