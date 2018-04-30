@@ -257,7 +257,7 @@ resources:
 - name: teardown-timer
   type: time
   source:
-    interval: 1h
+    interval: 5m
 
 jobs:
 - name: tear-down
@@ -375,6 +375,15 @@ jobs:
   - get: teardown-timer
     trigger: true
     passed: [tear-down]
+  - put: create-rm-rabbitmq
+    resource: cf-cli-resource-teardown
+    params:
+      command: create-service
+      service: rabbitmq
+      plan: standard
+      service_instance: collection-instrument-rabbitmq
+      timeout: 900
+      wait_for_service: true
   - put: create-database
     resource: cf-cli-resource-teardown
     params:
@@ -527,7 +536,7 @@ jobs:
       service: elasticache-broker
       plan: small
       service_instance: ras-redis
-      timeout: 600
+      timeout: 900
       wait_for_service: true
   - put: cf-resource-teardown
     params:

@@ -10,7 +10,7 @@ do
 	cf delete "$app" -f -r
 done
 
-SERVICES=$(cf services | awk '{ print $1 }' | tail -n +5)
+SERVICES=$(cf services | awk '{ print $1 }' | tail -n +5 | grep -v collection-instrument-rabbitmq)
 for service in $SERVICES
 do
  cf delete-service-key "$service" "$service"-key  -f
