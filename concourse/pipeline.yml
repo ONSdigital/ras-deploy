@@ -172,7 +172,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/rm-action-service.git
-    branch: create-manifiest-no-envs
+    branch: master
 
 - name: rm-actionexporter-service-source
   type: git
@@ -184,13 +184,13 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/rm-case-service.git
-    branch: create-manifiest-no-envs
+    branch: master
 
 - name: rm-collection-exercise-service-source
   type: git
   source:
     uri: https://github.com/ONSdigital/rm-collection-exercise-service.git
-    branch: create-manifiest-no-envs
+    branch: master
 
 - name: iac-service-source
   type: git
@@ -203,24 +203,25 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/rm-notify-gateway.git
-    branch: remove-host-from-manifest
+    branch: master
 
 - name: rm-sample-service-source
   type: git
   source:
     uri: https://github.com/ONSdigital/rm-sample-service.git
-    branch: create-manifiest-no-envs
+    branch: master
 
 - name: rm-sdx-gateway-source
   type: git
   source:
     uri: https://github.com/ONSdigital/rm-sdx-gateway.git
-    branch: remove-host-from-manifest
+    branch: master
 
 - name: rm-survey-service-source
   type: git
   source:
     uri: https://github.com/ONSdigital/rm-survey-service.git
+    branch: master
 
 - name: sdc-uaa-source
   type: git
