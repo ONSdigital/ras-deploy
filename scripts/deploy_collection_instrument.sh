@@ -39,4 +39,4 @@ set_all_environment_variables
 
 cf unbind-service "$APP_NAME" "$SERVICE_NAME"
 
-cf start
+cf start "$APP_NAME"

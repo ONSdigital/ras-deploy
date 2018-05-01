@@ -372,6 +372,7 @@ jobs:
   serial_groups: [ras-collection-instrument-teardown-deploy]
   plan:
   - get: ras-collection-instrument-source
+  - get: ras-deploy
   - get: teardown-timer
     trigger: true
     passed: [tear-down]
