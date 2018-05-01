@@ -178,7 +178,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/rm-actionexporter-service.git
-    branch: remove-host-from-manifest
+    branch: master
 
 - name: rm-case-service-source
   type: git
@@ -196,7 +196,7 @@ resources:
   type: git
   source:
     uri: git@github.com:ONSdigital/iac-service.git
-    branch: create-manifiest-no-envs
+    branch: master
     private_key: ((git_key))
 
 - name: rm-notify-gateway-source
