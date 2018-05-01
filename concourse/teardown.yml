@@ -513,17 +513,15 @@ jobs:
         OAUTH2_SUPER_USER_PASSWORD: ((teardown_oauth2_super_user_password))
         SECRET_KEY: ((teardown_jwt_secret))
         TESTING: 'False'
-  - put: create-super-user
-    resource: cf-cli-resource-teardown
+  - task: create-super-user
+    file: ras-deploy/tasks/django-oauth2-test/create_default_user.yml
     params:
-      command: run-task
-      app_name: django-oauth2-test-teardown-migration
-      task_command: "./create_default_user.sh"
-      task_name: create-super-user
-      environment_variables:
-        OAUTH2_SUPER_USER: ((teardown_oauth2_super_user))
-        OAUTH2_SUPER_USER_EMAIL: ((teardown_oauth2_super_user_email))
-        OAUTH2_SUPER_USER_PASSWORD: ((teardown_oauth2_super_user_password))
+      CLOUDFOUNDRY_API: ((cloudfoundry_api))
+      CLOUDFOUNDRY_EMAIL: ((cloudfoundry_email))
+      CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
+      CLOUDFOUNDRY_ORG: rmras
+      CLOUDFOUNDRY_SPACE: concourse-teardown
+      APP_NAME: django-oauth2-test-teardown-migration
 
 - name: response-operations-ui-teardown-deploy
   serial_groups: [response-operations-ui-teardown-deploy]
