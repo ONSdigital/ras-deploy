@@ -375,13 +375,13 @@ jobs:
   - get: teardown-timer
     trigger: true
     passed: [tear-down]
-  - put: create-collection-instrument-rabbitmq
+  - put: create-collection-instrument-rabbitmq-external
     resource: cf-cli-resource-teardown
     params:
       command: create-service
       service: rabbitmq
       plan: standard
-      service_instance: collection-instrument-rabbitmq
+      service_instance: collection-instrument-rabbitmq-external
       timeout: 900
       wait_for_service: true
   - put: create-database
@@ -393,18 +393,20 @@ jobs:
       service_instance: ras-ci-db
       timeout: 300
       wait_for_service: true
-  - put: cf-resource-teardown
+  - task: deploy-collection-instrument
+    file: ras-deploy/tasks/deploy_collection_instrument.yml
     params:
-      current_app_name: ras-collection-instrument-teardown-migration
-      manifest: ras-collection-instrument-source/manifest.yml
-      path: ras-collection-instrument-source
-      environment_variables:
-        <<: *teardown_security_user
-        <<: *teardown_service_endpoints_for_python
-        JSON_SECRET_KEYS: ((teardown_json_secret_keys))
-        ONS_CRYPTOKEY: ((teardown_collection_instrument_encryption_key))
-        RABBITMQ_AMQP_COLLECTION_INSTRUMENT: ((teardown_rabbitmq_amqp_collection_instrument)) # What is this queue?
-        RABBITMQ_AMQP_SURVEY_RESPONSE: ((teardown_rabbitmq_amqp_survey_response))
+      <<: *teardown_security_user
+      <<: *teardown_service_endpoints_for_python
+      APP_NAME: ras-collection-instrument-teardown-migration
+      SERVICE_NAME: collection-instrument-rabbitmq-external
+      CLOUDFOUNDRY_API: ((cloudfoundry_api))
+      CLOUDFOUNDRY_EMAIL: ((cloudfoundry_email))
+      CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
+      CLOUDFOUNDRY_ORG: rmras
+      CLOUDFOUNDRY_SPACE: concourse-teardown
+      JSON_SECRET_KEYS: ((teardown_json_secret_keys))
+      ONS_CRYPTOKEY: ((teardown_collection_instrument_encryption_key))
 
 - name: ras-frontstage-teardown-deploy
   serial_groups: [ras-frontstage-teardown-deploy]
