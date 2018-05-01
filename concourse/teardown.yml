@@ -452,6 +452,7 @@ jobs:
   serial_groups: [django-oauth2-test-teardown-deploy]
   plan:
   - get: django-oauth2-test-source
+  - get: ras-deploy
   - get: teardown-timer
     trigger: true
     passed: [tear-down]
