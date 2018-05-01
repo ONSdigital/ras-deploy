@@ -37,6 +37,4 @@ RABBIT_URI=$(cf apps | grep "$APP_NAME" | awk '{ print "cf env "$1 }'| bash | gr
 
 set_all_environment_variables
 
-#cf unbind-service "$APP_NAME" "$SERVICE_NAME"
-
 cf start "$APP_NAME"

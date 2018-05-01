@@ -11,17 +11,5 @@ inputs:
 - name: ras-deploy
 - name: ras-collection-instrument-source
 
-#outputs:
-#- name: cf-database-env-vars
-
 run:
   path: ras-deploy/scripts/deploy_collection_instrument.sh
-
-
-# Create separate rabbitmq for CI each time
-# Deploy CI app, but not start
-# Bind rabbit service to CI
-# Use cf env to get rabbit service URI
-# Set CI env variables from rabbit URI
-# Unbind rabbit service to 'document' that there is no bound dependency
-
