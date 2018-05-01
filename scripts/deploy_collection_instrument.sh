@@ -33,7 +33,7 @@ cf login -a "$CLOUDFOUNDRY_API" -u "$CLOUDFOUNDRY_EMAIL" -p "$CLOUDFOUNDRY_PASSW
 cf push "$APP_NAME" --no-start
 cf bind-service "$APP_NAME" "$SERVICE_NAME"
 
-RABBIT_URI=cf apps | grep "$APP_NAME" | awk '{ print "cf env "$1 }'| bash | grep "amqp://" | head -1 | awk -F \" '{ print $4 }'
+RABBIT_URI=$(cf apps | grep "$APP_NAME" | awk '{ print "cf env "$1 }'| bash | grep "amqp://" | head -1 | awk -F \" '{ print $4 }')
 
 set_all_environment_variables
 
