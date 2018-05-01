@@ -10,6 +10,8 @@ cf login \
     -s "$CLOUDFOUNDRY_SPACE" \
     --skip-ssl-validation
 
+cf apps >/dev/null # Call this to check that the CF login command was successful
+
 APPS=$(cf apps | cut -f 1 -d ' ' | tail -n +5)
 
 if [ ${#APPS[@]} -ne 0 ]; then
