@@ -274,8 +274,8 @@ jobs:
     file: ras-deploy/tasks/clear_space.yml
     params:
       CLOUDFOUNDRY_API: ((cloudfoundry_api))
-      USERNAME: ((cloudfoundry_email))
-      PASSWORD: ((cloudfoundry_password))
+      CLOUDFOUNDRY_EMAIL: ((cloudfoundry_email))
+      CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
       CLOUDFOUNDRY_ORG: rmras
       CLOUDFOUNDRY_SPACE: concourse-teardown
 
