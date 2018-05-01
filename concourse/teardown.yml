@@ -257,7 +257,7 @@ resources:
 - name: teardown-timer
   type: time
   source:
-    interval: 5m
+    interval: 1h
 
 jobs:
 - name: tear-down
