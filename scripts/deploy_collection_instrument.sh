@@ -31,12 +31,12 @@ cd ras-collection-instrument-source
 cf login -a "$CLOUDFOUNDRY_API" -u "$CLOUDFOUNDRY_EMAIL" -p "$CLOUDFOUNDRY_PASSWORD" -o "$CLOUDFOUNDRY_ORG" -s "$CLOUDFOUNDRY_SPACE" --skip-ssl-validation
 
 cf push "$APP_NAME" --no-start
+
+# The RabbitMQ service is bound here only because the URI changes each time it starts up.
 cf bind-service "$APP_NAME" "$SERVICE_NAME"
 
 RABBIT_URI=$(cf apps | grep "$APP_NAME" | awk '{ print "cf env "$1 }'| bash | grep "amqp://" | head -1 | awk -F \" '{ print $4 }')
 
 set_all_environment_variables
-
-cf unbind-service "$APP_NAME" "$SERVICE_NAME"
 
 cf start "$APP_NAME"
