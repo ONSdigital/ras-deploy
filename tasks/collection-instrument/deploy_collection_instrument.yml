@@ -12,4 +12,4 @@ inputs:
 - name: ras-collection-instrument-source
 
 run:
-  path: ras-deploy/scripts/deploy_collection_instrument.sh
+  path: ras-deploy/scripts/collection-instrument/deploy_collection_instrument.sh

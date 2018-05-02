@@ -412,7 +412,7 @@ jobs:
       timeout: 300
       wait_for_service: true
   - task: deploy-collection-instrument
-    file: ras-deploy/tasks/deploy_collection_instrument.yml
+    file: ras-deploy/tasks/collection-instrument/deploy_collection_instrument.yml
     params:
       <<: *ci_security_user
       <<: *ci_service_endpoints_for_python
