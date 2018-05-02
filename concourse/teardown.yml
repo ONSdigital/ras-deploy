@@ -81,7 +81,7 @@ templates:
         service: elasticache-broker
         plan: small
         service_instance: rm-redis
-        timeout: 900
+        timeout: 1200
         wait_for_service: true
 
     create_rm_rabbitmq: &teardown_create_rm_rabbitmq
@@ -92,7 +92,7 @@ templates:
         service: rabbitmq
         plan: standard
         service_instance: rm-rabbitmq
-        timeout: 900
+        timeout: 1200
         wait_for_service: true
 
     create_rm_pg_db: &teardown_create_rm_pg_db
@@ -103,7 +103,7 @@ templates:
         service: rds
         plan: shared-psql
         service_instance: rm-pg-db
-        timeout: 900
+        timeout: 1200
         wait_for_service: true
 
 resource_types:
@@ -384,7 +384,7 @@ jobs:
       service: rabbitmq
       plan: standard
       service_instance: collection-instrument-rabbitmq-external
-      timeout: 900
+      timeout: 1200
       wait_for_service: true
   - put: create-database
     resource: cf-cli-resource-teardown
@@ -539,7 +539,7 @@ jobs:
       service: elasticache-broker
       plan: small
       service_instance: ras-redis
-      timeout: 900
+      timeout: 1200
       wait_for_service: true
   - put: cf-resource-teardown
     params:
