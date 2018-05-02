@@ -15,4 +15,7 @@ outputs:
 
 run:
   path: sh
-  args: ras-deploy/scripts/get_database_uris.sh > cf-database-env-vars/setenv.sh
+  args:
+  - -exc
+  - |
+    ras-deploy/scripts/get_database_uris.sh > cf-database-env-vars/setenv.sh
