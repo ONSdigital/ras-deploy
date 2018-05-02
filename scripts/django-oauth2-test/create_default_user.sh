@@ -2,8 +2,6 @@
 
 set -ev
 
-APP_NAME=django-oauth2-test-teardown-migration
-
 cf login \
     -a "$CLOUDFOUNDRY_API" \
     -u "$CLOUDFOUNDRY_EMAIL" \

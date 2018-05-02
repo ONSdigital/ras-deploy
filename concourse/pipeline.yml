@@ -4,6 +4,26 @@ templates:
     security_user: &ci_security_user
       SECURITY_USER_NAME: ((ci_security_user_name))
       SECURITY_USER_PASSWORD: ((ci_security_user_password))
+      
+    all_services: &ci_all_services
+    - ras-party-ci-deploy
+    - ras-backstage-ci-deploy
+    - ras-frontstage-ci-deploy
+    - ras-frontstage-api-ci-deploy
+    - django-oauth2-test-ci-deploy
+    - response-operations-ui-ci-deploy
+    - ras-secure-message-ci-deploy
+    - ras-collection-instrument-ci-deploy
+    - rm-action-service-ci-deploy
+    - rm-actionexporter-service-ci-deploy
+    - rm-case-service-ci-deploy
+    - rm-collection-exercise-ci-deploy
+    - iac-service-ci-deploy
+    - rm-notify-gateway-ci-deploy
+    - rm-sample-service-ci-deploy
+    - rm-sdx-gateway-ci-deploy
+    - rm-survey-service-ci-deploy
+    - sdc-uaa-ci-deploy
 
     service_endpoints_for_python: &ci_service_endpoints_for_python
       ACTION_SERVICE_HOST: rm-action-service-ci-migration.apps.devtest.onsclofo.uk
@@ -81,7 +101,7 @@ templates:
         service: elasticache-broker
         plan: small
         service_instance: rm-redis
-        timeout: 600
+        timeout: 1200
         wait_for_service: true
 
     create_rm_rabbitmq: &ci_create_rm_rabbitmq
@@ -92,7 +112,7 @@ templates:
         service: rabbitmq
         plan: standard
         service_instance: rm-rabbitmq
-        timeout: 300
+        timeout: 1200
         wait_for_service: true
 
     create_rm_pg_db: &ci_create_rm_pg_db
@@ -103,7 +123,7 @@ templates:
         service: rds
         plan: shared-psql
         service_instance: rm-pg-db
-        timeout: 300
+        timeout: 1200
         wait_for_service: true
 
 resource_types:
@@ -237,7 +257,7 @@ resources:
 
 - name: cf-cli-resource-ci
   type: cf-cli-resource
-  source: &ci_cf_cli_auth
+  source:
     api: ((cloudfoundry_api))
     username: ((cloudfoundry_email))
     password: ((cloudfoundry_password))
@@ -255,41 +275,35 @@ resources:
     space: concourse-ci
     skip_cert_check: true
 
-jobs:
-#- name: ras-party-unit-tests
-#  plan:
-#  - get: ras-party-source
-#    trigger: true
-#  - task: run-unit-tests
-#    config:
-#      platform: linux
-#      image_resource:
-#        type: docker-image
-#        source:
-#          repository: sdcplatform/python-pipenv-chrome
-#      inputs:
-#      - name: ras-party-source
-#      params:
-#        DATABASE_URI: sqlite://
-#      run:
-#        path: sh
-#        dir: ras-party-source
-#        args:
-#        - -exc
-#        - |
-#          # Download quickfix for pipenv check error
-#          pip install --upgrade --pre pipenv
-#
-#          echo $DATABASE_URI
-#
-#          pipenv install --dev
-#          make test
+- name: ci-teardown-timer
+  type: time
+  source:
+    interval: 30m
 
+jobs:
+- name: ci-teardown
+  serial_groups: *ci_all_services
+  plan:
+  - get: ras-deploy
+  - get: ci-teardown-timer
+    trigger: true
+  - task: clear-space
+    file: ras-deploy/tasks/clear_space.yml
+    params:
+      CLOUDFOUNDRY_API: ((cloudfoundry_api))
+      CLOUDFOUNDRY_EMAIL: ((cloudfoundry_email))
+      CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
+      CLOUDFOUNDRY_ORG: rmras
+      CLOUDFOUNDRY_SPACE: concourse-ci
+
+### START DEPLOYMENTS
 - name: ras-party-ci-deploy
   serial_groups: [ras-party-ci-deploy]
   plan:
   - get: ras-party-source
+  - get: ci-teardown-timer
     trigger: true
+    passed: [ci-teardown]
   - put: create-database
     resource: cf-cli-resource-ci
     params:
@@ -317,7 +331,9 @@ jobs:
   serial_groups: [ras-secure-message-ci-deploy]
   plan:
   - get: ras-secure-message-source
+  - get: ci-teardown-timer
     trigger: true
+    passed: [ci-teardown]
   - put: create-database
     resource: cf-cli-resource-ci
     params:
@@ -352,7 +368,9 @@ jobs:
   serial_groups: [ras-backstage-ci-deploy]
   plan:
   - get: ras-backstage-source
+  - get: ci-teardown-timer
     trigger: true
+    passed: [ci-teardown]
   - put: cf-resource-ci
     params:
       current_app_name: ras-backstage-ci-migration
@@ -371,7 +389,19 @@ jobs:
   serial_groups: [ras-collection-instrument-ci-deploy]
   plan:
   - get: ras-collection-instrument-source
+  - get: ras-deploy
+  - get: ci-teardown-timer
     trigger: true
+    passed: [ci-teardown]
+  - put: create-collection-instrument-rabbitmq-external
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: rabbitmq
+      plan: standard
+      service_instance: collection-instrument-rabbitmq-external
+      timeout: 1200
+      wait_for_service: true
   - put: create-database
     resource: cf-cli-resource-ci
     params:
@@ -381,24 +411,28 @@ jobs:
       service_instance: ras-ci-db
       timeout: 300
       wait_for_service: true
-  - put: cf-resource-ci
+  - task: deploy-collection-instrument
+    file: ras-deploy/tasks/deploy_collection_instrument.yml
     params:
-      current_app_name: ras-collection-instrument-ci-migration
-      manifest: ras-collection-instrument-source/manifest.yml
-      path: ras-collection-instrument-source
-      environment_variables:
-        <<: *ci_security_user
-        <<: *ci_service_endpoints_for_python
-        JSON_SECRET_KEYS: ((ci_json_secret_keys))
-        ONS_CRYPTOKEY: ((ci_collection_instrument_encryption_key))
-        RABBITMQ_AMQP_COLLECTION_INSTRUMENT: ((ci_rabbitmq_amqp_collection_instrument)) # What is this queue?
-        RABBITMQ_AMQP_SURVEY_RESPONSE: ((ci_rabbitmq_amqp_survey_response))
+      <<: *ci_security_user
+      <<: *ci_service_endpoints_for_python
+      APP_NAME: ras-collection-instrument-ci-migration
+      SERVICE_NAME: collection-instrument-rabbitmq-external
+      CLOUDFOUNDRY_API: ((cloudfoundry_api))
+      CLOUDFOUNDRY_EMAIL: ((cloudfoundry_email))
+      CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
+      CLOUDFOUNDRY_ORG: rmras
+      CLOUDFOUNDRY_SPACE: concourse-ci
+      JSON_SECRET_KEYS: ((ci_json_secret_keys))
+      ONS_CRYPTOKEY: ((ci_collection_instrument_encryption_key))
 
 - name: ras-frontstage-ci-deploy
   serial_groups: [ras-frontstage-ci-deploy]
   plan:
   - get: ras-frontstage-source
+  - get: ci-teardown-timer
     trigger: true
+    passed: [ci-teardown]
   - <<: *ci_create_rm_redis
   - put: cf-resource-ci
     params:
@@ -415,7 +449,9 @@ jobs:
   serial_groups: [ras-frontstage-api-ci-deploy]
   plan:
   - get: ras-frontstage-api-source
+  - get: ci-teardown-timer
     trigger: true
+    passed: [ci-teardown]
   - put: cf-resource-ci
     params:
       current_app_name: ras-frontstage-api-ci-migration
@@ -433,8 +469,10 @@ jobs:
   serial_groups: [django-oauth2-test-ci-deploy]
   plan:
   - get: django-oauth2-test-source
-    trigger: true
   - get: ras-deploy
+  - get: ci-teardown-timer
+    trigger: true
+    passed: [ci-teardown]
   - put: create-database
     resource: cf-cli-resource-ci
     params:
@@ -507,7 +545,9 @@ jobs:
   serial_groups: [response-operations-ui-ci-deploy]
   plan:
   - get: response-operations-ui-source
+  - get: ci-teardown-timer
     trigger: true
+    passed: [ci-teardown]
   - put: create-redis
     resource: cf-cli-resource-ci
     params:
@@ -515,7 +555,7 @@ jobs:
       service: elasticache-broker
       plan: small
       service_instance: ras-redis
-      timeout: 600
+      timeout: 1200
       wait_for_service: true
   - put: cf-resource-ci
     params:
@@ -533,7 +573,9 @@ jobs:
   serial_groups: [rm-action-service-ci-deploy]
   plan:
   - get: rm-action-service-source
+  - get: ci-teardown-timer
     trigger: true
+    passed: [ci-teardown]
   - <<: *ci_create_rm_pg_db
   - <<: *ci_create_rm_redis
   - <<: *ci_create_rm_rabbitmq
@@ -591,7 +633,9 @@ jobs:
   serial_groups: [rm-actionexporter-service-ci-deploy]
   plan:
   - get: rm-actionexporter-service-source
+  - get: ci-teardown-timer
     trigger: true
+    passed: [ci-teardown]
   - <<: *ci_create_rm_pg_db
   - <<: *ci_create_rm_redis
   - <<: *ci_create_rm_rabbitmq
@@ -634,7 +678,9 @@ jobs:
   serial_groups: [rm-case-service-ci-deploy]
   plan:
   - get: rm-case-service-source
+  - get: ci-teardown-timer
     trigger: true
+    passed: [ci-teardown]
   - <<: *ci_create_rm_pg_db
   - <<: *ci_create_rm_redis
   - <<: *ci_create_rm_rabbitmq
@@ -687,7 +733,9 @@ jobs:
   serial_groups: [rm-collection-exercise-ci-deploy]
   plan:
   - get: rm-collection-exercise-service-source
+  - get: ci-teardown-timer
     trigger: true
+    passed: [ci-teardown]
   - <<: *ci_create_rm_pg_db
   - <<: *ci_create_rm_redis
   - <<: *ci_create_rm_rabbitmq
@@ -747,7 +795,9 @@ jobs:
   serial_groups: [iac-service-ci-deploy]
   plan:
   - get: iac-service-source
+  - get: ci-teardown-timer
     trigger: true
+    passed: [ci-teardown]
   - <<: *ci_create_rm_pg_db
   - task: build
     config:
@@ -788,7 +838,9 @@ jobs:
   serial_groups: [rm-notify-gateway-ci-deploy]
   plan:
   - get: rm-notify-gateway-source
+  - get: ci-teardown-timer
     trigger: true
+    passed: [ci-teardown]
   - <<: *ci_create_rm_pg_db
   - <<: *ci_create_rm_rabbitmq
   - task: build
@@ -829,7 +881,9 @@ jobs:
   serial_groups: [rm-sample-service-ci-deploy]
   plan:
   - get: rm-sample-service-source
+  - get: ci-teardown-timer
     trigger: true
+    passed: [ci-teardown]
   - <<: *ci_create_rm_pg_db
   - <<: *ci_create_rm_redis
   - <<: *ci_create_rm_rabbitmq
@@ -878,7 +932,9 @@ jobs:
   serial_groups: [rm-sdx-gateway-ci-deploy]
   plan:
   - get: rm-sdx-gateway-source
+  - get: ci-teardown-timer
     trigger: true
+    passed: [ci-teardown]
   - <<: *ci_create_rm_redis
   - <<: *ci_create_rm_rabbitmq
   - task: build
@@ -915,7 +971,9 @@ jobs:
   serial_groups: [rm-survey-service-ci-deploy]
   plan:
   - get: rm-survey-service-source
+  - get: ci-teardown-timer
     trigger: true
+    passed: [ci-teardown]
   - <<: *ci_create_rm_pg_db
   - task: build
     config:
@@ -951,7 +1009,9 @@ jobs:
   serial_groups: [sdc-uaa-ci-deploy]
   plan:
   - get: sdc-uaa-source
+  - get: ci-teardown-timer
     trigger: true
+    passed: [ci-teardown]
   - task: build
     config:
       platform: linux
@@ -1058,17 +1118,15 @@ jobs:
         path: sh
         args:
         - './scripts/jenkins/add_user.sh'
-
+### END DEPLOYMENTS
 
 - name: rasrm-acceptance-tests
-  serial_groups: [ras-party-ci-deploy, ras-backstage-ci-deploy, ras-frontstage-ci-deploy, ras-frontstage-api-ci-deploy,
-    django-oauth2-test-ci-deploy, response-operations-ui-ci-deploy, ras-secure-message-ci-deploy,
-    ras-collection-instrument-ci-deploy, rm-action-service-ci-deploy, rm-actionexporter-service-ci-deploy,
-    rm-case-service-ci-deploy, rm-collection-exercise-ci-deploy, iac-service-ci-deploy, rm-notify-gateway-ci-deploy,
-    rm-sample-service-ci-deploy, rm-sdx-gateway-ci-deploy, rm-survey-service-ci-deploy, sdc-uaa-ci-deploy]
+  serial_groups: *ci_all_services
   plan:
   - get: ras-deploy
+  - get: ci-teardown-timer
     trigger: true
+    passed: *ci_all_services
   - get: rasrm-acceptance-tests-source
     trigger: true
   - get: ras-party-source
