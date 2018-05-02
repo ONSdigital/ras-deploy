@@ -163,7 +163,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-collection-instrument.git
-    branch: master
+    branch: fallback-to-using-cloudfoundry-queue
 
 - name: ras-frontstage-source
   type: git
@@ -278,7 +278,7 @@ resources:
 - name: ci-teardown-timer
   type: time
   source:
-    interval: 30m
+    interval: 2h
 
 jobs:
 - name: ci-teardown
@@ -393,13 +393,13 @@ jobs:
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
-  - put: create-collection-instrument-rabbitmq-external
+  - put: create-ras-rabbitmq
     resource: cf-cli-resource-ci
     params:
       command: create-service
       service: rabbitmq
       plan: standard
-      service_instance: collection-instrument-rabbitmq-external
+      service_instance: ras-rabbitmq
       timeout: 1800
       wait_for_service: true
   - put: create-database
@@ -411,20 +411,18 @@ jobs:
       service_instance: ras-ci-db
       timeout: 300
       wait_for_service: true
-  - task: deploy-collection-instrument
-    file: ras-deploy/tasks/collection-instrument/deploy_collection_instrument.yml
+  - put: cf-resource-ci
     params:
-      <<: *ci_security_user
-      <<: *ci_service_endpoints_for_python
-      APP_NAME: ras-collection-instrument-ci-migration
-      SERVICE_NAME: collection-instrument-rabbitmq-external
-      CLOUDFOUNDRY_API: ((cloudfoundry_api))
-      CLOUDFOUNDRY_EMAIL: ((cloudfoundry_email))
-      CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
-      CLOUDFOUNDRY_ORG: rmras
-      CLOUDFOUNDRY_SPACE: concourse-ci
-      JSON_SECRET_KEYS: ((ci_json_secret_keys))
-      ONS_CRYPTOKEY: ((ci_collection_instrument_encryption_key))
+      current_app_name: ras-collection-instrument-ci-migration
+      manifest: ras-collection-instrument-source/manifest-ci.yml
+      path: ras-collection-instrument-source
+      environment_variables:
+        <<: *ci_security_user
+        <<: *ci_service_endpoints_for_python
+        JSON_SECRET_KEYS: ((ci_json_secret_keys))
+        ONS_CRYPTOKEY: ((ci_collection_instrument_encryption_key))
+        RABBITMQ_AMQP_COLLECTION_INSTRUMENT: ((ci_rabbitmq_amqp_collection_instrument)) # What is this queue?
+        RABBITMQ_AMQP_SURVEY_RESPONSE: ((ci_rabbitmq_amqp_survey_response))
 
 - name: ras-frontstage-ci-deploy
   serial_groups: [ras-frontstage-ci-deploy]
