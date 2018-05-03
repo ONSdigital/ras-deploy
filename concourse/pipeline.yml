@@ -6,6 +6,8 @@ templates:
       actionSvc_connectionConfig_username: ((ci_security_user_name))
       caseSvc_connectionConfig_username: ((ci_security_user_name))
       caseSvc_connectionConfig_password: ((ci_security_user_password))
+      collectionExerciseSvc_connectionConfig_username: ((ci_security_user_name))
+      collectionExerciseSvc_connectionConfig_password: ((ci_security_user_password))
       collectionInstrumentSvc_connectionConfig_username: ((ci_security_user_name))
       collectionInstrumentSvc_connectionConfig_password: ((ci_security_user_password))
       internetAccessCodeSvc_connectionConfig_password: ((ci_security_user_password))
@@ -18,6 +20,8 @@ templates:
       security_user_password: ((ci_security_user_password))
       surveySvc_connectionConfig_username: ((ci_security_user_name))
       surveySvc_connectionConfig_password: ((ci_security_user_password))
+      SECURITY_USER_NAME: ((ci_security_user_name))
+      SECURITY_USER_PASSWORD: ((ci_security_user_password))
 
     all_services: &ci_all_services
     - ras-party-ci-deploy
