@@ -977,6 +977,7 @@ jobs:
       path: rm-survey-service-build
       environment_variables:
         <<: *ci_security_user
+        MIGRATION_SOURCE: 'file://db-migrations'
 
 - name: sdc-uaa-ci-deploy
   serial_groups: [sdc-uaa-ci-deploy]
