@@ -2,9 +2,23 @@
 templates:
   ci:
     security_user: &ci_security_user
-      SECURITY_USER_NAME: ((ci_security_user_name))
-      SECURITY_USER_PASSWORD: ((ci_security_user_password))
-      
+      actionSvc_connectionConfig_password: ((ci_security_user_password))
+      actionSvc_connectionConfig_username: ((ci_security_user_name))
+      caseSvc_connectionConfig_username: ((ci_security_user_name))
+      caseSvc_connectionConfig_password: ((ci_security_user_password))
+      collectionInstrumentSvc_connectionConfig_username: ((ci_security_user_name))
+      collectionInstrumentSvc_connectionConfig_password: ((ci_security_user_password))
+      internetAccessCodeSvc_connectionConfig_password: ((ci_security_user_password))
+      internetAccessCodeSvc_connectionConfig_username: ((ci_security_user_name))
+      partySvc_connectionConfig_username: ((ci_security_user_name))
+      partySvc_connectionConfig_password: ((ci_security_user_password))
+      sampleSvc_connectionConfig_username: ((ci_security_user_name))
+      sampleSvc_connectionConfig_password: ((ci_security_user_password))
+      security_user_name: ((ci_security_user_name))
+      security_user_password: ((ci_security_user_password))
+      surveySvc_connectionConfig_username: ((ci_security_user_name))
+      surveySvc_connectionConfig_password: ((ci_security_user_password))
+
     all_services: &ci_all_services
     - ras-party-ci-deploy
     - ras-backstage-ci-deploy
@@ -92,6 +106,32 @@ templates:
       SECURE_MESSAGE_SERVICE_PORT: '80'
       SURVEY_SERVICE_HOST: rm-survey-service-ci-migration.apps.devtest.onsclofo.uk
       SURVEY_SERVICE_PORT: '80'
+
+    service_endpoints_for_java: &ci_service_endpoints_for_java
+      actionSvc_connectionConfig_host: 'rm-action-service-ci-migration.apps.devtest.onsclofo.uk'
+      actionSvc_connectionConfig_port: '80'
+      actionSvc_connectionConfig_scheme: 'http'
+      caseSvc_connectionConfig_host: 'rm-case-service-ci-migration.apps.devtest.onsclofo.uk'
+      caseSvc_connectionConfig_port: '80'
+      caseSvc_connectionConfig_scheme: 'http'
+      collectionExerciseSvc_connectionConfig_host: 'rm-collection-exercise-service-ci-migration.apps.devtest.onsclofo.uk'
+      collectionExerciseSvc_connectionConfig_port: '80'
+      collectionExerciseSvc_connectionConfig_scheme: 'http'
+      collectionInstrumentSvc_connectionConfig_host: 'ras-collection-instrument-ci-migration.apps.devtest.onsclofo.uk'
+      collectionInstrumentSvc_connectionConfig_port: '80'
+      collectionInstrumentSvc_connectionConfig_scheme: 'http'
+      internetAccessCodeSvc_connectionConfig_host: 'iac-service-ci-migration.apps.devtest.onsclofo.uk'
+      internetAccessCodeSvc_connectionConfig_port: '80'
+      internetAccessCodeSvc_connectionConfig_scheme: 'http'
+      partySvc_connectionConfig_host: 'ras-party-ci-migration.apps.devtest.onsclofo.uk'
+      partySvc_connectionConfig_port: '80'
+      partySvc_connectionConfig_scheme: 'http'
+      sampleSvc_connectionConfig_host: 'rm-sample-service-ci-migration.apps.devtest.onsclofo.uk'
+      sampleSvc_connectionConfig_port: '80'
+      sampleSvc_connectionConfig_scheme: 'http'
+      surveySvc_connectionConfig_host: 'rm-survey-service-ci-migration.apps.devtest.onsclofo.uk'
+      surveySvc_connectionConfig_port: '80'
+      surveySvc_connectionConfig_scheme: 'http'
 
     create_rm_redis: &ci_create_rm_redis
       put: create-rm-redis
@@ -603,29 +643,9 @@ jobs:
       manifest: rm-action-service-source/manifest-no-envs.yml
       path: target/actionsvc*.jar
       environment_variables:
-        partySvc_connectionConfig_host: 'ras-party-ci-migration.apps.devtest.onsclofo.uk'
-        partySvc_connectionConfig_port: '80'
-        partySvc_connectionConfig_scheme: 'http'
-        partySvc_connectionConfig_username: ((ci_security_user_name))
-        partySvc_connectionConfig_password: ((ci_security_user_password))
-        collectionExerciseSvc_connectionConfig_host: 'rm-collection-exercise-service-ci-migration.apps.devtest.onsclofo.uk'
-        collectionExerciseSvc_connectionConfig_port: '80'
-        collectionExerciseSvc_connectionConfig_scheme: 'http'
-        collectionExerciseSvc_connectionConfig_username: ((ci_security_user_name))
-        collectionExerciseSvc_connectionConfig_password: ((ci_security_user_password))
-        caseSvc_connectionConfig_host: 'rm-case-service-ci-migration.apps.devtest.onsclofo.uk'
-        caseSvc_connectionConfig_port: '80'
-        caseSvc_connectionConfig_scheme: 'http'
-        caseSvc_connectionConfig_username: ((ci_security_user_name))
-        caseSvc_connectionConfig_password: ((ci_security_user_password))
-        surveySvc_connectionConfig_host: 'rm-survey-service-ci-migration.apps.devtest.onsclofo.uk'
-        surveySvc_connectionConfig_port: '80'
-        surveySvc_connectionConfig_scheme: 'http'
-        surveySvc_connectionConfig_username: ((ci_security_user_name))
-        surveySvc_connectionConfig_password: ((ci_security_user_password))
+        <<: *ci_security_user
+        <<: *ci_service_endpoints_for_java
         endpoints_enabled: 'false'
-        security_user_name: ((ci_security_user_name))
-        security_user_password: ((ci_security_user_password))
 
 - name: rm-actionexporter-service-ci-deploy
   serial_groups: [rm-actionexporter-service-ci-deploy]
@@ -663,10 +683,9 @@ jobs:
       manifest: rm-actionexporter-service-source/manifest.yml
       path: target/actionexportersvc*.jar
       environment_variables:
+        <<: *ci_security_user
         endpoints_enabled: 'false'
         exportSchedule_cronExpression: '0 * * * * ?'
-        security_user_name: ((ci_security_user_name))
-        security_user_password: ((ci_security_user_password))
         sftp_host: ((sftp_host))
         sftp_password: ((actionexporter_sftp_password))
         sftp_port: '22'
@@ -708,24 +727,9 @@ jobs:
       manifest: rm-case-service-source/manifest-no-envs.yml
       path: target/casesvc*.jar
       environment_variables:
-        actionSvc_connectionConfig_host: 'rm-action-service-ci-migration.apps.devtest.onsclofo.uk'
-        actionSvc_connectionConfig_password: ((ci_security_user_password))
-        actionSvc_connectionConfig_port: '80'
-        actionSvc_connectionConfig_scheme: 'http'
-        actionSvc_connectionConfig_username: ((ci_security_user_name))
-        collectionExerciseSvc_connectionConfig_host: 'rm-collection-exercise-service-ci-migration.apps.devtest.onsclofo.uk'
-        collectionExerciseSvc_connectionConfig_password: ((ci_security_user_password))
-        collectionExerciseSvc_connectionConfig_port: '80'
-        collectionExerciseSvc_connectionConfig_scheme: 'http'
-        collectionExerciseSvc_connectionConfig_username: ((ci_security_user_name))
+        <<: *ci_security_user
+        <<: *ci_service_endpoints_for_java
         endpoints_enabled: 'false'
-        internetAccessCodeSvc_connectionConfig_host: 'iac-service-ci-migration.apps.devtest.onsclofo.uk'
-        internetAccessCodeSvc_connectionConfig_password: ((ci_security_user_password))
-        internetAccessCodeSvc_connectionConfig_port: '80'
-        internetAccessCodeSvc_connectionConfig_scheme: 'http'
-        internetAccessCodeSvc_connectionConfig_username: ((ci_security_user_name))
-        security_user_name: ((ci_security_user_name))
-        security_user_password: ((ci_security_user_password))
 
 - name: rm-collection-exercise-ci-deploy
   serial_groups: [rm-collection-exercise-ci-deploy]
@@ -763,29 +767,9 @@ jobs:
       manifest: rm-collection-exercise-service-source/manifest-no-envs.yml
       path: target/collectionexercisesvc*.jar
       environment_variables:
-        collectionInstrumentSvc_connectionConfig_host: 'ras-collection-instrument-ci-migration.apps.devtest.onsclofo.uk'
-        collectionInstrumentSvc_connectionConfig_password: ((ci_security_user_password))
-        collectionInstrumentSvc_connectionConfig_port: '80'
-        collectionInstrumentSvc_connectionConfig_scheme: 'http'
-        collectionInstrumentSvc_connectionConfig_username: ((ci_security_user_name))
+        <<: *ci_security_user
+        <<: *ci_service_endpoints_for_java
         endpoints_enabled: 'false'
-        partySvc_connectionConfig_host: 'ras-party-ci-migration.apps.devtest.onsclofo.uk'
-        partySvc_connectionConfig_password: ((ci_security_user_password))
-        partySvc_connectionConfig_port: '80'
-        partySvc_connectionConfig_scheme: 'http'
-        partySvc_connectionConfig_username: ((ci_security_user_name))
-        sampleSvc_connectionConfig_host: 'rm-sample-service-ci-migration.apps.devtest.onsclofo.uk'
-        sampleSvc_connectionConfig_password: ((ci_security_user_password))
-        sampleSvc_connectionConfig_port: '80'
-        sampleSvc_connectionConfig_scheme: 'http'
-        sampleSvc_connectionConfig_username: ((ci_security_user_name))
-        security_user_name: ((ci_security_user_name))
-        security_user_password: ((ci_security_user_password))
-        surveySvc_connectionConfig_host: 'rm-survey-service-ci-migration.apps.devtest.onsclofo.uk'
-        surveySvc_connectionConfig_password: ((ci_security_user_password))
-        surveySvc_connectionConfig_port: '80'
-        surveySvc_connectionConfig_scheme: 'http'
-        surveySvc_connectionConfig_username: ((ci_security_user_name))
         SCHEDULES_VALIDATION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
         SCHEDULES_DISTRIBUTION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
 
@@ -823,14 +807,9 @@ jobs:
       manifest: iac-service-source/manifest-no-envs.yml
       path: target/iacsvc*.jar
       environment_variables:
-        caseSvc_connectionConfig_host: 'rm-case-service-ci-migration.apps.devtest.onsclofo.uk'
-        caseSvc_connectionConfig_password: ((ci_security_user_password))
-        caseSvc_connectionConfig_port: '80'
-        caseSvc_connectionConfig_scheme: 'http'
-        caseSvc_connectionConfig_username: ((ci_security_user_name))
+        <<: *ci_security_user
+        <<: *ci_service_endpoints_for_java
         endpoints_enabled: 'false'
-        security_user_name: ((ci_security_user_name))
-        security_user_password: ((ci_security_user_password))
 
 - name: rm-notify-gateway-ci-deploy
   serial_groups: [rm-notify-gateway-ci-deploy]
@@ -867,13 +846,12 @@ jobs:
       manifest: rm-notify-gateway-source/manifest.yml
       path: target/notifygatewaysvc*.jar
       environment_variables:
+        <<: *ci_security_user
         endpoints_enabled: 'false'
         notify_apiKey: ((test_notify_api_key))
         notify_censusUacSmsTemplateId: '966731dc-ef2e-41ad-a828-8cdd95c81ebc'
         notify_enabled: 'false'
         notify_onsSurveysRasEmailReminderTemplateId: '19a0aa89-797f-4a34-ad54-267fd581f2ef'
-        security_user_name: ((ci_security_user_name))
-        security_user_password: ((ci_security_user_password))
 
 - name: rm-sample-service-ci-deploy
   serial_groups: [rm-sample-service-ci-deploy]
@@ -911,16 +889,11 @@ jobs:
       manifest: rm-sample-service-source/manifest-no-envs.yml
       path: target/samplesvc*.jar
       environment_variables:
+        <<: *ci_security_user
+        <<: *ci_service_endpoints_for_java
         SAMPLE_UNIT_DISTRIBUTION_DELAY_MILLI_SECONDS: '1000'
         endpoints_enabled: 'false'
         exportSchedule_cronExpression: '0 0/5 * * * ?'
-        partySvc_connectionConfig_host: 'ras-party-ci-migration.apps.devtest.onsclofo.uk'
-        partySvc_connectionConfig_password: ((ci_security_user_password))
-        partySvc_connectionConfig_port: '80'
-        partySvc_connectionConfig_scheme: 'http'
-        partySvc_connectionConfig_username: ((ci_security_user_name))
-        security_user_name: ((ci_security_user_name))
-        security_user_password: ((ci_security_user_password))
         sftp_host: ((sftp_host))
         sftp_password: ((sample_sftp_password))
         sftp_port: '22'
@@ -961,9 +934,8 @@ jobs:
       manifest: rm-sdx-gateway-source/manifest.yml
       path: target/sdxgatewaysvc*.jar
       environment_variables:
+        <<: *ci_security_user
         endpoints_enabled: 'false'
-        security_user_name: ((ci_security_user_name))
-        security_user_password: ((ci_security_user_password))
 
 - name: rm-survey-service-ci-deploy
   serial_groups: [rm-survey-service-ci-deploy]
@@ -1000,8 +972,7 @@ jobs:
       manifest: rm-survey-service-source/manifest.yml
       path: rm-survey-service-build
       environment_variables:
-        security_user_name: ((ci_security_user_name))
-        security_user_password: ((ci_security_user_password))
+        <<: *ci_security_user
 
 - name: sdc-uaa-ci-deploy
   serial_groups: [sdc-uaa-ci-deploy]
