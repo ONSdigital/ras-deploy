@@ -4,8 +4,8 @@ CI/CD pipeline for RAS/RM services.
 
 ## Description
 
-The pipeline deploys all the way to the `prod` environment (Cloud Foundry space) via the `ci`, `current` and
-`preprod` environments. Deployments to `ci` and `current` are continuous and trigger on every merge to `master`,
+The pipeline deploys all the way to the `prod` environment (Cloud Foundry space) via the `ci`, `latest` and
+`preprod` environments. Deployments to `ci` and `latest` are continuous and trigger on every merge to `master`,
 deployments to `preprod` and `prod` require manual triggers.
 
 ## Environments
@@ -13,7 +13,7 @@ deployments to `preprod` and `prod` require manual triggers.
 | Space   | Usage                                                                                                                              |
 |---------|------------------------------------------------------------------------------------------------------------------------------------|
 | ci      | Used for running automated tests.  This environment is not intended to be interacted with manually unless debugging failing tests. |
-| current | Used by devs for testing and exploring.  This is always up to date with the latest commit that passes the `ci` acceptance tests.   |
+| latest  | Used by devs for testing and exploring.  This is always up to date with the latest commit that passes the `ci` acceptance tests.   |
 | preprod | Used for SIT and CAT testing. This doesn't change without manual intervention.                                                     |
 | prod    | The live application.  Nothing can be deployed to `prod` without having first been deployed to `preprod`.                          |
 

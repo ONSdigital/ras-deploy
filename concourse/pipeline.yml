@@ -170,6 +170,176 @@ templates:
         timeout: 1800
         wait_for_service: true
 
+  latest:
+    security_user: &latest_security_user
+      actionSvc_connectionConfig_password: ((latest_security_user_password))
+      actionSvc_connectionConfig_username: ((latest_security_user_name))
+      caseSvc_connectionConfig_username: ((latest_security_user_name))
+      caseSvc_connectionConfig_password: ((latest_security_user_password))
+      collectionExerciseSvc_connectionConfig_username: ((latest_security_user_name))
+      collectionExerciseSvc_connectionConfig_password: ((latest_security_user_password))
+      collectionInstrumentSvc_connectionConfig_username: ((latest_security_user_name))
+      collectionInstrumentSvc_connectionConfig_password: ((latest_security_user_password))
+      internetAccessCodeSvc_connectionConfig_password: ((latest_security_user_password))
+      internetAccessCodeSvc_connectionConfig_username: ((latest_security_user_name))
+      partySvc_connectionConfig_username: ((latest_security_user_name))
+      partySvc_connectionConfig_password: ((latest_security_user_password))
+      sampleSvc_connectionConfig_username: ((latest_security_user_name))
+      sampleSvc_connectionConfig_password: ((latest_security_user_password))
+      security_user_name: ((latest_security_user_name))
+      security_user_password: ((latest_security_user_password))
+      surveySvc_connectionConfig_username: ((latest_security_user_name))
+      surveySvc_connectionConfig_password: ((latest_security_user_password))
+      SECURITY_USER_NAME: ((latest_security_user_name))
+      SECURITY_USER_PASSWORD: ((latest_security_user_password))
+
+    all_services: &latest_all_services
+    - ras-party-latest-deploy
+    - ras-backstage-latest-deploy
+    - ras-frontstage-latest-deploy
+    - ras-frontstage-api-latest-deploy
+    - django-oauth2-test-latest-deploy
+    - response-operations-ui-latest-deploy
+    - ras-secure-message-latest-deploy
+    - ras-collection-instrument-latest-deploy
+    - rm-action-service-latest-deploy
+    - rm-actionexporter-service-latest-deploy
+    - rm-case-service-latest-deploy
+    - rm-collection-exercise-latest-deploy
+    - iac-service-latest-deploy
+    - rm-notify-gateway-latest-deploy
+    - rm-sample-service-latest-deploy
+    - rm-sdx-gateway-latest-deploy
+    - rm-survey-service-latest-deploy
+    - sdc-uaa-latest-deploy
+
+    service_endpoints_for_python: &latest_service_endpoints_for_python
+      ACTION_SERVICE_HOST: rm-action-service-latest-migration.apps.devtest.onsclofo.uk
+      ACTION_SERVICE_PORT: '80'
+      ACTION_EXPORTER_HOST: rm-actionexporter-service-latest-migration.apps.devtest.onsclofo.uk
+      ACTION_EXPORTER_PORT: '80'
+      BACKSTAGE_SERVICE_HOST: ras-backstage-latest-migration.apps.devtest.onsclofo.uk
+      BACKSTAGE_SERVICE_PORT: '80'
+      CASE_SERVICE_HOST: rm-case-service-latest-migration.apps.devtest.onsclofo.uk
+      CASE_SERVICE_PORT: '80'
+      COLLECTION_EXERCISE_SERVICE_HOST: rm-collection-exercise-service-latest-migration.apps.devtest.onsclofo.uk
+      COLLECTION_EXERCISE_SERVICE_PORT: '80'
+      COLLECTION_EXERCISE_HOST: rm-collection-exercise-service-latest-migration.apps.devtest.onsclofo.uk
+      COLLECTION_EXERCISE_PORT: '80'
+      COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-latest-migration.apps.devtest.onsclofo.uk
+      COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
+      DJANGO_SERVICE_HOST: django-oauth2-test-latest-migration.apps.devtest.onsclofo.uk
+      DJANGO_SERVICE_PORT: '80'
+      FRONTSTAGE_API_SERVICE_HOST: ras-frontstage-api-latest-migration.apps.devtest.onsclofo.uk
+      FRONTSTAGE_API_SERVICE_PORT: '80'
+      FRONTSTAGE_SERVICE_HOST: ras-frontstage-latest-migration.apps.devtest.onsclofo.uk
+      FRONTSTAGE_SERVICE_PORT: '80'
+      IAC_SERVICE_HOST: iac-service-latest-migration.apps.devtest.onsclofo.uk
+      IAC_SERVICE_PORT: '80'
+      NOTIFY_GATEWAY_SERVICE_HOST: rm-notify-gateway-latest-migration.apps.devtest.onsclofo.uk
+      NOTIFY_GATEWAY_SERVICE_PORT: '80'
+      PARTY_SERVICE_HOST: ras-party-latest-migration.apps.devtest.onsclofo.uk
+      PARTY_SERVICE_PORT: '80'
+      RM_CASE_SERVICE_HOST: rm-case-service-latest-migration.apps.devtest.onsclofo.uk
+      RM_CASE_SERVICE_PORT: '80'
+      RM_COLLECTION_EXERCISE_SERVICE_HOST: rm-collection-exercise-service-latest-migration.apps.devtest.onsclofo.uk
+      RM_COLLECTION_EXERCISE_SERVICE_PORT: '80'
+      RM_IAC_SERVICE_HOST: iac-service-latest-migration.apps.devtest.onsclofo.uk
+      RM_IAC_SERVICE_PORT: '80'
+      RM_SAMPLE_SERVICE_HOST: rm-sample-service-latest-migration.apps.devtest.onsclofo.uk
+      RM_SAMPLE_SERVICE_PORT: '80'
+      RM_SURVEY_SERVICE_HOST: rm-survey-service-latest-migration.apps.devtest.onsclofo.uk
+      RM_SURVEY_SERVICE_PORT: '80'
+      RAS_CASE_SERVICE_HOST: rm-case-service-latest-migration.apps.devtest.onsclofo.uk
+      RAS_CASE_SERVICE_PORT: '80'
+      RAS_COLLEX_SERVICE_HOST: rm-collection-exercise-service-latest-migration.apps.devtest.onsclofo.uk
+      RAS_COLLEX_SERVICE_PORT: '80'
+      RAS_FRONTSTAGE_API_HOST: ras-frontstage-api-latest-migration.apps.devtest.onsclofo.uk
+      RAS_FRONTSTAGE_API_PORT: '80'
+      RAS_IAC_SERVICE_HOST: iac-service-latest-migration.apps.devtest.onsclofo.uk
+      RAS_IAC_SERVICE_PORT: '80'
+      RAS_OAUTH_SERVICE_HOST: django-oauth2-test-latest-migration.apps.devtest.onsclofo.uk
+      RAS_OAUTH_SERVICE_PORT: '80'
+      RAS_PARTY_SERVICE_HOST: ras-party-latest-migration.apps.devtest.onsclofo.uk
+      RAS_PARTY_SERVICE_PORT: '80'
+      RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-latest-migration.apps.devtest.onsclofo.uk
+      RAS_COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
+      RAS_PUBLIC_WEBSITE_HOST: ras-frontstage-latest-migration.apps.devtest.onsclofo.uk
+      RAS_PUBLIC_WEBSITE_PORT: '80'
+      RAS_SECURE_MESSAGE_SERVICE_HOST: ras-secure-message-latest-migration.apps.devtest.onsclofo.uk
+      RAS_SECURE_MESSAGE_SERVICE_PORT: '80'
+      RAS_SECURE_MESSAGING_SERVICE_HOST: ras-secure-message-latest-migration.apps.devtest.onsclofo.uk
+      RAS_SECURE_MESSAGING_SERVICE_PORT: '80'
+      RAS_SURVEY_SERVICE_HOST: rm-survey-service-latest-migration.apps.devtest.onsclofo.uk
+      RAS_SURVEY_SERVICE_PORT: '80'
+      RESPONSE_OPERATIONS_UI_HOST: response-operations-ui-latest-migration.apps.devtest.onsclofo.uk
+      RESPONSE_OPERATIONS_UI_PORT: '80'
+      SAMPLE_SERVICE_HOST: rm-sample-service-latest-migration.apps.devtest.onsclofo.uk
+      SAMPLE_SERVICE_PORT: '80'
+      SECURE_MESSAGE_SERVICE_HOST: ras-secure-message-latest-migration.apps.devtest.onsclofo.uk
+      SECURE_MESSAGE_SERVICE_PORT: '80'
+      SURVEY_SERVICE_HOST: rm-survey-service-latest-migration.apps.devtest.onsclofo.uk
+      SURVEY_SERVICE_PORT: '80'
+
+    service_endpoints_for_java: &latest_service_endpoints_for_java
+      actionSvc_connectionConfig_host: 'rm-action-service-latest-migration.apps.devtest.onsclofo.uk'
+      actionSvc_connectionConfig_port: '80'
+      actionSvc_connectionConfig_scheme: 'http'
+      caseSvc_connectionConfig_host: 'rm-case-service-latest-migration.apps.devtest.onsclofo.uk'
+      caseSvc_connectionConfig_port: '80'
+      caseSvc_connectionConfig_scheme: 'http'
+      collectionExerciseSvc_connectionConfig_host: 'rm-collection-exercise-service-latest-migration.apps.devtest.onsclofo.uk'
+      collectionExerciseSvc_connectionConfig_port: '80'
+      collectionExerciseSvc_connectionConfig_scheme: 'http'
+      collectionInstrumentSvc_connectionConfig_host: 'ras-collection-instrument-latest-migration.apps.devtest.onsclofo.uk'
+      collectionInstrumentSvc_connectionConfig_port: '80'
+      collectionInstrumentSvc_connectionConfig_scheme: 'http'
+      internetAccessCodeSvc_connectionConfig_host: 'iac-service-latest-migration.apps.devtest.onsclofo.uk'
+      internetAccessCodeSvc_connectionConfig_port: '80'
+      internetAccessCodeSvc_connectionConfig_scheme: 'http'
+      partySvc_connectionConfig_host: 'ras-party-latest-migration.apps.devtest.onsclofo.uk'
+      partySvc_connectionConfig_port: '80'
+      partySvc_connectionConfig_scheme: 'http'
+      sampleSvc_connectionConfig_host: 'rm-sample-service-latest-migration.apps.devtest.onsclofo.uk'
+      sampleSvc_connectionConfig_port: '80'
+      sampleSvc_connectionConfig_scheme: 'http'
+      surveySvc_connectionConfig_host: 'rm-survey-service-latest-migration.apps.devtest.onsclofo.uk'
+      surveySvc_connectionConfig_port: '80'
+      surveySvc_connectionConfig_scheme: 'http'
+
+    create_rm_redis: &latest_create_rm_redis
+      put: create-rm-redis
+      resource: cf-cli-resource-latest
+      params:
+        command: create-service
+        service: elasticache-broker
+        plan: small
+        service_instance: rm-redis
+        timeout: 1800
+        wait_for_service: true
+
+    create_rm_rabbitmq: &latest_create_rm_rabbitmq
+      put: create-rm-rabbitmq
+      resource: cf-cli-resource-latest
+      params:
+        command: create-service
+        service: rabbitmq
+        plan: standard
+        service_instance: rm-rabbitmq
+        timeout: 1800
+        wait_for_service: true
+
+    create_rm_pg_db: &latest_create_rm_pg_db
+      put: create-database
+      resource: cf-cli-resource-latest
+      params:
+        command: create-service
+        service: rds
+        plan: shared-psql
+        service_instance: rm-pg-db
+        timeout: 1800
+        wait_for_service: true
+
 resource_types:
 - name: cf-cli-resource
   type: docker-image
@@ -324,6 +494,26 @@ resources:
   source:
     interval: 2h
 
+- name: cf-cli-resource-latest
+  type: cf-cli-resource
+  source:
+    api: ((cloudfoundry_api))
+    username: ((cloudfoundry_email))
+    password: ((cloudfoundry_password))
+    org: rmras
+    space: concourse-latest
+    skip_cert_check: true
+
+- name: cf-resource-latest
+  type: cf
+  source:
+    api: ((cloudfoundry_api))
+    username: ((cloudfoundry_email))
+    password: ((cloudfoundry_password))
+    organization: rmras
+    space: concourse-latest
+    skip_cert_check: true
+
 jobs:
 - name: ci-teardown
   serial_groups: *ci_all_services
@@ -345,6 +535,7 @@ jobs:
   serial_groups: [ras-party-ci-deploy]
   plan:
   - get: ras-party-source
+    trigger: true
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
@@ -375,6 +566,7 @@ jobs:
   serial_groups: [ras-secure-message-ci-deploy]
   plan:
   - get: ras-secure-message-source
+    trigger: true
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
@@ -412,6 +604,7 @@ jobs:
   serial_groups: [ras-backstage-ci-deploy]
   plan:
   - get: ras-backstage-source
+    trigger: true
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
@@ -433,6 +626,7 @@ jobs:
   serial_groups: [ras-collection-instrument-ci-deploy]
   plan:
   - get: ras-collection-instrument-source
+    trigger: true
   - get: ras-deploy
   - get: ci-teardown-timer
     trigger: true
@@ -472,6 +666,7 @@ jobs:
   serial_groups: [ras-frontstage-ci-deploy]
   plan:
   - get: ras-frontstage-source
+    trigger: true
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
@@ -491,6 +686,7 @@ jobs:
   serial_groups: [ras-frontstage-api-ci-deploy]
   plan:
   - get: ras-frontstage-api-source
+    trigger: true
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
@@ -511,6 +707,7 @@ jobs:
   serial_groups: [django-oauth2-test-ci-deploy]
   plan:
   - get: django-oauth2-test-source
+    trigger: true
   - get: ras-deploy
   - get: ci-teardown-timer
     trigger: true
@@ -587,6 +784,7 @@ jobs:
   serial_groups: [response-operations-ui-ci-deploy]
   plan:
   - get: response-operations-ui-source
+    trigger: true
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
@@ -615,6 +813,7 @@ jobs:
   serial_groups: [rm-action-service-ci-deploy]
   plan:
   - get: rm-action-service-source
+    trigger: true
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
@@ -655,6 +854,7 @@ jobs:
   serial_groups: [rm-actionexporter-service-ci-deploy]
   plan:
   - get: rm-actionexporter-service-source
+    trigger: true
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
@@ -699,6 +899,7 @@ jobs:
   serial_groups: [rm-case-service-ci-deploy]
   plan:
   - get: rm-case-service-source
+    trigger: true
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
@@ -739,6 +940,7 @@ jobs:
   serial_groups: [rm-collection-exercise-ci-deploy]
   plan:
   - get: rm-collection-exercise-service-source
+    trigger: true
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
@@ -781,6 +983,7 @@ jobs:
   serial_groups: [iac-service-ci-deploy]
   plan:
   - get: iac-service-source
+    trigger: true
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
@@ -819,6 +1022,7 @@ jobs:
   serial_groups: [rm-notify-gateway-ci-deploy]
   plan:
   - get: rm-notify-gateway-source
+    trigger: true
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
@@ -861,6 +1065,7 @@ jobs:
   serial_groups: [rm-sample-service-ci-deploy]
   plan:
   - get: rm-sample-service-source
+    trigger: true
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
@@ -907,6 +1112,7 @@ jobs:
   serial_groups: [rm-sdx-gateway-ci-deploy]
   plan:
   - get: rm-sdx-gateway-source
+    trigger: true
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
@@ -945,6 +1151,7 @@ jobs:
   serial_groups: [rm-survey-service-ci-deploy]
   plan:
   - get: rm-survey-service-source
+    trigger: true
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
@@ -982,6 +1189,7 @@ jobs:
   serial_groups: [sdc-uaa-ci-deploy]
   plan:
   - get: sdc-uaa-source
+    trigger: true
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
@@ -1091,9 +1299,9 @@ jobs:
         path: sh
         args:
         - './scripts/jenkins/add_user.sh'
-### END DEPLOYMENTS
+### END CI DEPLOYMENTS
 
-- name: rasrm-acceptance-tests
+- name: ci-acceptance-tests
   serial_groups: *ci_all_services
   plan:
   - get: ras-deploy
@@ -1171,3 +1379,815 @@ jobs:
     params:
       <<: *ci_security_user
       <<: *ci_service_endpoints_for_python
+
+
+### START latest SPACE DEPLOYMENTS
+- name: ras-party-latest-deploy
+  serial_groups: [ras-party-latest-deploy]
+  plan:
+  - get: ras-party-source
+    trigger: true
+    passed: [ci-acceptance-tests]
+  - put: create-database
+    resource: cf-cli-resource-latest
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: ras-party-db
+      timeout: 300
+      wait_for_service: true
+  - put: push-app
+    resource: cf-resource-latest
+    params:
+      current_app_name: ras-party-latest-migration
+      manifest: ras-party-source/manifest.yml
+      path: ras-party-source
+      environment_variables:
+        <<: *latest_security_user
+        <<: *latest_service_endpoints_for_python
+        RAS_NOTIFY_CONFIRM_PASSWORD_CHANGE_TEMPLATE: ba41c152-ad96-4255-9456-9e42de83f510
+        RAS_NOTIFY_EMAIL_VERIFICATION_TEMPLATE: 53c59576-8c3b-4298-99d1-b245ddd28500
+        RAS_NOTIFY_REQUEST_PASSWORD_CHANGE_TEMPLATE: c45c59ff-7771-4de4-a66b-ce50b108390a
+        RAS_NOTIFY_SERVICE_URL: http://rm-notify-gateway-latest-migration.apps.devtest.onsclofo.uk/emails/
+
+- name: ras-secure-message-latest-deploy
+  serial_groups: [ras-secure-message-latest-deploy]
+  plan:
+  - get: ras-secure-message-source
+    trigger: true
+    passed: [ci-acceptance-tests]
+  - put: create-database
+    resource: cf-cli-resource-latest
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: secure-message-db
+      timeout: 300
+      wait_for_service: true
+  - put: cf-resource-latest
+    params:
+      current_app_name: ras-secure-message-latest-migration
+      manifest: ras-secure-message-source/manifest.yml
+      path: ras-secure-message-source
+      environment_variables:
+        <<: *latest_security_user
+        <<: *latest_service_endpoints_for_python
+        JWT_ALGORITHM: 'HS256'
+        JWT_SECRET: ((latest_jwt_secret))
+        NOTIFICATION_API_KEY: ((test_notify_api_key))
+        NOTIFICATION_TEMPLATE_ID: 'f6404844-a994-428c-a5d7-45a4e1cfff4b'
+        NOTIFY_VIA_GOV_NOTIFY: '1'
+        RM_NOTIFY_GATEWAY_URL: 'http://rm-notify-gateway-latest-migration.apps.devtest.onsclofo.uk/emails/'
+        RAS_SM_PATH: '/home/vcap/app'
+        SERVICE_ID: 'ce3674b1-7b08-4377-a6a7-05b5722d4ea5'
+        UAA_URL: 'http://uaa-concourse-latest.apps.devtest.onsclofo.uk'
+        CLIENT_ID: 'secure_message'
+        CLIENT_SECRET: ((latest_secure_message_client_secret))
+        USE_UAA: '1'
+
+- name: ras-backstage-latest-deploy
+  serial_groups: [ras-backstage-latest-deploy]
+  plan:
+  - get: ras-backstage-source
+    trigger: true
+    passed: [ci-acceptance-tests]
+  - put: cf-resource-latest
+    params:
+      current_app_name: ras-backstage-latest-migration
+      manifest: ras-backstage-source/manifest.yml
+      path: ras-backstage-source
+      environment_variables:
+        <<: *latest_security_user
+        <<: *latest_service_endpoints_for_python
+        RAS_SECURE_MESSAGING_JWT_SECRET: ((latest_jwt_secret))
+        UAA_CLIENT_ID: 'ras_backstage'
+        UAA_CLIENT_SECRET: ((latest_backstage_client_secret))
+        UAA_SERVICE_URL: 'http://uaa-concourse-latest.apps.devtest.onsclofo.uk'
+        USE_UAA: '1'
+
+- name: ras-collection-instrument-latest-deploy
+  serial_groups: [ras-collection-instrument-latest-deploy]
+  plan:
+  - get: ras-collection-instrument-source
+    trigger: true
+    passed: [ci-acceptance-tests]
+  - get: ras-deploy
+  - put: create-ras-rabbitmq
+    resource: cf-cli-resource-latest
+    params:
+      command: create-service
+      service: rabbitmq
+      plan: standard
+      service_instance: ras-rabbitmq
+      timeout: 1800
+      wait_for_service: true
+  - put: create-database
+    resource: cf-cli-resource-latest
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: ras-ci-db
+      timeout: 300
+      wait_for_service: true
+  - put: cf-resource-latest
+    params:
+      current_app_name: ras-collection-instrument-latest-migration
+      manifest: ras-collection-instrument-source/manifest-ci.yml
+      path: ras-collection-instrument-source
+      environment_variables:
+        <<: *latest_security_user
+        <<: *latest_service_endpoints_for_python
+        JSON_SECRET_KEYS: ((latest_json_secret_keys))
+        ONS_CRYPTOKEY: ((latest_collection_instrument_encryption_key))
+        RABBITMQ_AMQP_COLLECTION_INSTRUMENT: ((latest_rabbitmq_amqp_collection_instrument)) # What is this queue?
+        RABBITMQ_AMQP_SURVEY_RESPONSE: ((latest_rabbitmq_amqp_survey_response))
+
+- name: ras-frontstage-latest-deploy
+  serial_groups: [ras-frontstage-latest-deploy]
+  plan:
+  - get: ras-frontstage-source
+    trigger: true
+    passed: [ci-acceptance-tests]
+  - <<: *latest_create_rm_redis
+  - put: cf-resource-latest
+    params:
+      current_app_name: ras-frontstage-latest-migration
+      manifest: ras-frontstage-source/manifest.yml
+      path: ras-frontstage-source
+      environment_variables:
+        <<: *latest_security_user
+        <<: *latest_service_endpoints_for_python
+        JWT_SECRET: ((latest_jwt_secret))
+        SECRET_KEY: ((latest_enrolement_code_encryption_key))
+
+- name: ras-frontstage-api-latest-deploy
+  serial_groups: [ras-frontstage-api-latest-deploy]
+  plan:
+  - get: ras-frontstage-api-source
+    trigger: true
+    passed: [ci-acceptance-tests]
+  - put: cf-resource-latest
+    params:
+      current_app_name: ras-frontstage-api-latest-migration
+      manifest: ras-frontstage-api-source/manifest.yml
+      path: ras-frontstage-api-source
+      environment_variables:
+        <<: *latest_security_user
+        <<: *latest_service_endpoints_for_python
+        DJANGO_CLIENT_ID: 'ons@ons.gov'
+        DJANGO_CLIENT_SECRET: 'password'
+        EQ_URL: 'https://eq-test/session?token='
+        JSON_SECRET_KEYS: ((latest_json_secret_keys))
+
+- name: django-oauth2-test-latest-deploy
+  serial_groups: [django-oauth2-test-latest-deploy]
+  plan:
+  - get: django-oauth2-test-source
+    trigger: true
+    passed: [ci-acceptance-tests]
+  - get: ras-deploy
+  - put: create-database
+    resource: cf-cli-resource-latest
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: oauth-db
+      timeout: 300
+      wait_for_service: true
+  # Create git_info file for info end point
+  - task: git-info
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: paasmule/curl-ssl-git
+          tag: "latest"
+      inputs:
+        - name: django-oauth2-test-source
+      outputs:
+        - name: django-oauth2-test-source-git-info
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          cd django-oauth2-test-source
+          branch=$(git rev-parse --abbrev-ref HEAD)
+          url=$(git config --get remote.origin.url)
+          commit=$(git rev-parse HEAD)
+          repo=$(basename `git rev-parse --show-toplevel`)
+          when=`date --utc +%FT%TZ`
+          output=git_info
+          echo '{' > ${output}
+          echo   \"origin\": \"${url}\", >> ${output}
+          echo   \"commit\": \"${commit}\", >> ${output}
+          echo   \"branch\": \"${branch}\", >> ${output}
+          echo   \"name\": \"${repo}\", >> ${output}
+          echo   \"built\": \"${when}\" >> ${output}
+          echo '}' >> ${output}
+          cd ..
+          cp -r django-oauth2-test-source/* django-oauth2-test-source-git-info
+  - put: cf-resource-latest
+    params:
+      current_app_name: django-oauth2-test-latest-migration
+      manifest: django-oauth2-test-source-git-info/manifest.yml
+      path: django-oauth2-test-source-git-info
+      environment_variables:
+        <<: *latest_security_user
+        CSRF_ENABLED: 'True'
+        DEBUG: 'False'
+        DJANGO_SETTINGS_MODULE: 'proj.settings.cloud_foundry_settings'
+        OAUTH2_SUPER_USER: ((latest_oauth2_super_user))
+        OAUTH2_SUPER_USER_EMAIL: ((latest_oauth2_super_user_email))
+        OAUTH2_SUPER_USER_PASSWORD: ((latest_oauth2_super_user_password))
+        SECRET_KEY: ((latest_jwt_secret))
+        TESTING: 'False'
+  - task: create-super-user
+    file: ras-deploy/tasks/django-oauth2-test/create_default_user.yml
+    params:
+      CLOUDFOUNDRY_API: ((cloudfoundry_api))
+      CLOUDFOUNDRY_EMAIL: ((cloudfoundry_email))
+      CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
+      CLOUDFOUNDRY_ORG: rmras
+      CLOUDFOUNDRY_SPACE: concourse-latest
+      APP_NAME: django-oauth2-test-latest-migration
+
+- name: response-operations-ui-latest-deploy
+  serial_groups: [response-operations-ui-latest-deploy]
+  plan:
+  - get: response-operations-ui-source
+    trigger: true
+    passed: [ci-acceptance-tests]
+  - put: create-redis
+    resource: cf-cli-resource-latest
+    params:
+      command: create-service
+      service: elasticache-broker
+      plan: small
+      service_instance: ras-redis
+      timeout: 1800
+      wait_for_service: true
+  - put: cf-resource-latest
+    params:
+      current_app_name: response-operations-ui-latest-migration
+      manifest: response-operations-ui-source/manifest.yml
+      path: response-operations-ui-source
+      environment_variables:
+        BACKSTAGE_API_URL: 'http://ras-backstage-latest-migration.apps.devtest.onsclofo.uk/backstage-api'
+        UAA_SERVICE_URL: 'http://uaa-concourse-latest.apps.devtest.onsclofo.uk'
+        SECURE_MESSAGE_URL: 'http://ras-secure-message-latest-migration.apps.devtest.onsclofo.uk'
+        RAS_SECURE_MESSAGING_JWT_SECRET: ((latest_jwt_secret))
+        REDIS_SERVICE: ras-redis
+
+- name: rm-action-service-latest-deploy
+  serial_groups: [rm-action-service-latest-deploy]
+  plan:
+  - get: rm-action-service-source
+    trigger: true
+    passed: [ci-acceptance-tests]
+  - <<: *latest_create_rm_pg_db
+  - <<: *latest_create_rm_redis
+  - <<: *latest_create_rm_rabbitmq
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-action-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-action-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-action-service-source/pom.xml
+          cp -r rm-action-service-source/target/ .
+  - put: cf-resource-latest
+    params:
+      current_app_name: rm-action-service-latest-migration
+      manifest: rm-action-service-source/manifest-no-envs.yml
+      path: target/actionsvc*.jar
+      environment_variables:
+        <<: *latest_security_user
+        <<: *latest_service_endpoints_for_java
+        endpoints_enabled: 'false'
+
+- name: rm-actionexporter-service-latest-deploy
+  serial_groups: [rm-actionexporter-service-latest-deploy]
+  plan:
+  - get: rm-actionexporter-service-source
+    trigger: true
+    passed: [ci-acceptance-tests]
+  - <<: *latest_create_rm_pg_db
+  - <<: *latest_create_rm_redis
+  - <<: *latest_create_rm_rabbitmq
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-actionexporter-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-actionexporter-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-actionexporter-service-source/pom.xml
+          cp -r rm-actionexporter-service-source/target/ .
+  - put: cf-resource-latest
+    params:
+      current_app_name: rm-actionexporter-service-latest-migration
+      manifest: rm-actionexporter-service-source/manifest.yml
+      path: target/actionexportersvc*.jar
+      environment_variables:
+        <<: *latest_security_user
+        endpoints_enabled: 'false'
+        exportSchedule_cronExpression: '0 * * * * ?'
+        sftp_host: ((sftp_host))
+        sftp_password: ((actionexporter_sftp_password))
+        sftp_port: '22'
+        sftp_username: ((actionexporter_sftp_username))
+
+- name: rm-case-service-latest-deploy
+  serial_groups: [rm-case-service-latest-deploy]
+  plan:
+  - get: rm-case-service-source
+    trigger: true
+    passed: [ci-acceptance-tests]
+  - <<: *latest_create_rm_pg_db
+  - <<: *latest_create_rm_redis
+  - <<: *latest_create_rm_rabbitmq
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-case-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-case-service-source/.travis.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
+          cp -r rm-case-service-source/target/ .
+  - put: cf-resource-latest
+    params:
+      current_app_name: rm-case-service-latest-migration
+      manifest: rm-case-service-source/manifest-no-envs.yml
+      path: target/casesvc*.jar
+      environment_variables:
+        <<: *latest_security_user
+        <<: *latest_service_endpoints_for_java
+        endpoints_enabled: 'false'
+
+- name: rm-collection-exercise-latest-deploy
+  serial_groups: [rm-collection-exercise-latest-deploy]
+  plan:
+  - get: rm-collection-exercise-service-source
+    trigger: true
+    passed: [ci-acceptance-tests]
+  - <<: *latest_create_rm_pg_db
+  - <<: *latest_create_rm_redis
+  - <<: *latest_create_rm_rabbitmq
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-collection-exercise-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-collection-exercise-service-source/pom.xml
+          cp -r rm-collection-exercise-service-source/target/ .
+  - put: cf-resource-latest
+    params:
+      current_app_name: rm-collection-exercise-service-latest-migration
+      manifest: rm-collection-exercise-service-source/manifest-no-envs.yml
+      path: target/collectionexercisesvc*.jar
+      environment_variables:
+        <<: *latest_security_user
+        <<: *latest_service_endpoints_for_java
+        endpoints_enabled: 'false'
+        SCHEDULES_VALIDATION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
+        SCHEDULES_DISTRIBUTION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
+
+- name: iac-service-latest-deploy
+  serial_groups: [iac-service-latest-deploy]
+  plan:
+  - get: iac-service-source
+    trigger: true
+    passed: [ci-acceptance-tests]
+  - <<: *latest_create_rm_pg_db
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: iac-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings iac-service-source/.travis.settings.xml install -Ddockerfile.skip -f iac-service-source/pom.xml
+          cp -r iac-service-source/target/ .
+  - put: cf-resource-latest
+    params:
+      current_app_name: iac-service-latest-migration
+      manifest: iac-service-source/manifest-no-envs.yml
+      path: target/iacsvc*.jar
+      environment_variables:
+        <<: *latest_security_user
+        <<: *latest_service_endpoints_for_java
+        endpoints_enabled: 'false'
+
+- name: rm-notify-gateway-latest-deploy
+  serial_groups: [rm-notify-gateway-latest-deploy]
+  plan:
+  - get: rm-notify-gateway-source
+    trigger: true
+    passed: [ci-acceptance-tests]
+  - <<: *latest_create_rm_pg_db
+  - <<: *latest_create_rm_rabbitmq
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-notify-gateway-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-notify-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-notify-gateway-source/pom.xml
+          cp -r rm-notify-gateway-source/target/ .
+  - put: cf-resource-latest
+    params:
+      current_app_name: rm-notify-gateway-latest-migration
+      manifest: rm-notify-gateway-source/manifest.yml
+      path: target/notifygatewaysvc*.jar
+      environment_variables:
+        <<: *latest_security_user
+        endpoints_enabled: 'false'
+        notify_apiKey: ((test_notify_api_key))
+        notify_censusUacSmsTemplateId: '966731dc-ef2e-41ad-a828-8cdd95c81ebc'
+        notify_enabled: 'false'
+        notify_onsSurveysRasEmailReminderTemplateId: '19a0aa89-797f-4a34-ad54-267fd581f2ef'
+
+- name: rm-sample-service-latest-deploy
+  serial_groups: [rm-sample-service-latest-deploy]
+  plan:
+  - get: rm-sample-service-source
+    trigger: true
+    passed: [ci-acceptance-tests]
+  - <<: *latest_create_rm_pg_db
+  - <<: *latest_create_rm_redis
+  - <<: *latest_create_rm_rabbitmq
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-sample-service-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-sample-service-source/.travis.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
+          cp -r rm-sample-service-source/target/ .
+  - put: cf-resource-latest
+    params:
+      current_app_name: rm-sample-service-latest-migration
+      manifest: rm-sample-service-source/manifest-no-envs.yml
+      path: target/samplesvc*.jar
+      environment_variables:
+        <<: *latest_security_user
+        <<: *latest_service_endpoints_for_java
+        SAMPLE_UNIT_DISTRIBUTION_DELAY_MILLI_SECONDS: '1000'
+        endpoints_enabled: 'false'
+        exportSchedule_cronExpression: '0 0/5 * * * ?'
+        sftp_host: ((sftp_host))
+        sftp_password: ((sample_sftp_password))
+        sftp_port: '22'
+        sftp_username: ((sample_sftp_username))
+
+- name: rm-sdx-gateway-latest-deploy
+  serial_groups: [rm-sdx-gateway-latest-deploy]
+  plan:
+  - get: rm-sdx-gateway-source
+    trigger: true
+    passed: [ci-acceptance-tests]
+  - <<: *latest_create_rm_redis
+  - <<: *latest_create_rm_rabbitmq
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: maven
+          tag: 3.3.9-jdk-8
+      inputs:
+        - name: rm-sdx-gateway-source
+      outputs:
+        - name: target
+          path: target
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mvn --settings rm-sdx-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-sdx-gateway-source/pom.xml
+          cp -r rm-sdx-gateway-source/target/ .
+  - put: cf-resource-latest
+    params:
+      current_app_name: rm-sdx-gateway-latest-migration
+      manifest: rm-sdx-gateway-source/manifest.yml
+      path: target/sdxgatewaysvc*.jar
+      environment_variables:
+        <<: *latest_security_user
+        endpoints_enabled: 'false'
+
+- name: rm-survey-service-latest-deploy
+  serial_groups: [rm-survey-service-latest-deploy]
+  plan:
+  - get: rm-survey-service-source
+    trigger: true
+    passed: [ci-acceptance-tests]
+  - <<: *latest_create_rm_pg_db
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: golang
+      inputs:
+        - name: rm-survey-service-source
+      outputs:
+        - name: rm-survey-service-build
+          path: rm-survey-service
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mkdir -p /go/src/github.com/ONSdigital/
+          cp -r rm-survey-service-source /go/src/github.com/ONSdigital/rm-survey-service
+          make -C /go/src/github.com/ONSdigital/rm-survey-service
+          cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
+  - put: cf-resource-latest
+    params:
+      current_app_name: rm-survey-service-latest-migration
+      manifest: rm-survey-service-source/manifest.yml
+      path: rm-survey-service-build
+      environment_variables:
+        <<: *latest_security_user
+
+- name: sdc-uaa-latest-deploy
+  serial_groups: [sdc-uaa-latest-deploy]
+  plan:
+  - get: sdc-uaa-source
+    trigger: true
+    passed: [ci-acceptance-tests]
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: sdcplatform/maven-cf-cli-docker
+      inputs:
+        - name: sdc-uaa-source
+      outputs:
+        - name: sdc-uaa-build
+          path: sdc-uaa-build
+      params:
+        UAA_PRIVATE_KEY: ((latest_uaa_private_key))
+        UAA_CERTIFICATE: ((latest_uaa_certificate))
+        UAA_PRIVATE_KEY_PASSWORD: ((latest_uaa_private_key_password))
+        JENKINS_CF_USERNAME: ((cloudfoundry_email))
+        JENKINS_CF_PASSWORD: ((cloudfoundry_password))
+        API_ENDPOINT: ((cloudfoundry_api))
+        ORG: rmras
+        SPACE: concourse-latest
+        UAA_ID: ((latest_uaa_id))
+        UAA_SECRET: ((latest_uaa_secret))
+        UAA_JWT_SIGNING_KEY: ((latest_uaa_jwt_signing_key))
+        UAA_JWT_VERIFICATION_KEY: ((latest_uaa_jwt_verification_key))
+        UAA_URL: 'http://uaa-concourse-latest.apps.devtest.onsclofo.uk'
+        LOGIN_URL: 'http://uaa-concourse-latest.apps.devtest.onsclofo.uk'
+        ZONE_URL: 'uaa-concourse-latest.apps.devtest.onsclofo.uk'
+        ADMIN_SECRET: ((latest_uaa_admin_secret))
+        LOGIN_SECRET: ((latest_uaa_login_secret))
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          (cd sdc-uaa-source && ls && sh deploy-uaa-pre-steps.sh dev)
+          mvn install -f sdc-uaa-source/pom.xml
+          cp -r sdc-uaa-source/* sdc-uaa-build
+  - put: cf-resource-latest
+    params:
+      current_app_name: sdc-uaa-latest-migration
+      manifest: sdc-uaa-build/uaa-cf-application.yml
+      #### EXTRACT ME ####
+  - task: create-secure-message-client
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: kennethreitz/pipenv
+      inputs:
+        - name: sdc-uaa-source
+      params:
+        SPACE: concourse-latest
+        CLIENT: secure_message
+        PASSWORD: ((latest_secure_message_client_secret))
+        ADMIN_SECRET: ((latest_uaa_admin_secret))
+        UAA_URL: 'uaa-concourse-latest.apps.devtest.onsclofo.uk'
+      run:
+        dir: sdc-uaa-source
+        path: sh
+        args:
+        - './scripts/jenkins/add_client.sh'
+  - task: create-ras-backstage-client
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: kennethreitz/pipenv
+      inputs:
+        - name: sdc-uaa-source
+      params:
+        SPACE: concourse-latest
+        CLIENT: ras_backstage
+        PASSWORD: ((latest_backstage_client_secret))
+        ADMIN_SECRET: ((latest_uaa_admin_secret))
+        UAA_URL: 'uaa-concourse-latest.apps.devtest.onsclofo.uk'
+      run:
+        dir: sdc-uaa-source
+        path: sh
+        args:
+        - './scripts/jenkins/add_client.sh'
+  - task: create-uaa-user
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: kennethreitz/pipenv
+      inputs:
+        - name: sdc-uaa-source
+      params:
+        SPACE: concourse-latest
+        USERNAME: uaa_user
+        PASSWORD: ((latest_uaa_user_password))
+        EMAIL: ons@ons.gov
+        FIRSTNAME: uaa
+        LASTNAME: user
+        ADMIN_SECRET: ((latest_uaa_admin_secret))
+        UAA_URL: 'uaa-concourse-latest.apps.devtest.onsclofo.uk'
+      run:
+        dir: sdc-uaa-source
+        path: sh
+        args:
+        - './scripts/jenkins/add_user.sh'
+### END latest SPACE DEPLOYMENTS
+
+- name: latest-acceptance-tests
+  serial_groups: *latest_all_services
+  plan:
+  - get: ras-deploy
+  - get: rasrm-acceptance-tests-source
+    trigger: true
+  - get: ras-party-source
+    passed: [ras-party-latest-deploy]
+    trigger: true
+  - get: ras-backstage-source
+    passed: [ras-backstage-latest-deploy]
+    trigger: true
+  - get: ras-frontstage-source
+    passed: [ras-frontstage-latest-deploy]
+    trigger: true
+  - get: ras-frontstage-api-source
+    passed: [ras-frontstage-api-latest-deploy]
+    trigger: true
+  - get: django-oauth2-test-source
+    passed: [django-oauth2-test-latest-deploy]
+    trigger: true
+  - get: response-operations-ui-source
+    passed: [response-operations-ui-latest-deploy]
+    trigger: true
+  - get: ras-secure-message-source
+    passed: [ras-secure-message-latest-deploy]
+    trigger: true
+  - get: ras-collection-instrument-source
+    passed: [ras-collection-instrument-latest-deploy]
+    trigger: true
+  - get: rm-action-service-source
+    passed: [rm-action-service-latest-deploy]
+    trigger: true
+  - get: rm-actionexporter-service-source
+    passed: [rm-actionexporter-service-latest-deploy]
+    trigger: true
+  - get: rm-case-service-source
+    passed: [rm-case-service-latest-deploy]
+    trigger: true
+  - get: rm-collection-exercise-service-source
+    passed: [rm-collection-exercise-latest-deploy]
+    trigger: true
+  - get: iac-service-source
+    passed: [iac-service-latest-deploy]
+    trigger: true
+  - get: rm-notify-gateway-source
+    passed: [rm-notify-gateway-latest-deploy]
+    trigger: true
+  - get: rm-sample-service-source
+    passed: [rm-sample-service-latest-deploy]
+    trigger: true
+  - get: rm-sdx-gateway-source
+    passed: [rm-sdx-gateway-latest-deploy]
+    trigger: true
+  - get: rm-survey-service-source
+    passed: [rm-survey-service-latest-deploy]
+    trigger: true
+  - get: sdc-uaa-source
+    passed: [sdc-uaa-latest-deploy]
+    trigger: true
+  - task: get-cf-database-uris
+    file: ras-deploy/tasks/get_database_uris.yml
+    params:
+      CLOUDFOUNDRY_API: ((cloudfoundry_api))
+      CLOUDFOUNDRY_EMAIL: ((cloudfoundry_email))
+      CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
+      CLOUDFOUNDRY_ORG: rmras
+      CLOUDFOUNDRY_SPACE: concourse-latest
+
+  - task: acceptance-test
+    privileged: true
+    file: ras-deploy/tasks/rasrm-acceptance-tests/run_acceptance_tests.yml
+    params:
+      <<: *latest_security_user
+      <<: *latest_service_endpoints_for_python
