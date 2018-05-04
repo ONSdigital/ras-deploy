@@ -22,6 +22,8 @@ templates:
       surveySvc_connectionConfig_password: ((ci_security_user_password))
       SECURITY_USER_NAME: ((ci_security_user_name))
       SECURITY_USER_PASSWORD: ((ci_security_user_password))
+      COLLECTION_EXERCISE_USERNAME: ((ci_security_user_name))
+      COLLECTION_EXERCISE_PASSWORD: ((ci_security_user_password))
 
     all_services: &ci_all_services
     - ras-party-ci-deploy
@@ -192,6 +194,8 @@ templates:
       surveySvc_connectionConfig_password: ((latest_security_user_password))
       SECURITY_USER_NAME: ((latest_security_user_name))
       SECURITY_USER_PASSWORD: ((latest_security_user_password))
+      COLLECTION_EXERCISE_USERNAME: ((ci_security_user_name))
+      COLLECTION_EXERCISE_PASSWORD: ((ci_security_user_password))
 
     all_services: &latest_all_services
     - ras-party-latest-deploy
@@ -492,7 +496,7 @@ resources:
 - name: ci-teardown-timer
   type: time
   source:
-    interval: 2h
+    interval: 24h
 
 - name: cf-cli-resource-latest
   type: cf-cli-resource
@@ -803,9 +807,11 @@ jobs:
       manifest: response-operations-ui-source/manifest.yml
       path: response-operations-ui-source
       environment_variables:
+        <<: *ci_security_user
         BACKSTAGE_API_URL: 'http://ras-backstage-ci-migration.apps.devtest.onsclofo.uk/backstage-api'
-        UAA_SERVICE_URL: 'http://uaa-concourse-ci.apps.devtest.onsclofo.uk'
+        COLLECTION_EXERCISE_URL: 'http://rm-collection-exercise-service-ci-migration.apps.devtest.onsclofo.uk'
         SECURE_MESSAGE_URL: 'http://ras-secure-message-ci-migration.apps.devtest.onsclofo.uk'
+        UAA_SERVICE_URL: 'http://uaa-concourse-ci.apps.devtest.onsclofo.uk'
         RAS_SECURE_MESSAGING_JWT_SECRET: ((ci_jwt_secret))
         REDIS_SERVICE: ras-redis
 
@@ -1639,9 +1645,11 @@ jobs:
       manifest: response-operations-ui-source/manifest.yml
       path: response-operations-ui-source
       environment_variables:
+        <<: *latest_security_user
         BACKSTAGE_API_URL: 'http://ras-backstage-latest-migration.apps.devtest.onsclofo.uk/backstage-api'
-        UAA_SERVICE_URL: 'http://uaa-concourse-latest.apps.devtest.onsclofo.uk'
+        COLLECTION_EXERCISE_URL: 'http://rm-collection-exercise-service-latest-migration.apps.devtest.onsclofo.uk'
         SECURE_MESSAGE_URL: 'http://ras-secure-message-latest-migration.apps.devtest.onsclofo.uk'
+        UAA_SERVICE_URL: 'http://uaa-concourse-latest.apps.devtest.onsclofo.uk'
         RAS_SECURE_MESSAGING_JWT_SECRET: ((latest_jwt_secret))
         REDIS_SERVICE: ras-redis
 
