@@ -635,13 +635,22 @@ jobs:
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
-  - put: create-ras-rabbitmq
+  - put: create-sdx-rabbitmq
     resource: cf-cli-resource-ci
     params:
       command: create-service
       service: rabbitmq
       plan: standard
-      service_instance: ras-rabbitmq
+      service_instance: sdx-rabbitmq
+      timeout: 1800
+      wait_for_service: true
+  - put: create-rm-rabbitmq
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: rabbitmq
+      plan: standard
+      service_instance: rm-rabbitmq
       timeout: 1800
       wait_for_service: true
   - put: create-database
@@ -656,7 +665,7 @@ jobs:
   - put: cf-resource-ci
     params:
       current_app_name: ras-collection-instrument-ci-migration
-      manifest: ras-collection-instrument-source/manifest.yml
+      manifest: ras-collection-instrument-source/manifest-ci.yml
       path: ras-collection-instrument-source
       environment_variables:
         <<: *ci_security_user
@@ -1481,13 +1490,22 @@ jobs:
     trigger: true
     passed: [ci-acceptance-tests]
   - get: ras-deploy
-  - put: create-ras-rabbitmq
+  - put: create-rm-rabbitmq
     resource: cf-cli-resource-latest
     params:
       command: create-service
       service: rabbitmq
       plan: standard
-      service_instance: ras-rabbitmq
+      service_instance: rm-rabbitmq
+      timeout: 1800
+      wait_for_service: true
+  - put: create-sdx-rabbitmq
+    resource: cf-cli-resource-latest
+    params:
+      command: create-service
+      service: rabbitmq
+      plan: standard
+      service_instance: sdx-rabbitmq
       timeout: 1800
       wait_for_service: true
   - put: create-database
@@ -1502,7 +1520,7 @@ jobs:
   - put: cf-resource-latest
     params:
       current_app_name: ras-collection-instrument-latest-migration
-      manifest: ras-collection-instrument-source/manifest.yml
+      manifest: ras-collection-instrument-source/manifest-ci.yml
       path: ras-collection-instrument-source
       environment_variables:
         <<: *latest_security_user
