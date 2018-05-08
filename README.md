@@ -17,6 +17,18 @@ deployments to `preprod` and `prod` require manual triggers.
 | preprod | Used for SIT and CAT testing. This doesn't change without manual intervention.                                                     |
 | prod    | The live application.  Nothing can be deployed to `prod` without having first been deployed to `preprod`.                          |
 
+## Maintaining pipelines
+The pipeline or task files (which could live in the services repository) will need to be updated whenever there is a change
+that will have an effect on the build or deployment change of a services. e.g.
+
+* Adding/Removing/Changing environmental variables
+* Build scripts added/removed
+* Changing the docker image used to build
+* A service is added/removed
+* A github repository is renamed
+* A service depends on a new Cloudfoundry service
+* A change to how the acceptance tests run
+
 ## Deploying pipeline
 
 1. Install fly cli
@@ -25,8 +37,8 @@ wget https://github.com/concourse/concourse/releases/download/v3.5.0/fly_darwin_
 chmod +x fly_darwin_amd64
 sudo mv fly_darwin_amd64 /usr/local/bin/fly
 ```
-1. Copy `secrets.yml.example` to `secrets.yml`
+1. Copy `secrets.yml.example` to `secrets.yml` (Do not git push this file)
 1. Assign values to all secret variables
-1. Login to concourse `fly -t lite login -c http://localhost:8080`
-1. Deploy the pipeline `fly -t lite set-pipeline -p ras-deploy -c concourse/pipeline.yml  --load-vars-from concourse/secrets.yml`
-1. Go to <concourse-host>/teams/main/pipelines/ras-deploy e.g. http://localhost:8080/teams/main/pipelines/ras-deploy
+1. Login to concourse `fly -t ons login -c $concourse_url`
+1. Deploy the pipeline `fly -t ons set-pipeline -p rasrm -c concourse/pipeline.yml  --load-vars-from concourse/secrets.yml`
+1. Go to $concourse_url/teams/rasrm/pipelines/rasrm
