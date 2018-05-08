@@ -2032,6 +2032,7 @@ jobs:
       path: rm-survey-service-build
       environment_variables:
         <<: *latest_security_user
+        MIGRATION_SOURCE: 'file://db-migrations'
 
 - name: sdc-uaa-latest-deploy
   serial_groups: [sdc-uaa-latest-deploy]
