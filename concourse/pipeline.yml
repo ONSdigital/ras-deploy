@@ -924,7 +924,7 @@ resources:
 - name: notify
   type: slack-notification
   source:
-    url: ((slack-webhook))
+    url: ((slack_webhook))
 
 jobs:
 - name: ci-teardown
@@ -2567,6 +2567,7 @@ jobs:
   - get: ras-deploy
   - get: rasrm-acceptance-tests-source
     trigger: true
+    passed: [ci-acceptance-tests]
   - get: ras-party-source
     passed: [ras-party-latest-deploy]
     trigger: true
