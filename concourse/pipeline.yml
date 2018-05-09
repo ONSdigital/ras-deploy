@@ -2469,6 +2469,7 @@ jobs:
       
 ### START preprod SPACE DEPLOYMENTS
 - name: ras-party-preprod-deploy
+  disable_manual_trigger: true
   serial_groups: [ras-party-preprod-deploy]
   plan:
   - get: ras-party-source
@@ -2498,6 +2499,7 @@ jobs:
         RAS_NOTIFY_SERVICE_URL: http://rm-notify-gateway-concourse-preprod.apps.devtest.onsclofo.uk/emails/
 
 - name: ras-secure-message-preprod-deploy
+  disable_manual_trigger: true
   serial_groups: [ras-secure-message-preprod-deploy]
   plan:
   - get: ras-secure-message-source
@@ -2534,6 +2536,7 @@ jobs:
         USE_UAA: '1'
 
 - name: ras-backstage-preprod-deploy
+  disable_manual_trigger: true
   serial_groups: [ras-backstage-preprod-deploy]
   plan:
   - get: ras-backstage-source
@@ -2554,6 +2557,7 @@ jobs:
         USE_UAA: '1'
 
 - name: ras-collection-instrument-preprod-deploy
+  disable_manual_trigger: true
   serial_groups: [ras-collection-instrument-preprod-deploy]
   plan:
   - get: ras-collection-instrument-source
@@ -2601,6 +2605,7 @@ jobs:
         RABBITMQ_AMQP_SURVEY_RESPONSE: ((preprod_rabbitmq_amqp_survey_response))
 
 - name: ras-frontstage-preprod-deploy
+  disable_manual_trigger: true
   serial_groups: [ras-frontstage-preprod-deploy]
   plan:
   - get: ras-frontstage-source
@@ -2619,6 +2624,7 @@ jobs:
         SECRET_KEY: ((preprod_enrolement_code_encryption_key))
 
 - name: ras-frontstage-api-preprod-deploy
+  disable_manual_trigger: true
   serial_groups: [ras-frontstage-api-preprod-deploy]
   plan:
   - get: ras-frontstage-api-source
@@ -2638,6 +2644,7 @@ jobs:
         JSON_SECRET_KEYS: ((preprod_json_secret_keys))
 
 - name: django-oauth2-test-preprod-deploy
+  disable_manual_trigger: true
   serial_groups: [django-oauth2-test-preprod-deploy]
   plan:
   - get: django-oauth2-test-source
@@ -2713,6 +2720,7 @@ jobs:
       APP_NAME: django-oauth2-test-concourse-preprod
 
 - name: response-operations-ui-preprod-deploy
+  disable_manual_trigger: true
   serial_groups: [response-operations-ui-preprod-deploy]
   plan:
   - get: response-operations-ui-source
@@ -2745,6 +2753,7 @@ jobs:
         SURVEY_URL: 'http://rm-survey-service-concourse-preprod.apps.devtest.onsclofo.uk'
 
 - name: rm-action-service-preprod-deploy
+  disable_manual_trigger: true
   serial_groups: [rm-action-service-preprod-deploy]
   plan:
   - get: rm-action-service-source
@@ -2784,6 +2793,7 @@ jobs:
         endpoints_enabled: 'false'
 
 - name: rm-actionexporter-service-preprod-deploy
+  disable_manual_trigger: true
   serial_groups: [rm-actionexporter-service-preprod-deploy]
   plan:
   - get: rm-actionexporter-service-source
@@ -2827,6 +2837,7 @@ jobs:
         sftp_username: ((actionexporter_sftp_username))
 
 - name: rm-case-service-preprod-deploy
+  disable_manual_trigger: true
   serial_groups: [rm-case-service-preprod-deploy]
   plan:
   - get: rm-case-service-source
@@ -2866,6 +2877,7 @@ jobs:
         endpoints_enabled: 'false'
 
 - name: rm-collection-exercise-preprod-deploy
+  disable_manual_trigger: true
   serial_groups: [rm-collection-exercise-preprod-deploy]
   plan:
   - get: rm-collection-exercise-service-source
@@ -2907,6 +2919,7 @@ jobs:
         SCHEDULES_DISTRIBUTION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
 
 - name: iac-service-preprod-deploy
+  disable_manual_trigger: true
   serial_groups: [iac-service-preprod-deploy]
   plan:
   - get: iac-service-source
@@ -2944,6 +2957,7 @@ jobs:
         endpoints_enabled: 'false'
 
 - name: rm-notify-gateway-preprod-deploy
+  disable_manual_trigger: true
   serial_groups: [rm-notify-gateway-preprod-deploy]
   plan:
   - get: rm-notify-gateway-source
@@ -2985,6 +2999,7 @@ jobs:
         notify_onsSurveysRasEmailReminderTemplateId: '19a0aa89-797f-4a34-ad54-267fd581f2ef'
 
 - name: rm-sample-service-preprod-deploy
+  disable_manual_trigger: true
   serial_groups: [rm-sample-service-preprod-deploy]
   plan:
   - get: rm-sample-service-source
@@ -3030,6 +3045,7 @@ jobs:
         sftp_username: ((sample_sftp_username))
 
 - name: rm-sdx-gateway-preprod-deploy
+  disable_manual_trigger: true
   serial_groups: [rm-sdx-gateway-preprod-deploy]
   plan:
   - get: rm-sdx-gateway-source
@@ -3067,6 +3083,7 @@ jobs:
         endpoints_enabled: 'false'
 
 - name: rm-survey-service-preprod-deploy
+  disable_manual_trigger: true
   serial_groups: [rm-survey-service-preprod-deploy]
   plan:
   - get: rm-survey-service-source
@@ -3104,6 +3121,7 @@ jobs:
         MIGRATION_SOURCE: 'file://db-migrations'
 
 - name: sdc-uaa-preprod-deploy
+  disable_manual_trigger: true
   serial_groups: [sdc-uaa-preprod-deploy]
   plan:
   - get: sdc-uaa-source
