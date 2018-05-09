@@ -695,6 +695,11 @@ resource_types:
     repository: nulldriver/cf-cli-resource
     tag: latest
 
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+
 ### START MICROSERVICE REPOS
 resources:
 - name: ras-deploy
@@ -915,6 +920,11 @@ resources:
     organization: rmras
     space: concourse-prod
     skip_cert_check: true
+
+- name: notify
+  type: slack-notification
+  source:
+    url: ((slack-webhook))
 
 jobs:
 - name: ci-teardown
@@ -1790,6 +1800,10 @@ jobs:
       CLOUDFOUNDRY_ORG: rmras
       CLOUDFOUNDRY_SPACE: ci
   - task: acceptance-test
+    on_failure:
+      put: notify
+      params:
+        text: "Acceptance tests failed in CI space"
     privileged: true
     file: ras-deploy/tasks/rasrm-acceptance-tests/run_acceptance_tests.yml
     params:
