@@ -1234,7 +1234,6 @@ jobs:
         SURVEY_USERNAME: ((ci_security_user_name))
         SURVEY_PASSWORD: ((ci_security_user_password))
         SURVEY_URL: 'http://rm-survey-service-ci.apps.devtest.onsclofo.uk'
-        SECURE_COOKIES: 'False'  # Required due to no SSL certificate on devtest this is a temp work around
 
 - name: rm-action-service-ci-deploy
   serial_groups: [rm-action-service-ci-deploy]
@@ -2088,7 +2087,6 @@ jobs:
         SURVEY_USERNAME: ((latest_security_user_name))
         SURVEY_PASSWORD: ((latest_security_user_password))
         SURVEY_URL: 'http://rm-survey-service-concourse-latest.apps.devtest.onsclofo.uk'
-        SECURE_COOKIES: 'False'  # Required due to no SSL certificate on devtest this is a temp work around
 
 - name: rm-action-service-latest-deploy
   serial_groups: [rm-action-service-latest-deploy]
@@ -2966,7 +2964,6 @@ jobs:
         SURVEY_USERNAME: ((preprod_security_user_name))
         SURVEY_PASSWORD: ((preprod_security_user_password))
         SURVEY_URL: 'http://rm-survey-service-concourse-preprod.apps.devtest.onsclofo.uk'
-        SECURE_COOKIES: 'False'  # Required due to no SSL certificate on devtest this is a temp work around
 
 - name: rm-action-service-preprod-deploy
   disable_manual_trigger: true
@@ -3850,7 +3847,6 @@ jobs:
         SURVEY_USERNAME: ((prod_security_user_name))
         SURVEY_PASSWORD: ((prod_security_user_password))
         SURVEY_URL: 'http://rm-survey-service-concourse-prod.apps.devtest.onsclofo.uk'
-        SECURE_COOKIES: 'False'  # Required due to no SSL certificate on devtest this is a temp work around
 
 - name: rm-action-service-prod-deploy
   disable_manual_trigger: true
