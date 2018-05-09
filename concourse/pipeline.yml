@@ -2417,7 +2417,6 @@ jobs:
       CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
       CLOUDFOUNDRY_ORG: rmras
       CLOUDFOUNDRY_SPACE: concourse-latest
-
   - task: acceptance-test
     privileged: true
     file: ras-deploy/tasks/rasrm-acceptance-tests/run_acceptance_tests.yml
@@ -3234,3 +3233,76 @@ jobs:
         args:
         - './scripts/jenkins/add_user.sh'
 ### END preprod SPACE DEPLOYMENTS
+
+- name: preprod-smoke-tests
+  serial_groups: *preprod_all_services
+  plan:
+  - get: ras-deploy
+  - get: rasrm-acceptance-tests-source
+    trigger: true
+  - get: ras-party-source
+    passed: [ras-party-preprod-deploy]
+    trigger: true
+  - get: ras-backstage-source
+    passed: [ras-backstage-preprod-deploy]
+    trigger: true
+  - get: ras-frontstage-source
+    passed: [ras-frontstage-preprod-deploy]
+    trigger: true
+  - get: ras-frontstage-api-source
+    passed: [ras-frontstage-api-preprod-deploy]
+    trigger: true
+  - get: django-oauth2-test-source
+    passed: [django-oauth2-test-preprod-deploy]
+    trigger: true
+  - get: response-operations-ui-source
+    passed: [response-operations-ui-preprod-deploy]
+    trigger: true
+  - get: ras-secure-message-source
+    passed: [ras-secure-message-preprod-deploy]
+    trigger: true
+  - get: ras-collection-instrument-source
+    passed: [ras-collection-instrument-preprod-deploy]
+    trigger: true
+  - get: rm-action-service-source
+    passed: [rm-action-service-preprod-deploy]
+    trigger: true
+  - get: rm-actionexporter-service-source
+    passed: [rm-actionexporter-service-preprod-deploy]
+    trigger: true
+  - get: rm-case-service-source
+    passed: [rm-case-service-preprod-deploy]
+    trigger: true
+  - get: rm-collection-exercise-service-source
+    passed: [rm-collection-exercise-preprod-deploy]
+    trigger: true
+  - get: iac-service-source
+    passed: [iac-service-preprod-deploy]
+    trigger: true
+  - get: rm-notify-gateway-source
+    passed: [rm-notify-gateway-preprod-deploy]
+    trigger: true
+  - get: rm-sample-service-source
+    passed: [rm-sample-service-preprod-deploy]
+    trigger: true
+  - get: rm-sdx-gateway-source
+    passed: [rm-sdx-gateway-preprod-deploy]
+    trigger: true
+  - get: rm-survey-service-source
+    passed: [rm-survey-service-preprod-deploy]
+    trigger: true
+  - get: sdc-uaa-source
+    passed: [sdc-uaa-preprod-deploy]
+    trigger: true
+  - task: smoke-test
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: alpine
+      run:
+        path: sh
+        args:
+        - -exc
+        - echo "Smoke test placeholder"
