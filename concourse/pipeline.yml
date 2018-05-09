@@ -645,7 +645,7 @@ resources:
     uri: "git@github.com:ONSdigital/rasrm-deploy-trigger"
     paths: ["preprod/*"]
     private_key: ((git_key))
-    
+
 - name: rasrm-acceptance-tests-source
   type: git
   source:
@@ -1590,7 +1590,6 @@ jobs:
       CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
       CLOUDFOUNDRY_ORG: rmras
       CLOUDFOUNDRY_SPACE: ci
-
   - task: acceptance-test
     privileged: true
     file: ras-deploy/tasks/rasrm-acceptance-tests/run_acceptance_tests.yml
@@ -2417,6 +2416,7 @@ jobs:
       CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
       CLOUDFOUNDRY_ORG: rmras
       CLOUDFOUNDRY_SPACE: concourse-latest
+
   - task: acceptance-test
     privileged: true
     file: ras-deploy/tasks/rasrm-acceptance-tests/run_acceptance_tests.yml
@@ -2465,7 +2465,7 @@ jobs:
     passed: [latest-acceptance-tests]
   - get: sdc-uaa-source
     passed: [latest-acceptance-tests]
-      
+
 ### START preprod SPACE DEPLOYMENTS
 - name: ras-party-preprod-deploy
   disable_manual_trigger: true
@@ -2667,7 +2667,7 @@ jobs:
         type: docker-image
         source:
           repository: paasmule/curl-ssl-git
-          tag: "preprod"
+          tag: "latest"
       inputs:
         - name: django-oauth2-test-source
       outputs:
