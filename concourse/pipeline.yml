@@ -46,97 +46,97 @@ templates:
     - sdc-uaa-ci-deploy
 
     service_endpoints_for_python: &ci_service_endpoints_for_python
-      ACTION_SERVICE_HOST: rm-action-service-concourse-ci.apps.devtest.onsclofo.uk
+      ACTION_SERVICE_HOST: rm-action-service-ci.apps.devtest.onsclofo.uk
       ACTION_SERVICE_PORT: '80'
-      ACTION_EXPORTER_HOST: rm-actionexporter-service-concourse-ci.apps.devtest.onsclofo.uk
+      ACTION_EXPORTER_HOST: rm-actionexporter-service-ci.apps.devtest.onsclofo.uk
       ACTION_EXPORTER_PORT: '80'
-      BACKSTAGE_SERVICE_HOST: ras-backstage-concourse-ci.apps.devtest.onsclofo.uk
+      BACKSTAGE_SERVICE_HOST: ras-backstage-ci.apps.devtest.onsclofo.uk
       BACKSTAGE_SERVICE_PORT: '80'
-      CASE_SERVICE_HOST: rm-case-service-concourse-ci.apps.devtest.onsclofo.uk
+      CASE_SERVICE_HOST: rm-case-service-ci.apps.devtest.onsclofo.uk
       CASE_SERVICE_PORT: '80'
-      COLLECTION_EXERCISE_SERVICE_HOST: rm-collection-exercise-service-concourse-ci.apps.devtest.onsclofo.uk
+      COLLECTION_EXERCISE_SERVICE_HOST: rm-collection-exercise-service-ci.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_SERVICE_PORT: '80'
-      COLLECTION_EXERCISE_HOST: rm-collection-exercise-service-concourse-ci.apps.devtest.onsclofo.uk
+      COLLECTION_EXERCISE_HOST: rm-collection-exercise-service-ci.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_PORT: '80'
-      COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-concourse-ci.apps.devtest.onsclofo.uk
+      COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-ci.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
-      DJANGO_SERVICE_HOST: django-oauth2-test-concourse-ci.apps.devtest.onsclofo.uk
+      DJANGO_SERVICE_HOST: django-oauth2-test-ci.apps.devtest.onsclofo.uk
       DJANGO_SERVICE_PORT: '80'
-      FRONTSTAGE_API_SERVICE_HOST: ras-frontstage-api-concourse-ci.apps.devtest.onsclofo.uk
+      FRONTSTAGE_API_SERVICE_HOST: ras-frontstage-api-ci.apps.devtest.onsclofo.uk
       FRONTSTAGE_API_SERVICE_PORT: '80'
-      FRONTSTAGE_SERVICE_HOST: ras-frontstage-concourse-ci.apps.devtest.onsclofo.uk
+      FRONTSTAGE_SERVICE_HOST: ras-frontstage-ci.apps.devtest.onsclofo.uk
       FRONTSTAGE_SERVICE_PORT: '80'
-      IAC_SERVICE_HOST: iac-service-concourse-ci.apps.devtest.onsclofo.uk
+      IAC_SERVICE_HOST: iac-service-ci.apps.devtest.onsclofo.uk
       IAC_SERVICE_PORT: '80'
-      NOTIFY_GATEWAY_SERVICE_HOST: rm-notify-gateway-concourse-ci.apps.devtest.onsclofo.uk
+      NOTIFY_GATEWAY_SERVICE_HOST: rm-notify-gateway-ci.apps.devtest.onsclofo.uk
       NOTIFY_GATEWAY_SERVICE_PORT: '80'
-      PARTY_SERVICE_HOST: ras-party-concourse-ci.apps.devtest.onsclofo.uk
+      PARTY_SERVICE_HOST: ras-party-ci.apps.devtest.onsclofo.uk
       PARTY_SERVICE_PORT: '80'
-      RM_CASE_SERVICE_HOST: rm-case-service-concourse-ci.apps.devtest.onsclofo.uk
+      RM_CASE_SERVICE_HOST: rm-case-service-ci.apps.devtest.onsclofo.uk
       RM_CASE_SERVICE_PORT: '80'
-      RM_COLLECTION_EXERCISE_SERVICE_HOST: rm-collection-exercise-service-concourse-ci.apps.devtest.onsclofo.uk
+      RM_COLLECTION_EXERCISE_SERVICE_HOST: rm-collection-exercise-service-ci.apps.devtest.onsclofo.uk
       RM_COLLECTION_EXERCISE_SERVICE_PORT: '80'
-      RM_IAC_SERVICE_HOST: iac-service-concourse-ci.apps.devtest.onsclofo.uk
+      RM_IAC_SERVICE_HOST: iac-service-ci.apps.devtest.onsclofo.uk
       RM_IAC_SERVICE_PORT: '80'
-      RM_SAMPLE_SERVICE_HOST: rm-sample-service-concourse-ci.apps.devtest.onsclofo.uk
+      RM_SAMPLE_SERVICE_HOST: rm-sample-service-ci.apps.devtest.onsclofo.uk
       RM_SAMPLE_SERVICE_PORT: '80'
-      RM_SURVEY_SERVICE_HOST: rm-survey-service-concourse-ci.apps.devtest.onsclofo.uk
+      RM_SURVEY_SERVICE_HOST: rm-survey-service-ci.apps.devtest.onsclofo.uk
       RM_SURVEY_SERVICE_PORT: '80'
-      RAS_CASE_SERVICE_HOST: rm-case-service-concourse-ci.apps.devtest.onsclofo.uk
+      RAS_CASE_SERVICE_HOST: rm-case-service-ci.apps.devtest.onsclofo.uk
       RAS_CASE_SERVICE_PORT: '80'
-      RAS_COLLEX_SERVICE_HOST: rm-collection-exercise-service-concourse-ci.apps.devtest.onsclofo.uk
+      RAS_COLLEX_SERVICE_HOST: rm-collection-exercise-service-ci.apps.devtest.onsclofo.uk
       RAS_COLLEX_SERVICE_PORT: '80'
-      RAS_FRONTSTAGE_API_HOST: ras-frontstage-api-concourse-ci.apps.devtest.onsclofo.uk
+      RAS_FRONTSTAGE_API_HOST: ras-frontstage-api-ci.apps.devtest.onsclofo.uk
       RAS_FRONTSTAGE_API_PORT: '80'
-      RAS_IAC_SERVICE_HOST: iac-service-concourse-ci.apps.devtest.onsclofo.uk
+      RAS_IAC_SERVICE_HOST: iac-service-ci.apps.devtest.onsclofo.uk
       RAS_IAC_SERVICE_PORT: '80'
-      RAS_OAUTH_SERVICE_HOST: django-oauth2-test-concourse-ci.apps.devtest.onsclofo.uk
+      RAS_OAUTH_SERVICE_HOST: django-oauth2-test-ci.apps.devtest.onsclofo.uk
       RAS_OAUTH_SERVICE_PORT: '80'
-      RAS_PARTY_SERVICE_HOST: ras-party-concourse-ci.apps.devtest.onsclofo.uk
+      RAS_PARTY_SERVICE_HOST: ras-party-ci.apps.devtest.onsclofo.uk
       RAS_PARTY_SERVICE_PORT: '80'
-      RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-concourse-ci.apps.devtest.onsclofo.uk
+      RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-ci.apps.devtest.onsclofo.uk
       RAS_COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
-      RAS_PUBLIC_WEBSITE_HOST: ras-frontstage-concourse-ci.apps.devtest.onsclofo.uk
+      RAS_PUBLIC_WEBSITE_HOST: ras-frontstage-ci.apps.devtest.onsclofo.uk
       RAS_PUBLIC_WEBSITE_PORT: '80'
-      RAS_SECURE_MESSAGE_SERVICE_HOST: ras-secure-message-concourse-ci.apps.devtest.onsclofo.uk
+      RAS_SECURE_MESSAGE_SERVICE_HOST: ras-secure-message-ci.apps.devtest.onsclofo.uk
       RAS_SECURE_MESSAGE_SERVICE_PORT: '80'
-      RAS_SECURE_MESSAGING_SERVICE_HOST: ras-secure-message-concourse-ci.apps.devtest.onsclofo.uk
+      RAS_SECURE_MESSAGING_SERVICE_HOST: ras-secure-message-ci.apps.devtest.onsclofo.uk
       RAS_SECURE_MESSAGING_SERVICE_PORT: '80'
-      RAS_SURVEY_SERVICE_HOST: rm-survey-service-concourse-ci.apps.devtest.onsclofo.uk
+      RAS_SURVEY_SERVICE_HOST: rm-survey-service-ci.apps.devtest.onsclofo.uk
       RAS_SURVEY_SERVICE_PORT: '80'
-      RESPONSE_OPERATIONS_UI_HOST: response-operations-ui-concourse-ci.apps.devtest.onsclofo.uk
+      RESPONSE_OPERATIONS_UI_HOST: response-operations-ui-ci.apps.devtest.onsclofo.uk
       RESPONSE_OPERATIONS_UI_PORT: '80'
-      SAMPLE_SERVICE_HOST: rm-sample-service-concourse-ci.apps.devtest.onsclofo.uk
+      SAMPLE_SERVICE_HOST: rm-sample-service-ci.apps.devtest.onsclofo.uk
       SAMPLE_SERVICE_PORT: '80'
-      SECURE_MESSAGE_SERVICE_HOST: ras-secure-message-concourse-ci.apps.devtest.onsclofo.uk
+      SECURE_MESSAGE_SERVICE_HOST: ras-secure-message-ci.apps.devtest.onsclofo.uk
       SECURE_MESSAGE_SERVICE_PORT: '80'
-      SURVEY_SERVICE_HOST: rm-survey-service-concourse-ci.apps.devtest.onsclofo.uk
+      SURVEY_SERVICE_HOST: rm-survey-service-ci.apps.devtest.onsclofo.uk
       SURVEY_SERVICE_PORT: '80'
-      SURVEY_URL: 'http://rm-survey-service-concourse-ci.apps.devtest.onsclofo.uk'
+      SURVEY_URL: 'http://rm-survey-service-ci.apps.devtest.onsclofo.uk'
 
     service_endpoints_for_java: &ci_service_endpoints_for_java
-      actionSvc_connectionConfig_host: 'rm-action-service-concourse-ci.apps.devtest.onsclofo.uk'
+      actionSvc_connectionConfig_host: 'rm-action-service-ci.apps.devtest.onsclofo.uk'
       actionSvc_connectionConfig_port: '80'
       actionSvc_connectionConfig_scheme: 'http'
-      caseSvc_connectionConfig_host: 'rm-case-service-concourse-ci.apps.devtest.onsclofo.uk'
+      caseSvc_connectionConfig_host: 'rm-case-service-ci.apps.devtest.onsclofo.uk'
       caseSvc_connectionConfig_port: '80'
       caseSvc_connectionConfig_scheme: 'http'
-      collectionExerciseSvc_connectionConfig_host: 'rm-collection-exercise-service-concourse-ci.apps.devtest.onsclofo.uk'
+      collectionExerciseSvc_connectionConfig_host: 'rm-collection-exercise-service-ci.apps.devtest.onsclofo.uk'
       collectionExerciseSvc_connectionConfig_port: '80'
       collectionExerciseSvc_connectionConfig_scheme: 'http'
-      collectionInstrumentSvc_connectionConfig_host: 'ras-collection-instrument-concourse-ci.apps.devtest.onsclofo.uk'
+      collectionInstrumentSvc_connectionConfig_host: 'ras-collection-instrument-ci.apps.devtest.onsclofo.uk'
       collectionInstrumentSvc_connectionConfig_port: '80'
       collectionInstrumentSvc_connectionConfig_scheme: 'http'
-      internetAccessCodeSvc_connectionConfig_host: 'iac-service-concourse-ci.apps.devtest.onsclofo.uk'
+      internetAccessCodeSvc_connectionConfig_host: 'iac-service-ci.apps.devtest.onsclofo.uk'
       internetAccessCodeSvc_connectionConfig_port: '80'
       internetAccessCodeSvc_connectionConfig_scheme: 'http'
-      partySvc_connectionConfig_host: 'ras-party-concourse-ci.apps.devtest.onsclofo.uk'
+      partySvc_connectionConfig_host: 'ras-party-ci.apps.devtest.onsclofo.uk'
       partySvc_connectionConfig_port: '80'
       partySvc_connectionConfig_scheme: 'http'
-      sampleSvc_connectionConfig_host: 'rm-sample-service-concourse-ci.apps.devtest.onsclofo.uk'
+      sampleSvc_connectionConfig_host: 'rm-sample-service-ci.apps.devtest.onsclofo.uk'
       sampleSvc_connectionConfig_port: '80'
       sampleSvc_connectionConfig_scheme: 'http'
-      surveySvc_connectionConfig_host: 'rm-survey-service-concourse-ci.apps.devtest.onsclofo.uk'
+      surveySvc_connectionConfig_host: 'rm-survey-service-ci.apps.devtest.onsclofo.uk'
       surveySvc_connectionConfig_port: '80'
       surveySvc_connectionConfig_scheme: 'http'
 
@@ -383,7 +383,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-collection-instrument.git
-    branch: fallback-to-using-cloudfoundry-queue
+    branch: master
 
 - name: ras-frontstage-source
   type: git
@@ -482,7 +482,7 @@ resources:
     username: ((cloudfoundry_email))
     password: ((cloudfoundry_password))
     org: rmras
-    space: concourse-ci
+    space: ci
     skip_cert_check: true
 
 - name: cf-resource-ci
@@ -492,7 +492,7 @@ resources:
     username: ((cloudfoundry_email))
     password: ((cloudfoundry_password))
     organization: rmras
-    space: concourse-ci
+    space: ci
     skip_cert_check: true
 
 - name: ci-teardown-timer
@@ -534,7 +534,7 @@ jobs:
       CLOUDFOUNDRY_EMAIL: ((cloudfoundry_email))
       CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
       CLOUDFOUNDRY_ORG: rmras
-      CLOUDFOUNDRY_SPACE: concourse-ci
+      CLOUDFOUNDRY_SPACE: ci
 
 ### START DEPLOYMENTS
 - name: ras-party-ci-deploy
@@ -557,7 +557,7 @@ jobs:
   - put: push-app
     resource: cf-resource-ci
     params:
-      current_app_name: ras-party-concourse-ci
+      current_app_name: ras-party-ci
       manifest: ras-party-source/manifest.yml
       path: ras-party-source
       environment_variables:
@@ -566,7 +566,7 @@ jobs:
         RAS_NOTIFY_CONFIRM_PASSWORD_CHANGE_TEMPLATE: ba41c152-ad96-4255-9456-9e42de83f510
         RAS_NOTIFY_EMAIL_VERIFICATION_TEMPLATE: 53c59576-8c3b-4298-99d1-b245ddd28500
         RAS_NOTIFY_REQUEST_PASSWORD_CHANGE_TEMPLATE: c45c59ff-7771-4de4-a66b-ce50b108390a
-        RAS_NOTIFY_SERVICE_URL: http://rm-notify-gateway-concourse-ci.apps.devtest.onsclofo.uk/emails/
+        RAS_NOTIFY_SERVICE_URL: http://rm-notify-gateway-ci.apps.devtest.onsclofo.uk/emails/
 
 - name: ras-secure-message-ci-deploy
   serial_groups: [ras-secure-message-ci-deploy]
@@ -587,7 +587,7 @@ jobs:
       wait_for_service: true
   - put: cf-resource-ci
     params:
-      current_app_name: ras-secure-message-concourse-ci
+      current_app_name: ras-secure-message-ci
       manifest: ras-secure-message-source/manifest.yml
       path: ras-secure-message-source
       environment_variables:
@@ -598,10 +598,10 @@ jobs:
         NOTIFICATION_API_KEY: ((test_notify_api_key))
         NOTIFICATION_TEMPLATE_ID: 'f6404844-a994-428c-a5d7-45a4e1cfff4b'
         NOTIFY_VIA_GOV_NOTIFY: '1'
-        RM_NOTIFY_GATEWAY_URL: 'http://rm-notify-gateway-concourse-ci.apps.devtest.onsclofo.uk/emails/'
+        RM_NOTIFY_GATEWAY_URL: 'http://rm-notify-gateway-ci.apps.devtest.onsclofo.uk/emails/'
         RAS_SM_PATH: '/home/vcap/app'
         SERVICE_ID: 'ce3674b1-7b08-4377-a6a7-05b5722d4ea5'
-        UAA_URL: 'http://uaa-concourse-ci.apps.devtest.onsclofo.uk'
+        UAA_URL: 'http://uaa-ci.apps.devtest.onsclofo.uk'
         CLIENT_ID: 'secure_message'
         CLIENT_SECRET: ((ci_secure_message_client_secret))
         USE_UAA: '1'
@@ -616,7 +616,7 @@ jobs:
     passed: [ci-teardown]
   - put: cf-resource-ci
     params:
-      current_app_name: ras-backstage-concourse-ci
+      current_app_name: ras-backstage-ci
       manifest: ras-backstage-source/manifest.yml
       path: ras-backstage-source
       environment_variables:
@@ -625,7 +625,7 @@ jobs:
         RAS_SECURE_MESSAGING_JWT_SECRET: ((ci_jwt_secret))
         UAA_CLIENT_ID: 'ras_backstage'
         UAA_CLIENT_SECRET: ((ci_backstage_client_secret))
-        UAA_SERVICE_URL: 'http://uaa-concourse-ci.apps.devtest.onsclofo.uk'
+        UAA_SERVICE_URL: 'http://uaa-ci.apps.devtest.onsclofo.uk'
         USE_UAA: '1'
 
 - name: ras-collection-instrument-ci-deploy
@@ -666,7 +666,7 @@ jobs:
       wait_for_service: true
   - put: cf-resource-ci
     params:
-      current_app_name: ras-collection-instrument-concourse-ci
+      current_app_name: ras-collection-instrument-ci
       manifest: ras-collection-instrument-source/manifest-ci.yml
       path: ras-collection-instrument-source
       environment_variables:
@@ -688,7 +688,7 @@ jobs:
   - <<: *ci_create_rm_redis
   - put: cf-resource-ci
     params:
-      current_app_name: ras-frontstage-concourse-ci
+      current_app_name: ras-frontstage-ci
       manifest: ras-frontstage-source/manifest.yml
       path: ras-frontstage-source
       environment_variables:
@@ -707,7 +707,7 @@ jobs:
     passed: [ci-teardown]
   - put: cf-resource-ci
     params:
-      current_app_name: ras-frontstage-api-concourse-ci
+      current_app_name: ras-frontstage-api-ci
       manifest: ras-frontstage-api-source/manifest.yml
       path: ras-frontstage-api-source
       environment_variables:
@@ -772,7 +772,7 @@ jobs:
           cp -r django-oauth2-test-source/* django-oauth2-test-source-git-info
   - put: cf-resource-ci
     params:
-      current_app_name: django-oauth2-test-concourse-ci
+      current_app_name: django-oauth2-test-ci
       manifest: django-oauth2-test-source-git-info/manifest.yml
       path: django-oauth2-test-source-git-info
       environment_variables:
@@ -792,8 +792,8 @@ jobs:
       CLOUDFOUNDRY_EMAIL: ((cloudfoundry_email))
       CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
       CLOUDFOUNDRY_ORG: rmras
-      CLOUDFOUNDRY_SPACE: concourse-ci
-      APP_NAME: django-oauth2-test-concourse-ci
+      CLOUDFOUNDRY_SPACE: ci
+      APP_NAME: django-oauth2-test-ci
 
 - name: response-operations-ui-ci-deploy
   serial_groups: [response-operations-ui-ci-deploy]
@@ -814,15 +814,15 @@ jobs:
       wait_for_service: true
   - put: cf-resource-ci
     params:
-      current_app_name: response-operations-ui-concourse-ci
+      current_app_name: response-operations-ui-ci
       manifest: response-operations-ui-source/manifest.yml
       path: response-operations-ui-source
       environment_variables:
         <<: *ci_security_user
-        BACKSTAGE_API_URL: 'http://ras-backstage-concourse-ci.apps.devtest.onsclofo.uk/backstage-api'
-        COLLECTION_EXERCISE_URL: 'http://rm-collection-exercise-service-concourse-ci.apps.devtest.onsclofo.uk'
-        SECURE_MESSAGE_URL: 'http://ras-secure-message-concourse-ci.apps.devtest.onsclofo.uk'
-        UAA_SERVICE_URL: 'http://uaa-concourse-ci.apps.devtest.onsclofo.uk'
+        BACKSTAGE_API_URL: 'http://ras-backstage-ci.apps.devtest.onsclofo.uk/backstage-api'
+        COLLECTION_EXERCISE_URL: 'http://rm-collection-exercise-service-ci.apps.devtest.onsclofo.uk'
+        SECURE_MESSAGE_URL: 'http://ras-secure-message-ci.apps.devtest.onsclofo.uk'
+        UAA_SERVICE_URL: 'http://uaa-ci.apps.devtest.onsclofo.uk'
         RAS_SECURE_MESSAGING_JWT_SECRET: ((ci_jwt_secret))
         REDIS_SERVICE: ras-redis
         SURVEY_USERNAME: ((ci_security_user_name))
@@ -861,7 +861,7 @@ jobs:
           cp -r rm-action-service-source/target/ .
   - put: cf-resource-ci
     params:
-      current_app_name: rm-action-service-concourse-ci
+      current_app_name: rm-action-service-ci
       manifest: rm-action-service-source/manifest-no-envs.yml
       path: target/actionsvc*.jar
       environment_variables:
@@ -902,7 +902,7 @@ jobs:
           cp -r rm-actionexporter-service-source/target/ .
   - put: cf-resource-ci
     params:
-      current_app_name: rm-actionexporter-service-concourse-ci
+      current_app_name: rm-actionexporter-service-ci
       manifest: rm-actionexporter-service-source/manifest.yml
       path: target/actionexportersvc*.jar
       environment_variables:
@@ -947,7 +947,7 @@ jobs:
           cp -r rm-case-service-source/target/ .
   - put: cf-resource-ci
     params:
-      current_app_name: rm-case-service-concourse-ci
+      current_app_name: rm-case-service-ci
       manifest: rm-case-service-source/manifest-no-envs.yml
       path: target/casesvc*.jar
       environment_variables:
@@ -988,7 +988,7 @@ jobs:
           cp -r rm-collection-exercise-service-source/target/ .
   - put: cf-resource-ci
     params:
-      current_app_name: rm-collection-exercise-service-concourse-ci
+      current_app_name: rm-collection-exercise-service-ci
       manifest: rm-collection-exercise-service-source/manifest-no-envs.yml
       path: target/collectionexercisesvc*.jar
       environment_variables:
@@ -1029,7 +1029,7 @@ jobs:
           cp -r iac-service-source/target/ .
   - put: cf-resource-ci
     params:
-      current_app_name: iac-service-concourse-ci
+      current_app_name: iac-service-ci
       manifest: iac-service-source/manifest-no-envs.yml
       path: target/iacsvc*.jar
       environment_variables:
@@ -1069,7 +1069,7 @@ jobs:
           cp -r rm-notify-gateway-source/target/ .
   - put: cf-resource-ci
     params:
-      current_app_name: rm-notify-gateway-concourse-ci
+      current_app_name: rm-notify-gateway-ci
       manifest: rm-notify-gateway-source/manifest.yml
       path: target/notifygatewaysvc*.jar
       environment_variables:
@@ -1113,7 +1113,7 @@ jobs:
           cp -r rm-sample-service-source/target/ .
   - put: cf-resource-ci
     params:
-      current_app_name: rm-sample-service-concourse-ci
+      current_app_name: rm-sample-service-ci
       manifest: rm-sample-service-source/manifest-no-envs.yml
       path: target/samplesvc*.jar
       environment_variables:
@@ -1159,7 +1159,7 @@ jobs:
           cp -r rm-sdx-gateway-source/target/ .
   - put: cf-resource-ci
     params:
-      current_app_name: rm-sdx-gateway-concourse-ci
+      current_app_name: rm-sdx-gateway-ci
       manifest: rm-sdx-gateway-source/manifest.yml
       path: target/sdxgatewaysvc*.jar
       environment_variables:
@@ -1198,7 +1198,7 @@ jobs:
           cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
   - put: cf-resource-ci
     params:
-      current_app_name: rm-survey-service-concourse-ci
+      current_app_name: rm-survey-service-ci
       manifest: rm-survey-service-source/manifest.yml
       path: rm-survey-service-build
       environment_variables:
@@ -1233,14 +1233,14 @@ jobs:
         JENKINS_CF_PASSWORD: ((cloudfoundry_password))
         API_ENDPOINT: ((cloudfoundry_api))
         ORG: rmras
-        SPACE: concourse-ci
+        SPACE: ci
         UAA_ID: ((ci_uaa_id))
         UAA_SECRET: ((ci_uaa_secret))
         UAA_JWT_SIGNING_KEY: ((ci_uaa_jwt_signing_key))
         UAA_JWT_VERIFICATION_KEY: ((ci_uaa_jwt_verification_key))
-        UAA_URL: 'http://uaa-concourse-ci.apps.devtest.onsclofo.uk'
-        LOGIN_URL: 'http://uaa-concourse-ci.apps.devtest.onsclofo.uk'
-        ZONE_URL: 'uaa-concourse-ci.apps.devtest.onsclofo.uk'
+        UAA_URL: 'http://uaa-ci.apps.devtest.onsclofo.uk'
+        LOGIN_URL: 'http://uaa-ci.apps.devtest.onsclofo.uk'
+        ZONE_URL: 'uaa-ci.apps.devtest.onsclofo.uk'
         ADMIN_SECRET: ((ci_uaa_admin_secret))
         LOGIN_SECRET: ((ci_uaa_login_secret))
       run:
@@ -1253,7 +1253,7 @@ jobs:
           cp -r sdc-uaa-source/* sdc-uaa-build
   - put: cf-resource-ci
     params:
-      current_app_name: sdc-uaa-concourse-ci
+      current_app_name: sdc-uaa-ci
       manifest: sdc-uaa-build/uaa-cf-application.yml
       #### EXTRACT ME ####
   - task: create-secure-message-client
@@ -1266,11 +1266,11 @@ jobs:
       inputs:
         - name: sdc-uaa-source
       params:
-        SPACE: concourse-ci
+        SPACE: ci
         CLIENT: secure_message
         PASSWORD: ((ci_secure_message_client_secret))
         ADMIN_SECRET: ((ci_uaa_admin_secret))
-        UAA_URL: 'uaa-concourse-ci.apps.devtest.onsclofo.uk'
+        UAA_URL: 'uaa-ci.apps.devtest.onsclofo.uk'
       run:
         dir: sdc-uaa-source
         path: sh
@@ -1286,11 +1286,11 @@ jobs:
       inputs:
         - name: sdc-uaa-source
       params:
-        SPACE: concourse-ci
+        SPACE: ci
         CLIENT: ras_backstage
         PASSWORD: ((ci_backstage_client_secret))
         ADMIN_SECRET: ((ci_uaa_admin_secret))
-        UAA_URL: 'uaa-concourse-ci.apps.devtest.onsclofo.uk'
+        UAA_URL: 'uaa-ci.apps.devtest.onsclofo.uk'
       run:
         dir: sdc-uaa-source
         path: sh
@@ -1306,14 +1306,14 @@ jobs:
       inputs:
         - name: sdc-uaa-source
       params:
-        SPACE: concourse-ci
+        SPACE: ci
         USERNAME: uaa_user
         PASSWORD: ((ci_uaa_user_password))
         EMAIL: ons@ons.gov
         FIRSTNAME: uaa
         LASTNAME: user
         ADMIN_SECRET: ((ci_uaa_admin_secret))
-        UAA_URL: 'uaa-concourse-ci.apps.devtest.onsclofo.uk'
+        UAA_URL: 'uaa-ci.apps.devtest.onsclofo.uk'
       run:
         dir: sdc-uaa-source
         path: sh
@@ -1391,7 +1391,7 @@ jobs:
       CLOUDFOUNDRY_EMAIL: ((cloudfoundry_email))
       CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
       CLOUDFOUNDRY_ORG: rmras
-      CLOUDFOUNDRY_SPACE: concourse-ci
+      CLOUDFOUNDRY_SPACE: ci
 
   - task: acceptance-test
     privileged: true
