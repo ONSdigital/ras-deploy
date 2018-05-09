@@ -27,6 +27,7 @@ if [ ${#SERVICES[@]} -ne 0 ]; then
     for service in $SERVICES
     do
      cf delete-service-key "$service" "$service"-key  -f
-     cf delete-service "$service" -f
+     cf rename-service "$service" "$service"-old
+     cf delete-service "$service"-old -f
     done
 fi
