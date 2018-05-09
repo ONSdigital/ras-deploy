@@ -829,7 +829,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/rasrm-acceptance-tests.git
-    branch: fixing-tests-for-concourse
+    branch: master
 
 - name: cf-cli-resource-ci
   type: cf-cli-resource
