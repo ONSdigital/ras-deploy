@@ -639,6 +639,13 @@ resources:
     uri: https://github.com/ONSdigital/sdc-uaa.git
 ### END MICROSERVICE REPOS
 
+- name: preprod-deploy-trigger
+  type: git
+  source:
+    uri: "git@github.com:ONSdigital/rasrm-deploy-trigger"
+    paths: ["preprod/*"]
+    private_key: ((git_key))
+    
 - name: rasrm-acceptance-tests-source
   type: git
   source:
@@ -2418,13 +2425,55 @@ jobs:
       <<: *latest_security_user
       <<: *latest_service_endpoints_for_python
       
+- name: preprod-trigger
+  disable_manual_trigger: true
+  plan:
+  - get: preprod-deploy-trigger
+    trigger: true
+  - get: ras-party-source
+    passed: [latest-acceptance-tests]
+  - get: ras-backstage-source
+    passed: [latest-acceptance-tests]
+  - get: ras-frontstage-source
+    passed: [latest-acceptance-tests]
+  - get: ras-frontstage-api-source
+    passed: [latest-acceptance-tests]
+  - get: django-oauth2-test-source
+    passed: [latest-acceptance-tests]
+  - get: response-operations-ui-source
+    passed: [latest-acceptance-tests]
+  - get: ras-secure-message-source
+    passed: [latest-acceptance-tests]
+  - get: ras-collection-instrument-source
+    passed: [latest-acceptance-tests]
+  - get: rm-action-service-source
+    passed: [latest-acceptance-tests]
+  - get: rm-actionexporter-service-source
+    passed: [latest-acceptance-tests]
+  - get: rm-case-service-source
+    passed: [latest-acceptance-tests]
+  - get: rm-collection-exercise-service-source
+    passed: [latest-acceptance-tests]
+  - get: iac-service-source
+    passed: [latest-acceptance-tests]
+  - get: rm-notify-gateway-source
+    passed: [latest-acceptance-tests]
+  - get: rm-sample-service-source
+    passed: [latest-acceptance-tests]
+  - get: rm-sdx-gateway-source
+    passed: [latest-acceptance-tests]
+  - get: rm-survey-service-source
+    passed: [latest-acceptance-tests]
+  - get: sdc-uaa-source
+    passed: [latest-acceptance-tests]
+      
 ### START preprod SPACE DEPLOYMENTS
 - name: ras-party-preprod-deploy
   serial_groups: [ras-party-preprod-deploy]
   plan:
   - get: ras-party-source
     trigger: true
-    passed: [latest-acceptance-tests]
+    passed: [preprod-trigger]
   - put: create-database
     resource: cf-cli-resource-preprod
     params:
@@ -2453,7 +2502,7 @@ jobs:
   plan:
   - get: ras-secure-message-source
     trigger: true
-    passed: [latest-acceptance-tests]
+    passed: [preprod-trigger]
   - put: create-database
     resource: cf-cli-resource-preprod
     params:
@@ -2489,7 +2538,7 @@ jobs:
   plan:
   - get: ras-backstage-source
     trigger: true
-    passed: [latest-acceptance-tests]
+    passed: [preprod-trigger]
   - put: cf-resource-preprod
     params:
       current_app_name: ras-backstage-concourse-preprod
@@ -2509,7 +2558,7 @@ jobs:
   plan:
   - get: ras-collection-instrument-source
     trigger: true
-    passed: [latest-acceptance-tests]
+    passed: [preprod-trigger]
   - get: ras-deploy
   - put: create-rm-rabbitmq
     resource: cf-cli-resource-preprod
@@ -2556,7 +2605,7 @@ jobs:
   plan:
   - get: ras-frontstage-source
     trigger: true
-    passed: [latest-acceptance-tests]
+    passed: [preprod-trigger]
   - <<: *preprod_create_rm_redis
   - put: cf-resource-preprod
     params:
@@ -2574,7 +2623,7 @@ jobs:
   plan:
   - get: ras-frontstage-api-source
     trigger: true
-    passed: [latest-acceptance-tests]
+    passed: [preprod-trigger]
   - put: cf-resource-preprod
     params:
       current_app_name: ras-frontstage-api-concourse-preprod
@@ -2593,7 +2642,7 @@ jobs:
   plan:
   - get: django-oauth2-test-source
     trigger: true
-    passed: [latest-acceptance-tests]
+    passed: [preprod-trigger]
   - get: ras-deploy
   - put: create-database
     resource: cf-cli-resource-preprod
@@ -2668,7 +2717,7 @@ jobs:
   plan:
   - get: response-operations-ui-source
     trigger: true
-    passed: [latest-acceptance-tests]
+    passed: [preprod-trigger]
   - put: create-redis
     resource: cf-cli-resource-preprod
     params:
@@ -2700,7 +2749,7 @@ jobs:
   plan:
   - get: rm-action-service-source
     trigger: true
-    passed: [latest-acceptance-tests]
+    passed: [preprod-trigger]
   - <<: *preprod_create_rm_pg_db
   - <<: *preprod_create_rm_redis
   - <<: *preprod_create_rm_rabbitmq
@@ -2739,7 +2788,7 @@ jobs:
   plan:
   - get: rm-actionexporter-service-source
     trigger: true
-    passed: [latest-acceptance-tests]
+    passed: [preprod-trigger]
   - <<: *preprod_create_rm_pg_db
   - <<: *preprod_create_rm_redis
   - <<: *preprod_create_rm_rabbitmq
@@ -2782,7 +2831,7 @@ jobs:
   plan:
   - get: rm-case-service-source
     trigger: true
-    passed: [latest-acceptance-tests]
+    passed: [preprod-trigger]
   - <<: *preprod_create_rm_pg_db
   - <<: *preprod_create_rm_redis
   - <<: *preprod_create_rm_rabbitmq
@@ -2821,7 +2870,7 @@ jobs:
   plan:
   - get: rm-collection-exercise-service-source
     trigger: true
-    passed: [latest-acceptance-tests]
+    passed: [preprod-trigger]
   - <<: *preprod_create_rm_pg_db
   - <<: *preprod_create_rm_redis
   - <<: *preprod_create_rm_rabbitmq
@@ -2862,7 +2911,7 @@ jobs:
   plan:
   - get: iac-service-source
     trigger: true
-    passed: [latest-acceptance-tests]
+    passed: [preprod-trigger]
   - <<: *preprod_create_rm_pg_db
   - task: build
     config:
@@ -2899,7 +2948,7 @@ jobs:
   plan:
   - get: rm-notify-gateway-source
     trigger: true
-    passed: [latest-acceptance-tests]
+    passed: [preprod-trigger]
   - <<: *preprod_create_rm_pg_db
   - <<: *preprod_create_rm_rabbitmq
   - task: build
@@ -2940,7 +2989,7 @@ jobs:
   plan:
   - get: rm-sample-service-source
     trigger: true
-    passed: [latest-acceptance-tests]
+    passed: [preprod-trigger]
   - <<: *preprod_create_rm_pg_db
   - <<: *preprod_create_rm_redis
   - <<: *preprod_create_rm_rabbitmq
@@ -2985,7 +3034,7 @@ jobs:
   plan:
   - get: rm-sdx-gateway-source
     trigger: true
-    passed: [latest-acceptance-tests]
+    passed: [preprod-trigger]
   - <<: *preprod_create_rm_redis
   - <<: *preprod_create_rm_rabbitmq
   - task: build
@@ -3022,7 +3071,7 @@ jobs:
   plan:
   - get: rm-survey-service-source
     trigger: true
-    passed: [latest-acceptance-tests]
+    passed: [preprod-trigger]
   - <<: *preprod_create_rm_pg_db
   - task: build
     config:
@@ -3059,7 +3108,7 @@ jobs:
   plan:
   - get: sdc-uaa-source
     trigger: true
-    passed: [latest-acceptance-tests]
+    passed: [preprod-trigger]
   - task: build
     config:
       platform: linux
