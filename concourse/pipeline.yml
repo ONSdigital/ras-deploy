@@ -199,8 +199,8 @@ templates:
       SECURITY_USER_PASSWORD: ((latest_security_user_password))
       COLLECTION_EXERCISE_USERNAME: ((latest_security_user_name))
       COLLECTION_EXERCISE_PASSWORD: ((latest_security_user_password))
-      PARTY_USERNAME: ((ci_security_user_name))
-      PARTY_PASSWORD: ((ci_security_user_password))
+      PARTY_USERNAME: ((latest_security_user_name))
+      PARTY_PASSWORD: ((latest_security_user_password))
 
     all_services: &latest_all_services
     - ras-party-latest-deploy
