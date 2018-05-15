@@ -26,6 +26,8 @@ templates:
       CASE_PASSWORD: ((ci_security_user_password))
       COLLECTION_EXERCISE_USERNAME: ((ci_security_user_name))
       COLLECTION_EXERCISE_PASSWORD: ((ci_security_user_password))
+      COLLECTION_INSTRUMENT_USERNAME: ((ci_security_user_name))
+      COLLECTION_INSTRUMENT_PASSWORD: ((ci_security_user_password))
       IAC_USERNAME: ((ci_security_user_name))
       IAC_PASSWORD: ((ci_security_user_password))
       PARTY_USERNAME: ((ci_security_user_name))
@@ -69,6 +71,7 @@ templates:
       COLLECTION_EXERCISE_SERVICE_PORT: '80'
       COLLECTION_EXERCISE_HOST: rm-collection-exercise-service-ci.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_PORT: '80'
+      COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-ci.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-ci.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
       DJANGO_SERVICE_HOST: django-oauth2-test-ci.apps.devtest.onsclofo.uk
@@ -214,6 +217,8 @@ templates:
       CASE_PASSWORD: ((latest_security_user_password))
       COLLECTION_EXERCISE_USERNAME: ((latest_security_user_name))
       COLLECTION_EXERCISE_PASSWORD: ((latest_security_user_password))
+      COLLECTION_INSTRUMENT_USERNAME: ((latest_security_user_name))
+      COLLECTION_INSTRUMENT_PASSWORD: ((latest_security_user_password))
       IAC_USERNAME: ((latest_security_user_name))
       IAC_PASSWORD: ((latest_security_user_password))
       PARTY_USERNAME: ((latest_security_user_name))
@@ -257,6 +262,7 @@ templates:
       COLLECTION_EXERCISE_SERVICE_PORT: '80'
       COLLECTION_EXERCISE_HOST: rm-collection-exercise-service-concourse-latest.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_PORT: '80'
+      COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-concourse-latest.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-concourse-latest.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
       DJANGO_SERVICE_HOST: django-oauth2-test-concourse-latest.apps.devtest.onsclofo.uk
@@ -402,6 +408,8 @@ templates:
       CASE_PASSWORD: ((preprod_security_user_password))
       COLLECTION_EXERCISE_USERNAME: ((preprod_security_user_name))
       COLLECTION_EXERCISE_PASSWORD: ((preprod_security_user_password))
+      COLLECTION_INSTRUMENT_USERNAME: ((preprod_security_user_name))
+      COLLECTION_INSTRUMENT_PASSWORD: ((preprod_security_user_password))
       IAC_USERNAME: ((preprod_security_user_name))
       IAC_PASSWORD: ((preprod_security_user_password))
       PARTY_USERNAME: ((preprod_security_user_name))
@@ -445,6 +453,7 @@ templates:
       COLLECTION_EXERCISE_SERVICE_PORT: '80'
       COLLECTION_EXERCISE_HOST: rm-collection-exercise-service-concourse-preprod.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_PORT: '80'
+      COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-concourse-preprod.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-concourse-preprod.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
       DJANGO_SERVICE_HOST: django-oauth2-test-concourse-preprod.apps.devtest.onsclofo.uk
@@ -590,6 +599,8 @@ templates:
       CASE_PASSWORD: ((prod_security_user_password))
       COLLECTION_EXERCISE_USERNAME: ((prod_security_user_name))
       COLLECTION_EXERCISE_PASSWORD: ((prod_security_user_password))
+      COLLECTION_INSTRUMENT_USERNAME: ((prod_security_user_name))
+      COLLECTION_INSTRUMENT_PASSWORD: ((prod_security_user_password))
       IAC_USERNAME: ((prod_security_user_name))
       IAC_PASSWORD: ((prod_security_user_password))
       PARTY_USERNAME: ((prod_security_user_name))
@@ -633,6 +644,7 @@ templates:
       COLLECTION_EXERCISE_SERVICE_PORT: '80'
       COLLECTION_EXERCISE_HOST: rm-collection-exercise-service-concourse-prod.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_PORT: '80'
+      COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-concourse-prod.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-concourse-prod.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
       DJANGO_SERVICE_HOST: django-oauth2-test-concourse-prod.apps.devtest.onsclofo.uk
