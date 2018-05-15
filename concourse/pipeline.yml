@@ -22,10 +22,18 @@ templates:
       surveySvc_connectionConfig_password: ((ci_security_user_password))
       SECURITY_USER_NAME: ((ci_security_user_name))
       SECURITY_USER_PASSWORD: ((ci_security_user_password))
+      CASE_USERNAME: ((ci_security_user_name))
+      CASE_PASSWORD: ((ci_security_user_password))
       COLLECTION_EXERCISE_USERNAME: ((ci_security_user_name))
       COLLECTION_EXERCISE_PASSWORD: ((ci_security_user_password))
+      COLLECTION_INSTRUMENT_USERNAME: ((ci_security_user_name))
+      COLLECTION_INSTRUMENT_PASSWORD: ((ci_security_user_password))
+      IAC_USERNAME: ((ci_security_user_name))
+      IAC_PASSWORD: ((ci_security_user_password))
       PARTY_USERNAME: ((ci_security_user_name))
       PARTY_PASSWORD: ((ci_security_user_password))
+      SURVEY_USERNAME: ((ci_security_user_name))
+      SURVEY_PASSWORD: ((ci_security_user_password))
 
     all_services: &ci_all_services
     - ras-party-ci-deploy
@@ -52,14 +60,18 @@ templates:
       ACTION_SERVICE_PORT: '80'
       ACTION_EXPORTER_HOST: rm-actionexporter-service-ci.apps.devtest.onsclofo.uk
       ACTION_EXPORTER_PORT: '80'
+      BACKSTAGE_API_URL: http://ras-backstage-ci.apps.devtest.onsclofo.uk/backstage-api
       BACKSTAGE_SERVICE_HOST: ras-backstage-ci.apps.devtest.onsclofo.uk
       BACKSTAGE_SERVICE_PORT: '80'
+      CASE_URL: http://rm-case-service-ci.apps.devtest.onsclofo.uk
       CASE_SERVICE_HOST: rm-case-service-ci.apps.devtest.onsclofo.uk
       CASE_SERVICE_PORT: '80'
+      COLLECTION_EXERCISE_URL: http://rm-collection-exercise-service-ci.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_SERVICE_HOST: rm-collection-exercise-service-ci.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_SERVICE_PORT: '80'
       COLLECTION_EXERCISE_HOST: rm-collection-exercise-service-ci.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_PORT: '80'
+      COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-ci.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-ci.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
       DJANGO_SERVICE_HOST: django-oauth2-test-ci.apps.devtest.onsclofo.uk
@@ -68,6 +80,7 @@ templates:
       FRONTSTAGE_API_SERVICE_PORT: '80'
       FRONTSTAGE_SERVICE_HOST: ras-frontstage-ci.apps.devtest.onsclofo.uk
       FRONTSTAGE_SERVICE_PORT: '80'
+      IAC_URL: http://iac-service-ci.apps.devtest.onsclofo.uk
       IAC_SERVICE_HOST: iac-service-ci.apps.devtest.onsclofo.uk
       IAC_SERVICE_PORT: '80'
       NOTIFY_GATEWAY_SERVICE_HOST: rm-notify-gateway-ci.apps.devtest.onsclofo.uk
@@ -105,8 +118,10 @@ templates:
       RAS_SECURE_MESSAGE_SERVICE_PORT: '80'
       RAS_SECURE_MESSAGING_SERVICE_HOST: ras-secure-message-ci.apps.devtest.onsclofo.uk
       RAS_SECURE_MESSAGING_SERVICE_PORT: '80'
+      SECURE_MESSAGE_URL: http://ras-secure-message-ci.apps.devtest.onsclofo.uk
       RAS_SURVEY_SERVICE_HOST: rm-survey-service-ci.apps.devtest.onsclofo.uk
       RAS_SURVEY_SERVICE_PORT: '80'
+      SURVEY_URL: http://rm-survey-service-ci.apps.devtest.onsclofo.uk
       RESPONSE_OPERATIONS_UI_HOST: response-operations-ui-ci.apps.devtest.onsclofo.uk
       RESPONSE_OPERATIONS_UI_PORT: '80'
       SAMPLE_SERVICE_HOST: rm-sample-service-ci.apps.devtest.onsclofo.uk
@@ -115,6 +130,7 @@ templates:
       SECURE_MESSAGE_SERVICE_PORT: '80'
       SURVEY_SERVICE_HOST: rm-survey-service-ci.apps.devtest.onsclofo.uk
       SURVEY_SERVICE_PORT: '80'
+      UAA_SERVICE_URL: http://uaa-ci.apps.devtest.onsclofo.uk
 
     service_endpoints_for_java: &ci_service_endpoints_for_java
       actionSvc_connectionConfig_host: 'rm-action-service-ci.apps.devtest.onsclofo.uk'
@@ -197,10 +213,18 @@ templates:
       surveySvc_connectionConfig_password: ((latest_security_user_password))
       SECURITY_USER_NAME: ((latest_security_user_name))
       SECURITY_USER_PASSWORD: ((latest_security_user_password))
+      CASE_USERNAME: ((latest_security_user_name))
+      CASE_PASSWORD: ((latest_security_user_password))
       COLLECTION_EXERCISE_USERNAME: ((latest_security_user_name))
       COLLECTION_EXERCISE_PASSWORD: ((latest_security_user_password))
+      COLLECTION_INSTRUMENT_USERNAME: ((latest_security_user_name))
+      COLLECTION_INSTRUMENT_PASSWORD: ((latest_security_user_password))
+      IAC_USERNAME: ((latest_security_user_name))
+      IAC_PASSWORD: ((latest_security_user_password))
       PARTY_USERNAME: ((latest_security_user_name))
       PARTY_PASSWORD: ((latest_security_user_password))
+      SURVEY_USERNAME: ((latest_security_user_name))
+      SURVEY_PASSWORD: ((latest_security_user_password))
 
     all_services: &latest_all_services
     - ras-party-latest-deploy
@@ -227,14 +251,18 @@ templates:
       ACTION_SERVICE_PORT: '80'
       ACTION_EXPORTER_HOST: rm-actionexporter-service-concourse-latest.apps.devtest.onsclofo.uk
       ACTION_EXPORTER_PORT: '80'
+      BACKSTAGE_API_URL: http://ras-backstage-concourse-latest.apps.devtest.onsclofo.uk/backstage-api
       BACKSTAGE_SERVICE_HOST: ras-backstage-concourse-latest.apps.devtest.onsclofo.uk
       BACKSTAGE_SERVICE_PORT: '80'
+      CASE_URL: http://rm-case-service-concourse-latest.apps.devtest.onsclofo.uk
       CASE_SERVICE_HOST: rm-case-service-concourse-latest.apps.devtest.onsclofo.uk
       CASE_SERVICE_PORT: '80'
+      COLLECTION_EXERCISE_URL: http://rm-collection-exercise-service-concourse-latest.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_SERVICE_HOST: rm-collection-exercise-service-concourse-latest.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_SERVICE_PORT: '80'
       COLLECTION_EXERCISE_HOST: rm-collection-exercise-service-concourse-latest.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_PORT: '80'
+      COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-concourse-latest.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-concourse-latest.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
       DJANGO_SERVICE_HOST: django-oauth2-test-concourse-latest.apps.devtest.onsclofo.uk
@@ -243,6 +271,7 @@ templates:
       FRONTSTAGE_API_SERVICE_PORT: '80'
       FRONTSTAGE_SERVICE_HOST: ras-frontstage-concourse-latest.apps.devtest.onsclofo.uk
       FRONTSTAGE_SERVICE_PORT: '80'
+      IAC_URL: http://iac-service-concourse-latest.apps.devtest.onsclofo.uk
       IAC_SERVICE_HOST: iac-service-concourse-latest.apps.devtest.onsclofo.uk
       IAC_SERVICE_PORT: '80'
       NOTIFY_GATEWAY_SERVICE_HOST: rm-notify-gateway-concourse-latest.apps.devtest.onsclofo.uk
@@ -286,10 +315,13 @@ templates:
       RESPONSE_OPERATIONS_UI_PORT: '80'
       SAMPLE_SERVICE_HOST: rm-sample-service-concourse-latest.apps.devtest.onsclofo.uk
       SAMPLE_SERVICE_PORT: '80'
+      SECURE_MESSAGE_URL: http://ras-secure-message-concourse-latest.apps.devtest.onsclofo.uk
       SECURE_MESSAGE_SERVICE_HOST: ras-secure-message-concourse-latest.apps.devtest.onsclofo.uk
       SECURE_MESSAGE_SERVICE_PORT: '80'
+      SURVEY_URL: http://rm-survey-service-concourse-latest.apps.devtest.onsclofo.uk
       SURVEY_SERVICE_HOST: rm-survey-service-concourse-latest.apps.devtest.onsclofo.uk
       SURVEY_SERVICE_PORT: '80'
+      UAA_SERVICE_URL: http://uaa-concourse-latest.apps.devtest.onsclofo.uk
 
     service_endpoints_for_java: &latest_service_endpoints_for_java
       actionSvc_connectionConfig_host: 'rm-action-service-concourse-latest.apps.devtest.onsclofo.uk'
@@ -372,10 +404,18 @@ templates:
       surveySvc_connectionConfig_password: ((preprod_security_user_password))
       SECURITY_USER_NAME: ((preprod_security_user_name))
       SECURITY_USER_PASSWORD: ((preprod_security_user_password))
+      CASE_USERNAME: ((preprod_security_user_name))
+      CASE_PASSWORD: ((preprod_security_user_password))
       COLLECTION_EXERCISE_USERNAME: ((preprod_security_user_name))
       COLLECTION_EXERCISE_PASSWORD: ((preprod_security_user_password))
+      COLLECTION_INSTRUMENT_USERNAME: ((preprod_security_user_name))
+      COLLECTION_INSTRUMENT_PASSWORD: ((preprod_security_user_password))
+      IAC_USERNAME: ((preprod_security_user_name))
+      IAC_PASSWORD: ((preprod_security_user_password))
       PARTY_USERNAME: ((preprod_security_user_name))
       PARTY_PASSWORD: ((preprod_security_user_password))
+      SURVEY_USERNAME: ((preprod_security_user_name))
+      SURVEY_PASSWORD: ((preprod_security_user_password))
 
     all_services: &preprod_all_services
     - ras-party-preprod-deploy
@@ -402,14 +442,18 @@ templates:
       ACTION_SERVICE_PORT: '80'
       ACTION_EXPORTER_HOST: rm-actionexporter-service-concourse-preprod.apps.devtest.onsclofo.uk
       ACTION_EXPORTER_PORT: '80'
+      BACKSTAGE_API_URL: http://ras-backstage-concourse-preprod.apps.devtest.onsclofo.uk/backstage-api
       BACKSTAGE_SERVICE_HOST: ras-backstage-concourse-preprod.apps.devtest.onsclofo.uk
       BACKSTAGE_SERVICE_PORT: '80'
+      CASE_URL: http://rm-case-service-concourse-preprod.apps.devtest.onsclofo.uk
       CASE_SERVICE_HOST: rm-case-service-concourse-preprod.apps.devtest.onsclofo.uk
       CASE_SERVICE_PORT: '80'
+      COLLECTION_EXERCISE_URL: http://rm-collection-exercise-service-concourse-preprod.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_SERVICE_HOST: rm-collection-exercise-service-concourse-preprod.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_SERVICE_PORT: '80'
       COLLECTION_EXERCISE_HOST: rm-collection-exercise-service-concourse-preprod.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_PORT: '80'
+      COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-concourse-preprod.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-concourse-preprod.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
       DJANGO_SERVICE_HOST: django-oauth2-test-concourse-preprod.apps.devtest.onsclofo.uk
@@ -418,6 +462,7 @@ templates:
       FRONTSTAGE_API_SERVICE_PORT: '80'
       FRONTSTAGE_SERVICE_HOST: ras-frontstage-concourse-preprod.apps.devtest.onsclofo.uk
       FRONTSTAGE_SERVICE_PORT: '80'
+      IAC_URL: http://iac-service-concourse-preprod.apps.devtest.onsclofo.uk
       IAC_SERVICE_HOST: iac-service-concourse-preprod.apps.devtest.onsclofo.uk
       IAC_SERVICE_PORT: '80'
       NOTIFY_GATEWAY_SERVICE_HOST: rm-notify-gateway-concourse-preprod.apps.devtest.onsclofo.uk
@@ -461,10 +506,13 @@ templates:
       RESPONSE_OPERATIONS_UI_PORT: '80'
       SAMPLE_SERVICE_HOST: rm-sample-service-concourse-preprod.apps.devtest.onsclofo.uk
       SAMPLE_SERVICE_PORT: '80'
+      SECURE_MESSAGE_URL: http://ras-secure-message-concourse-preprod.apps.devtest.onsclofo.uk
       SECURE_MESSAGE_SERVICE_HOST: ras-secure-message-concourse-preprod.apps.devtest.onsclofo.uk
       SECURE_MESSAGE_SERVICE_PORT: '80'
+      SURVEY_URL: http://rm-survey-service-concourse-preprod.apps.devtest.onsclofo.uk
       SURVEY_SERVICE_HOST: rm-survey-service-concourse-preprod.apps.devtest.onsclofo.uk
       SURVEY_SERVICE_PORT: '80'
+      UAA_SERVICE_URL: http://uaa-concourse-preprod.apps.devtest.onsclofo.uk
 
     service_endpoints_for_java: &preprod_service_endpoints_for_java
       actionSvc_connectionConfig_host: 'rm-action-service-concourse-preprod.apps.devtest.onsclofo.uk'
@@ -547,10 +595,18 @@ templates:
       surveySvc_connectionConfig_password: ((prod_security_user_password))
       SECURITY_USER_NAME: ((prod_security_user_name))
       SECURITY_USER_PASSWORD: ((prod_security_user_password))
+      CASE_USERNAME: ((prod_security_user_name))
+      CASE_PASSWORD: ((prod_security_user_password))
       COLLECTION_EXERCISE_USERNAME: ((prod_security_user_name))
       COLLECTION_EXERCISE_PASSWORD: ((prod_security_user_password))
+      COLLECTION_INSTRUMENT_USERNAME: ((prod_security_user_name))
+      COLLECTION_INSTRUMENT_PASSWORD: ((prod_security_user_password))
+      IAC_USERNAME: ((prod_security_user_name))
+      IAC_PASSWORD: ((prod_security_user_password))
       PARTY_USERNAME: ((prod_security_user_name))
       PARTY_PASSWORD: ((prod_security_user_password))
+      SURVEY_USERNAME: ((prod_security_user_name))
+      SURVEY_PASSWORD: ((prod_security_user_password))
 
     all_services: &prod_all_services
     - ras-party-prod-deploy
@@ -577,14 +633,18 @@ templates:
       ACTION_SERVICE_PORT: '80'
       ACTION_EXPORTER_HOST: rm-actionexporter-service-concourse-prod.apps.devtest.onsclofo.uk
       ACTION_EXPORTER_PORT: '80'
+      BACKSTAGE_API_URL: http://ras-backstage-concourse-prod.apps.devtest.onsclofo.uk/backstage-api
       BACKSTAGE_SERVICE_HOST: ras-backstage-concourse-prod.apps.devtest.onsclofo.uk
       BACKSTAGE_SERVICE_PORT: '80'
+      CASE_URL: http://rm-case-service-concourse-prod.apps.devtest.onsclofo.uk
       CASE_SERVICE_HOST: rm-case-service-concourse-prod.apps.devtest.onsclofo.uk
       CASE_SERVICE_PORT: '80'
+      COLLECTION_EXERCISE_URL: http://rm-collection-exercise-service-concourse-prod.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_SERVICE_HOST: rm-collection-exercise-service-concourse-prod.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_SERVICE_PORT: '80'
       COLLECTION_EXERCISE_HOST: rm-collection-exercise-service-concourse-prod.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_PORT: '80'
+      COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-concourse-prod.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-concourse-prod.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
       DJANGO_SERVICE_HOST: django-oauth2-test-concourse-prod.apps.devtest.onsclofo.uk
@@ -593,6 +653,7 @@ templates:
       FRONTSTAGE_API_SERVICE_PORT: '80'
       FRONTSTAGE_SERVICE_HOST: ras-frontstage-concourse-prod.apps.devtest.onsclofo.uk
       FRONTSTAGE_SERVICE_PORT: '80'
+      IAC_URL: http://iac-service-concourse-prod.apps.devtest.onsclofo.uk
       IAC_SERVICE_HOST: iac-service-concourse-prod.apps.devtest.onsclofo.uk
       IAC_SERVICE_PORT: '80'
       NOTIFY_GATEWAY_SERVICE_HOST: rm-notify-gateway-concourse-prod.apps.devtest.onsclofo.uk
@@ -636,10 +697,13 @@ templates:
       RESPONSE_OPERATIONS_UI_PORT: '80'
       SAMPLE_SERVICE_HOST: rm-sample-service-concourse-prod.apps.devtest.onsclofo.uk
       SAMPLE_SERVICE_PORT: '80'
+      SECURE_MESSAGE_URL: http://ras-secure-message-concourse-prod.apps.devtest.onsclofo.uk
       SECURE_MESSAGE_SERVICE_HOST: ras-secure-message-concourse-prod.apps.devtest.onsclofo.uk
       SECURE_MESSAGE_SERVICE_PORT: '80'
+      SURVEY_URL: http://rm-survey-service-concourse-prod.apps.devtest.onsclofo.uk
       SURVEY_SERVICE_HOST: rm-survey-service-concourse-prod.apps.devtest.onsclofo.uk
       SURVEY_SERVICE_PORT: '80'
+      UAA_SERVICE_URL: http://uaa-concourse-prod.apps.devtest.onsclofo.uk
 
     service_endpoints_for_java: &prod_service_endpoints_for_java
       actionSvc_connectionConfig_host: 'rm-action-service-concourse-prod.apps.devtest.onsclofo.uk'
@@ -1237,15 +1301,9 @@ jobs:
       path: response-operations-ui-source
       environment_variables:
         <<: *ci_security_user
-        BACKSTAGE_API_URL: 'http://ras-backstage-ci.apps.devtest.onsclofo.uk/backstage-api'
-        COLLECTION_EXERCISE_URL: 'http://rm-collection-exercise-service-ci.apps.devtest.onsclofo.uk'
-        SECURE_MESSAGE_URL: 'http://ras-secure-message-ci.apps.devtest.onsclofo.uk'
-        UAA_SERVICE_URL: 'http://uaa-ci.apps.devtest.onsclofo.uk'
+        <<: *ci_service_endpoints_for_python
         RAS_SECURE_MESSAGING_JWT_SECRET: ((ci_jwt_secret))
         REDIS_SERVICE: ras-redis
-        SURVEY_USERNAME: ((ci_security_user_name))
-        SURVEY_PASSWORD: ((ci_security_user_password))
-        SURVEY_URL: 'http://rm-survey-service-ci.apps.devtest.onsclofo.uk'
 
 - name: rm-action-service-ci-deploy
   serial_groups: [rm-action-service-ci-deploy]
@@ -2090,15 +2148,9 @@ jobs:
       path: response-operations-ui-source
       environment_variables:
         <<: *latest_security_user
-        BACKSTAGE_API_URL: 'http://ras-backstage-concourse-latest.apps.devtest.onsclofo.uk/backstage-api'
-        COLLECTION_EXERCISE_URL: 'http://rm-collection-exercise-service-concourse-latest.apps.devtest.onsclofo.uk'
-        SECURE_MESSAGE_URL: 'http://ras-secure-message-concourse-latest.apps.devtest.onsclofo.uk'
-        UAA_SERVICE_URL: 'http://uaa-concourse-latest.apps.devtest.onsclofo.uk'
+        <<: *latest_service_endpoints_for_python
         RAS_SECURE_MESSAGING_JWT_SECRET: ((latest_jwt_secret))
         REDIS_SERVICE: ras-redis
-        SURVEY_USERNAME: ((latest_security_user_name))
-        SURVEY_PASSWORD: ((latest_security_user_password))
-        SURVEY_URL: 'http://rm-survey-service-concourse-latest.apps.devtest.onsclofo.uk'
 
 - name: rm-action-service-latest-deploy
   serial_groups: [rm-action-service-latest-deploy]
@@ -2967,15 +3019,9 @@ jobs:
       path: response-operations-ui-source
       environment_variables:
         <<: *preprod_security_user
-        BACKSTAGE_API_URL: 'http://ras-backstage-concourse-preprod.apps.devtest.onsclofo.uk/backstage-api'
-        COLLECTION_EXERCISE_URL: 'http://rm-collection-exercise-service-concourse-preprod.apps.devtest.onsclofo.uk'
-        SECURE_MESSAGE_URL: 'http://ras-secure-message-concourse-preprod.apps.devtest.onsclofo.uk'
-        UAA_SERVICE_URL: 'http://uaa-concourse-preprod.apps.devtest.onsclofo.uk'
+        <<: *preprod_service_endpoints_for_python
         RAS_SECURE_MESSAGING_JWT_SECRET: ((preprod_jwt_secret))
         REDIS_SERVICE: ras-redis
-        SURVEY_USERNAME: ((preprod_security_user_name))
-        SURVEY_PASSWORD: ((preprod_security_user_password))
-        SURVEY_URL: 'http://rm-survey-service-concourse-preprod.apps.devtest.onsclofo.uk'
 
 - name: rm-action-service-preprod-deploy
   disable_manual_trigger: true
@@ -3849,16 +3895,10 @@ jobs:
       manifest: response-operations-ui-source/manifest.yml
       path: response-operations-ui-source
       environment_variables:
+        <<: *prod_service_endpoints_for_python
         <<: *prod_security_user
-        BACKSTAGE_API_URL: 'http://ras-backstage-concourse-prod.apps.devtest.onsclofo.uk/backstage-api'
-        COLLECTION_EXERCISE_URL: 'http://rm-collection-exercise-service-concourse-prod.apps.devtest.onsclofo.uk'
-        SECURE_MESSAGE_URL: 'http://ras-secure-message-concourse-prod.apps.devtest.onsclofo.uk'
-        UAA_SERVICE_URL: 'http://uaa-concourse-prod.apps.devtest.onsclofo.uk'
         RAS_SECURE_MESSAGING_JWT_SECRET: ((prod_jwt_secret))
         REDIS_SERVICE: ras-redis
-        SURVEY_USERNAME: ((prod_security_user_name))
-        SURVEY_PASSWORD: ((prod_security_user_password))
-        SURVEY_URL: 'http://rm-survey-service-concourse-prod.apps.devtest.onsclofo.uk'
 
 - name: rm-action-service-prod-deploy
   disable_manual_trigger: true
