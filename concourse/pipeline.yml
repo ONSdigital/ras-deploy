@@ -315,13 +315,13 @@ templates:
       RESPONSE_OPERATIONS_UI_PORT: '80'
       SAMPLE_SERVICE_HOST: rm-sample-service-concourse-latest.apps.devtest.onsclofo.uk
       SAMPLE_SERVICE_PORT: '80'
-      SECURE_MESSAGE_URL: 'http://ras-secure-message-ci.apps.devtest.onsclofo.uk'
+      SECURE_MESSAGE_URL: http://ras-secure-message-concourse-latest.apps.devtest.onsclofo.uk
       SECURE_MESSAGE_SERVICE_HOST: ras-secure-message-concourse-latest.apps.devtest.onsclofo.uk
       SECURE_MESSAGE_SERVICE_PORT: '80'
       SURVEY_URL: http://rm-survey-service-concourse-latest.apps.devtest.onsclofo.uk
       SURVEY_SERVICE_HOST: rm-survey-service-concourse-latest.apps.devtest.onsclofo.uk
       SURVEY_SERVICE_PORT: '80'
-      UAA_SERVICE_URL: 'http://uaa-ci.apps.devtest.onsclofo.uk'
+      UAA_SERVICE_URL: http://uaa-concourse-latest.apps.devtest.onsclofo.uk
 
     service_endpoints_for_java: &latest_service_endpoints_for_java
       actionSvc_connectionConfig_host: 'rm-action-service-concourse-latest.apps.devtest.onsclofo.uk'
