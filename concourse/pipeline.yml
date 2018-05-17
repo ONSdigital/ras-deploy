@@ -1313,29 +1313,30 @@ jobs:
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
-  - <<: *ci_create_rm_pg_db
-  - <<: *ci_create_rm_redis
-  - <<: *ci_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-action-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-action-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-action-service-source/pom.xml
-          cp -r rm-action-service-source/target/ .
+  - aggregate:
+    - <<: *ci_create_rm_pg_db
+    - <<: *ci_create_rm_redis
+    - <<: *ci_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-action-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-action-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-action-service-source/pom.xml
+            cp -r rm-action-service-source/target/ .
   - put: cf-resource-ci
     params:
       current_app_name: rm-action-service-ci
@@ -1354,29 +1355,30 @@ jobs:
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
-  - <<: *ci_create_rm_pg_db
-  - <<: *ci_create_rm_redis
-  - <<: *ci_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-actionexporter-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-actionexporter-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-actionexporter-service-source/pom.xml
-          cp -r rm-actionexporter-service-source/target/ .
+  - aggregate:
+    - <<: *ci_create_rm_pg_db
+    - <<: *ci_create_rm_redis
+    - <<: *ci_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-actionexporter-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-actionexporter-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-actionexporter-service-source/pom.xml
+            cp -r rm-actionexporter-service-source/target/ .
   - put: cf-resource-ci
     params:
       current_app_name: rm-actionexporter-service-ci
@@ -1399,29 +1401,30 @@ jobs:
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
-  - <<: *ci_create_rm_pg_db
-  - <<: *ci_create_rm_redis
-  - <<: *ci_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-case-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-case-service-source/.travis.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
-          cp -r rm-case-service-source/target/ .
+  - aggregate:
+    - <<: *ci_create_rm_pg_db
+    - <<: *ci_create_rm_redis
+    - <<: *ci_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-case-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-case-service-source/.travis.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
+            cp -r rm-case-service-source/target/ .
   - put: cf-resource-ci
     params:
       current_app_name: rm-case-service-ci
@@ -1440,29 +1443,30 @@ jobs:
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
-  - <<: *ci_create_rm_pg_db
-  - <<: *ci_create_rm_redis
-  - <<: *ci_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-collection-exercise-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-collection-exercise-service-source/pom.xml
-          cp -r rm-collection-exercise-service-source/target/ .
+  - aggregate:
+    - <<: *ci_create_rm_pg_db
+    - <<: *ci_create_rm_redis
+    - <<: *ci_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-collection-exercise-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-collection-exercise-service-source/pom.xml
+            cp -r rm-collection-exercise-service-source/target/ .
   - put: cf-resource-ci
     params:
       current_app_name: rm-collection-exercise-service-ci
@@ -1483,27 +1487,28 @@ jobs:
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
-  - <<: *ci_create_rm_pg_db
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: iac-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings iac-service-source/.travis.settings.xml install -Ddockerfile.skip -f iac-service-source/pom.xml
-          cp -r iac-service-source/target/ .
+  - aggregate:
+    - <<: *ci_create_rm_pg_db
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: iac-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings iac-service-source/.travis.settings.xml install -Ddockerfile.skip -f iac-service-source/pom.xml
+            cp -r iac-service-source/target/ .
   - put: cf-resource-ci
     params:
       current_app_name: iac-service-ci
@@ -1522,28 +1527,29 @@ jobs:
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
-  - <<: *ci_create_rm_pg_db
-  - <<: *ci_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-notify-gateway-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-notify-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-notify-gateway-source/pom.xml
-          cp -r rm-notify-gateway-source/target/ .
+  - aggregate:
+    - <<: *ci_create_rm_pg_db
+    - <<: *ci_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-notify-gateway-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-notify-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-notify-gateway-source/pom.xml
+            cp -r rm-notify-gateway-source/target/ .
   - put: cf-resource-ci
     params:
       current_app_name: rm-notify-gateway-ci
@@ -1565,29 +1571,30 @@ jobs:
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
-  - <<: *ci_create_rm_pg_db
-  - <<: *ci_create_rm_redis
-  - <<: *ci_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-sample-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-sample-service-source/.travis.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
-          cp -r rm-sample-service-source/target/ .
+  - aggregate:
+    - <<: *ci_create_rm_pg_db
+    - <<: *ci_create_rm_redis
+    - <<: *ci_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-sample-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-sample-service-source/.travis.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
+            cp -r rm-sample-service-source/target/ .
   - put: cf-resource-ci
     params:
       current_app_name: rm-sample-service-ci
@@ -1612,28 +1619,29 @@ jobs:
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
-  - <<: *ci_create_rm_redis
-  - <<: *ci_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-sdx-gateway-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-sdx-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-sdx-gateway-source/pom.xml
-          cp -r rm-sdx-gateway-source/target/ .
+  - aggregate:
+    - <<: *ci_create_rm_redis
+    - <<: *ci_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-sdx-gateway-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-sdx-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-sdx-gateway-source/pom.xml
+            cp -r rm-sdx-gateway-source/target/ .
   - put: cf-resource-ci
     params:
       current_app_name: rm-sdx-gateway-ci
@@ -1651,28 +1659,29 @@ jobs:
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
-  - <<: *ci_create_rm_pg_db
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: golang
-      inputs:
-        - name: rm-survey-service-source
-      outputs:
-        - name: rm-survey-service-build
-          path: rm-survey-service
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mkdir -p /go/src/github.com/ONSdigital/
-          cp -r rm-survey-service-source /go/src/github.com/ONSdigital/rm-survey-service
-          make -C /go/src/github.com/ONSdigital/rm-survey-service
-          cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
+  - aggregate:
+    - <<: *ci_create_rm_pg_db
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: golang
+        inputs:
+          - name: rm-survey-service-source
+        outputs:
+          - name: rm-survey-service-build
+            path: rm-survey-service
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mkdir -p /go/src/github.com/ONSdigital/
+            cp -r rm-survey-service-source /go/src/github.com/ONSdigital/rm-survey-service
+            make -C /go/src/github.com/ONSdigital/rm-survey-service
+            cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
   - put: cf-resource-ci
     params:
       current_app_name: rm-survey-service-ci
@@ -2158,29 +2167,30 @@ jobs:
   - get: rm-action-service-source
     trigger: true
     passed: [ci-acceptance-tests]
-  - <<: *latest_create_rm_pg_db
-  - <<: *latest_create_rm_redis
-  - <<: *latest_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-action-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-action-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-action-service-source/pom.xml
-          cp -r rm-action-service-source/target/ .
+  - aggregate:
+    - <<: *latest_create_rm_pg_db
+    - <<: *latest_create_rm_redis
+    - <<: *latest_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-action-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-action-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-action-service-source/pom.xml
+            cp -r rm-action-service-source/target/ .
   - put: cf-resource-latest
     params:
       current_app_name: rm-action-service-concourse-latest
@@ -2197,29 +2207,30 @@ jobs:
   - get: rm-actionexporter-service-source
     trigger: true
     passed: [ci-acceptance-tests]
-  - <<: *latest_create_rm_pg_db
-  - <<: *latest_create_rm_redis
-  - <<: *latest_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-actionexporter-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-actionexporter-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-actionexporter-service-source/pom.xml
-          cp -r rm-actionexporter-service-source/target/ .
+  - aggregate:
+    - <<: *latest_create_rm_pg_db
+    - <<: *latest_create_rm_redis
+    - <<: *latest_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-actionexporter-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-actionexporter-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-actionexporter-service-source/pom.xml
+            cp -r rm-actionexporter-service-source/target/ .
   - put: cf-resource-latest
     params:
       current_app_name: rm-actionexporter-service-concourse-latest
@@ -2240,29 +2251,30 @@ jobs:
   - get: rm-case-service-source
     trigger: true
     passed: [ci-acceptance-tests]
-  - <<: *latest_create_rm_pg_db
-  - <<: *latest_create_rm_redis
-  - <<: *latest_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-case-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-case-service-source/.travis.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
-          cp -r rm-case-service-source/target/ .
+  - aggregate:
+    - <<: *latest_create_rm_pg_db
+    - <<: *latest_create_rm_redis
+    - <<: *latest_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-case-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-case-service-source/.travis.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
+            cp -r rm-case-service-source/target/ .
   - put: cf-resource-latest
     params:
       current_app_name: rm-case-service-concourse-latest
@@ -2279,29 +2291,30 @@ jobs:
   - get: rm-collection-exercise-service-source
     trigger: true
     passed: [ci-acceptance-tests]
-  - <<: *latest_create_rm_pg_db
-  - <<: *latest_create_rm_redis
-  - <<: *latest_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-collection-exercise-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-collection-exercise-service-source/pom.xml
-          cp -r rm-collection-exercise-service-source/target/ .
+  - aggregate:
+    - <<: *latest_create_rm_pg_db
+    - <<: *latest_create_rm_redis
+    - <<: *latest_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-collection-exercise-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-collection-exercise-service-source/pom.xml
+            cp -r rm-collection-exercise-service-source/target/ .
   - put: cf-resource-latest
     params:
       current_app_name: rm-collection-exercise-service-concourse-latest
@@ -2320,27 +2333,28 @@ jobs:
   - get: iac-service-source
     trigger: true
     passed: [ci-acceptance-tests]
-  - <<: *latest_create_rm_pg_db
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: iac-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings iac-service-source/.travis.settings.xml install -Ddockerfile.skip -f iac-service-source/pom.xml
-          cp -r iac-service-source/target/ .
+  - aggregate:
+    - <<: *latest_create_rm_pg_db
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: iac-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings iac-service-source/.travis.settings.xml install -Ddockerfile.skip -f iac-service-source/pom.xml
+            cp -r iac-service-source/target/ .
   - put: cf-resource-latest
     params:
       current_app_name: iac-service-concourse-latest
@@ -2357,28 +2371,29 @@ jobs:
   - get: rm-notify-gateway-source
     trigger: true
     passed: [ci-acceptance-tests]
-  - <<: *latest_create_rm_pg_db
-  - <<: *latest_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-notify-gateway-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-notify-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-notify-gateway-source/pom.xml
-          cp -r rm-notify-gateway-source/target/ .
+  - aggregate:
+    - <<: *latest_create_rm_pg_db
+    - <<: *latest_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-notify-gateway-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-notify-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-notify-gateway-source/pom.xml
+            cp -r rm-notify-gateway-source/target/ .
   - put: cf-resource-latest
     params:
       current_app_name: rm-notify-gateway-concourse-latest
@@ -2398,29 +2413,30 @@ jobs:
   - get: rm-sample-service-source
     trigger: true
     passed: [ci-acceptance-tests]
-  - <<: *latest_create_rm_pg_db
-  - <<: *latest_create_rm_redis
-  - <<: *latest_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-sample-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-sample-service-source/.travis.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
-          cp -r rm-sample-service-source/target/ .
+  - aggregate:
+    - <<: *latest_create_rm_pg_db
+    - <<: *latest_create_rm_redis
+    - <<: *latest_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-sample-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-sample-service-source/.travis.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
+            cp -r rm-sample-service-source/target/ .
   - put: cf-resource-latest
     params:
       current_app_name: rm-sample-service-concourse-latest
@@ -2443,28 +2459,29 @@ jobs:
   - get: rm-sdx-gateway-source
     trigger: true
     passed: [ci-acceptance-tests]
-  - <<: *latest_create_rm_redis
-  - <<: *latest_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-sdx-gateway-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-sdx-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-sdx-gateway-source/pom.xml
-          cp -r rm-sdx-gateway-source/target/ .
+  - aggregate:
+    - <<: *latest_create_rm_redis
+    - <<: *latest_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-sdx-gateway-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-sdx-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-sdx-gateway-source/pom.xml
+            cp -r rm-sdx-gateway-source/target/ .
   - put: cf-resource-latest
     params:
       current_app_name: rm-sdx-gateway-concourse-latest
@@ -2480,28 +2497,29 @@ jobs:
   - get: rm-survey-service-source
     trigger: true
     passed: [ci-acceptance-tests]
-  - <<: *latest_create_rm_pg_db
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: golang
-      inputs:
-        - name: rm-survey-service-source
-      outputs:
-        - name: rm-survey-service-build
-          path: rm-survey-service
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mkdir -p /go/src/github.com/ONSdigital/
-          cp -r rm-survey-service-source /go/src/github.com/ONSdigital/rm-survey-service
-          make -C /go/src/github.com/ONSdigital/rm-survey-service
-          cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
+  - aggregate:
+    - <<: *latest_create_rm_pg_db
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: golang
+        inputs:
+          - name: rm-survey-service-source
+        outputs:
+          - name: rm-survey-service-build
+            path: rm-survey-service
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mkdir -p /go/src/github.com/ONSdigital/
+            cp -r rm-survey-service-source /go/src/github.com/ONSdigital/rm-survey-service
+            make -C /go/src/github.com/ONSdigital/rm-survey-service
+            cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
   - put: cf-resource-latest
     params:
       current_app_name: rm-survey-service-concourse-latest
@@ -3030,29 +3048,30 @@ jobs:
   - get: rm-action-service-source
     trigger: true
     passed: [preprod-trigger]
-  - <<: *preprod_create_rm_pg_db
-  - <<: *preprod_create_rm_redis
-  - <<: *preprod_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-action-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-action-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-action-service-source/pom.xml
-          cp -r rm-action-service-source/target/ .
+  - aggregate:
+    - <<: *preprod_create_rm_pg_db
+    - <<: *preprod_create_rm_redis
+    - <<: *preprod_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-action-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-action-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-action-service-source/pom.xml
+            cp -r rm-action-service-source/target/ .
   - put: cf-resource-preprod
     params:
       current_app_name: rm-action-service-concourse-preprod
@@ -3070,29 +3089,30 @@ jobs:
   - get: rm-actionexporter-service-source
     trigger: true
     passed: [preprod-trigger]
-  - <<: *preprod_create_rm_pg_db
-  - <<: *preprod_create_rm_redis
-  - <<: *preprod_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-actionexporter-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-actionexporter-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-actionexporter-service-source/pom.xml
-          cp -r rm-actionexporter-service-source/target/ .
+  - aggregate:
+    - <<: *preprod_create_rm_pg_db
+    - <<: *preprod_create_rm_redis
+    - <<: *preprod_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-actionexporter-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-actionexporter-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-actionexporter-service-source/pom.xml
+            cp -r rm-actionexporter-service-source/target/ .
   - put: cf-resource-preprod
     params:
       current_app_name: rm-actionexporter-service-concourse-preprod
@@ -3114,29 +3134,30 @@ jobs:
   - get: rm-case-service-source
     trigger: true
     passed: [preprod-trigger]
-  - <<: *preprod_create_rm_pg_db
-  - <<: *preprod_create_rm_redis
-  - <<: *preprod_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-case-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-case-service-source/.travis.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
-          cp -r rm-case-service-source/target/ .
+  - aggregate:
+    - <<: *preprod_create_rm_pg_db
+    - <<: *preprod_create_rm_redis
+    - <<: *preprod_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-case-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-case-service-source/.travis.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
+            cp -r rm-case-service-source/target/ .
   - put: cf-resource-preprod
     params:
       current_app_name: rm-case-service-concourse-preprod
@@ -3154,29 +3175,30 @@ jobs:
   - get: rm-collection-exercise-service-source
     trigger: true
     passed: [preprod-trigger]
-  - <<: *preprod_create_rm_pg_db
-  - <<: *preprod_create_rm_redis
-  - <<: *preprod_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-collection-exercise-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-collection-exercise-service-source/pom.xml
-          cp -r rm-collection-exercise-service-source/target/ .
+  - aggregate:
+    - <<: *preprod_create_rm_pg_db
+    - <<: *preprod_create_rm_redis
+    - <<: *preprod_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-collection-exercise-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-collection-exercise-service-source/pom.xml
+            cp -r rm-collection-exercise-service-source/target/ .
   - put: cf-resource-preprod
     params:
       current_app_name: rm-collection-exercise-service-concourse-preprod
@@ -3196,27 +3218,28 @@ jobs:
   - get: iac-service-source
     trigger: true
     passed: [preprod-trigger]
-  - <<: *preprod_create_rm_pg_db
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: iac-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings iac-service-source/.travis.settings.xml install -Ddockerfile.skip -f iac-service-source/pom.xml
-          cp -r iac-service-source/target/ .
+  - aggregate:
+    - <<: *preprod_create_rm_pg_db
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: iac-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings iac-service-source/.travis.settings.xml install -Ddockerfile.skip -f iac-service-source/pom.xml
+            cp -r iac-service-source/target/ .
   - put: cf-resource-preprod
     params:
       current_app_name: iac-service-concourse-preprod
@@ -3234,28 +3257,29 @@ jobs:
   - get: rm-notify-gateway-source
     trigger: true
     passed: [preprod-trigger]
-  - <<: *preprod_create_rm_pg_db
-  - <<: *preprod_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-notify-gateway-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-notify-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-notify-gateway-source/pom.xml
-          cp -r rm-notify-gateway-source/target/ .
+  - aggregate:
+    - <<: *preprod_create_rm_pg_db
+    - <<: *preprod_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-notify-gateway-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-notify-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-notify-gateway-source/pom.xml
+            cp -r rm-notify-gateway-source/target/ .
   - put: cf-resource-preprod
     params:
       current_app_name: rm-notify-gateway-concourse-preprod
@@ -3276,29 +3300,30 @@ jobs:
   - get: rm-sample-service-source
     trigger: true
     passed: [preprod-trigger]
-  - <<: *preprod_create_rm_pg_db
-  - <<: *preprod_create_rm_redis
-  - <<: *preprod_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-sample-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-sample-service-source/.travis.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
-          cp -r rm-sample-service-source/target/ .
+  - aggregate:
+    - <<: *preprod_create_rm_pg_db
+    - <<: *preprod_create_rm_redis
+    - <<: *preprod_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-sample-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-sample-service-source/.travis.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
+            cp -r rm-sample-service-source/target/ .
   - put: cf-resource-preprod
     params:
       current_app_name: rm-sample-service-concourse-preprod
@@ -3322,28 +3347,29 @@ jobs:
   - get: rm-sdx-gateway-source
     trigger: true
     passed: [preprod-trigger]
-  - <<: *preprod_create_rm_redis
-  - <<: *preprod_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-sdx-gateway-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-sdx-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-sdx-gateway-source/pom.xml
-          cp -r rm-sdx-gateway-source/target/ .
+  - aggregate:
+    - <<: *preprod_create_rm_redis
+    - <<: *preprod_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-sdx-gateway-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-sdx-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-sdx-gateway-source/pom.xml
+            cp -r rm-sdx-gateway-source/target/ .
   - put: cf-resource-preprod
     params:
       current_app_name: rm-sdx-gateway-concourse-preprod
@@ -3360,28 +3386,29 @@ jobs:
   - get: rm-survey-service-source
     trigger: true
     passed: [preprod-trigger]
-  - <<: *preprod_create_rm_pg_db
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: golang
-      inputs:
-        - name: rm-survey-service-source
-      outputs:
-        - name: rm-survey-service-build
-          path: rm-survey-service
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mkdir -p /go/src/github.com/ONSdigital/
-          cp -r rm-survey-service-source /go/src/github.com/ONSdigital/rm-survey-service
-          make -C /go/src/github.com/ONSdigital/rm-survey-service
-          cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
+  - aggregate:
+    - <<: *preprod_create_rm_pg_db
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: golang
+        inputs:
+          - name: rm-survey-service-source
+        outputs:
+          - name: rm-survey-service-build
+            path: rm-survey-service
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mkdir -p /go/src/github.com/ONSdigital/
+            cp -r rm-survey-service-source /go/src/github.com/ONSdigital/rm-survey-service
+            make -C /go/src/github.com/ONSdigital/rm-survey-service
+            cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
   - put: cf-resource-preprod
     params:
       current_app_name: rm-survey-service-concourse-preprod
@@ -3907,29 +3934,30 @@ jobs:
   - get: rm-action-service-source
     trigger: true
     passed: [prod-trigger]
-  - <<: *prod_create_rm_pg_db
-  - <<: *prod_create_rm_redis
-  - <<: *prod_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-action-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-action-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-action-service-source/pom.xml
-          cp -r rm-action-service-source/target/ .
+  - aggregate:
+    - <<: *prod_create_rm_pg_db
+    - <<: *prod_create_rm_redis
+    - <<: *prod_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-action-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-action-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-action-service-source/pom.xml
+            cp -r rm-action-service-source/target/ .
   - put: cf-resource-prod
     params:
       current_app_name: rm-action-service-concourse-prod
@@ -3947,29 +3975,30 @@ jobs:
   - get: rm-actionexporter-service-source
     trigger: true
     passed: [prod-trigger]
-  - <<: *prod_create_rm_pg_db
-  - <<: *prod_create_rm_redis
-  - <<: *prod_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-actionexporter-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-actionexporter-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-actionexporter-service-source/pom.xml
-          cp -r rm-actionexporter-service-source/target/ .
+  - aggregate:
+    - <<: *prod_create_rm_pg_db
+    - <<: *prod_create_rm_redis
+    - <<: *prod_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-actionexporter-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-actionexporter-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-actionexporter-service-source/pom.xml
+            cp -r rm-actionexporter-service-source/target/ .
   - put: cf-resource-prod
     params:
       current_app_name: rm-actionexporter-service-concourse-prod
@@ -3991,29 +4020,30 @@ jobs:
   - get: rm-case-service-source
     trigger: true
     passed: [prod-trigger]
-  - <<: *prod_create_rm_pg_db
-  - <<: *prod_create_rm_redis
-  - <<: *prod_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-case-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-case-service-source/.travis.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
-          cp -r rm-case-service-source/target/ .
+  - aggregate:
+    - <<: *prod_create_rm_pg_db
+    - <<: *prod_create_rm_redis
+    - <<: *prod_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-case-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-case-service-source/.travis.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
+            cp -r rm-case-service-source/target/ .
   - put: cf-resource-prod
     params:
       current_app_name: rm-case-service-concourse-prod
@@ -4031,29 +4061,30 @@ jobs:
   - get: rm-collection-exercise-service-source
     trigger: true
     passed: [prod-trigger]
-  - <<: *prod_create_rm_pg_db
-  - <<: *prod_create_rm_redis
-  - <<: *prod_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-collection-exercise-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-collection-exercise-service-source/pom.xml
-          cp -r rm-collection-exercise-service-source/target/ .
+  - aggregate:
+    - <<: *prod_create_rm_pg_db
+    - <<: *prod_create_rm_redis
+    - <<: *prod_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-collection-exercise-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-collection-exercise-service-source/pom.xml
+            cp -r rm-collection-exercise-service-source/target/ .
   - put: cf-resource-prod
     params:
       current_app_name: rm-collection-exercise-service-concourse-prod
@@ -4073,27 +4104,28 @@ jobs:
   - get: iac-service-source
     trigger: true
     passed: [prod-trigger]
-  - <<: *prod_create_rm_pg_db
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: iac-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings iac-service-source/.travis.settings.xml install -Ddockerfile.skip -f iac-service-source/pom.xml
-          cp -r iac-service-source/target/ .
+  - aggregate:
+    - <<: *prod_create_rm_pg_db
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: iac-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings iac-service-source/.travis.settings.xml install -Ddockerfile.skip -f iac-service-source/pom.xml
+            cp -r iac-service-source/target/ .
   - put: cf-resource-prod
     params:
       current_app_name: iac-service-concourse-prod
@@ -4111,28 +4143,29 @@ jobs:
   - get: rm-notify-gateway-source
     trigger: true
     passed: [prod-trigger]
-  - <<: *prod_create_rm_pg_db
-  - <<: *prod_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-notify-gateway-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-notify-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-notify-gateway-source/pom.xml
-          cp -r rm-notify-gateway-source/target/ .
+  - aggregate:
+    - <<: *prod_create_rm_pg_db
+    - <<: *prod_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-notify-gateway-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-notify-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-notify-gateway-source/pom.xml
+            cp -r rm-notify-gateway-source/target/ .
   - put: cf-resource-prod
     params:
       current_app_name: rm-notify-gateway-concourse-prod
@@ -4153,29 +4186,30 @@ jobs:
   - get: rm-sample-service-source
     trigger: true
     passed: [prod-trigger]
-  - <<: *prod_create_rm_pg_db
-  - <<: *prod_create_rm_redis
-  - <<: *prod_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-sample-service-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-sample-service-source/.travis.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
-          cp -r rm-sample-service-source/target/ .
+  - aggregate:
+    - <<: *prod_create_rm_pg_db
+    - <<: *prod_create_rm_redis
+    - <<: *prod_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-sample-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-sample-service-source/.travis.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
+            cp -r rm-sample-service-source/target/ .
   - put: cf-resource-prod
     params:
       current_app_name: rm-sample-service-concourse-prod
@@ -4199,28 +4233,29 @@ jobs:
   - get: rm-sdx-gateway-source
     trigger: true
     passed: [prod-trigger]
-  - <<: *prod_create_rm_redis
-  - <<: *prod_create_rm_rabbitmq
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: maven
-          tag: 3.3.9-jdk-8
-      inputs:
-        - name: rm-sdx-gateway-source
-      outputs:
-        - name: target
-          path: target
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mvn --settings rm-sdx-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-sdx-gateway-source/pom.xml
-          cp -r rm-sdx-gateway-source/target/ .
+  - aggregate:
+    - <<: *prod_create_rm_redis
+    - <<: *prod_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-sdx-gateway-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-sdx-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-sdx-gateway-source/pom.xml
+            cp -r rm-sdx-gateway-source/target/ .
   - put: cf-resource-prod
     params:
       current_app_name: rm-sdx-gateway-concourse-prod
@@ -4237,28 +4272,29 @@ jobs:
   - get: rm-survey-service-source
     trigger: true
     passed: [prod-trigger]
-  - <<: *prod_create_rm_pg_db
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: golang
-      inputs:
-        - name: rm-survey-service-source
-      outputs:
-        - name: rm-survey-service-build
-          path: rm-survey-service
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          mkdir -p /go/src/github.com/ONSdigital/
-          cp -r rm-survey-service-source /go/src/github.com/ONSdigital/rm-survey-service
-          make -C /go/src/github.com/ONSdigital/rm-survey-service
-          cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
+  - aggregate:
+    - <<: *prod_create_rm_pg_db
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: golang
+        inputs:
+          - name: rm-survey-service-source
+        outputs:
+          - name: rm-survey-service-build
+            path: rm-survey-service
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mkdir -p /go/src/github.com/ONSdigital/
+            cp -r rm-survey-service-source /go/src/github.com/ONSdigital/rm-survey-service
+            make -C /go/src/github.com/ONSdigital/rm-survey-service
+            cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
   - put: cf-resource-prod
     params:
       current_app_name: rm-survey-service-concourse-prod
