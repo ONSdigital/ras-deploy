@@ -1423,7 +1423,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-case-service-source/.travis.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
+            mvn --settings rm-case-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
             cp -r rm-case-service-source/target/ .
   - put: cf-resource-ci
     params:
@@ -1507,7 +1507,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings iac-service-source/.travis.settings.xml install -Ddockerfile.skip -f iac-service-source/pom.xml
+            mvn --settings iac-service-source/.maven.settings.xml install -Ddockerfile.skip -f iac-service-source/pom.xml
             cp -r iac-service-source/target/ .
   - put: cf-resource-ci
     params:
@@ -1548,7 +1548,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-notify-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-notify-gateway-source/pom.xml
+            mvn --settings rm-notify-gateway-source/.maven.settings.xml install -Ddockerfile.skip -f rm-notify-gateway-source/pom.xml
             cp -r rm-notify-gateway-source/target/ .
   - put: cf-resource-ci
     params:
@@ -1593,7 +1593,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-sample-service-source/.travis.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
+            mvn --settings rm-sample-service-source/.maven.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
             cp -r rm-sample-service-source/target/ .
   - put: cf-resource-ci
     params:
@@ -1640,7 +1640,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-sdx-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-sdx-gateway-source/pom.xml
+            mvn --settings rm-sdx-gateway-source/.maven.settings.xml install -Ddockerfile.skip -f rm-sdx-gateway-source/pom.xml
             cp -r rm-sdx-gateway-source/target/ .
   - put: cf-resource-ci
     params:
@@ -2273,7 +2273,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-case-service-source/.travis.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
+            mvn --settings rm-case-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
             cp -r rm-case-service-source/target/ .
   - put: cf-resource-latest
     params:
@@ -2353,7 +2353,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings iac-service-source/.travis.settings.xml install -Ddockerfile.skip -f iac-service-source/pom.xml
+            mvn --settings iac-service-source/.maven.settings.xml install -Ddockerfile.skip -f iac-service-source/pom.xml
             cp -r iac-service-source/target/ .
   - put: cf-resource-latest
     params:
@@ -2392,7 +2392,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-notify-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-notify-gateway-source/pom.xml
+            mvn --settings rm-notify-gateway-source/.maven.settings.xml install -Ddockerfile.skip -f rm-notify-gateway-source/pom.xml
             cp -r rm-notify-gateway-source/target/ .
   - put: cf-resource-latest
     params:
@@ -2435,7 +2435,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-sample-service-source/.travis.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
+            mvn --settings rm-sample-service-source/.maven.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
             cp -r rm-sample-service-source/target/ .
   - put: cf-resource-latest
     params:
@@ -2480,7 +2480,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-sdx-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-sdx-gateway-source/pom.xml
+            mvn --settings rm-sdx-gateway-source/.maven.settings.xml install -Ddockerfile.skip -f rm-sdx-gateway-source/pom.xml
             cp -r rm-sdx-gateway-source/target/ .
   - put: cf-resource-latest
     params:
@@ -3156,7 +3156,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-case-service-source/.travis.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
+            mvn --settings rm-case-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
             cp -r rm-case-service-source/target/ .
   - put: cf-resource-preprod
     params:
@@ -3238,7 +3238,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings iac-service-source/.travis.settings.xml install -Ddockerfile.skip -f iac-service-source/pom.xml
+            mvn --settings iac-service-source/.maven.settings.xml install -Ddockerfile.skip -f iac-service-source/pom.xml
             cp -r iac-service-source/target/ .
   - put: cf-resource-preprod
     params:
@@ -3278,7 +3278,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-notify-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-notify-gateway-source/pom.xml
+            mvn --settings rm-notify-gateway-source/.maven.settings.xml install -Ddockerfile.skip -f rm-notify-gateway-source/pom.xml
             cp -r rm-notify-gateway-source/target/ .
   - put: cf-resource-preprod
     params:
@@ -3322,7 +3322,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-sample-service-source/.travis.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
+            mvn --settings rm-sample-service-source/.maven.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
             cp -r rm-sample-service-source/target/ .
   - put: cf-resource-preprod
     params:
@@ -3368,7 +3368,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-sdx-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-sdx-gateway-source/pom.xml
+            mvn --settings rm-sdx-gateway-source/.maven.settings.xml install -Ddockerfile.skip -f rm-sdx-gateway-source/pom.xml
             cp -r rm-sdx-gateway-source/target/ .
   - put: cf-resource-preprod
     params:
@@ -4042,7 +4042,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-case-service-source/.travis.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
+            mvn --settings rm-case-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-case-service-source/pom.xml
             cp -r rm-case-service-source/target/ .
   - put: cf-resource-prod
     params:
@@ -4124,7 +4124,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings iac-service-source/.travis.settings.xml install -Ddockerfile.skip -f iac-service-source/pom.xml
+            mvn --settings iac-service-source/.maven.settings.xml install -Ddockerfile.skip -f iac-service-source/pom.xml
             cp -r iac-service-source/target/ .
   - put: cf-resource-prod
     params:
@@ -4164,7 +4164,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-notify-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-notify-gateway-source/pom.xml
+            mvn --settings rm-notify-gateway-source/.maven.settings.xml install -Ddockerfile.skip -f rm-notify-gateway-source/pom.xml
             cp -r rm-notify-gateway-source/target/ .
   - put: cf-resource-prod
     params:
@@ -4208,7 +4208,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-sample-service-source/.travis.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
+            mvn --settings rm-sample-service-source/.maven.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
             cp -r rm-sample-service-source/target/ .
   - put: cf-resource-prod
     params:
@@ -4254,7 +4254,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-sdx-gateway-source/.travis.settings.xml install -Ddockerfile.skip -f rm-sdx-gateway-source/pom.xml
+            mvn --settings rm-sdx-gateway-source/.maven.settings.xml install -Ddockerfile.skip -f rm-sdx-gateway-source/pom.xml
             cp -r rm-sdx-gateway-source/target/ .
   - put: cf-resource-prod
     params:
