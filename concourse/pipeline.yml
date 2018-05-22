@@ -34,6 +34,8 @@ templates:
       PARTY_PASSWORD: ((ci_security_user_password))
       SURVEY_USERNAME: ((ci_security_user_name))
       SURVEY_PASSWORD: ((ci_security_user_password))
+      SAMPLE_USERNAME: ((ci_security_user_name))
+      SAMPLE_PASWORD: ((ci_security_user_password))
 
     all_services: &ci_all_services
     - ras-party-ci-deploy
@@ -126,6 +128,8 @@ templates:
       RESPONSE_OPERATIONS_UI_PORT: '80'
       SAMPLE_SERVICE_HOST: rm-sample-service-ci.apps.devtest.onsclofo.uk
       SAMPLE_SERVICE_PORT: '80'
+      SAMPLE_HOST: rm-sample-service-ci.apps.devtest.onsclofo.uk
+      SAMPLE_PORT: '80'
       SECURE_MESSAGE_SERVICE_HOST: ras-secure-message-ci.apps.devtest.onsclofo.uk
       SECURE_MESSAGE_SERVICE_PORT: '80'
       SURVEY_SERVICE_HOST: rm-survey-service-ci.apps.devtest.onsclofo.uk
@@ -225,6 +229,8 @@ templates:
       PARTY_PASSWORD: ((latest_security_user_password))
       SURVEY_USERNAME: ((latest_security_user_name))
       SURVEY_PASSWORD: ((latest_security_user_password))
+      SAMPLE_USERNAME: ((latest_security_user_name))
+      SAMPLE_PASSWORD: ((latest_security_user_password))
 
     all_services: &latest_all_services
     - ras-party-latest-deploy
@@ -315,6 +321,8 @@ templates:
       RESPONSE_OPERATIONS_UI_PORT: '80'
       SAMPLE_SERVICE_HOST: rm-sample-service-concourse-latest.apps.devtest.onsclofo.uk
       SAMPLE_SERVICE_PORT: '80'
+      SAMPLE_HOST: rm-sample-service-concourse-latest.apps.devtest.onsclofo.uk
+      SAMPLE:PORT: '80'
       SECURE_MESSAGE_URL: http://ras-secure-message-concourse-latest.apps.devtest.onsclofo.uk
       SECURE_MESSAGE_SERVICE_HOST: ras-secure-message-concourse-latest.apps.devtest.onsclofo.uk
       SECURE_MESSAGE_SERVICE_PORT: '80'
@@ -416,6 +424,8 @@ templates:
       PARTY_PASSWORD: ((preprod_security_user_password))
       SURVEY_USERNAME: ((preprod_security_user_name))
       SURVEY_PASSWORD: ((preprod_security_user_password))
+      SAMPLE_USERNAME: ((preprod_security_user_name))
+      SAMPLE_PASSWORD: ((preprod_security_user_password))
 
     all_services: &preprod_all_services
     - ras-party-preprod-deploy
@@ -506,6 +516,8 @@ templates:
       RESPONSE_OPERATIONS_UI_PORT: '80'
       SAMPLE_SERVICE_HOST: rm-sample-service-concourse-preprod.apps.devtest.onsclofo.uk
       SAMPLE_SERVICE_PORT: '80'
+      SAMPLE_HOST: rm-sample-service-concourse-preprod.apps.devtest.onsclofo.uk
+      SAMPLE_PORT: '80'
       SECURE_MESSAGE_URL: http://ras-secure-message-concourse-preprod.apps.devtest.onsclofo.uk
       SECURE_MESSAGE_SERVICE_HOST: ras-secure-message-concourse-preprod.apps.devtest.onsclofo.uk
       SECURE_MESSAGE_SERVICE_PORT: '80'
@@ -607,6 +619,8 @@ templates:
       PARTY_PASSWORD: ((prod_security_user_password))
       SURVEY_USERNAME: ((prod_security_user_name))
       SURVEY_PASSWORD: ((prod_security_user_password))
+      SAMPLE_USERNAME: ((prod_security_user_name))
+      SAMPLE_PASSWORD: ((prod_security_user_password))
 
     all_services: &prod_all_services
     - ras-party-prod-deploy
@@ -697,6 +711,8 @@ templates:
       RESPONSE_OPERATIONS_UI_PORT: '80'
       SAMPLE_SERVICE_HOST: rm-sample-service-concourse-prod.apps.devtest.onsclofo.uk
       SAMPLE_SERVICE_PORT: '80'
+      SAMPLE_HOST: rm-sample-service-concourse-prod.apps.devtest.onsclofo.uk
+      SAMPLE_PORT: '80'
       SECURE_MESSAGE_URL: http://ras-secure-message-concourse-prod.apps.devtest.onsclofo.uk
       SECURE_MESSAGE_SERVICE_HOST: ras-secure-message-concourse-prod.apps.devtest.onsclofo.uk
       SECURE_MESSAGE_SERVICE_PORT: '80'
