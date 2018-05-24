@@ -795,7 +795,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-deploy.git
-    branch: master
+    branch: secure-messaging
 
 - name: ras-party-source
   type: git
@@ -923,7 +923,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/rasrm-acceptance-tests.git
-    branch: master
+    branch: secure-messaging
 
 - name: cf-cli-resource-ci
   type: cf-cli-resource
@@ -1820,7 +1820,7 @@ jobs:
         - './scripts/jenkins/add_user.sh'
 ### END CI DEPLOYMENTS
 
-- name: ci-acceptance-tests
+- name: ci-rasrm-acceptance-tests
   serial_groups: *ci_all_services
   plan:
   - get: ras-deploy
@@ -1891,16 +1891,125 @@ jobs:
       CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
       CLOUDFOUNDRY_ORG: rmras
       CLOUDFOUNDRY_SPACE: ci
-  - task: acceptance-test
+      MAKE_TARGET: rasrm_acceptance_tests
+  - task: acceptance-test-setup
     on_failure:
       put: notify
       params:
-        text: "Acceptance tests failed in CI space"
+        text: "Acceptance tests setup failed in CI space"
     privileged: true
     file: ras-deploy/tasks/rasrm-acceptance-tests/run_acceptance_tests.yml
     params:
       <<: *ci_security_user
       <<: *ci_service_endpoints_for_python
+      MAKE_TARGET: setup
+  - task: rasrm-acceptance-tests
+    on_failure:
+      put: notify
+      params:
+        text: "RASRM acceptance tests failed in CI space"
+    privileged: true
+    file: ras-deploy/tasks/rasrm-acceptance-tests/run_acceptance_tests.yml
+    params:
+      <<: *ci_security_user
+      <<: *ci_service_endpoints_for_python
+      MAKE_TARGET: rasrm_acceptance_tests
+
+- name: ci-securemessage-acceptance-tests
+  serial_groups:
+    *ci_all_services
+  plan:
+  - get: ras-deploy
+  - get: ci-teardown-timer
+    passed: [ci-rasrm-acceptance-tests]
+    trigger: true
+  - get: rasrm-acceptance-tests-source
+    trigger: true
+  - get: ras-party-source
+    passed: [ci-rasrm-acceptance-tests]
+    trigger: true
+  - get: ras-backstage-source
+    passed: [ci-rasrm-acceptance-tests]
+    trigger: true
+  - get: ras-frontstage-source
+    passed: [ci-rasrm-acceptance-tests]
+    trigger: true
+  - get: ras-frontstage-api-source
+    passed: [ci-rasrm-acceptance-tests]
+    trigger: true
+  - get: django-oauth2-test-source
+    passed: [ci-rasrm-acceptance-tests]
+    trigger: true
+  - get: response-operations-ui-source
+    passed: [ci-rasrm-acceptance-tests]
+    trigger: true
+  - get: ras-secure-message-source
+    passed: [ci-rasrm-acceptance-tests]
+    trigger: true
+  - get: ras-collection-instrument-source
+    passed: [ci-rasrm-acceptance-tests]
+    trigger: true
+  - get: rm-action-service-source
+    passed: [ci-rasrm-acceptance-tests]
+    trigger: true
+  - get: rm-actionexporter-service-source
+    passed: [ci-rasrm-acceptance-tests]
+    trigger: true
+  - get: rm-case-service-source
+    passed: [ci-rasrm-acceptance-tests]
+    trigger: true
+  - get: rm-collection-exercise-service-source
+    passed: [ci-rasrm-acceptance-tests]
+    trigger: true
+  - get: iac-service-source
+    passed: [ci-rasrm-acceptance-tests]
+    trigger: true
+  - get: rm-notify-gateway-source
+    passed: [ci-rasrm-acceptance-tests]
+    trigger: true
+  - get: rm-sample-service-source
+    passed: [ci-rasrm-acceptance-tests]
+    trigger: true
+  - get: rm-sdx-gateway-source
+    passed: [ci-rasrm-acceptance-tests]
+    trigger: true
+  - get: rm-survey-service-source
+    passed: [ci-rasrm-acceptance-tests]
+    trigger: true
+  - get: sdc-uaa-source
+    passed: [ci-rasrm-acceptance-tests]
+    trigger: true
+  - task: get-cf-database-uris
+    file: ras-deploy/tasks/get_database_uris.yml
+    params:
+      CLOUDFOUNDRY_API: ((cloudfoundry_api))
+      CLOUDFOUNDRY_EMAIL: ((cloudfoundry_email))
+      CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
+      CLOUDFOUNDRY_ORG: rmras
+      CLOUDFOUNDRY_SPACE: ci
+      MAKE_TARGET: rasrm_acceptance_tests
+  - task: acceptance-test-setup
+    on_failure:
+      put: notify
+      params:
+        text: "Acceptance tests setup failed in CI space"
+    privileged: true
+    file: ras-deploy/tasks/rasrm-acceptance-tests/run_acceptance_tests.yml
+    params:
+      <<: *ci_security_user
+      <<: *ci_service_endpoints_for_python
+      MAKE_TARGET: setup
+  - task: secure-messaging-acceptance-tests
+    on_failure:
+      put: notify
+      params:
+        text: "Secure Messaging acceptance tests failed in CI space"
+    privileged: true
+    file: ras-deploy/tasks/rasrm-acceptance-tests/run_acceptance_tests.yml
+    params:
+      <<: *ci_security_user
+      <<: *ci_service_endpoints_for_python
+      MAKE_TARGET: secure_messaging_acceptance_tests
 
 
 ### START latest SPACE DEPLOYMENTS
@@ -1909,7 +2018,7 @@ jobs:
   plan:
   - get: ras-party-source
     trigger: true
-    passed: [ci-acceptance-tests]
+    passed: [ci-securemessage-acceptance-tests]
   - put: create-database
     resource: cf-cli-resource-latest
     params:
@@ -1938,7 +2047,7 @@ jobs:
   plan:
   - get: ras-secure-message-source
     trigger: true
-    passed: [ci-acceptance-tests]
+    passed: [ci-securemessage-acceptance-tests]
   - put: create-database
     resource: cf-cli-resource-latest
     params:
@@ -1974,7 +2083,7 @@ jobs:
   plan:
   - get: ras-backstage-source
     trigger: true
-    passed: [ci-acceptance-tests]
+    passed: [ci-securemessage-acceptance-tests]
   - put: cf-resource-latest
     params:
       current_app_name: ras-backstage-concourse-latest
@@ -1994,7 +2103,7 @@ jobs:
   plan:
   - get: ras-collection-instrument-source
     trigger: true
-    passed: [ci-acceptance-tests]
+    passed: [ci-securemessage-acceptance-tests]
   - get: ras-deploy
   - put: create-rm-rabbitmq
     resource: cf-cli-resource-latest
@@ -2041,7 +2150,7 @@ jobs:
   plan:
   - get: ras-frontstage-source
     trigger: true
-    passed: [ci-acceptance-tests]
+    passed: [ci-securemessage-acceptance-tests]
   - <<: *latest_create_rm_redis
   - put: cf-resource-latest
     params:
@@ -2059,7 +2168,7 @@ jobs:
   plan:
   - get: ras-frontstage-api-source
     trigger: true
-    passed: [ci-acceptance-tests]
+    passed: [ci-securemessage-acceptance-tests]
   - put: cf-resource-latest
     params:
       current_app_name: ras-frontstage-api-concourse-latest
@@ -2078,7 +2187,7 @@ jobs:
   plan:
   - get: django-oauth2-test-source
     trigger: true
-    passed: [ci-acceptance-tests]
+    passed: [ci-securemessage-acceptance-tests]
   - get: ras-deploy
   - put: create-database
     resource: cf-cli-resource-latest
@@ -2153,7 +2262,7 @@ jobs:
   plan:
   - get: response-operations-ui-source
     trigger: true
-    passed: [ci-acceptance-tests]
+    passed: [ci-securemessage-acceptance-tests]
   - put: create-redis
     resource: cf-cli-resource-latest
     params:
@@ -2179,7 +2288,7 @@ jobs:
   plan:
   - get: rm-action-service-source
     trigger: true
-    passed: [ci-acceptance-tests]
+    passed: [ci-securemessage-acceptance-tests]
   - aggregate:
     - <<: *latest_create_rm_pg_db
     - <<: *latest_create_rm_redis
@@ -2219,7 +2328,7 @@ jobs:
   plan:
   - get: rm-actionexporter-service-source
     trigger: true
-    passed: [ci-acceptance-tests]
+    passed: [ci-securemessage-acceptance-tests]
   - aggregate:
     - <<: *latest_create_rm_pg_db
     - <<: *latest_create_rm_redis
@@ -2263,7 +2372,7 @@ jobs:
   plan:
   - get: rm-case-service-source
     trigger: true
-    passed: [ci-acceptance-tests]
+    passed: [ci-securemessage-acceptance-tests]
   - aggregate:
     - <<: *latest_create_rm_pg_db
     - <<: *latest_create_rm_redis
@@ -2303,7 +2412,7 @@ jobs:
   plan:
   - get: rm-collection-exercise-service-source
     trigger: true
-    passed: [ci-acceptance-tests]
+    passed: [ci-securemessage-acceptance-tests]
   - aggregate:
     - <<: *latest_create_rm_pg_db
     - <<: *latest_create_rm_redis
@@ -2345,7 +2454,7 @@ jobs:
   plan:
   - get: iac-service-source
     trigger: true
-    passed: [ci-acceptance-tests]
+    passed: [ci-securemessage-acceptance-tests]
   - aggregate:
     - <<: *latest_create_rm_pg_db
     - task: build
@@ -2383,7 +2492,7 @@ jobs:
   plan:
   - get: rm-notify-gateway-source
     trigger: true
-    passed: [ci-acceptance-tests]
+    passed: [ci-securemessage-acceptance-tests]
   - aggregate:
     - <<: *latest_create_rm_pg_db
     - <<: *latest_create_rm_rabbitmq
@@ -2425,7 +2534,7 @@ jobs:
   plan:
   - get: rm-sample-service-source
     trigger: true
-    passed: [ci-acceptance-tests]
+    passed: [ci-securemessage-acceptance-tests]
   - aggregate:
     - <<: *latest_create_rm_pg_db
     - <<: *latest_create_rm_redis
@@ -2471,7 +2580,7 @@ jobs:
   plan:
   - get: rm-sdx-gateway-source
     trigger: true
-    passed: [ci-acceptance-tests]
+    passed: [ci-securemessage-acceptance-tests]
   - aggregate:
     - <<: *latest_create_rm_redis
     - <<: *latest_create_rm_rabbitmq
@@ -2509,7 +2618,7 @@ jobs:
   plan:
   - get: rm-survey-service-source
     trigger: true
-    passed: [ci-acceptance-tests]
+    passed: [ci-securemessage-acceptance-tests]
   - aggregate:
     - <<: *latest_create_rm_pg_db
     - task: build
@@ -2547,7 +2656,7 @@ jobs:
   plan:
   - get: sdc-uaa-source
     trigger: true
-    passed: [ci-acceptance-tests]
+    passed: [ci-securemessage-acceptance-tests]
   - task: build
     config:
       platform: linux
@@ -2662,7 +2771,7 @@ jobs:
   - get: ras-deploy
   - get: rasrm-acceptance-tests-source
     trigger: true
-    passed: [ci-acceptance-tests]
+    passed: [ci-rasrm-acceptance-tests,ci-securemessage-acceptance-tests]
   - get: ras-party-source
     passed: [ras-party-latest-deploy]
     trigger: true
@@ -2732,7 +2841,7 @@ jobs:
     params:
       <<: *latest_security_user
       <<: *latest_service_endpoints_for_python
-
+      MAKE_TARGET: acceptance_tests
 - name: preprod-trigger
   disable_manual_trigger: true
   plan:
