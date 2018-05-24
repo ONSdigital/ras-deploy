@@ -1105,8 +1105,8 @@ jobs:
         <<: *ci_security_user
         <<: *ci_service_endpoints_for_python
         RAS_SECURE_MESSAGING_JWT_SECRET: ((ci_jwt_secret))
-        UAA_CLIENT_ID: 'ras_backstage'
-        UAA_CLIENT_SECRET: ((ci_backstage_client_secret))
+        UAA_CLIENT_ID: 'response_operations'
+        UAA_CLIENT_SECRET: ((ci_response_operations_client_secret))
         UAA_SERVICE_URL: 'http://uaa-ci.apps.devtest.onsclofo.uk'
         USE_UAA: '1'
 
@@ -1973,8 +1973,8 @@ jobs:
         <<: *latest_security_user
         <<: *latest_service_endpoints_for_python
         RAS_SECURE_MESSAGING_JWT_SECRET: ((latest_jwt_secret))
-        UAA_CLIENT_ID: 'ras_backstage'
-        UAA_CLIENT_SECRET: ((latest_backstage_client_secret))
+        UAA_CLIENT_ID: 'response_operations'
+        UAA_CLIENT_SECRET: ((latest_response_operations_client_secret))
         UAA_SERVICE_URL: 'http://uaa-concourse-latest.apps.devtest.onsclofo.uk'
         USE_UAA: '1'
 
@@ -2850,8 +2850,8 @@ jobs:
         <<: *preprod_security_user
         <<: *preprod_service_endpoints_for_python
         RAS_SECURE_MESSAGING_JWT_SECRET: ((preprod_jwt_secret))
-        UAA_CLIENT_ID: 'ras_backstage'
-        UAA_CLIENT_SECRET: ((preprod_backstage_client_secret))
+        UAA_CLIENT_ID: 'response_operations'
+        UAA_CLIENT_SECRET: ((preprod_response_operations_client_secret))
         UAA_SERVICE_URL: 'http://uaa-concourse-preprod.apps.devtest.onsclofo.uk'
         USE_UAA: '1'
 
@@ -3738,8 +3738,8 @@ jobs:
         <<: *prod_security_user
         <<: *prod_service_endpoints_for_python
         RAS_SECURE_MESSAGING_JWT_SECRET: ((prod_jwt_secret))
-        UAA_CLIENT_ID: 'ras_backstage'
-        UAA_CLIENT_SECRET: ((prod_backstage_client_secret))
+        UAA_CLIENT_ID: 'response_operations'
+        UAA_CLIENT_SECRET: ((prod_response_operations_client_secret))
         UAA_SERVICE_URL: 'http://uaa-concourse-prod.apps.devtest.onsclofo.uk'
         USE_UAA: '1'
 
