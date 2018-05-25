@@ -837,7 +837,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/django-oauth2-test.git
-    branch: create-user-script
+    branch: master
 
 - name: response-operations-ui-source
   type: git
