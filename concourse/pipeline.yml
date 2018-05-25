@@ -35,7 +35,7 @@ templates:
       SURVEY_USERNAME: ((ci_security_user_name))
       SURVEY_PASSWORD: ((ci_security_user_password))
       SAMPLE_USERNAME: ((ci_security_user_name))
-      SAMPLE_PASWORD: ((ci_security_user_password))
+      SAMPLE_PASSWORD: ((ci_security_user_password))
 
     all_services: &ci_all_services
     - ras-party-ci-deploy
@@ -1891,7 +1891,6 @@ jobs:
       CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
       CLOUDFOUNDRY_ORG: rmras
       CLOUDFOUNDRY_SPACE: ci
-      MAKE_TARGET: rasrm_acceptance_tests
   - task: acceptance-test-setup
     on_failure:
       put: notify
@@ -1987,7 +1986,6 @@ jobs:
       CLOUDFOUNDRY_PASSWORD: ((cloudfoundry_password))
       CLOUDFOUNDRY_ORG: rmras
       CLOUDFOUNDRY_SPACE: ci
-      MAKE_TARGET: rasrm_acceptance_tests
   - task: acceptance-test-setup
     on_failure:
       put: notify
