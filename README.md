@@ -30,11 +30,11 @@ See [here](https://digitaleq.atlassian.net/wiki/spaces/RASB/pages/458358937/RAS+
 
 
 ### Job failed in pipeline
-Sometimes a job might fail in the pipeline. You should first try the following to identify the problem by:
+Sometimes a job might fail in the pipeline. You should first try to identify the problem by:
  
 * Looking at the logs from the failing job in the Concourse UI
 * Looking at the logs from the application(s) in Cloud Foundry / Docker
-* Try to replicate the issue locally with Docker
+* Trying to replicate the issue locally with Docker
  
 If you're still unable to resolve the problem then you can **'hijack'** into the container of the failing job in Concourse. 
 
