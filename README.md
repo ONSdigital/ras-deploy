@@ -44,14 +44,13 @@ In this example, we'll look at failing acceptance tests in the CI space of the p
     ```
     fly -t ons hijack --job rasrm/ci-acceptance-tests
     ```
-1. You will then be able to choose a number which corresponds to a step running the task. 
+1. Choose the container you wish to connect to. In this example we want to connect to the container that runs the acceptance tests, which is `1`
     ```
         1: build #2, step: acceptance-test, type: task
         2: build #2, step: get-cf-database-uris, type: task
         3: build #2, step: notify, type: get
         4: build #2, step: notify, type: put
     ```
-1. Choose the container you wish to connect to. In this example we want to connect to the container that runs the acceptance tests, which is `1`
 1. You can now edit whatever you like in this container because this only relates to the current job. Containers are only around for a short time after a build finishes so that we can connect to them. For example, you could edit a test file to log out additional information and run the following:
     ```bash
     source cf-database-env-vars/setenv.sh
