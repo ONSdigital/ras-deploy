@@ -1,0 +1,23 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: maven
+    tag: 3.3.9-jdk-8
+
+inputs:
+  - name: repository-name
+
+outputs:
+  - name: target
+    path: target
+
+run:
+  path: sh
+  args:
+  - -exc
+  - |
+    mvn --settings repository-name/.maven.settings.xml install -Ddockerfile.skip -f repository-name/pom.xml
+    cp -r repository-name/target/ .
