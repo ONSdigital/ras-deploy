@@ -21,17 +21,7 @@ that will have an effect on the build or deployment change of a services. e.g.
 
 ## Deploying pipeline
 
-1. Install fly cli
-```bash
-wget https://github.com/concourse/concourse/releases/download/v3.5.0/fly_darwin_amd64
-chmod +x fly_darwin_amd64
-sudo mv fly_darwin_amd64 /usr/local/bin/fly
-```
-1. Copy `secrets.yml.example` to `secrets.yml` (Do not git push this file)
-1. Assign values to all secret variables
-1. Login to concourse `fly -t ons login -c $concourse_url`
-1. Deploy the pipeline `fly -t ons set-pipeline -p rasrm -c concourse/pipeline.yml  --load-vars-from concourse/secrets.yml`
-1. Go to $concourse_url/teams/rasrm/pipelines/rasrm
+See [here](https://digitaleq.atlassian.net/wiki/spaces/RASB/pages/458358937/RAS+RM+Concourse+Pipeline)
 
 ## Troubleshooting
 ### Known issues
