@@ -32,3 +32,7 @@ sudo mv fly_darwin_amd64 /usr/local/bin/fly
 1. Login to concourse `fly -t ons login -c $concourse_url`
 1. Deploy the pipeline `fly -t ons set-pipeline -p rasrm -c concourse/pipeline.yml  --load-vars-from concourse/secrets.yml`
 1. Go to $concourse_url/teams/rasrm/pipelines/rasrm
+
+## Known issues
+* `pq: current transaction is aborted, commands ignored until end of transaction block
+` when deploying services. This is a known bug in concourse https://github.com/concourse/concourse/issues/2224. Restart the job to resolve this.
