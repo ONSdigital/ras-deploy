@@ -53,6 +53,7 @@ In this example, we'll look at failing acceptance tests in the CI space of the p
     ```
 1. You can now edit whatever you like in this container because this only relates to the current job. Containers are only around for a short time after a build finishes so that we can connect to them. For example, you could edit a test file to log out additional information and run the following:
     ```bash
+    apt-get install vim    # So files can be edited
     source cf-database-env-vars/setenv.sh
     cd rasrm-acceptance-tests-source/
     make setup
