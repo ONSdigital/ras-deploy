@@ -4,7 +4,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-deploy
-    branch: initial-concurrency-dashboard
+    branch: master
 
 - name: prunes-loadtest-space
   type: cf
