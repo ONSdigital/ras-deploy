@@ -1,0 +1,4 @@
+---
+applications: 
+- name: concurrency-dashboard
+  buildpack: staticfile_buildpack
