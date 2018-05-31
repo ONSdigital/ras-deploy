@@ -905,20 +905,6 @@ resources:
     uri: https://github.com/ONSdigital/sdc-uaa.git
 ### END MICROSERVICE REPOS
 
-- name: preprod-deploy-trigger
-  type: git
-  source:
-    uri: "git@github.com:ONSdigital/rasrm-deploy-trigger"
-    paths: ["preprod/*"]
-    private_key: ((git_key))
-
-- name: prod-deploy-trigger
-  type: git
-  source:
-    uri: "git@github.com:ONSdigital/rasrm-deploy-trigger"
-    paths: ["prod/*"]
-    private_key: ((git_key))
-
 - name: rasrm-acceptance-tests-source
   type: git
   source:
@@ -970,6 +956,26 @@ resources:
     space: concourse-latest
     skip_cert_check: true
 
+- name: notify
+  type: slack-notification
+  source:
+    url: ((slack_webhook))
+
+disabled-resources:
+- name: preprod-deploy-trigger
+  type: git
+  source:
+    uri: "git@github.com:ONSdigital/rasrm-deploy-trigger"
+    paths: ["preprod/*"]
+    private_key: ((git_key))
+
+- name: prod-deploy-trigger
+  type: git
+  source:
+    uri: "git@github.com:ONSdigital/rasrm-deploy-trigger"
+    paths: ["prod/*"]
+    private_key: ((git_key))
+
 - name: cf-cli-resource-preprod
   type: cf-cli-resource
   source:
@@ -1009,11 +1015,6 @@ resources:
     organization: rmras
     space: concourse-prod
     skip_cert_check: true
-
-- name: notify
-  type: slack-notification
-  source:
-    url: ((slack_webhook))
 
 jobs:
 - name: ci-teardown
@@ -2840,6 +2841,8 @@ jobs:
       <<: *latest_security_user
       <<: *latest_service_endpoints_for_python
       MAKE_TARGET: acceptance_tests
+
+disabled-jobs:
 - name: preprod-trigger
   disable_manual_trigger: true
   plan:
