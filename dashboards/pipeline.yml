@@ -22,5 +22,5 @@ jobs:
     trigger: true
   - put: prunes-loadtest-space
     params:
-      manifest: ras-deploy/Dashboards/manifest.yml
-      path: ras-deploy/Dashboards
+      manifest: ras-deploy/dashboards/manifest.yml
+      path: ras-deploy/dashboards
