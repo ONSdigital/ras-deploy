@@ -320,6 +320,11 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/sdc-uaa.git
+
+- name: ras-rm-acceptance-tests
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rasrm-acceptance-tests.git
 ### END MICROSERVICE REPOS
 
 - name: cf-cli-resource-((loadtest_cloudfoundry_space))
@@ -947,5 +952,26 @@ jobs:
         args:
         - './scripts/jenkins/add_user.sh'
 
+- name: prepare-data
+  serial_groups: *loadtest_all_services
+  plan:
+  - get: ras-rm-acceptance-tests
+  - task: setup
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: sdcplatform/rasrm-acceptance-tests
+      inputs:
+        - name: ras-rm-acceptance-tests
+      params:
+        <<: *loadtest_service_endpoints_for_python
+        <<: *loadtest_security_user
+      run:
+        dir: ras-rm-acceptance-tests
+        path: sh
+        args:
+        - 'make setup'
 
 
