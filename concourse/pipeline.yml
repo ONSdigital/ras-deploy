@@ -1119,8 +1119,8 @@ jobs:
         <<: *ci_security_user
         <<: *ci_service_endpoints_for_python
         RAS_SECURE_MESSAGING_JWT_SECRET: ((ci_jwt_secret))
-        UAA_CLIENT_ID: 'ras_backstage'
-        UAA_CLIENT_SECRET: ((ci_backstage_client_secret))
+        UAA_CLIENT_ID: 'response_operations'
+        UAA_CLIENT_SECRET: ((ci_response_operations_client_secret))
         UAA_SERVICE_URL: 'http://uaa-ci.apps.devtest.onsclofo.uk'
         USE_UAA: '1'
 
@@ -1318,6 +1318,8 @@ jobs:
         <<: *ci_service_endpoints_for_python
         RAS_SECURE_MESSAGING_JWT_SECRET: ((ci_jwt_secret))
         REDIS_SERVICE: ras-redis
+        UAA_CLIENT_ID: 'response_operations'
+        UAA_CLIENT_SECRET: ((ci_response_operations_client_secret))
 
 - name: rm-action-service-ci-deploy
   serial_groups: [rm-action-service-ci-deploy]
@@ -1776,7 +1778,7 @@ jobs:
         path: sh
         args:
         - './scripts/jenkins/add_client.sh'
-  - task: create-ras-backstage-client
+  - task: create-response_operations-client
     config:
       platform: linux
       image_resource:
@@ -1787,8 +1789,8 @@ jobs:
         - name: sdc-uaa-source
       params:
         SPACE: ci
-        CLIENT: ras_backstage
-        PASSWORD: ((ci_backstage_client_secret))
+        CLIENT: response_operations
+        PASSWORD: ((ci_response_operations_client_secret))
         ADMIN_SECRET: ((ci_uaa_admin_secret))
         UAA_URL: 'uaa-ci.apps.devtest.onsclofo.uk'
       run:
@@ -2092,8 +2094,8 @@ jobs:
         <<: *latest_security_user
         <<: *latest_service_endpoints_for_python
         RAS_SECURE_MESSAGING_JWT_SECRET: ((latest_jwt_secret))
-        UAA_CLIENT_ID: 'ras_backstage'
-        UAA_CLIENT_SECRET: ((latest_backstage_client_secret))
+        UAA_CLIENT_ID: 'response_operations'
+        UAA_CLIENT_SECRET: ((latest_response_operations_client_secret))
         UAA_SERVICE_URL: 'http://uaa-concourse-latest.apps.devtest.onsclofo.uk'
         USE_UAA: '1'
 
@@ -2281,6 +2283,8 @@ jobs:
         <<: *latest_service_endpoints_for_python
         RAS_SECURE_MESSAGING_JWT_SECRET: ((latest_jwt_secret))
         REDIS_SERVICE: ras-redis
+        UAA_CLIENT_ID: 'response_operations'
+        UAA_CLIENT_SECRET: ((latest_response_operations_client_secret))
 
 - name: rm-action-service-latest-deploy
   serial_groups: [rm-action-service-latest-deploy]
@@ -2719,7 +2723,7 @@ jobs:
         path: sh
         args:
         - './scripts/jenkins/add_client.sh'
-  - task: create-ras-backstage-client
+  - task: create-response_operations-client
     config:
       platform: linux
       image_resource:
@@ -2730,8 +2734,8 @@ jobs:
         - name: sdc-uaa-source
       params:
         SPACE: concourse-latest
-        CLIENT: ras_backstage
-        PASSWORD: ((latest_backstage_client_secret))
+        CLIENT: response_operations
+        PASSWORD: ((latest_response_operations_client_secret))
         ADMIN_SECRET: ((latest_uaa_admin_secret))
         UAA_URL: 'uaa-concourse-latest.apps.devtest.onsclofo.uk'
       run:
@@ -2969,8 +2973,8 @@ disabled-jobs:
         <<: *preprod_security_user
         <<: *preprod_service_endpoints_for_python
         RAS_SECURE_MESSAGING_JWT_SECRET: ((preprod_jwt_secret))
-        UAA_CLIENT_ID: 'ras_backstage'
-        UAA_CLIENT_SECRET: ((preprod_backstage_client_secret))
+        UAA_CLIENT_ID: 'response_operations'
+        UAA_CLIENT_SECRET: ((preprod_response_operations_client_secret))
         UAA_SERVICE_URL: 'http://uaa-concourse-preprod.apps.devtest.onsclofo.uk'
         USE_UAA: '1'
 
@@ -3163,6 +3167,8 @@ disabled-jobs:
         <<: *preprod_service_endpoints_for_python
         RAS_SECURE_MESSAGING_JWT_SECRET: ((preprod_jwt_secret))
         REDIS_SERVICE: ras-redis
+        UAA_CLIENT_ID: 'response_operations'
+        UAA_CLIENT_SECRET: ((preprod_response_operations_client_secret))
 
 - name: rm-action-service-preprod-deploy
   disable_manual_trigger: true
@@ -3611,7 +3617,7 @@ disabled-jobs:
         path: sh
         args:
         - './scripts/jenkins/add_client.sh'
-  - task: create-ras-backstage-client
+  - task: create-response_operations-client
     config:
       platform: linux
       image_resource:
@@ -3622,8 +3628,8 @@ disabled-jobs:
         - name: sdc-uaa-source
       params:
         SPACE: concourse-preprod
-        CLIENT: ras_backstage
-        PASSWORD: ((preprod_backstage_client_secret))
+        CLIENT: response_operations
+        PASSWORD: ((preprod_response_operations_client_secret))
         ADMIN_SECRET: ((preprod_uaa_admin_secret))
         UAA_URL: 'uaa-concourse-preprod.apps.devtest.onsclofo.uk'
       run:
@@ -3855,8 +3861,8 @@ disabled-jobs:
         <<: *prod_security_user
         <<: *prod_service_endpoints_for_python
         RAS_SECURE_MESSAGING_JWT_SECRET: ((prod_jwt_secret))
-        UAA_CLIENT_ID: 'ras_backstage'
-        UAA_CLIENT_SECRET: ((prod_backstage_client_secret))
+        UAA_CLIENT_ID: 'response_operations'
+        UAA_CLIENT_SECRET: ((prod_response_operations_client_secret))
         UAA_SERVICE_URL: 'http://uaa-concourse-prod.apps.devtest.onsclofo.uk'
         USE_UAA: '1'
 
@@ -4049,6 +4055,8 @@ disabled-jobs:
         <<: *prod_security_user
         RAS_SECURE_MESSAGING_JWT_SECRET: ((prod_jwt_secret))
         REDIS_SERVICE: ras-redis
+        UAA_CLIENT_ID: 'response_operations'
+        UAA_CLIENT_SECRET: ((prod_response_operations_client_secret))
 
 - name: rm-action-service-prod-deploy
   disable_manual_trigger: true
@@ -4497,7 +4505,7 @@ disabled-jobs:
         path: sh
         args:
         - './scripts/jenkins/add_client.sh'
-  - task: create-ras-backstage-client
+  - task: create-response_operations-client
     config:
       platform: linux
       image_resource:
@@ -4508,8 +4516,8 @@ disabled-jobs:
         - name: sdc-uaa-source
       params:
         SPACE: concourse-prod
-        CLIENT: ras_backstage
-        PASSWORD: ((prod_backstage_client_secret))
+        CLIENT: response_operations
+        PASSWORD: ((prod_response_operations_client_secret))
         ADMIN_SECRET: ((prod_uaa_admin_secret))
         UAA_URL: 'uaa-concourse-prod.apps.devtest.onsclofo.uk'
       run:
