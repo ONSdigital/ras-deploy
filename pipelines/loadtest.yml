@@ -1,0 +1,953 @@
+---
+templates:
+  loadtest:
+    security_user: &loadtest_security_user
+      actionSvc_connectionConfig_password: ((loadtest_security_user_password))
+      actionSvc_connectionConfig_username: ((loadtest_security_user_name))
+      caseSvc_connectionConfig_username: ((loadtest_security_user_name))
+      caseSvc_connectionConfig_password: ((loadtest_security_user_password))
+      collectionExerciseSvc_connectionConfig_username: ((loadtest_security_user_name))
+      collectionExerciseSvc_connectionConfig_password: ((loadtest_security_user_password))
+      collectionInstrumentSvc_connectionConfig_username: ((loadtest_security_user_name))
+      collectionInstrumentSvc_connectionConfig_password: ((loadtest_security_user_password))
+      internetAccessCodeSvc_connectionConfig_password: ((loadtest_security_user_password))
+      internetAccessCodeSvc_connectionConfig_username: ((loadtest_security_user_name))
+      partySvc_connectionConfig_username: ((loadtest_security_user_name))
+      partySvc_connectionConfig_password: ((loadtest_security_user_password))
+      sampleSvc_connectionConfig_username: ((loadtest_security_user_name))
+      sampleSvc_connectionConfig_password: ((loadtest_security_user_password))
+      security_user_name: ((loadtest_security_user_name))
+      security_user_password: ((loadtest_security_user_password))
+      surveySvc_connectionConfig_username: ((loadtest_security_user_name))
+      surveySvc_connectionConfig_password: ((loadtest_security_user_password))
+      SECURITY_USER_NAME: ((loadtest_security_user_name))
+      SECURITY_USER_PASSWORD: ((loadtest_security_user_password))
+      CASE_USERNAME: ((loadtest_security_user_name))
+      CASE_PASSWORD: ((loadtest_security_user_password))
+      COLLECTION_EXERCISE_USERNAME: ((loadtest_security_user_name))
+      COLLECTION_EXERCISE_PASSWORD: ((loadtest_security_user_password))
+      COLLECTION_INSTRUMENT_USERNAME: ((loadtest_security_user_name))
+      COLLECTION_INSTRUMENT_PASSWORD: ((loadtest_security_user_password))
+      IAC_USERNAME: ((loadtest_security_user_name))
+      IAC_PASSWORD: ((loadtest_security_user_password))
+      PARTY_USERNAME: ((loadtest_security_user_name))
+      PARTY_PASSWORD: ((loadtest_security_user_password))
+      SURVEY_USERNAME: ((loadtest_security_user_name))
+      SURVEY_PASSWORD: ((loadtest_security_user_password))
+      SAMPLE_USERNAME: ((loadtest_security_user_name))
+      SAMPLE_PASSWORD: ((loadtest_security_user_password))
+
+    all_services: &loadtest_all_services
+    - ras-party-((loadtest_cloudfoundry_space))-deploy
+    - ras-backstage-((loadtest_cloudfoundry_space))-deploy
+    - ras-frontstage-((loadtest_cloudfoundry_space))-deploy
+    - ras-frontstage-api-((loadtest_cloudfoundry_space))-deploy
+    - django-oauth2-test-((loadtest_cloudfoundry_space))-deploy
+    - response-operations-ui-((loadtest_cloudfoundry_space))-deploy
+    - ras-secure-message-((loadtest_cloudfoundry_space))-deploy
+    - ras-collection-instrument-((loadtest_cloudfoundry_space))-deploy
+    - rm-action-service-((loadtest_cloudfoundry_space))-deploy
+    - rm-actionexporter-service-((loadtest_cloudfoundry_space))-deploy
+    - rm-case-service-((loadtest_cloudfoundry_space))-deploy
+    - rm-collection-exercise-((loadtest_cloudfoundry_space))-deploy
+    - iac-service-((loadtest_cloudfoundry_space))-deploy
+    - rm-notify-gateway-((loadtest_cloudfoundry_space))-deploy
+    - rm-sample-service-((loadtest_cloudfoundry_space))-deploy
+    - rm-sdx-gateway-((loadtest_cloudfoundry_space))-deploy
+    - rm-survey-service-((loadtest_cloudfoundry_space))-deploy
+    - sdc-uaa-((loadtest_cloudfoundry_space))-deploy
+
+    service_endpoints_for_python: &loadtest_service_endpoints_for_python
+      ACTION_SERVICE_HOST: rm-action-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      ACTION_SERVICE_PORT: '80'
+      ACTION_EXPORTER_HOST: rm-actionexporter-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      ACTION_EXPORTER_PORT: '80'
+      BACKSTAGE_API_URL: http://ras-backstage-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk/backstage-api
+      BACKSTAGE_SERVICE_HOST: ras-backstage-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      BACKSTAGE_SERVICE_PORT: '80'
+      CASE_URL: http://rm-case-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      CASE_SERVICE_HOST: rm-case-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      CASE_SERVICE_PORT: '80'
+      COLLECTION_EXERCISE_URL: http://rm-collection-exercise-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      COLLECTION_EXERCISE_SERVICE_HOST: rm-collection-exercise-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      COLLECTION_EXERCISE_SERVICE_PORT: '80'
+      COLLECTION_EXERCISE_HOST: rm-collection-exercise-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      COLLECTION_EXERCISE_PORT: '80'
+      COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
+      DJANGO_SERVICE_HOST: django-oauth2-test-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      DJANGO_SERVICE_PORT: '80'
+      FRONTSTAGE_API_SERVICE_HOST: ras-frontstage-api-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      FRONTSTAGE_API_SERVICE_PORT: '80'
+      FRONTSTAGE_SERVICE_HOST: ras-frontstage-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      FRONTSTAGE_SERVICE_PORT: '80'
+      IAC_URL: http://iac-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      IAC_SERVICE_HOST: iac-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      IAC_SERVICE_PORT: '80'
+      NOTIFY_GATEWAY_SERVICE_HOST: rm-notify-gateway-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      NOTIFY_GATEWAY_SERVICE_PORT: '80'
+      PARTY_URL: http://ras-party-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      PARTY_SERVICE_HOST: ras-party-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      PARTY_SERVICE_PORT: '80'
+      RM_CASE_SERVICE_HOST: rm-case-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RM_CASE_SERVICE_PORT: '80'
+      RM_COLLECTION_EXERCISE_SERVICE_HOST: rm-collection-exercise-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RM_COLLECTION_EXERCISE_SERVICE_PORT: '80'
+      RM_IAC_SERVICE_HOST: iac-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RM_IAC_SERVICE_PORT: '80'
+      RM_SAMPLE_SERVICE_HOST: rm-sample-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RM_SAMPLE_SERVICE_PORT: '80'
+      RM_SURVEY_SERVICE_HOST: rm-survey-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RM_SURVEY_SERVICE_PORT: '80'
+      RAS_CASE_SERVICE_HOST: rm-case-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RAS_CASE_SERVICE_PORT: '80'
+      RAS_COLLEX_SERVICE_HOST: rm-collection-exercise-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RAS_COLLEX_SERVICE_PORT: '80'
+      RAS_FRONTSTAGE_API_HOST: ras-frontstage-api-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RAS_FRONTSTAGE_API_PORT: '80'
+      RAS_IAC_SERVICE_HOST: iac-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RAS_IAC_SERVICE_PORT: '80'
+      RAS_OAUTH_SERVICE_HOST: django-oauth2-test-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RAS_OAUTH_SERVICE_PORT: '80'
+      RAS_PARTY_SERVICE_HOST: ras-party-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RAS_PARTY_SERVICE_PORT: '80'
+      RAS_COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RAS_COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
+      RAS_PUBLIC_WEBSITE_HOST: ras-frontstage-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RAS_PUBLIC_WEBSITE_PORT: '80'
+      RAS_SECURE_MESSAGE_SERVICE_HOST: ras-secure-message-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RAS_SECURE_MESSAGE_SERVICE_PORT: '80'
+      RAS_SECURE_MESSAGING_SERVICE_HOST: ras-secure-message-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RAS_SECURE_MESSAGING_SERVICE_PORT: '80'
+      SECURE_MESSAGE_URL: http://ras-secure-message-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RAS_SURVEY_SERVICE_HOST: rm-survey-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RAS_SURVEY_SERVICE_PORT: '80'
+      SURVEY_URL: http://rm-survey-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RESPONSE_OPERATIONS_UI_HOST: response-operations-ui-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RESPONSE_OPERATIONS_UI_PORT: '80'
+      SAMPLE_SERVICE_HOST: rm-sample-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      SAMPLE_SERVICE_PORT: '80'
+      SAMPLE_URL: http://rm-sample-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      SECURE_MESSAGE_SERVICE_HOST: ras-secure-message-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      SECURE_MESSAGE_SERVICE_PORT: '80'
+      SURVEY_SERVICE_HOST: rm-survey-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      SURVEY_SERVICE_PORT: '80'
+      UAA_SERVICE_URL: http://uaa-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+
+    service_endpoints_for_java: &loadtest_service_endpoints_for_java
+      actionSvc_connectionConfig_host: 'rm-action-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk'
+      actionSvc_connectionConfig_port: '80'
+      actionSvc_connectionConfig_scheme: 'http'
+      caseSvc_connectionConfig_host: 'rm-case-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk'
+      caseSvc_connectionConfig_port: '80'
+      caseSvc_connectionConfig_scheme: 'http'
+      collectionExerciseSvc_connectionConfig_host: 'rm-collection-exercise-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk'
+      collectionExerciseSvc_connectionConfig_port: '80'
+      collectionExerciseSvc_connectionConfig_scheme: 'http'
+      collectionInstrumentSvc_connectionConfig_host: 'ras-collection-instrument-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk'
+      collectionInstrumentSvc_connectionConfig_port: '80'
+      collectionInstrumentSvc_connectionConfig_scheme: 'http'
+      internetAccessCodeSvc_connectionConfig_host: 'iac-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk'
+      internetAccessCodeSvc_connectionConfig_port: '80'
+      internetAccessCodeSvc_connectionConfig_scheme: 'http'
+      partySvc_connectionConfig_host: 'ras-party-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk'
+      partySvc_connectionConfig_port: '80'
+      partySvc_connectionConfig_scheme: 'http'
+      sampleSvc_connectionConfig_host: 'rm-sample-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk'
+      sampleSvc_connectionConfig_port: '80'
+      sampleSvc_connectionConfig_scheme: 'http'
+      surveySvc_connectionConfig_host: 'rm-survey-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk'
+      surveySvc_connectionConfig_port: '80'
+      surveySvc_connectionConfig_scheme: 'http'
+
+    create_rm_redis: &loadtest_create_rm_redis
+      put: create-rm-redis
+      resource: cf-cli-resource-((loadtest_cloudfoundry_space))
+      params:
+        command: create-service
+        service: elasticache
+        plan: small
+        service_instance: rm-redis
+        timeout: 1800
+        wait_for_service: true
+
+    create_rm_rabbitmq: &loadtest_create_rm_rabbitmq
+      put: create-rm-rabbitmq
+      resource: cf-cli-resource-((loadtest_cloudfoundry_space))
+      params:
+        command: create-service
+        service: rabbitmq
+        plan: standard
+        service_instance: rm-rabbitmq
+        timeout: 1800
+        wait_for_service: true
+
+    create_rm_pg_db: &loadtest_create_rm_pg_db
+      put: create-database
+      resource: cf-cli-resource-((loadtest_cloudfoundry_space))
+      params:
+        command: create-service
+        service: rds
+        plan: shared-psql
+        service_instance: rm-pg-db
+        timeout: 1800
+        wait_for_service: true
+
+resource_types:
+- name: cf-cli-resource
+  type: docker-image
+  source:
+    repository: nulldriver/cf-cli-resource
+    tag: latest
+
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+
+### START MICROSERVICE REPOS
+resources:
+- name: ras-deploy
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-deploy.git
+    branch: add-implementation-for-load-test-pipeline
+
+- name: ras-party-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-party.git
+    branch: master
+
+- name: ras-secure-message-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-secure-message.git
+    branch: master
+
+- name: ras-backstage-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-backstage.git
+    branch: master
+
+- name: ras-collection-instrument-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-collection-instrument.git
+    branch: master
+
+- name: ras-frontstage-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-frontstage.git
+    branch: master
+
+- name: ras-frontstage-api-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-frontstage-api.git
+    branch: master
+
+- name: django-oauth2-test-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/django-oauth2-test.git
+    branch: release_15-branch
+
+- name: response-operations-ui-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/response-operations-ui.git
+
+- name: rm-action-service-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-action-service.git
+    branch: master
+
+- name: rm-actionexporter-service-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-actionexporter-service.git
+    branch: master
+
+- name: rm-case-service-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-case-service.git
+    branch: master
+
+- name: rm-collection-exercise-service-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-collection-exercise-service.git
+    branch: master
+
+- name: iac-service-source
+  type: git
+  source:
+    uri: git@github.com:ONSdigital/iac-service.git
+    branch: master
+    private_key: ((git_key))
+
+- name: rm-notify-gateway-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-notify-gateway.git
+    branch: master
+
+- name: rm-sample-service-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-sample-service.git
+    branch: master
+
+- name: rm-sdx-gateway-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-sdx-gateway.git
+    branch: master
+
+- name: rm-survey-service-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-survey-service.git
+    branch: master
+
+- name: sdc-uaa-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/sdc-uaa.git
+
+- name: ras-rm-acceptance-tests
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rasrm-acceptance-tests.git
+### END MICROSERVICE REPOS
+
+- name: cf-cli-resource-((loadtest_cloudfoundry_space))
+  type: cf-cli-resource
+  source:
+    api: ((loadtest_cloudfoundry_api))
+    username: ((loadtest_cloudfoundry_email))
+    password: ((loadtest_cloudfoundry_password))
+    org: SDC
+    space: ((loadtest_cloudfoundry_space))
+    skip_cert_check: true
+
+- name: cf-resource-((loadtest_cloudfoundry_space))
+  type: cf
+  source:
+    api: ((loadtest_cloudfoundry_api))
+    username: ((loadtest_cloudfoundry_email))
+    password: ((loadtest_cloudfoundry_password))
+    organization: SDC
+    space: ((loadtest_cloudfoundry_space))
+    skip_cert_check: true
+
+jobs:
+- name: ras-party-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [ras-party-((loadtest_cloudfoundry_space))-deploy]
+  plan:
+  - get: ras-party-source
+  - put: create-database
+    resource: cf-cli-resource-((loadtest_cloudfoundry_space))
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: ras-party-db
+      timeout: 300
+      wait_for_service: true
+  - put: push-app
+    resource: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: ras-party-((loadtest_cloudfoundry_space))
+      manifest: ras-party-source/manifest.yml
+      path: ras-party-source
+      environment_variables:
+        <<: *loadtest_security_user
+        <<: *loadtest_service_endpoints_for_python
+        RAS_NOTIFY_CONFIRM_PASSWORD_CHANGE_TEMPLATE: ba41c152-ad96-4255-9456-9e42de83f510
+        RAS_NOTIFY_EMAIL_VERIFICATION_TEMPLATE: 53c59576-8c3b-4298-99d1-b245ddd28500
+        RAS_NOTIFY_REQUEST_PASSWORD_CHANGE_TEMPLATE: c45c59ff-7771-4de4-a66b-ce50b108390a
+        RAS_NOTIFY_SERVICE_URL: http://rm-notify-gateway-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk/emails/
+
+- name: ras-secure-message-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [ras-secure-message-((loadtest_cloudfoundry_space))-deploy]
+  plan:
+  - get: ras-secure-message-source
+  - put: create-database
+    resource: cf-cli-resource-((loadtest_cloudfoundry_space))
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: secure-message-db
+      timeout: 300
+      wait_for_service: true
+  - put: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: ras-secure-message-((loadtest_cloudfoundry_space))
+      manifest: ras-secure-message-source/manifest.yml
+      path: ras-secure-message-source
+      environment_variables:
+        <<: *loadtest_security_user
+        <<: *loadtest_service_endpoints_for_python
+        JWT_ALGORITHM: 'HS256'
+        JWT_SECRET: ((loadtest_jwt_secret))
+        NOTIFICATION_API_KEY: ((test_notify_api_key))
+        NOTIFICATION_TEMPLATE_ID: 'f6404844-a994-428c-a5d7-45a4e1cfff4b'
+        NOTIFY_VIA_GOV_NOTIFY: '1'
+        RM_NOTIFY_GATEWAY_URL: 'http://rm-notify-gateway-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk/emails/'
+        RAS_SM_PATH: '/home/vcap/app'
+        SERVICE_ID: 'ce3674b1-7b08-4377-a6a7-05b5722d4ea5'
+        UAA_URL: 'http://uaa-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk'
+        CLIENT_ID: 'secure_message'
+        CLIENT_SECRET: ((loadtest_secure_message_client_secret))
+        USE_UAA: '1'
+
+- name: ras-backstage-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [ras-backstage-loadtest-deploy]
+  plan:
+  - get: ras-backstage-source
+  - put: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: ras-backstage-((loadtest_cloudfoundry_space))
+      manifest: ras-backstage-source/manifest.yml
+      path: ras-backstage-source
+      environment_variables:
+        <<: *loadtest_security_user
+        <<: *loadtest_service_endpoints_for_python
+        RAS_SECURE_MESSAGING_JWT_SECRET: ((loadtest_jwt_secret))
+        UAA_CLIENT_ID: 'ras_backstage'
+        UAA_CLIENT_SECRET: ((loadtest_backstage_client_secret))
+        UAA_SERVICE_URL: 'http://uaa-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk'
+        USE_UAA: '1'
+
+- name: ras-collection-instrument-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [ras-collection-instrument-((loadtest_cloudfoundry_space))-deploy]
+  plan:
+  - get: ras-collection-instrument-source
+  - get: ras-deploy
+  - put: create-sdx-rabbitmq
+    resource: cf-cli-resource-((loadtest_cloudfoundry_space))
+    params:
+      command: create-service
+      service: rabbitmq
+      plan: standard
+      service_instance: sdx-rabbitmq
+      timeout: 1800
+      wait_for_service: true
+  - put: create-rm-rabbitmq
+    resource: cf-cli-resource-((loadtest_cloudfoundry_space))
+    params:
+      command: create-service
+      service: rabbitmq
+      plan: standard
+      service_instance: rm-rabbitmq
+      timeout: 1800
+      wait_for_service: true
+  - put: create-database
+    resource: cf-cli-resource-((loadtest_cloudfoundry_space))
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: ras-ci-db
+      timeout: 300
+      wait_for_service: true
+  - put: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: ras-collection-instrument-((loadtest_cloudfoundry_space))
+      manifest: ras-collection-instrument-source/manifest-ci.yml
+      path: ras-collection-instrument-source
+      environment_variables:
+        <<: *loadtest_security_user
+        <<: *loadtest_service_endpoints_for_python
+        JSON_SECRET_KEYS: ((loadtest_json_secret_keys))
+        ONS_CRYPTOKEY: ((loadtest_collection_instrument_encryption_key))
+        RABBITMQ_AMQP_COLLECTION_INSTRUMENT: ((loadtest_rabbitmq_amqp_collection_instrument)) # What is this queue?
+        RABBITMQ_AMQP_SURVEY_RESPONSE: ((loadtest_rabbitmq_amqp_survey_response))
+
+- name: ras-frontstage-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [ras-frontstage-((loadtest_cloudfoundry_space))-deploy]
+  plan:
+  - get: ras-frontstage-source
+  - <<: *loadtest_create_rm_redis
+  - put: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: ras-frontstage-((loadtest_cloudfoundry_space))
+      manifest: ras-frontstage-source/manifest.yml
+      path: ras-frontstage-source
+      environment_variables:
+        <<: *loadtest_security_user
+        <<: *loadtest_service_endpoints_for_python
+        JWT_SECRET: ((loadtest_jwt_secret))
+        SECRET_KEY: ((loadtest_enrolement_code_encryption_key))
+
+- name: ras-frontstage-api-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [ras-frontstage-api-((loadtest_cloudfoundry_space))-deploy]
+  plan:
+  - get: ras-frontstage-api-source
+  - put: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: ras-frontstage-api-((loadtest_cloudfoundry_space))
+      manifest: ras-frontstage-api-source/manifest.yml
+      path: ras-frontstage-api-source
+      environment_variables:
+        <<: *loadtest_security_user
+        <<: *loadtest_service_endpoints_for_python
+        DJANGO_CLIENT_ID: 'ons@ons.gov'
+        DJANGO_CLIENT_SECRET: 'password'
+        EQ_URL: 'https://eq-test/session?token='
+        JSON_SECRET_KEYS: ((loadtest_json_secret_keys))
+
+- name: django-oauth2-test-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [django-oauth2-test-((loadtest_cloudfoundry_space))-deploy]
+  plan:
+  - get: django-oauth2-test-source
+  - get: ras-deploy
+  - put: create-database
+    resource: cf-cli-resource-((loadtest_cloudfoundry_space))
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: oauth-db
+      timeout: 300
+      wait_for_service: true
+  # Create git_info file for info end point
+  - task: git-info
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: paasmule/curl-ssl-git
+          tag: "latest"
+      inputs:
+        - name: django-oauth2-test-source
+      outputs:
+        - name: django-oauth2-test-source-git-info
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          cd django-oauth2-test-source
+          branch=$(git rev-parse --abbrev-ref HEAD)
+          url=$(git config --get remote.origin.url)
+          commit=$(git rev-parse HEAD)
+          repo=$(basename `git rev-parse --show-toplevel`)
+          when=`date --utc +%FT%TZ`
+          output=git_info
+          echo '{' > ${output}
+          echo   \"origin\": \"${url}\", >> ${output}
+          echo   \"commit\": \"${commit}\", >> ${output}
+          echo   \"branch\": \"${branch}\", >> ${output}
+          echo   \"name\": \"${repo}\", >> ${output}
+          echo   \"built\": \"${when}\" >> ${output}
+          echo '}' >> ${output}
+          cd ..
+          cp -r django-oauth2-test-source/* django-oauth2-test-source-git-info
+  - put: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: django-oauth2-test-((loadtest_cloudfoundry_space))
+      manifest: django-oauth2-test-source-git-info/manifest.yml
+      path: django-oauth2-test-source-git-info
+      environment_variables:
+        <<: *loadtest_security_user
+        CSRF_ENABLED: 'True'
+        DEBUG: 'False'
+        DJANGO_SETTINGS_MODULE: 'proj.settings.cloud_foundry_settings'
+        OAUTH2_SUPER_USER: ((loadtest_oauth2_super_user))
+        OAUTH2_SUPER_USER_EMAIL: ((loadtest_oauth2_super_user_email))
+        OAUTH2_SUPER_USER_PASSWORD: ((loadtest_oauth2_super_user_password))
+        SECRET_KEY: ((loadtest_jwt_secret))
+        TESTING: 'False'
+  - task: create-super-user
+    file: ras-deploy/tasks/django-oauth2-test/create_default_user.yml
+    params:
+      CLOUDFOUNDRY_API: ((loadtest_cloudfoundry_api))
+      CLOUDFOUNDRY_EMAIL: ((loadtest_cloudfoundry_email))
+      CLOUDFOUNDRY_PASSWORD: ((loadtest_cloudfoundry_password))
+      CLOUDFOUNDRY_ORG: SDC
+      CLOUDFOUNDRY_SPACE: ((loadtest_cloudfoundry_space))
+      APP_NAME: django-oauth2-test-((loadtest_cloudfoundry_space))
+
+- name: response-operations-ui-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [response-operations-ui-((loadtest_cloudfoundry_space))-deploy]
+  plan:
+  - get: response-operations-ui-source
+  - put: create-redis
+    resource: cf-cli-resource-((loadtest_cloudfoundry_space))
+    params:
+      command: create-service
+      service: elasticache
+      plan: small
+      service_instance: ras-redis
+      timeout: 1800
+      wait_for_service: true
+  - put: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: response-operations-ui-((loadtest_cloudfoundry_space))
+      manifest: response-operations-ui-source/manifest.yml
+      path: response-operations-ui-source
+      environment_variables:
+        <<: *loadtest_security_user
+        <<: *loadtest_service_endpoints_for_python
+        RAS_SECURE_MESSAGING_JWT_SECRET: ((loadtest_jwt_secret))
+        REDIS_SERVICE: ras-redis
+
+- name: rm-action-service-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [rm-action-service-((loadtest_cloudfoundry_space))-deploy]
+  plan:
+  - get: rm-action-service-source
+  - get: ras-deploy
+  - aggregate:
+    - <<: *loadtest_create_rm_pg_db
+    - <<: *loadtest_create_rm_redis
+    - <<: *loadtest_create_rm_rabbitmq
+    - task: build
+      file: ras-deploy/tasks/build-java-service.yml
+      input_mapping: { repository-name: rm-action-service-source }
+  - put: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: rm-action-service-((loadtest_cloudfoundry_space))
+      manifest: rm-action-service-source/manifest-no-envs.yml
+      path: target/actionsvc*.jar
+      environment_variables:
+        <<: *loadtest_security_user
+        <<: *loadtest_service_endpoints_for_java
+        endpoints_enabled: 'false'
+
+- name: rm-actionexporter-service-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [rm-actionexporter-service-((loadtest_cloudfoundry_space))-deploy]
+  plan:
+  - get: rm-actionexporter-service-source
+  - get: ras-deploy
+  - aggregate:
+    - <<: *loadtest_create_rm_pg_db
+    - <<: *loadtest_create_rm_redis
+    - <<: *loadtest_create_rm_rabbitmq
+    - task: build 
+      file: ras-deploy/tasks/build-java-service.yml
+      input_mapping: { repository-name: rm-actionexporter-service-source }
+  - put: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: rm-actionexporter-service-((loadtest_cloudfoundry_space))
+      manifest: rm-actionexporter-service-source/manifest.yml
+      path: target/actionexportersvc*.jar
+      environment_variables:
+        <<: *loadtest_security_user
+        endpoints_enabled: 'false'
+        exportSchedule_cronExpression: '0 * * * * ?'
+        sftp_host: ((sftp_host))
+        sftp_password: ((actionexporter_sftp_password))
+        sftp_port: '22'
+        sftp_username: ((actionexporter_sftp_username))
+
+- name: rm-case-service-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [rm-case-service-((loadtest_cloudfoundry_space))-deploy]
+  plan:
+  - get: rm-case-service-source
+  - get: ras-deploy
+  - aggregate:
+    - <<: *loadtest_create_rm_pg_db
+    - <<: *loadtest_create_rm_redis
+    - <<: *loadtest_create_rm_rabbitmq
+    - task: build
+      file: ras-deploy/tasks/build-java-service.yml
+      input_mapping: { repository-name: rm-case-service-source }
+  - put: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: rm-case-service-((loadtest_cloudfoundry_space))
+      manifest: rm-case-service-source/manifest-no-envs.yml
+      path: target/casesvc*.jar
+      environment_variables:
+        <<: *loadtest_security_user
+        <<: *loadtest_service_endpoints_for_java
+        endpoints_enabled: 'false'
+
+- name: rm-collection-exercise-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [rm-collection-exercise-((loadtest_cloudfoundry_space))-deploy]
+  plan:
+  - get: rm-collection-exercise-service-source
+  - get: ras-deploy
+  - aggregate:
+    - <<: *loadtest_create_rm_pg_db
+    - <<: *loadtest_create_rm_redis
+    - <<: *loadtest_create_rm_rabbitmq
+    - task: build
+      file: ras-deploy/tasks/build-java-service.yml
+      input_mapping: { repository-name: rm-collection-exercise-service-source }
+  - put: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: rm-collection-exercise-service-((loadtest_cloudfoundry_space))
+      manifest: rm-collection-exercise-service-source/manifest-no-envs.yml
+      path: target/collectionexercisesvc*.jar
+      environment_variables:
+        <<: *loadtest_security_user
+        <<: *loadtest_service_endpoints_for_java
+        endpoints_enabled: 'false'
+        SCHEDULES_VALIDATION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
+        SCHEDULES_DISTRIBUTION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
+
+- name: iac-service-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [iac-service-((loadtest_cloudfoundry_space))-deploy]
+  plan:
+  - get: iac-service-source
+  - get: ras-deploy
+  - aggregate:
+    - <<: *loadtest_create_rm_pg_db
+    - task: build
+      file: ras-deploy/tasks/build-java-service.yml
+      input_mapping: { repository-name: iac-service-source }
+  - put: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: iac-service-((loadtest_cloudfoundry_space))
+      manifest: iac-service-source/manifest-no-envs.yml
+      path: target/iacsvc*.jar
+      environment_variables:
+        <<: *loadtest_security_user
+        <<: *loadtest_service_endpoints_for_java
+        endpoints_enabled: 'false'
+
+- name: rm-notify-gateway-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [rm-notify-gateway-((loadtest_cloudfoundry_space))-deploy]
+  plan:
+  - get: rm-notify-gateway-source
+  - get: ras-deploy
+  - aggregate:
+    - <<: *loadtest_create_rm_pg_db
+    - <<: *loadtest_create_rm_rabbitmq
+    - task: build
+      file: ras-deploy/tasks/build-java-service.yml
+      input_mapping: { repository-name: rm-notify-gateway-source }
+  - put: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: rm-notify-gateway-((loadtest_cloudfoundry_space))
+      manifest: rm-notify-gateway-source/manifest.yml
+      path: target/notifygatewaysvc*.jar
+      environment_variables:
+        <<: *loadtest_security_user
+        endpoints_enabled: 'false'
+        notify_apiKey: ((test_notify_api_key))
+        notify_censusUacSmsTemplateId: '966731dc-ef2e-41ad-a828-8cdd95c81ebc'
+        notify_enabled: 'false'
+        notify_onsSurveysRasEmailReminderTemplateId: '19a0aa89-797f-4a34-ad54-267fd581f2ef'
+
+- name: rm-sample-service-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [rm-sample-service-((loadtest_cloudfoundry_space))-deploy]
+  plan:
+  - get: rm-sample-service-source
+  - get: ras-deploy
+  - aggregate:
+    - <<: *loadtest_create_rm_pg_db
+    - <<: *loadtest_create_rm_redis
+    - <<: *loadtest_create_rm_rabbitmq
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-sample-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-sample-service-source/.maven.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-sample-service-source/pom.xml
+            cp -r rm-sample-service-source/target/ .
+  - put: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: rm-sample-service-((loadtest_cloudfoundry_space))
+      manifest: rm-sample-service-source/manifest-no-envs.yml
+      path: target/samplesvc*.jar
+      environment_variables:
+        <<: *loadtest_security_user
+        <<: *loadtest_service_endpoints_for_java
+        SAMPLE_UNIT_DISTRIBUTION_DELAY_MILLI_SECONDS: '1000'
+        endpoints_enabled: 'false'
+        exportSchedule_cronExpression: '0 0/5 * * * ?'
+        sftp_host: ((sftp_host))
+        sftp_password: ((sample_sftp_password))
+        sftp_port: '22'
+        sftp_username: ((sample_sftp_username))
+
+- name: rm-sdx-gateway-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [rm-sdx-gateway-((loadtest_cloudfoundry_space))-deploy]
+  plan:
+  - get: rm-sdx-gateway-source
+  - get: ras-deploy
+  - aggregate:
+    - <<: *loadtest_create_rm_redis
+    - <<: *loadtest_create_rm_rabbitmq
+    - task: build
+      file: ras-deploy/tasks/build-java-service.yml
+      input_mapping: { repository-name: rm-sdx-gateway-source }
+  - put: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: rm-sdx-gateway-((loadtest_cloudfoundry_space))
+      manifest: rm-sdx-gateway-source/manifest.yml
+      path: target/sdxgatewaysvc*.jar
+      environment_variables:
+        <<: *loadtest_security_user
+        endpoints_enabled: 'false'
+
+- name: rm-survey-service-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [rm-survey-service-((loadtest_cloudfoundry_space))-deploy]
+  plan:
+  - get: rm-survey-service-source
+  - aggregate:
+    - <<: *loadtest_create_rm_pg_db
+    - task: build
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: golang
+        inputs:
+          - name: rm-survey-service-source
+        outputs:
+          - name: rm-survey-service-build
+            path: rm-survey-service
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mkdir -p /go/src/github.com/ONSdigital/
+            cp -r rm-survey-service-source /go/src/github.com/ONSdigital/rm-survey-service
+            make -C /go/src/github.com/ONSdigital/rm-survey-service
+            cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
+  - put: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: rm-survey-service-((loadtest_cloudfoundry_space))
+      manifest: rm-survey-service-source/manifest.yml
+      path: rm-survey-service-build
+      environment_variables:
+        <<: *loadtest_security_user
+        MIGRATION_SOURCE: 'file://db-migrations'
+
+- name: sdc-uaa-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [sdc-uaa-((loadtest_cloudfoundry_space))-deploy]
+  plan:
+  - get: sdc-uaa-source
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: sdcplatform/maven-cf-cli-docker
+      inputs:
+        - name: sdc-uaa-source
+      outputs:
+        - name: sdc-uaa-build
+          path: sdc-uaa-build
+      params:
+        UAA_PRIVATE_KEY: ((loadtest_uaa_private_key))
+        UAA_CERTIFICATE: ((loadtest_uaa_certificate))
+        UAA_PRIVATE_KEY_PASSWORD: ((loadtest_uaa_private_key_password))
+        JENKINS_CF_USERNAME: ((loadtest_cloudfoundry_email))
+        JENKINS_CF_PASSWORD: ((loadtest_cloudfoundry_password))
+        API_ENDPOINT: ((loadtest_cloudfoundry_api))
+        ORG: SDC
+        SPACE: ((loadtest_cloudfoundry_space))
+        UAA_ID: ((loadtest_uaa_id))
+        UAA_SECRET: ((loadtest_uaa_secret))
+        UAA_JWT_SIGNING_KEY: ((loadtest_uaa_jwt_signing_key))
+        UAA_JWT_VERIFICATION_KEY: ((loadtest_uaa_jwt_verification_key))
+        UAA_URL: 'http://uaa-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk'
+        LOGIN_URL: 'http://uaa-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk'
+        ZONE_URL: 'uaa-loadtest.apps.prunes.cf2.onsclofo.uk'
+        ADMIN_SECRET: ((loadtest_uaa_admin_secret))
+        LOGIN_SECRET: ((loadtest_uaa_login_secret))
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          (cd sdc-uaa-source && ls && sh deploy-uaa-pre-steps.sh dev)
+          mvn install -f sdc-uaa-source/pom.xml
+          cp -r sdc-uaa-source/* sdc-uaa-build
+  - put: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: sdc-uaa-((loadtest_cloudfoundry_space))
+      manifest: sdc-uaa-build/uaa-cf-application.yml
+      #### EXTRACT ME ####
+  - task: create-secure-message-client
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: kennethreitz/pipenv
+      inputs:
+        - name: sdc-uaa-source
+      params:
+        SPACE: ((loadtest_cloudfoundry_space))
+        CLIENT: secure_message
+        PASSWORD: ((loadtest_secure_message_client_secret))
+        ADMIN_SECRET: ((loadtest_uaa_admin_secret))
+        UAA_URL: 'uaa-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk'
+      run:
+        dir: sdc-uaa-source
+        path: sh
+        args:
+        - './scripts/jenkins/add_client.sh'
+  - task: create-ras-backstage-client
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: kennethreitz/pipenv
+      inputs:
+        - name: sdc-uaa-source
+      params:
+        SPACE: ((loadtest_cloudfoundry_space))
+        CLIENT: ras_backstage
+        PASSWORD: ((loadtest_backstage_client_secret))
+        ADMIN_SECRET: ((loadtest_uaa_admin_secret))
+        UAA_URL: 'uaa-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk'
+      run:
+        dir: sdc-uaa-source
+        path: sh
+        args:
+        - './scripts/jenkins/add_client.sh'
+  - task: create-uaa-user
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: kennethreitz/pipenv
+      inputs:
+        - name: sdc-uaa-source
+      params:
+        SPACE: ((loadtest_cloudfoundry_space))
+        USERNAME: uaa_user
+        PASSWORD: ((loadtest_uaa_user_password))
+        EMAIL: ons@ons.gov
+        FIRSTNAME: uaa
+        LASTNAME: user
+        ADMIN_SECRET: ((loadtest_uaa_admin_secret))
+        UAA_URL: uaa-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      run:
+        dir: sdc-uaa-source
+        path: sh
+        args:
+        - './scripts/jenkins/add_user.sh'

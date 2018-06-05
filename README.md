@@ -19,6 +19,22 @@ that will have an effect on the build or deployment change of a services. e.g.
 * A service depends on a new Cloudfoundry service
 * A change to how the acceptance tests run
 
+## Pipelines
+
+### RAS/RM Continuous Delivery Pipeline
+
+Filename: `concourse/pipeline.yml`
+
+This pipeline deploys the RAS and RM services and runs the acceptance tests
+against them. It is also intended to provide a single action deployment to
+preproduction and production
+
+### RAS/RM Load Test Pipeline
+
+Filename: `pipelines/loadtest.yml`
+
+This pipeline deploys the required RAS and RM services to a Cloud Foundry for load testing.
+
 ## Deploying pipeline
 
 See [here](https://digitaleq.atlassian.net/wiki/spaces/RASB/pages/458358937/RAS+RM+Concourse+Pipeline)
