@@ -1446,7 +1446,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-collection-exercise-service-source/pom.xml
+            mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-collection-exercise-service-source/pom.xml
             cp -r rm-collection-exercise-service-source/target/ .
   - put: cf-resource-ci
     params:
@@ -2382,7 +2382,7 @@ jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-collection-exercise-service-source/pom.xml
+            mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-collection-exercise-service-source/pom.xml
             cp -r rm-collection-exercise-service-source/target/ .
   - put: cf-resource-latest
     params:
@@ -3249,7 +3249,7 @@ disabled-jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-collection-exercise-service-source/pom.xml
+            mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs-f rm-collection-exercise-service-source/pom.xml
             cp -r rm-collection-exercise-service-source/target/ .
   - put: cf-resource-preprod
     params:
@@ -4116,7 +4116,7 @@ disabled-jobs:
           args:
           - -exc
           - |
-            mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -f rm-collection-exercise-service-source/pom.xml
+            mvn --settings rm-collection-exercise-service-source/.maven.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-collection-exercise-service-source/pom.xml
             cp -r rm-collection-exercise-service-source/target/ .
   - put: cf-resource-prod
     params:
