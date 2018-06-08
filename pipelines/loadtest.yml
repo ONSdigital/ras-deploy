@@ -32,6 +32,8 @@ templates:
       IAC_PASSWORD: ((loadtest_security_user_password))
       PARTY_USERNAME: ((loadtest_security_user_name))
       PARTY_PASSWORD: ((loadtest_security_user_password))
+      RESPONDENT_HOME_IAC_SERVICE_USER: ((loadtest_security_user_name))
+      RESPONDENT_HOME_IAC_SERVICE_PASSWORD: ((loadtest_security_user_password))
       SURVEY_USERNAME: ((loadtest_security_user_name))
       SURVEY_PASSWORD: ((loadtest_security_user_password))
       SAMPLE_USERNAME: ((loadtest_security_user_name))
@@ -43,6 +45,7 @@ templates:
     - ras-frontstage-((loadtest_cloudfoundry_space))-deploy
     - ras-frontstage-api-((loadtest_cloudfoundry_space))-deploy
     - django-oauth2-test-((loadtest_cloudfoundry_space))-deploy
+    - respondent-home-ui-((loadtest_cloudfoundry_space))-deploy
     - response-operations-ui-((loadtest_cloudfoundry_space))-deploy
     - ras-secure-message-((loadtest_cloudfoundry_space))-deploy
     - ras-collection-instrument-((loadtest_cloudfoundry_space))-deploy
@@ -161,6 +164,14 @@ templates:
       surveySvc_connectionConfig_port: '80'
       surveySvc_connectionConfig_scheme: 'http'
 
+    service_endpoints_for_ruby: &loadtest_service_endpoints_for_ruby
+      RESPONDENT_HOME_EQ_HOST: eq-server
+      RESPONDENT_HOME_EQ_PORT: '80'
+      RESPONDENT_HOME_EQ_PROTOCOL: http
+      RESPONDENT_HOME_IAC_SERVICE_HOST: iac-service-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+      RESPONDENT_HOME_IAC_SERVICE_PORT: '80'
+      RESPONDENT_HOME_IAC_SERVICE_PROTOCOL: 'http'
+
     create_rm_redis: &loadtest_create_rm_redis
       put: create-rm-redis
       resource: cf-cli-resource-((loadtest_cloudfoundry_space))
@@ -255,6 +266,12 @@ resources:
   source:
     uri: https://github.com/ONSdigital/django-oauth2-test.git
     branch: release_15-branch
+
+- name: respondent-home-ui-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/respondent-home-ui.git
+    branch: master
 
 - name: response-operations-ui-source
   type: git
@@ -577,6 +594,29 @@ jobs:
       CLOUDFOUNDRY_ORG: SDC
       CLOUDFOUNDRY_SPACE: ((loadtest_cloudfoundry_space))
       APP_NAME: django-oauth2-test-((loadtest_cloudfoundry_space))
+
+- name: respondent-home-ui-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [respondent-home-ui-((loadtest_cloudfoundry_space))-deploy]
+  plan:
+  - get: respondent-home-ui-source
+    trigger: true
+  - get: ci-teardown-timer
+    trigger: true
+    passed: [ci-teardown]
+  - task: bundle-respondent-home-ui
+    file: ras-deploy/tasks/respondent-home-ui/bundle-respondent-home-ui.yml
+  - put: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: respondent-home-ui-((loadtest_cloudfoundry_space))
+      manifest: respondent-home-ui-source-bundle/manifest.yml
+      path: respondent-home-ui-source-bundle
+      environment_variables:
+        <<: *loadtest_security_user
+        <<: *loadtest_service_endpoints_for_ruby
+        RESPONDENT_HOME_ANALYTICS_ACCOUNT: ((loadtest_respondent_home_analytics_account))
+        RESPONDENT_HOME_LOCALE: 'en'
+        RESPONDENT_HOME_EQ_PUBLIC_KEY: ((loadtest_respondent_home_eq_public_key))
+        RESPONDENT_HOME_EQ_PRIVATE_KEY: ((loadtest_respondent_home_eq_private_key))
 
 - name: response-operations-ui-((loadtest_cloudfoundry_space))-deploy
   serial_groups: [response-operations-ui-((loadtest_cloudfoundry_space))-deploy]
