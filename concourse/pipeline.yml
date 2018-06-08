@@ -30,6 +30,8 @@ templates:
       IAC_PASSWORD: ((ci_security_user_password))
       PARTY_USERNAME: ((ci_security_user_name))
       PARTY_PASSWORD: ((ci_security_user_password))
+      RESPONDENT_HOME_IAC_SERVICE_USER: ((ci_security_user_name))
+      RESPONDENT_HOME_IAC_SERVICE_PASSWORD: ((ci_security_user_password))
       SAMPLE_USERNAME: ((ci_security_user_name))
       SAMPLE_PASSWORD: ((ci_security_user_password))
       SECURITY_USER_NAME: ((ci_security_user_name))
@@ -42,6 +44,7 @@ templates:
     - ras-backstage-ci-deploy
     - ras-frontstage-ci-deploy
     - django-oauth2-test-ci-deploy
+    - respondent-home-ui-ci-deploy
     - response-operations-ui-ci-deploy
     - ras-secure-message-ci-deploy
     - ras-collection-instrument-ci-deploy
@@ -158,6 +161,14 @@ templates:
       surveySvc_connectionConfig_port: '80'
       surveySvc_connectionConfig_scheme: 'http'
 
+    service_endpoints_for_ruby: &ci_service_endpoints_for_ruby
+      RESPONDENT_HOME_EQ_HOST: eq-server
+      RESPONDENT_HOME_EQ_PORT: '80'
+      RESPONDENT_HOME_EQ_PROTOCOL: http
+      RESPONDENT_HOME_IAC_SERVICE_HOST: iac-service-ci.apps.devtest.onsclofo.uk
+      RESPONDENT_HOME_IAC_SERVICE_PORT: '80'
+      RESPONDENT_HOME_IAC_SERVICE_PROTOCOL: 'http'
+
     create_rm_redis: &ci_create_rm_redis
       put: create-rm-redis
       resource: cf-cli-resource-ci
@@ -221,6 +232,8 @@ templates:
       IAC_PASSWORD: ((latest_security_user_password))
       PARTY_USERNAME: ((latest_security_user_name))
       PARTY_PASSWORD: ((latest_security_user_password))
+      RESPONDENT_HOME_IAC_SERVICE_USER: ((latest_security_user_name))
+      RESPONDENT_HOME_IAC_SERVICE_PASSWORD: ((latest_security_user_password))
       SAMPLE_USERNAME: ((latest_security_user_name))
       SAMPLE_PASSWORD: ((latest_security_user_password))
       SECURITY_USER_NAME: ((latest_security_user_name))
@@ -234,6 +247,7 @@ templates:
     - ras-frontstage-latest-deploy
     - django-oauth2-test-latest-deploy
     - response-operations-ui-latest-deploy
+    - respondent-home-ui-latest-deploy
     - ras-secure-message-latest-deploy
     - ras-collection-instrument-latest-deploy
     - rm-action-service-latest-deploy
@@ -349,6 +363,14 @@ templates:
       surveySvc_connectionConfig_port: '80'
       surveySvc_connectionConfig_scheme: 'http'
 
+    service_endpoints_for_ruby: &latest_service_endpoints_for_ruby
+      RESPONDENT_HOME_EQ_HOST: eq-server
+      RESPONDENT_HOME_EQ_PORT: '80'
+      RESPONDENT_HOME_EQ_PROTOCOL: http
+      RESPONDENT_HOME_IAC_SERVICE_HOST: iac-service-concourse-latest.apps.devtest.onsclofo.uk
+      RESPONDENT_HOME_IAC_SERVICE_PORT: '80'
+      RESPONDENT_HOME_IAC_SERVICE_PROTOCOL: 'http'
+
     create_rm_redis: &latest_create_rm_redis
       put: create-rm-redis
       resource: cf-cli-resource-latest
@@ -412,6 +434,8 @@ templates:
       IAC_PASSWORD: ((preprod_security_user_password))
       PARTY_USERNAME: ((preprod_security_user_name))
       PARTY_PASSWORD: ((preprod_security_user_password))
+      RESPONDENT_HOME_IAC_SERVICE_USER: ((preprod_security_user_name))
+      RESPONDENT_HOME_IAC_SERVICE_PASSWORD: ((preprod_security_user_password))
       SAMPLE_USERNAME: ((preprod_security_user_name))
       SAMPLE_PASSWORD: ((preprod_security_user_password))
       SECURITY_USER_NAME: ((preprod_security_user_name))
@@ -424,6 +448,7 @@ templates:
     - ras-backstage-preprod-deploy
     - ras-frontstage-preprod-deploy
     - django-oauth2-test-preprod-deploy
+    - respondent-home-ui-preprod-deploy
     - response-operations-ui-preprod-deploy
     - ras-secure-message-preprod-deploy
     - ras-collection-instrument-preprod-deploy
@@ -540,6 +565,14 @@ templates:
       surveySvc_connectionConfig_port: '80'
       surveySvc_connectionConfig_scheme: 'http'
 
+    service_endpoints_for_ruby: &preprod_service_endpoints_for_ruby
+      RESPONDENT_HOME_EQ_HOST: eq-server
+      RESPONDENT_HOME_EQ_PORT: '80'
+      RESPONDENT_HOME_EQ_PROTOCOL: http
+      RESPONDENT_HOME_IAC_SERVICE_HOST: iac-service-concourse-preprod.apps.devtest.onsclofo.uk
+      RESPONDENT_HOME_IAC_SERVICE_PORT: '80'
+      RESPONDENT_HOME_IAC_SERVICE_PROTOCOL: 'http'
+
     create_rm_redis: &preprod_create_rm_redis
       put: create-rm-redis
       resource: cf-cli-resource-preprod
@@ -603,6 +636,8 @@ templates:
       IAC_PASSWORD: ((prod_security_user_password))
       PARTY_USERNAME: ((prod_security_user_name))
       PARTY_PASSWORD: ((prod_security_user_password))
+      RESPONDENT_HOME_IAC_SERVICE_USER: ((prod_security_user_name))
+      RESPONDENT_HOME_IAC_SERVICE_PASSWORD: ((prod_security_user_password))
       SAMPLE_USERNAME: ((prod_security_user_name))
       SAMPLE_PASSWORD: ((prod_security_user_password))
       SECURITY_USER_NAME: ((prod_security_user_name))
@@ -615,6 +650,7 @@ templates:
     - ras-backstage-prod-deploy
     - ras-frontstage-prod-deploy
     - django-oauth2-test-prod-deploy
+    - respondent-home-ui-prod-deploy
     - response-operations-ui-prod-deploy
     - ras-secure-message-prod-deploy
     - ras-collection-instrument-prod-deploy
@@ -732,6 +768,14 @@ templates:
       surveySvc_connectionConfig_port: '80'
       surveySvc_connectionConfig_scheme: 'http'
 
+    service_endpoints_for_ruby: &prod_service_endpoints_for_ruby
+      RESPONDENT_HOME_EQ_HOST: eq-server
+      RESPONDENT_HOME_EQ_PORT: '80'
+      RESPONDENT_HOME_EQ_PROTOCOL: http
+      RESPONDENT_HOME_IAC_SERVICE_HOST: iac-service-concourse-prod.apps.devtest.onsclofo.uk
+      RESPONDENT_HOME_IAC_SERVICE_PORT: '80'
+      RESPONDENT_HOME_IAC_SERVICE_PROTOCOL: 'http'
+
     create_rm_redis: &prod_create_rm_redis
       put: create-rm-redis
       resource: cf-cli-resource-prod
@@ -783,7 +827,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-deploy.git
-    branch: master
+    branch: add-resondent-home-ui
 
 - name: ras-party-source
   type: git
@@ -819,6 +863,12 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/django-oauth2-test.git
+    branch: master
+
+- name: respondent-home-ui-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/respondent-home-ui.git
     branch: master
 
 - name: response-operations-ui-source
@@ -1255,6 +1305,52 @@ jobs:
       CLOUDFOUNDRY_ORG: rmras
       CLOUDFOUNDRY_SPACE: ci
       APP_NAME: django-oauth2-test-ci
+
+- name: respondent-home-ui-ci-deploy
+  serial_groups: [respondent-home-ui-ci-deploy]
+  plan:
+  - get: respondent-home-ui-source
+    trigger: true
+  - get: ci-teardown-timer
+    trigger: true
+    passed: [ci-teardown]
+  - task: bundle-respondent-home-ui
+    file: ras-deploy/tasks/respondent-home-ui/bundle-respondent-home-ui.yml
+#    config:
+#      platform: linux
+#      image_resource:
+#        type: docker-image
+#        source:
+#          repository: ruby
+#          tag: "latest"
+#      inputs:
+#        - name: respondent-home-ui-source
+#      outputs:
+#        - name: respondent-home-ui-source-bundle
+#          path: respondent-home-ui-source-bundle
+#      run:
+#        path: sh
+#        args:
+#        - -exc
+#        - |
+#          cd respondent-home-ui-source
+#          bundle package --all
+#          cd ..
+#          cp -r respondent-home-ui-source/* respondent-home-ui-source-bundle
+  - put: push-app
+    resource: cf-resource-ci
+    params:
+      current_app_name: respondent-home-ui-ci
+      manifest: respondent-home-ui-source-bundle/manifest.yml
+      path: respondent-home-ui-source-bundle
+      environment_variables:
+        <<: *ci_security_user
+        <<: *ci_service_endpoints_for_ruby
+        RESPONDENT_HOME_ANALYTICS_ACCOUNT: ((ci_respondent_home_analytics_account))
+        RESPONDENT_HOME_LOCALE: 'en'
+        RESPONDENT_HOME_EQ_PUBLIC_KEY: ((ci_respondent_home_eq_public_key))
+        RESPONDENT_HOME_EQ_PRIVATE_KEY: ((ci_respondent_home_eq_private_key))
+
 
 - name: response-operations-ui-ci-deploy
   serial_groups: [response-operations-ui-ci-deploy]
