@@ -869,7 +869,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/respondent-home-ui.git
-    branch: master
+    branch: ssd
 
 - name: response-operations-ui-source
   type: git
@@ -1316,27 +1316,6 @@ jobs:
     passed: [ci-teardown]
   - task: bundle-respondent-home-ui
     file: ras-deploy/tasks/respondent-home-ui/bundle-respondent-home-ui.yml
-#    config:
-#      platform: linux
-#      image_resource:
-#        type: docker-image
-#        source:
-#          repository: ruby
-#          tag: "latest"
-#      inputs:
-#        - name: respondent-home-ui-source
-#      outputs:
-#        - name: respondent-home-ui-source-bundle
-#          path: respondent-home-ui-source-bundle
-#      run:
-#        path: sh
-#        args:
-#        - -exc
-#        - |
-#          cd respondent-home-ui-source
-#          bundle package --all
-#          cd ..
-#          cp -r respondent-home-ui-source/* respondent-home-ui-source-bundle
   - put: push-app
     resource: cf-resource-ci
     params:
@@ -1350,7 +1329,6 @@ jobs:
         RESPONDENT_HOME_LOCALE: 'en'
         RESPONDENT_HOME_EQ_PUBLIC_KEY: ((ci_respondent_home_eq_public_key))
         RESPONDENT_HOME_EQ_PRIVATE_KEY: ((ci_respondent_home_eq_private_key))
-
 
 - name: response-operations-ui-ci-deploy
   serial_groups: [response-operations-ui-ci-deploy]
@@ -1905,6 +1883,9 @@ jobs:
   - get: django-oauth2-test-source
     passed: [django-oauth2-test-ci-deploy]
     trigger: true
+  - get: respondent-home-ui-source
+    passed: [respondent-home-ui-ci-deploy]
+    trigger: true
   - get: response-operations-ui-source
     passed: [response-operations-ui-ci-deploy]
     trigger: true
@@ -1996,6 +1977,9 @@ jobs:
     trigger: true
   - get: django-oauth2-test-source
     passed: [django-oauth2-test-ci-deploy]
+    trigger: true
+  - get: respondent-home-ui-source
+    passed: [respondent-home-ui-ci-deploy]
     trigger: true
   - get: response-operations-ui-source
     passed: [response-operations-ui-ci-deploy]
@@ -2297,6 +2281,28 @@ jobs:
       CLOUDFOUNDRY_ORG: rmras
       CLOUDFOUNDRY_SPACE: concourse-latest
       APP_NAME: django-oauth2-test-concourse-latest
+
+- name: respondent-home-ui-latest-deploy
+  serial_groups: [respondent-home-ui-latest-deploy]
+  plan:
+  - get: respondent-home-ui-source
+    trigger: true
+    passed: [ci-rasrm-acceptance-tests, ci-securemessage-acceptance-tests]
+  - task: bundle-respondent-home-ui
+    file: ras-deploy/tasks/respondent-home-ui/bundle-respondent-home-ui.yml
+  - put: push-app
+    resource: cf-resource-ci
+    params:
+      current_app_name: respondent-home-ui-concourse-latest
+      manifest: respondent-home-ui-source-bundle/manifest.yml
+      path: respondent-home-ui-source-bundle
+      environment_variables:
+        <<: *latest_security_user
+        <<: *latest_service_endpoints_for_ruby
+        RESPONDENT_HOME_ANALYTICS_ACCOUNT: ((latest_respondent_home_analytics_account))
+        RESPONDENT_HOME_LOCALE: 'en'
+        RESPONDENT_HOME_EQ_PUBLIC_KEY: ((latest_respondent_home_eq_public_key))
+        RESPONDENT_HOME_EQ_PRIVATE_KEY: ((latest_respondent_home_eq_private_key))
 
 - name: response-operations-ui-latest-deploy
   serial_groups: [response-operations-ui-latest-deploy]
@@ -2827,6 +2833,9 @@ jobs:
   - get: django-oauth2-test-source
     passed: [django-oauth2-test-latest-deploy]
     trigger: true
+  - get: respondent-home-ui-source
+    passed: [respondent-home-ui-latest-deploy]
+    trigger: true
   - get: response-operations-ui-source
     passed: [response-operations-ui-latest-deploy]
     trigger: true
@@ -2896,6 +2905,8 @@ disabled-jobs:
   - get: ras-frontstage-source
     passed: [latest-acceptance-tests]
   - get: django-oauth2-test-source
+    passed: [latest-acceptance-tests]
+  - get: respondent-home-ui-source
     passed: [latest-acceptance-tests]
   - get: response-operations-ui-source
     passed: [latest-acceptance-tests]
@@ -3159,6 +3170,29 @@ disabled-jobs:
       CLOUDFOUNDRY_ORG: rmras
       CLOUDFOUNDRY_SPACE: concourse-preprod
       APP_NAME: django-oauth2-test-concourse-preprod
+
+- name: respondent-home-ui-preprod-deploy
+  disable_manual_trigger: true
+  serial_groups: [respondent-home-ui-preprod-deploy]
+  plan:
+  - get: respondent-home-ui-source
+    trigger: true
+    passed: [preprod-trigger]
+  - task: bundle-respondent-home-ui
+    file: ras-deploy/tasks/respondent-home-ui/bundle-respondent-home-ui.yml
+  - put: push-app
+    resource: cf-resource-ci
+    params:
+      current_app_name: respondent-home-ui-concourse-preprod
+      manifest: respondent-home-ui-source-bundle/manifest.yml
+      path: respondent-home-ui-source-bundle
+      environment_variables:
+        <<: *preprod_security_user
+        <<: *preprod_service_endpoints_for_ruby
+        RESPONDENT_HOME_ANALYTICS_ACCOUNT: ((preprod_respondent_home_analytics_account))
+        RESPONDENT_HOME_LOCALE: 'en'
+        RESPONDENT_HOME_EQ_PUBLIC_KEY: ((preprod_respondent_home_eq_public_key))
+        RESPONDENT_HOME_EQ_PRIVATE_KEY: ((preprod_respondent_home_eq_private_key))
 
 - name: response-operations-ui-preprod-deploy
   disable_manual_trigger: true
@@ -3699,6 +3733,9 @@ disabled-jobs:
   - get: django-oauth2-test-source
     passed: [django-oauth2-test-preprod-deploy]
     trigger: true
+  - get: respondent-home-ui-source
+    passed: [respondent-home-ui-preprod-deploy]
+    trigger: true
   - get: response-operations-ui-source
     passed: [response-operations-ui-preprod-deploy]
     trigger: true
@@ -3763,6 +3800,8 @@ disabled-jobs:
   - get: ras-frontstage-source
     passed: [preprod-smoke-tests]
   - get: django-oauth2-test-source
+    passed: [preprod-smoke-tests]
+  - get: respondent-home-ui-source
     passed: [preprod-smoke-tests]
   - get: response-operations-ui-source
     passed: [preprod-smoke-tests]
@@ -4565,6 +4604,9 @@ disabled-jobs:
     trigger: true
   - get: django-oauth2-test-source
     passed: [django-oauth2-test-prod-deploy]
+    trigger: true
+  - get: respondent-home-ui-source
+    passed: [respondent-home-ui-prod-deploy]
     trigger: true
   - get: response-operations-ui-source
     passed: [response-operations-ui-prod-deploy]
