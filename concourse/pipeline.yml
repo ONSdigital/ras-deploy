@@ -827,7 +827,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-deploy.git
-    branch: add-resondent-home-ui
+    branch: add-respondent-home-ui
 
 - name: ras-party-source
   type: git
