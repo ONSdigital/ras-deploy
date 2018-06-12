@@ -1,10 +1,11 @@
 ---
 resources:
-- name: ras-deploy
+- name: sdc-dashboards
   type: git
   source:
-    uri: https://github.com/ONSdigital/ras-deploy
+    uri: https://github.com/ONSdigital/sdc-dashboards
     branch: master
+    private_key: ((git_key))
 
 - name: prunes-loadtest-space
   type: cf
@@ -15,12 +16,14 @@ resources:
     organization: SDC
     space: loadtest
     skip_cert_check: true
+
 jobs:
 - name: deploy-dashboard
+  serial: true
   plan:
-  - get: ras-deploy
+  - get: sdc-dashboards
     trigger: true
   - put: prunes-loadtest-space
     params:
-      manifest: ras-deploy/dashboards/manifest.yml
-      path: ras-deploy/dashboards
+      manifest: sdc-dashboards/manifest.yml
+      path: sdc-dashboards
