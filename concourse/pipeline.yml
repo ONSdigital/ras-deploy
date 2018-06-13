@@ -916,7 +916,7 @@ resources:
 - name: ci-teardown-timer
   type: time
   source:
-    interval: 24h
+    start: 6AM
 
 - name: cf-cli-resource-latest
   type: cf-cli-resource
