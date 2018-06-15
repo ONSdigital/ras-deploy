@@ -1,0 +1,48 @@
+---
+resources:
+- name: sdc-dashboards
+  type: git
+  source:
+    uri: git@github.com:ONSdigital/sdc-dashboards.git
+    branch: master
+    private_key: ((git_key))
+
+- name: prunes-loadtest-space
+  type: cf
+  source:
+    api: ((loadtest_cloudfoundry_api))
+    username: ((loadtest_cloudfoundry_email))
+    password: ((loadtest_cloudfoundry_password))
+    organization: SDC
+    space: loadtest
+    skip_cert_check: true
+
+jobs:
+- name: deploy-dashboard
+  serial: true
+  plan:
+  - get: sdc-dashboards
+    trigger: true
+  - task: interpolate
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: kennethreitz/pipenv
+      inputs:
+      - name: sdc-dashboards
+      outputs:
+      - name: interpolated-dashboard
+      run:
+        path: sh
+        args:
+        - -euc
+        - |
+          cd sdc-dashboards
+          pipenv install
+          pipenv run python interpolate.py > ../interpolated-dashboard/index.html
+  - put: prunes-loadtest-space
+    params:
+      manifest: sdc-dashboards/manifest.yml
+      path: interpolated-dashboard
