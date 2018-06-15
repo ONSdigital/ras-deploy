@@ -1327,8 +1327,25 @@ jobs:
     - <<: *ci_create_rm_redis
     - <<: *ci_create_rm_rabbitmq
     - task: build
-      file: ras-deploy/tasks/build-java-service.yml
-      input_mapping: { repository-name: rm-actionexporter-service-source }
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-actionexporter-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-actionexporter-service-source/.maven.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-actionexporter-service-source/pom.xml
+            cp -r rm-actionexporter-service-source/target/ .
   - put: cf-resource-ci
     params:
       current_app_name: rm-actionexporter-service-ci
@@ -2154,8 +2171,25 @@ jobs:
     - <<: *latest_create_rm_redis
     - <<: *latest_create_rm_rabbitmq
     - task: build
-      file: ras-deploy/tasks/build-java-service.yml
-      input_mapping: { repository-name: rm-actionexporter-service-source }
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-actionexporter-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-actionexporter-service-source/.maven.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-actionexporter-service-source/pom.xml
+            cp -r rm-actionexporter-service-source/target/ .
   - put: cf-resource-latest
     params:
       current_app_name: rm-actionexporter-service-concourse-latest
@@ -2907,8 +2941,25 @@ disabled-jobs:
     - <<: *preprod_create_rm_redis
     - <<: *preprod_create_rm_rabbitmq
     - task: build
-      file: ras-deploy/tasks/build-java-service.yml
-      input_mapping: { repository-name: rm-actionexporter-service-source }
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-actionexporter-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-actionexporter-service-source/.maven.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-actionexporter-service-source/pom.xml
+            cp -r rm-actionexporter-service-source/target/ .
   - put: cf-resource-preprod
     params:
       current_app_name: rm-actionexporter-service-concourse-preprod
@@ -3662,8 +3713,25 @@ disabled-jobs:
     - <<: *prod_create_rm_redis
     - <<: *prod_create_rm_rabbitmq
     - task: build
-      file: ras-deploy/tasks/build-java-service.yml
-      input_mapping: { repository-name: rm-actionexporter-service-source }
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: maven
+            tag: 3.3.9-jdk-8
+        inputs:
+          - name: rm-actionexporter-service-source
+        outputs:
+          - name: target
+            path: target
+        run:
+          path: sh
+          args:
+          - -exc
+          - |
+            mvn --settings rm-actionexporter-service-source/.maven.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f rm-actionexporter-service-source/pom.xml
+            cp -r rm-actionexporter-service-source/target/ .
   - put: cf-resource-prod
     params:
       current_app_name: rm-actionexporter-service-concourse-prod
