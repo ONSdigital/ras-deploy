@@ -1,0 +1,21 @@
+---
+  platform: linux
+  image_resource:
+    type: docker-image
+    source:
+      repository: ruby
+      tag: "latest"
+  inputs:
+    - name: respondent-home-ui-source
+  outputs:
+    - name: respondent-home-ui-source-bundle
+      path: respondent-home-ui-source-bundle
+  run:
+    path: sh
+    args:
+    - -exc
+    - |
+      cd respondent-home-ui-source
+      bundle package --all
+      cd ..
+      cp -r respondent-home-ui-source/* respondent-home-ui-source-bundle
