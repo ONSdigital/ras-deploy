@@ -917,6 +917,7 @@ resources:
   type: time
   source:
     start: 6AM
+    stop: 7AM
 
 - name: cf-cli-resource-latest
   type: cf-cli-resource
