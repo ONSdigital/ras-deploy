@@ -39,11 +39,16 @@ This pipeline deploys the required RAS and RM services to a Cloud Foundry for lo
 
 See [here](https://digitaleq.atlassian.net/wiki/spaces/RASB/pages/458358937/RAS+RM+Concourse+Pipeline)
 
+## Secrets
+
+To set the pipeline you need to supply one or more files containing the sensitive data. There are templates for creating these files in the `secrets` folder.
+
+It is recommended that you make a copy of these files in that folder removing the `.example` suffix and add the details. The `.gitignore` should stop any files with a `.yml` suffix in this folder from being committed.
+
 ## Troubleshooting
 ### Known issues
 * `pq: current transaction is aborted, commands ignored until end of transaction block
 ` when deploying services. This is a known bug in concourse https://github.com/concourse/concourse/issues/2224. Restart the job to resolve this.
-
 
 ### Job failed in pipeline
 Sometimes a job might fail in the pipeline. You should first try to identify the problem by:
