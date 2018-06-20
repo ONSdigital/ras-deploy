@@ -1457,6 +1457,7 @@ jobs:
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
+  - get: ras-deploy
   - aggregate:
     - <<: *ci_create_rm_pg_db
     - <<: *ci_create_rm_redis
@@ -2257,6 +2258,7 @@ jobs:
   - get: rm-sample-service-source
     trigger: true
     passed: [ci-rasrm-acceptance-tests, ci-securemessage-acceptance-tests]
+  - get: ras-deploy
   - aggregate:
     - <<: *latest_create_rm_pg_db
     - <<: *latest_create_rm_redis
@@ -2998,6 +3000,7 @@ disabled-jobs:
   - get: rm-sample-service-source
     trigger: true
     passed: [preprod-trigger]
+  - get: ras-deploy
   - aggregate:
     - <<: *preprod_create_rm_pg_db
     - <<: *preprod_create_rm_redis
@@ -3736,6 +3739,7 @@ disabled-jobs:
   - get: rm-sample-service-source
     trigger: true
     passed: [prod-trigger]
+  - get: ras-deploy
   - aggregate:
     - <<: *prod_create_rm_pg_db
     - <<: *prod_create_rm_redis
