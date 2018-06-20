@@ -1748,7 +1748,9 @@ jobs:
     on_failure:
       put: notify
       params:
-        text: "Acceptance tests setup failed in CI space"
+        text:  |
+          Acceptance tests setup failed in CI space.  Check the build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     privileged: true
     file: ras-deploy/tasks/rasrm-acceptance-tests/run_acceptance_tests.yml
     params:
@@ -1759,7 +1761,9 @@ jobs:
     on_failure:
       put: notify
       params:
-        text: "RASRM acceptance tests failed in CI space"
+        text:  |
+          RASRM acceptance tests failed in CI space.  Check the build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     privileged: true
     file: ras-deploy/tasks/rasrm-acceptance-tests/run_acceptance_tests.yml
     params:
@@ -1840,7 +1844,9 @@ jobs:
     on_failure:
       put: notify
       params:
-        text: "Acceptance tests setup failed in CI space"
+        text:  |
+          Acceptance tests setup failed in CI space.  Check the build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     privileged: true
     file: ras-deploy/tasks/rasrm-acceptance-tests/run_acceptance_tests.yml
     params:
@@ -1851,7 +1857,9 @@ jobs:
     on_failure:
       put: notify
       params:
-        text: "Secure Messaging acceptance tests failed in CI space"
+        text:  |
+          Secure Messaging acceptance tests failed in CI space.  Check the build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     privileged: true
     file: ras-deploy/tasks/rasrm-acceptance-tests/run_acceptance_tests.yml
     params:
