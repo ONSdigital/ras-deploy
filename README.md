@@ -23,7 +23,7 @@ that will have an effect on the build or deployment change of a services. e.g.
 
 ### RAS/RM Continuous Delivery Pipeline
 
-Filename: `concourse/pipeline.yml`
+Filename: `pipelines/deployment.yml`
 
 This pipeline deploys the RAS and RM services and runs the acceptance tests
 against them. It is also intended to provide a single action deployment to
