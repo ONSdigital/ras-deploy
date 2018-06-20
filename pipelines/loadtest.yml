@@ -682,7 +682,7 @@ jobs:
     - <<: *loadtest_create_rm_redis
     - <<: *loadtest_create_rm_rabbitmq
     - task: build
-      file: ras-deploy/tasks/build-java-service.yml
+      file: ras-deploy/tasks/build-java-service-skip-IT.yml
       input_mapping: { repository-name: rm-collection-exercise-service-source }
   - put: cf-resource-((loadtest_cloudfoundry_space))
     params:

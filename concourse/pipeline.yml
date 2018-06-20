@@ -1383,7 +1383,7 @@ jobs:
     - <<: *ci_create_rm_redis
     - <<: *ci_create_rm_rabbitmq
     - task: build
-      file: ras-deploy/tasks/build-java-service.yml
+      file: ras-deploy/tasks/build-java-service-skip-IT.yml
       input_mapping: { repository-name: rm-collection-exercise-service-source }
   - put: cf-resource-ci
     params:
@@ -2190,7 +2190,7 @@ jobs:
     - <<: *latest_create_rm_redis
     - <<: *latest_create_rm_rabbitmq
     - task: build
-      file: ras-deploy/tasks/build-java-service.yml
+      file: ras-deploy/tasks/build-java-service-skip-IT.yml
       input_mapping: { repository-name: rm-collection-exercise-service-source }
   - put: cf-resource-latest
     params:
@@ -2929,7 +2929,7 @@ disabled-jobs:
     - <<: *preprod_create_rm_redis
     - <<: *preprod_create_rm_rabbitmq
     - task: build
-      file: ras-deploy/tasks/build-java-service.yml
+      file: ras-deploy/tasks/build-java-service-skip-IT.yml
       input_mapping: { repository-name: rm-collection-exercise-service-source }
   - put: cf-resource-preprod
     params:
@@ -3668,7 +3668,7 @@ disabled-jobs:
     - <<: *prod_create_rm_redis
     - <<: *prod_create_rm_rabbitmq
     - task: build
-      file: ras-deploy/tasks/build-java-service.yml
+      file: ras-deploy/tasks/build-java-service-skip-IT.yml
       input_mapping: { repository-name: rm-collection-exercise-service-source }
   - put: cf-resource-prod
     params:
