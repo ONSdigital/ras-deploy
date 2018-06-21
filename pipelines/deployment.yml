@@ -1489,6 +1489,7 @@ jobs:
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
+  - get: ras-deploy
   - aggregate:
     - <<: *ci_create_rm_redis
     - <<: *ci_create_rm_rabbitmq
