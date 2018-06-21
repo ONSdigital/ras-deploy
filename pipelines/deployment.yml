@@ -1312,6 +1312,7 @@ jobs:
         <<: *ci_security_user
         <<: *ci_service_endpoints_for_java
         endpoints_enabled: 'false'
+        planExecution_delayMilliSeconds: 10000
 
 - name: rm-actionexporter-service-ci-deploy
   serial_groups: [rm-actionexporter-service-ci-deploy]
@@ -2134,6 +2135,7 @@ jobs:
         <<: *latest_security_user
         <<: *latest_service_endpoints_for_java
         endpoints_enabled: 'false'
+        planExecution_delayMilliSeconds: 10000
 
 - name: rm-actionexporter-service-latest-deploy
   serial_groups: [rm-actionexporter-service-latest-deploy]
