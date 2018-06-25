@@ -208,7 +208,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-deploy.git
-    branch: add-implementation-for-load-test-pipeline
+    branch: master
 
 - name: ras-party-source
   type: git
@@ -311,7 +311,7 @@ resources:
   source:
     uri: https://github.com/ONSdigital/sdc-uaa.git
 
-- name: ras-rm-acceptance-tests
+- name: rasrm-acceptance-tests-source
   type: git
   source:
     uri: https://github.com/ONSdigital/rasrm-acceptance-tests.git
@@ -323,7 +323,7 @@ resources:
     api: ((loadtest_cloudfoundry_api))
     username: ((loadtest_cloudfoundry_email))
     password: ((loadtest_cloudfoundry_password))
-    org: SDC
+    org: ((loadtest_cloudfoundry_org))
     space: ((loadtest_cloudfoundry_space))
     skip_cert_check: true
 
@@ -333,7 +333,7 @@ resources:
     api: ((loadtest_cloudfoundry_api))
     username: ((loadtest_cloudfoundry_email))
     password: ((loadtest_cloudfoundry_password))
-    organization: SDC
+    organization: ((loadtest_cloudfoundry_org))
     space: ((loadtest_cloudfoundry_space))
     skip_cert_check: true
 
@@ -364,6 +364,7 @@ jobs:
         RAS_NOTIFY_EMAIL_VERIFICATION_TEMPLATE: 53c59576-8c3b-4298-99d1-b245ddd28500
         RAS_NOTIFY_REQUEST_PASSWORD_CHANGE_TEMPLATE: c45c59ff-7771-4de4-a66b-ce50b108390a
         RAS_NOTIFY_SERVICE_URL: http://rm-notify-gateway-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk/emails/
+        SEND_EMAIL_TO_GOV_NOTIFY: 'False'
 
 - name: ras-secure-message-((loadtest_cloudfoundry_space))-deploy
   serial_groups: [ras-secure-message-((loadtest_cloudfoundry_space))-deploy]
@@ -546,7 +547,7 @@ jobs:
       CLOUDFOUNDRY_API: ((loadtest_cloudfoundry_api))
       CLOUDFOUNDRY_EMAIL: ((loadtest_cloudfoundry_email))
       CLOUDFOUNDRY_PASSWORD: ((loadtest_cloudfoundry_password))
-      CLOUDFOUNDRY_ORG: SDC
+      CLOUDFOUNDRY_ORG: ((loadtest_cloudfoundry_org))
       CLOUDFOUNDRY_SPACE: ((loadtest_cloudfoundry_space))
       APP_NAME: django-oauth2-test-((loadtest_cloudfoundry_space))
 
@@ -573,6 +574,8 @@ jobs:
         <<: *loadtest_service_endpoints_for_python
         RAS_SECURE_MESSAGING_JWT_SECRET: ((loadtest_jwt_secret))
         REDIS_SERVICE: ras-redis
+        UAA_CLIENT_ID: 'response_operations'
+        UAA_CLIENT_SECRET: ((loadtest_response_operations_client_secret))
 
 - name: rm-action-service-((loadtest_cloudfoundry_space))-deploy
   serial_groups: [rm-action-service-((loadtest_cloudfoundry_space))-deploy]
@@ -819,7 +822,7 @@ jobs:
         JENKINS_CF_USERNAME: ((loadtest_cloudfoundry_email))
         JENKINS_CF_PASSWORD: ((loadtest_cloudfoundry_password))
         API_ENDPOINT: ((loadtest_cloudfoundry_api))
-        ORG: SDC
+        ORG: ((loadtest_cloudfoundry_org))
         SPACE: ((loadtest_cloudfoundry_space))
         UAA_ID: ((loadtest_uaa_id))
         UAA_SECRET: ((loadtest_uaa_secret))
@@ -880,9 +883,90 @@ jobs:
         FIRSTNAME: uaa
         LASTNAME: user
         ADMIN_SECRET: ((loadtest_uaa_admin_secret))
-        UAA_URL: uaa-((loadtest_cloudfoundry_space)).apps.prunes.cf2.onsclofo.uk
+        UAA_URL: uaa-((loadtest_cloudfoundry_space)).apps.devtest.onsclofo.uk
       run:
         dir: sdc-uaa-source
         path: sh
         args:
         - './scripts/jenkins/add_user.sh'
+
+- name: setup-collection-exercises
+  serial_groups: *loadtest_all_services
+  plan:
+  - get: ras-deploy
+  - get: rasrm-acceptance-tests-source
+    trigger: true
+  - get: ras-party-source
+    passed: [ras-party-((loadtest_cloudfoundry_space))-deploy]
+    trigger: true
+  - get: ras-backstage-source
+    passed: [ras-backstage-((loadtest_cloudfoundry_space))-deploy]
+    trigger: true
+  - get: ras-frontstage-source
+    passed: [ras-frontstage-((loadtest_cloudfoundry_space))-deploy]
+    trigger: true
+  - get: django-oauth2-test-source
+    passed: [django-oauth2-test-((loadtest_cloudfoundry_space))-deploy]
+    trigger: true
+  - get: response-operations-ui-source
+    passed: [response-operations-ui-((loadtest_cloudfoundry_space))-deploy]
+    trigger: true
+  - get: ras-secure-message-source
+    passed: [ras-secure-message-((loadtest_cloudfoundry_space))-deploy]
+    trigger: true
+  - get: ras-collection-instrument-source
+    passed: [ras-collection-instrument-((loadtest_cloudfoundry_space))-deploy]
+    trigger: true
+  - get: rm-action-service-source
+    passed: [rm-action-service-((loadtest_cloudfoundry_space))-deploy]
+    trigger: true
+  - get: rm-actionexporter-service-source
+    passed: [rm-actionexporter-service-((loadtest_cloudfoundry_space))-deploy]
+    trigger: true
+  - get: rm-case-service-source
+    passed: [rm-case-service-((loadtest_cloudfoundry_space))-deploy]
+    trigger: true
+  - get: rm-collection-exercise-service-source
+    passed: [rm-collection-exercise-((loadtest_cloudfoundry_space))-deploy]
+    trigger: true
+  - get: iac-service-source
+    passed: [iac-service-((loadtest_cloudfoundry_space))-deploy]
+    trigger: true
+  - get: rm-notify-gateway-source
+    passed: [rm-notify-gateway-((loadtest_cloudfoundry_space))-deploy]
+    trigger: true
+  - get: rm-sample-service-source
+    passed: [rm-sample-service-((loadtest_cloudfoundry_space))-deploy]
+    trigger: true
+  - get: rm-sdx-gateway-source
+    passed: [rm-sdx-gateway-((loadtest_cloudfoundry_space))-deploy]
+    trigger: true
+  - get: rm-survey-service-source
+    passed: [rm-survey-service-((loadtest_cloudfoundry_space))-deploy]
+    trigger: true
+  - get: sdc-uaa-source
+    passed: [sdc-uaa-((loadtest_cloudfoundry_space))-deploy]
+    trigger: true
+  - task: acceptance-test-setup
+    privileged: true
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: sdcplatform/rasrm-acceptance-tests
+          tag: latest
+      inputs:
+      - name: rasrm-acceptance-tests-source
+      params:
+        <<: *loadtest_security_user
+        <<: *loadtest_service_endpoints_for_python
+        MAKE_TARGET: setup
+      run:
+        dir: rasrm-acceptance-tests-source
+        path: sh
+        args:
+        - '-exc'
+        - |
+          pipenv install --dev
+          ./setup_data.sh https://github.com/ONSdigital/rm-tools.git
