@@ -39,7 +39,6 @@ templates:
 
     all_services: &ci_all_services
     - ras-party-ci-deploy
-    - ras-backstage-ci-deploy
     - ras-frontstage-ci-deploy
     - django-oauth2-test-ci-deploy
     - response-operations-ui-ci-deploy
@@ -62,9 +61,6 @@ templates:
       ACTION_SERVICE_PORT: '80'
       ACTION_EXPORTER_HOST: rm-actionexporter-service-ci.apps.devtest.onsclofo.uk
       ACTION_EXPORTER_PORT: '80'
-      BACKSTAGE_API_URL: http://ras-backstage-ci.apps.devtest.onsclofo.uk/backstage-api
-      BACKSTAGE_SERVICE_HOST: ras-backstage-ci.apps.devtest.onsclofo.uk
-      BACKSTAGE_SERVICE_PORT: '80'
       CASE_SERVICE_HOST: rm-case-service-ci.apps.devtest.onsclofo.uk
       CASE_SERVICE_PORT: '80'
       CASE_URL: http://rm-case-service-ci.apps.devtest.onsclofo.uk
@@ -230,7 +226,6 @@ templates:
 
     all_services: &latest_all_services
     - ras-party-latest-deploy
-    - ras-backstage-latest-deploy
     - ras-frontstage-latest-deploy
     - django-oauth2-test-latest-deploy
     - response-operations-ui-latest-deploy
@@ -253,9 +248,6 @@ templates:
       ACTION_SERVICE_PORT: '80'
       ACTION_EXPORTER_HOST: rm-actionexporter-service-concourse-latest.apps.devtest.onsclofo.uk
       ACTION_EXPORTER_PORT: '80'
-      BACKSTAGE_API_URL: http://ras-backstage-concourse-latest.apps.devtest.onsclofo.uk/backstage-api
-      BACKSTAGE_SERVICE_HOST: ras-backstage-concourse-latest.apps.devtest.onsclofo.uk
-      BACKSTAGE_SERVICE_PORT: '80'
       CASE_SERVICE_HOST: rm-case-service-concourse-latest.apps.devtest.onsclofo.uk
       CASE_SERVICE_PORT: '80'
       CASE_URL: http://rm-case-service-concourse-latest.apps.devtest.onsclofo.uk
@@ -421,7 +413,6 @@ templates:
 
     all_services: &preprod_all_services
     - ras-party-preprod-deploy
-    - ras-backstage-preprod-deploy
     - ras-frontstage-preprod-deploy
     - django-oauth2-test-preprod-deploy
     - response-operations-ui-preprod-deploy
@@ -444,9 +435,6 @@ templates:
       ACTION_SERVICE_PORT: '80'
       ACTION_EXPORTER_HOST: rm-actionexporter-service-concourse-preprod.apps.devtest.onsclofo.uk
       ACTION_EXPORTER_PORT: '80'
-      BACKSTAGE_API_URL: http://ras-backstage-concourse-preprod.apps.devtest.onsclofo.uk/backstage-api
-      BACKSTAGE_SERVICE_HOST: ras-backstage-concourse-preprod.apps.devtest.onsclofo.uk
-      BACKSTAGE_SERVICE_PORT: '80'
       CASE_SERVICE_HOST: rm-case-service-concourse-preprod.apps.devtest.onsclofo.uk
       CASE_SERVICE_PORT: '80'
       CASE_URL: http://rm-case-service-concourse-preprod.apps.devtest.onsclofo.uk
@@ -612,7 +600,6 @@ templates:
 
     all_services: &prod_all_services
     - ras-party-prod-deploy
-    - ras-backstage-prod-deploy
     - ras-frontstage-prod-deploy
     - django-oauth2-test-prod-deploy
     - response-operations-ui-prod-deploy
@@ -635,9 +622,6 @@ templates:
       ACTION_SERVICE_PORT: '80'
       ACTION_EXPORTER_HOST: rm-actionexporter-service-concourse-prod.apps.devtest.onsclofo.uk
       ACTION_EXPORTER_PORT: '80'
-      BACKSTAGE_API_URL: http://ras-backstage-concourse-prod.apps.devtest.onsclofo.uk/backstage-api
-      BACKSTAGE_SERVICE_HOST: ras-backstage-concourse-prod.apps.devtest.onsclofo.uk
-      BACKSTAGE_SERVICE_PORT: '80'
       CASE_SERVICE_HOST: rm-case-service-concourse-prod.apps.devtest.onsclofo.uk
       CASE_SERVICE_PORT: '80'
       CASE_URL: http://rm-case-service-concourse-prod.apps.devtest.onsclofo.uk
@@ -795,12 +779,6 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-secure-message.git
-    branch: master
-
-- name: ras-backstage-source
-  type: git
-  source:
-    uri: https://github.com/ONSdigital/ras-backstage.git
     branch: master
 
 - name: ras-collection-instrument-source
@@ -1083,28 +1061,6 @@ jobs:
         UAA_URL: 'http://uaa-ci.apps.devtest.onsclofo.uk'
         CLIENT_ID: 'secure_message'
         CLIENT_SECRET: ((ci_secure_message_client_secret))
-        USE_UAA: '1'
-
-- name: ras-backstage-ci-deploy
-  serial_groups: [ras-backstage-ci-deploy]
-  plan:
-  - get: ras-backstage-source
-    trigger: true
-  - get: ci-teardown-timer
-    trigger: true
-    passed: [ci-teardown]
-  - put: cf-resource-ci
-    params:
-      current_app_name: ras-backstage-ci
-      manifest: ras-backstage-source/manifest.yml
-      path: ras-backstage-source
-      environment_variables:
-        <<: *ci_security_user
-        <<: *ci_service_endpoints_for_python
-        RAS_SECURE_MESSAGING_JWT_SECRET: ((ci_jwt_secret))
-        UAA_CLIENT_ID: 'response_operations'
-        UAA_CLIENT_SECRET: ((ci_response_operations_client_secret))
-        UAA_SERVICE_URL: 'http://uaa-ci.apps.devtest.onsclofo.uk'
         USE_UAA: '1'
 
 - name: ras-collection-instrument-ci-deploy
@@ -1674,9 +1630,6 @@ jobs:
   - get: ras-party-source
     passed: [ras-party-ci-deploy]
     trigger: true
-  - get: ras-backstage-source
-    passed: [ras-backstage-ci-deploy]
-    trigger: true
   - get: ras-frontstage-source
     passed: [ras-frontstage-ci-deploy]
     trigger: true
@@ -1769,9 +1722,6 @@ jobs:
     trigger: true
   - get: ras-party-source
     passed: [ras-party-ci-deploy]
-    trigger: true
-  - get: ras-backstage-source
-    passed: [ras-backstage-ci-deploy]
     trigger: true
   - get: ras-frontstage-source
     passed: [ras-frontstage-ci-deploy]
@@ -1918,26 +1868,6 @@ jobs:
         UAA_URL: 'http://uaa-concourse-latest.apps.devtest.onsclofo.uk'
         CLIENT_ID: 'secure_message'
         CLIENT_SECRET: ((latest_secure_message_client_secret))
-        USE_UAA: '1'
-
-- name: ras-backstage-latest-deploy
-  serial_groups: [ras-backstage-latest-deploy]
-  plan:
-  - get: ras-backstage-source
-    trigger: true
-    passed: [ci-rasrm-acceptance-tests, ci-securemessage-acceptance-tests]
-  - put: cf-resource-latest
-    params:
-      current_app_name: ras-backstage-concourse-latest
-      manifest: ras-backstage-source/manifest.yml
-      path: ras-backstage-source
-      environment_variables:
-        <<: *latest_security_user
-        <<: *latest_service_endpoints_for_python
-        RAS_SECURE_MESSAGING_JWT_SECRET: ((latest_jwt_secret))
-        UAA_CLIENT_ID: 'response_operations'
-        UAA_CLIENT_SECRET: ((latest_response_operations_client_secret))
-        UAA_SERVICE_URL: 'http://uaa-concourse-latest.apps.devtest.onsclofo.uk'
         USE_UAA: '1'
 
 - name: ras-collection-instrument-latest-deploy
@@ -2477,9 +2407,6 @@ jobs:
   - get: ras-party-source
     passed: [ras-party-latest-deploy]
     trigger: true
-  - get: ras-backstage-source
-    passed: [ras-backstage-latest-deploy]
-    trigger: true
   - get: ras-frontstage-source
     passed: [ras-frontstage-latest-deploy]
     trigger: true
@@ -2549,8 +2476,6 @@ disabled-jobs:
   - get: preprod-deploy-trigger
     trigger: true
   - get: ras-party-source
-    passed: [latest-acceptance-tests]
-  - get: ras-backstage-source
     passed: [latest-acceptance-tests]
   - get: ras-frontstage-source
     passed: [latest-acceptance-tests]
@@ -2649,27 +2574,6 @@ disabled-jobs:
         UAA_URL: 'http://uaa-concourse-preprod.apps.devtest.onsclofo.uk'
         CLIENT_ID: 'secure_message'
         CLIENT_SECRET: ((preprod_secure_message_client_secret))
-        USE_UAA: '1'
-
-- name: ras-backstage-preprod-deploy
-  disable_manual_trigger: true
-  serial_groups: [ras-backstage-preprod-deploy]
-  plan:
-  - get: ras-backstage-source
-    trigger: true
-    passed: [preprod-trigger]
-  - put: cf-resource-preprod
-    params:
-      current_app_name: ras-backstage-concourse-preprod
-      manifest: ras-backstage-source/manifest.yml
-      path: ras-backstage-source
-      environment_variables:
-        <<: *preprod_security_user
-        <<: *preprod_service_endpoints_for_python
-        RAS_SECURE_MESSAGING_JWT_SECRET: ((preprod_jwt_secret))
-        UAA_CLIENT_ID: 'response_operations'
-        UAA_CLIENT_SECRET: ((preprod_response_operations_client_secret))
-        UAA_SERVICE_URL: 'http://uaa-concourse-preprod.apps.devtest.onsclofo.uk'
         USE_UAA: '1'
 
 - name: ras-collection-instrument-preprod-deploy
@@ -3221,9 +3125,6 @@ disabled-jobs:
   - get: ras-party-source
     passed: [ras-party-preprod-deploy]
     trigger: true
-  - get: ras-backstage-source
-    passed: [ras-backstage-preprod-deploy]
-    trigger: true
   - get: ras-frontstage-source
     passed: [ras-frontstage-preprod-deploy]
     trigger: true
@@ -3288,8 +3189,6 @@ disabled-jobs:
   - get: prod-deploy-trigger
     trigger: true
   - get: ras-party-source
-    passed: [preprod-smoke-tests]
-  - get: ras-backstage-source
     passed: [preprod-smoke-tests]
   - get: ras-frontstage-source
     passed: [preprod-smoke-tests]
@@ -3388,27 +3287,6 @@ disabled-jobs:
         UAA_URL: 'http://uaa-concourse-prod.apps.devtest.onsclofo.uk'
         CLIENT_ID: 'secure_message'
         CLIENT_SECRET: ((prod_secure_message_client_secret))
-        USE_UAA: '1'
-
-- name: ras-backstage-prod-deploy
-  disable_manual_trigger: true
-  serial_groups: [ras-backstage-prod-deploy]
-  plan:
-  - get: ras-backstage-source
-    trigger: true
-    passed: [prod-trigger]
-  - put: cf-resource-prod
-    params:
-      current_app_name: ras-backstage-concourse-prod
-      manifest: ras-backstage-source/manifest.yml
-      path: ras-backstage-source
-      environment_variables:
-        <<: *prod_security_user
-        <<: *prod_service_endpoints_for_python
-        RAS_SECURE_MESSAGING_JWT_SECRET: ((prod_jwt_secret))
-        UAA_CLIENT_ID: 'response_operations'
-        UAA_CLIENT_SECRET: ((prod_response_operations_client_secret))
-        UAA_SERVICE_URL: 'http://uaa-concourse-prod.apps.devtest.onsclofo.uk'
         USE_UAA: '1'
 
 - name: ras-collection-instrument-prod-deploy
@@ -3959,9 +3837,6 @@ disabled-jobs:
     trigger: true
   - get: ras-party-source
     passed: [ras-party-prod-deploy]
-    trigger: true
-  - get: ras-backstage-source
-    passed: [ras-backstage-prod-deploy]
     trigger: true
   - get: ras-frontstage-source
     passed: [ras-frontstage-prod-deploy]
