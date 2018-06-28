@@ -208,7 +208,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-deploy.git
-    branch: master
+    branch: loadtest-pipeline
 
 - name: ras-party-source
   type: git
@@ -983,6 +983,28 @@ jobs:
         - |
           pipenv install --dev
           ./setup_data.sh https://github.com/ONSdigital/rm-tools.git
+    - task: prepare-loadtests
+      privileged: true
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: kennethreitz/pipenv
+            tag: latest
+        inputs:
+        - name: ras-deploy
+        params:
+          <<: *loadtest_security_user
+          <<: *loadtest_service_endpoints_for_python
+        run:
+          dir: ras-deploy/scripts/loadtest-scripts
+          path: sh
+          args:
+          - '-exc'
+          - |
+            pipenv install
+            pipenv run python prepare_loadtests.py
 
 groups:
 - name: pipeline
