@@ -19,5 +19,5 @@ run:
   args:
   - -exc
   - |
-    mvn --settings repository-name/.maven.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -f repository-name/pom.xml
+    mvn --settings repository-name/.maven.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -Dhttp.wait.skip -f repository-name/pom.xml
     cp -r repository-name/target/ .
