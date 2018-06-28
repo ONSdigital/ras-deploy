@@ -338,6 +338,19 @@ resources:
     skip_cert_check: true
 
 jobs:
+- name: ((loadtest_cloudfoundry_space))-teardown
+  serial_groups: *loadtest_all_services
+  plan:
+  - get: ras-deploy
+  - task: clear-space
+    file: ras-deploy/tasks/clear_space.yml
+    params:
+      CLOUDFOUNDRY_API: ((loadtest_cloudfoundry_api))
+      CLOUDFOUNDRY_EMAIL: ((loadtest_cloudfoundry_email))
+      CLOUDFOUNDRY_PASSWORD: ((loadtest_cloudfoundry_password))
+      CLOUDFOUNDRY_ORG: ((loadtest_cloudfoundry_org))
+      CLOUDFOUNDRY_SPACE: ((loadtest_cloudfoundry_space))
+
 - name: ras-party-((loadtest_cloudfoundry_space))-deploy
   serial_groups: [ras-party-((loadtest_cloudfoundry_space))-deploy]
   plan:
@@ -970,3 +983,29 @@ jobs:
         - |
           pipenv install --dev
           ./setup_data.sh https://github.com/ONSdigital/rm-tools.git
+
+groups:
+- name: pipeline
+  jobs:
+  - ras-party-((loadtest_cloudfoundry_space))-deploy
+  - ras-secure-message-((loadtest_cloudfoundry_space))-deploy
+  - ras-backstage-((loadtest_cloudfoundry_space))-deploy
+  - ras-collection-instrument-((loadtest_cloudfoundry_space))-deploy
+  - ras-frontstage-((loadtest_cloudfoundry_space))-deploy
+  - ras-frontstage-api-((loadtest_cloudfoundry_space))-deploy
+  - django-oauth2-test-((loadtest_cloudfoundry_space))-deploy
+  - response-operations-ui-((loadtest_cloudfoundry_space))-deploy
+  - rm-action-service-((loadtest_cloudfoundry_space))-deploy
+  - rm-actionexporter-service-((loadtest_cloudfoundry_space))-deploy
+  - rm-case-service-((loadtest_cloudfoundry_space))-deploy
+  - rm-collection-exercise-((loadtest_cloudfoundry_space))-deploy
+  - iac-service-((loadtest_cloudfoundry_space))-deploy
+  - rm-notify-gateway-((loadtest_cloudfoundry_space))-deploy
+  - rm-sample-service-((loadtest_cloudfoundry_space))-deploy
+  - rm-sdx-gateway-((loadtest_cloudfoundry_space))-deploy
+  - rm-survey-service-((loadtest_cloudfoundry_space))-deploy
+  - sdc-uaa-((loadtest_cloudfoundry_space))-deploy
+  - setup-collection-exercises
+- name: teardown
+  jobs:
+  - ((loadtest_cloudfoundry_space))-teardown
