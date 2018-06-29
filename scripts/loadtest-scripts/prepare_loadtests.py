@@ -137,8 +137,6 @@ def error_exit(message):
     exit(1)
 
 def main():
-    # if collex.already_executed ?
-
     instrument_id = check_for_collection_instruments()
     if instrument_id is None:
         upload_collection_instrument()
@@ -149,7 +147,6 @@ def main():
 
     script_dir = os.path.dirname(os.path.realpath(__file__))
     file_path = f'{script_dir}/sample.csv'
-    # if there_is_already_an_uploaded_sample???
     sample_id = upload_sample_file(file_path)
     print(f'Sample ID = {sample_id}')
 
@@ -166,29 +163,3 @@ def main():
     exit(0)
 
 main()
-
-# Delete me!
-# def _upload_sample(short_name, period):
-#     error = _validate_sample()
-#
-#     if not error:
-#         survey = survey_controllers.get_survey_by_shortname(short_name)
-#         exercises = collection_exercise_controllers.get_collection_exercises_by_survey(survey['id'])
-#
-#         # Find the collection exercise for the given period
-#         exercise = get_collection_exercise_by_period(exercises, period)
-#
-#         if not exercise:
-#             return make_response(jsonify({'message': 'Collection exercise not found'}), 404)
-#         sample_summary = sample_controllers.upload_sample(short_name, period, request.files['sampleFile'])
-#
-#         logger.info('Linking sample summary with collection exercise',
-#                     collection_exercise_id=exercise['id'],
-#                     sample_id=sample_summary['id'])
-#
-#         collection_exercise_controllers.link_sample_summary_to_collection_exercise(
-#             collection_exercise_id=exercise['id'],
-#             sample_summary_id=sample_summary['id'])
-#
-#     return redirect(url_for('collection_exercise_bp.view_collection_exercise', short_name=short_name, period=period,
-#                             error=error, show_msg='true'))
