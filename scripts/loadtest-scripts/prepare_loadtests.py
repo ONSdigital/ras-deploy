@@ -14,7 +14,7 @@ collection_instrument_upload_endpoint = \
               '/collection-instrument-api/1.0.2/upload')
 collection_instrument_link_endpoint = \
     os.getenv('COLLECTION_INSTRUMENT_LINK_ENDPOINT',
-              '/collection-instrument-api/1.0.2/link')
+              '/collection-instrument-api/1.0.2/link-exercise')
 sample_url = \
     os.getenv('SAMPLE_URL',
               'http://localhost:8125')
