@@ -29,35 +29,37 @@ password = os.getenv('COLLECTION_INSTRUMENT_PASSWORD', 'secret')
 
 def upload_collection_instrument():
     upload_params = {'survey_id': survey_id, 'classifiers': classifiers}
+    url = collection_instrument_url + collection_instrument_upload_endpoint
 
-    response = requests.post(collection_instrument_url + collection_instrument_upload_endpoint,
-                             params=upload_params,
-                             auth=(username, password))
+    response = requests.post(url=url, params=upload_params, auth=(username, password))
+
     if response.status_code != requests.codes.ok:
         error_exit(f'Failed to set collection instrument: {response.text}')
-    else:
-        print('Collection instrument set!')
+
+    print('Collection instrument set!')
 
 def link_collection_instrument_to_collection_exercise(instrument_id, exercise_id):
-    response = requests.post(f'{collection_instrument_url}{collection_instrument_link_endpoint}/'
-                             f'{instrument_id}/{exercise_id}',
-                             auth=(username,password))
+    url = f'{collection_instrument_url}{collection_instrument_link_endpoint}/{instrument_id}/{exercise_id}'
+
+    response = requests.post(url=url, auth=(username,password))
+
     if response.status_code != requests.codes.ok:
         error_exit(f'Failed to link collection instrument to exercise: {response.text}')
-    else:
-        print('Collection instrument linked to exercise!')
+
+    print('Collection instrument linked to exercise!')
 
 
 def check_for_collection_instruments():
     search_params = {'searchString': classifiers}
-    response = requests.get(collection_instrument_url + collection_instrument_search_endpoint,
-                            params=search_params,
-                            auth=(username, password))
+    url = collection_instrument_url + collection_instrument_search_endpoint
+
+    response = requests.get(url=url, params=search_params, auth=(username, password))
+
     if response.status_code != requests.codes.ok:
         error_exit(f'Failed to check for collection instrument: {response.text}')
-    else:
-        results = response.json()
-        return results[0]['id'] if len(results) > 0 else None
+
+    results = response.json()
+    return results[0]['id'] if len(results) > 0 else None
 
 # Collection exercise
 
@@ -71,6 +73,7 @@ def get_collection_exercise_by_period(exercises, period):
 
 def get_collection_exercise_id(survey_id, period):
     url = f'{collection_exercise_url}/collectionexercises/survey/{survey_id}'
+
     response = requests.get(url=url, auth=(username, password))
 
     if response.status_code != requests.codes.ok:
@@ -87,14 +90,21 @@ def get_collection_exercise_id(survey_id, period):
 
 
 def execute_collection_exercise(exercise_id):
-    response = requests.post(f'{collection_exercise_url}/collectionexerciseexecution/{exercise_id}',
-                             auth=(username, password))
+    url = f'{collection_exercise_url}/collectionexerciseexecution/{exercise_id}'
+
+    response = requests.post(url=url, auth=(username, password))
+
     if response.status_code == requests.codes.not_found:
         error_exit(f'Failed to retrieve collection exercise: {exercise_id}')
-    elif response.status_code != requests.codes.ok:
+
+    if response.status_code != requests.codes.bad_request:
+        print(f'Collection exercise {exercise_id} has already been executed')
+        return
+
+    if response.status_code != requests.codes.ok:
         error_exit(f'Error executing collection exercise {exercise_id}: {response.text}')
-    else:
-        print('Collection exercise executed!')
+
+    print('Collection exercise executed!')
 
 # Sample
 
@@ -102,19 +112,19 @@ def link_sample_to_collection_exercise(sample_id, exercise_id):
     url = f'{collection_exercise_url}/collectionexercises/link/{exercise_id}'
     payload = {"sampleSummaryIds": [str(sample_id)]}
 
-    response = requests.put(url, auth=(username, password), json=payload)
+    response = requests.put(url=url, auth=(username, password), json=payload)
+
     if response.status_code != requests.codes.ok:
         error_exit(f'Failed to link sample to collection exercise: {response.text}')
-    else:
-        print('Sample linked to collection exercise!')
+
+    print('Sample linked to collection exercise!')
 
 
 def upload_sample_file(file_path):
     survey_type = 'B'
     url = f'{sample_url}/samples/{survey_type}/fileupload'
-    response = requests.post(url=url,
-                             auth=(username, password),
-                             files={'file': open(file_path, 'rb')})
+
+    response = requests.post(url=url, auth=(username, password), files={'file': open(file_path, 'rb')})
 
     if response.status_code != requests.codes.created:
         error_exit(f'Failed to upload sample file: {response.text}')
@@ -125,7 +135,6 @@ def upload_sample_file(file_path):
 def error_exit(message):
     print(message)
     exit(1)
-
 
 def main():
     # if collex.already_executed ?
