@@ -42,7 +42,7 @@ def upload_collection_instrument():
 def link_collection_instrument_to_collection_exercise(instrument_id, exercise_id):
     response = requests.post(f'{collection_instrument_url}{collection_instrument_link_endpoint}/'
                              f'{instrument_id}/{exercise_id}',
-                             auth(username,password))
+                             auth=(username,password))
     if response.status_code != requests.codes.ok:
         print(f'Failed to link collection instrument to exercise: {response.text}')
         exit(1)
