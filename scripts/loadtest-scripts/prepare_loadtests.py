@@ -34,8 +34,7 @@ def upload_collection_instrument():
                              params=upload_params,
                              auth=(username, password))
     if response.status_code != requests.codes.ok:
-        print(f'Failed to set collection instrument: {response.text}')
-        exit(1)
+        error_exit(f'Failed to set collection instrument: {response.text}')
     else:
         print('Collection instrument set!')
 
@@ -44,8 +43,7 @@ def link_collection_instrument_to_collection_exercise(instrument_id, exercise_id
                              f'{instrument_id}/{exercise_id}',
                              auth=(username,password))
     if response.status_code != requests.codes.ok:
-        print(f'Failed to link collection instrument to exercise: {response.text}')
-        exit(1)
+        error_exit(f'Failed to link collection instrument to exercise: {response.text}')
     else:
         print('Collection instrument linked to exercise!')
 
@@ -56,8 +54,7 @@ def check_for_collection_instruments():
                             params=search_params,
                             auth=(username, password))
     if response.status_code != requests.codes.ok:
-        print(f'Failed to check for collection instrument: {response.text}')
-        exit(1)
+        error_exit(f'Failed to check for collection instrument: {response.text}')
     else:
         results = response.json()
         return results[0]['id'] if len(results) > 0 else None
@@ -77,16 +74,14 @@ def get_collection_exercise_id(survey_id, period):
     response = requests.get(url=url, auth=(username, password))
 
     if response.status_code != requests.codes.ok:
-        print(f'Failed fetch collection exercises for survey {survey_id}: {response.text}')
-        exit(1)
+        error_exit(f'Failed fetch collection exercises for survey {survey_id}: {response.text}')
 
     exercises = response.json()
 
     exercise = get_collection_exercise_by_period(exercises, period)
 
     if exercise is None:
-        print(f'No collection exercise found for period {period} of {survey_id}')
-        exit(1)
+        error_exit(f'No collection exercise found for period {period} of {survey_id}')
 
     return exercise['id']
 
@@ -95,11 +90,9 @@ def execute_collection_exercise(exercise_id):
     response = requests.post(f'{collection_exercise_url}/collectionexercise/collectionexerciseexecution/{exercise_id}',
                              auth=(username, password))
     if response.status_code == requests.codes.not_found:
-        print(f'Failed to retrieve collection exercise: {exercise_id}')
-        exit(1)
+        error_exit(f'Failed to retrieve collection exercise: {exercise_id}')
     elif response.status_code != requests.codes.ok:
-        print(f'Error executing collection exercise {exercise_id}: {response.text}')
-        exit(1)
+        error_exit(f'Error executing collection exercise {exercise_id}: {response.text}')
     else:
         print('Collection exercise executed!')
 
@@ -111,8 +104,7 @@ def link_sample_to_collection_exercise(sample_id, exercise_id):
 
     response = requests.put(url, auth=(username, password), json=payload)
     if response.status_code != requests.codes.ok:
-        print(f'Failed to link sample to collection exercise: {response.text}')
-        exit(1)
+        error_exit(f'Failed to link sample to collection exercise: {response.text}')
     else:
         print('Sample linked to collection exercise!')
 
@@ -125,10 +117,14 @@ def upload_sample_file(file_path):
                              files={'file': open(file_path, 'rb')})
 
     if response.status_code != requests.codes.created:
-        print(f'Failed to upload sample file: {response.text}')
-        exit(1)
+        error_exit(f'Failed to upload sample file: {response.text}')
 
     return response.json()['id']
+
+
+def error_exit(message):
+    print(message)
+    exit(1)
 
 
 def main():
