@@ -1481,6 +1481,8 @@ jobs:
         sftp_password: ((sample_sftp_password))
         sftp_port: '22'
         sftp_username: ((sample_sftp_username))
+        LOGGING_LEVEL_uk.gov.ons.ctp.response.sample.scheduled.distribution: WARN
+        LOGGING_LEVEL_uk.gov.ons.ctp.common.distributed: INFO
 
 - name: rm-sdx-gateway-ci-deploy
   serial_groups: [rm-sdx-gateway-ci-deploy]
