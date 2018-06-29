@@ -59,7 +59,7 @@ def check_for_collection_instruments():
         print(f'Failed to check for collection instrument: {response.text}')
         exit(1)
     else:
-        return response[0]['id']
+        return response.json()[0]['id']
 
 # Collection exercise
 
