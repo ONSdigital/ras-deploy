@@ -92,7 +92,8 @@ def get_collection_exercise_id(survey_id, period):
 
 
 def execute_collection_exercise(exercise_id):
-    response = requests.post(f'{collection_exercise_url}/collectionexercise/collectionexerciseexecution/{exercise_id}')
+    response = requests.post(f'{collection_exercise_url}/collectionexercise/collectionexerciseexecution/{exercise_id}',
+                             auth=(username, password))
     if response.status_code == requests.codes.not_found:
         print(f'Failed to retrieve collection exercise: {exercise_id}')
         exit(1)
