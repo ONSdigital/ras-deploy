@@ -21,14 +21,14 @@ sample_url = \
 collection_exercise_url = \
     os.getenv('COLLECTION_EXERCISE_URL', 'http://localhost:8145')
 survey_id = os.getenv('SURVEY_ID', '75b19ea0-69a4-4c58-8d7f-4458c8f43f5c')
-classifiers = os.getenv('SURVEY_CLASSIFIERS', '{"form_type":"0102","eq_id":"1"}')
+survey_classifiers = os.getenv('SURVEY_CLASSIFIERS', '{"form_type":"0102","eq_id":"1"}')
 username = os.getenv('COLLECTION_INSTRUMENT_USERNAME', 'admin')
 password = os.getenv('COLLECTION_INSTRUMENT_PASSWORD', 'secret')
 
 # Collection instrument
 
 def upload_collection_instrument():
-    upload_params = {'survey_id': survey_id, 'classifiers': classifiers}
+    upload_params = {'survey_id': survey_id, 'classifiers': survey_classifiers}
     url = collection_instrument_url + collection_instrument_upload_endpoint
 
     response = requests.post(url=url, params=upload_params, auth=(username, password))
@@ -49,7 +49,7 @@ def link_collection_instrument_to_collection_exercise(instrument_id, exercise_id
     print('Collection instrument linked to exercise!')
 
 
-def check_for_collection_instruments():
+def get_collection_id_from_classifier(classifiers):
     search_params = {'searchString': classifiers}
     url = collection_instrument_url + collection_instrument_search_endpoint
 
@@ -79,9 +79,7 @@ def get_collection_exercise_id(survey_id, period):
     if response.status_code != requests.codes.ok:
         error_exit(f'Failed fetch collection exercises for survey {survey_id}: {response.text}')
 
-    exercises = response.json()
-
-    exercise = get_collection_exercise_by_period(exercises, period)
+    exercise = get_collection_exercise_by_period(response.json(), period)
 
     if exercise is None:
         error_exit(f'No collection exercise found for period {period} of {survey_id}')
@@ -106,8 +104,6 @@ def execute_collection_exercise(exercise_id):
 
     print('Collection exercise executed!')
 
-# Sample
-
 def link_sample_to_collection_exercise(sample_id, exercise_id):
     url = f'{collection_exercise_url}/collectionexercises/link/{exercise_id}'
     payload = {"sampleSummaryIds": [str(sample_id)]}
@@ -119,8 +115,10 @@ def link_sample_to_collection_exercise(sample_id, exercise_id):
 
     print('Sample linked to collection exercise!')
 
+# Sample
 
-def upload_sample_file(file_path):
+def upload_sample_file(filename):
+    file_path = f'{script_directory()}/{filename}'
     survey_type = 'B'
     url = f'{sample_url}/samples/{survey_type}/fileupload'
 
@@ -132,26 +130,30 @@ def upload_sample_file(file_path):
     return response.json()['id']
 
 
+def script_directory():
+    return os.path.dirname(os.path.realpath(__file__))
+
+
 def error_exit(message):
     print(message)
     exit(1)
 
 def main():
-    instrument_id = check_for_collection_instruments()
+    instrument_id = get_collection_id_from_classifier(survey_classifiers)
+
     if instrument_id is None:
         upload_collection_instrument()
-        instrument_id = check_for_collection_instruments()
+        instrument_id = get_collection_id_from_classifier(survey_classifiers)
         print(f'Created collection instrument, ID = {instrument_id}')
     else:
         print(f'Collection instrument exists, ID = {instrument_id}')
 
-    script_dir = os.path.dirname(os.path.realpath(__file__))
-    file_path = f'{script_dir}/sample.csv'
-    sample_id = upload_sample_file(file_path)
+    sample_id = upload_sample_file('sample.csv')
     print(f'Sample ID = {sample_id}')
 
     period = get_previous_period()
     print(f'Fetching collection exercise for {period}')
+    
     exercise_id = get_collection_exercise_id(survey_id, period)
     print(f'Exercise ID = {exercise_id}')
 
