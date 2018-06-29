@@ -12,6 +12,9 @@ collection_instrument_search_endpoint = \
 collection_instrument_upload_endpoint = \
     os.getenv('COLLECTION_INSTRUMENT_UPLOAD_ENDPOINT',
               '/collection-instrument-api/1.0.2/upload')
+collection_instrument_link_endpoint = \
+    os.getenv('COLLECTION_INSTRUMENT_LINK_ENDPOINT',
+              '/collection-instrument-api/1.0.2/link')
 sample_url = \
     os.getenv('SAMPLE_URL',
               'http://localhost:8125')
@@ -22,11 +25,33 @@ classifiers = os.getenv('SURVEY_CLASSIFIERS', '{"form_type":"0102","eq_id":"1"}'
 username = os.getenv('COLLECTION_INSTRUMENT_USERNAME', 'admin')
 password = os.getenv('COLLECTION_INSTRUMENT_PASSWORD', 'secret')
 
-search_params = {'searchString': classifiers}
-upload_params = {'survey_id': survey_id, 'classifiers': classifiers}
+# Collection instrument
+
+def upload_collection_instrument():
+    upload_params = {'survey_id': survey_id, 'classifiers': classifiers}
+
+    response = requests.post(collection_instrument_url + collection_instrument_upload_endpoint,
+                             params=upload_params,
+                             auth=(username, password))
+    if response.status_code != requests.codes.ok:
+        print(f'Failed to set collection instrument: {response.text}')
+        exit(1)
+    else:
+        print('Collection instrument set!')
+
+def link_collection_instrument_to_collection_exercise(instrument_id, exercise_id):
+    response = requests.post(f'{collection_instrument_url}{collection_instrument_link_endpoint}/'
+                             f'{instrument_id}/{exercise_id}',
+                             auth(username,password))
+    if response.status_code != requests.codes.ok:
+        print(f'Failed to link collection instrument to exercise: {response.text}')
+        exit(1)
+    else:
+        print('Collection instrument linked to exercise!')
 
 
 def check_for_collection_instruments():
+    search_params = {'searchString': classifiers}
     response = requests.get(collection_instrument_url + collection_instrument_search_endpoint,
                             params=search_params,
                             auth=(username, password))
@@ -34,18 +59,17 @@ def check_for_collection_instruments():
         print(f'Failed to check for collection instrument: {response.text}')
         exit(1)
     else:
-        return len(response.json()) > 0
+        return response[0]['id']
 
+# Collection exercise
 
 def get_previous_period():
     return (datetime.now() - relativedelta(months=1)).strftime('%Y%m')
-
 
 def get_collection_exercise_by_period(exercises, period):
     for exercise in exercises:
         if exercise['exerciseRef'] == period:
             return exercise
-
 
 def get_collection_exercise_id(survey_id, period):
     url = f'{collection_exercise_url}/collectionexercises/survey/{survey_id}'
@@ -65,6 +89,8 @@ def get_collection_exercise_id(survey_id, period):
 
     return exercise['id']
 
+# Sample
+
 def link_sample_to_collection_exercise(sample_id, exercise_id):
     url = f'{collection_exercise_url}/collectionexercises/link/{exercise_id}'
     payload = {"sampleSummaryIds": [str(sample_id)]}
@@ -76,15 +102,6 @@ def link_sample_to_collection_exercise(sample_id, exercise_id):
     else:
         print('Sample linked to collection exercise!')
 
-def upload_collection_instrument():
-    response = requests.post(collection_instrument_url + collection_instrument_upload_endpoint,
-                             params=upload_params,
-                             auth=(username, password))
-    if response.status_code != requests.codes.ok:
-        print(f'Failed to set collection instrument: {response.text}')
-        exit(1)
-    else:
-        print(f'Collection instrument set!')
 
 def upload_sample_file(file_path):
     survey_type = 'B'
@@ -99,11 +116,15 @@ def upload_sample_file(file_path):
 
     return response.json()['id']
 
+
 def main():
-    if not check_for_collection_instruments():
+    instrument_id = check_for_collection_instruments()
+    if instrument_id is None:
         upload_collection_instrument()
+        instrument_id = check_for_collection_instruments()
+        print(f'Created collection instrument, ID = {instrument_id}')
     else:
-        print('Collection instrument exists; skipping')
+        print(f'Collection instrument exists, ID = {instrument_id}')
 
     script_dir = os.path.dirname(os.path.realpath(__file__))
     file_path = f'{script_dir}/sample.csv'
@@ -117,6 +138,8 @@ def main():
     print(f'Exercise ID = {exercise_id}')
 
     link_sample_to_collection_exercise(sample_id, exercise_id)
+    
+    link_collection_instrument_to_collection_exercise(instrument_id, exercise_id)
 
 main()
 
