@@ -90,6 +90,18 @@ def get_collection_exercise_id(survey_id, period):
 
     return exercise['id']
 
+
+def execute_collection_exercise(exercise_id):
+    response = requests.post(f'{collection_exercise_url}/collectionexercise/collectionexerciseexecution/{exercise_id}')
+    if response.status_code == requests.codes.not_found:
+        print(f'Failed to retrieve collection exercise: {exercise_id}')
+        exit(1)
+    elif response.status_code != requests.codes.ok:
+        print(f'Error executing collection exercise {exercise_id}: {response.text}')
+        exit(1)
+    else:
+        print('Collection exercise executed!')
+
 # Sample
 
 def link_sample_to_collection_exercise(sample_id, exercise_id):
@@ -119,6 +131,8 @@ def upload_sample_file(file_path):
 
 
 def main():
+    # if collex.already_executed ?
+
     instrument_id = check_for_collection_instruments()
     if instrument_id is None:
         upload_collection_instrument()
@@ -129,10 +143,10 @@ def main():
 
     script_dir = os.path.dirname(os.path.realpath(__file__))
     file_path = f'{script_dir}/sample.csv'
-
     # if there_is_already_an_uploaded_sample???
     sample_id = upload_sample_file(file_path)
     print(f'Sample ID = {sample_id}')
+
     period = get_previous_period()
     print(f'Fetching collection exercise for {period}')
     exercise_id = get_collection_exercise_id(survey_id, period)
@@ -141,6 +155,9 @@ def main():
     link_sample_to_collection_exercise(sample_id, exercise_id)
     
     link_collection_instrument_to_collection_exercise(instrument_id, exercise_id)
+
+    execute_collection_exercise(exercise_id)
+    exit(0)
 
 main()
 
