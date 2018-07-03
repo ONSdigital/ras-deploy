@@ -183,7 +183,7 @@ def main():
     
     link_collection_instrument_to_collection_exercise(instrument_id, exercise_id)
 
-    with_timeout(lambda: get_collection_exercise_state(exercise_id) != 'READY_FOR_LIVE')
+    with_timeout(lambda: get_collection_exercise_state(exercise_id) != 'READY_FOR_REVIEW')
 
     execute_collection_exercise(exercise_id)
     exit(0)
