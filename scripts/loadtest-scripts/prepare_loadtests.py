@@ -26,6 +26,7 @@ survey_classifiers = os.getenv('SURVEY_CLASSIFIERS', '{"form_type":"0102","eq_id
 username = os.getenv('COLLECTION_INSTRUMENT_USERNAME', 'admin')
 password = os.getenv('COLLECTION_INSTRUMENT_PASSWORD', 'secret')
 polling_wait_time = int(os.getenv('POLLING_WAIT_TIME', '2'))
+polling_retries = int(os.getenv('POLLING_RETRIES', '30'))
 
 # Collection instrument
 
@@ -112,7 +113,7 @@ def get_collection_exercise_state(exercise_id):
     if response.status_code != requests.codes.ok:
         error_exit(f'Failed to check status of collection exercise: {response.text}')
 
-    print(f'Current collection exercise state: {response.json()["state"])}')
+    print(f'Current collection exercise state: {response.json()["state"]}')
     return response.json()['state']
 
 
@@ -150,6 +151,14 @@ def error_exit(message):
     print(message)
     exit(1)
 
+def with_timeout(action):
+    count = 0
+    while action():
+        count += 1
+        if count >= polling_retries:
+            error_exit('Timed out')
+
+        time.sleep(polling_wait_time)
 
 def main():
     instrument_id = get_collection_id_from_classifier(survey_classifiers)
@@ -174,8 +183,7 @@ def main():
     
     link_collection_instrument_to_collection_exercise(instrument_id, exercise_id)
 
-    while(get_collection_exercise_state(exercise_id) != 'READY_FOR_LIVE'):
-        time.sleep(polling_wait_time)
+    with_timeout(lambda: get_collection_exercise_state(exercise_id) != 'READY_FOR_LIVE')
 
     execute_collection_exercise(exercise_id)
     exit(0)
