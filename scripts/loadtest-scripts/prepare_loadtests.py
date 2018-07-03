@@ -1,3 +1,4 @@
+import time
 import requests
 import os
 from datetime import datetime
@@ -35,8 +36,6 @@ def upload_collection_instrument():
 
     if response.status_code != requests.codes.ok:
         error_exit(f'Failed to set collection instrument: {response.text}')
-
-    print('Collection instrument set!')
 
 def link_collection_instrument_to_collection_exercise(instrument_id, exercise_id):
     url = f'{collection_instrument_url}{collection_instrument_link_endpoint}/{instrument_id}/{exercise_id}'
@@ -153,13 +152,15 @@ def main():
 
     period = get_previous_period()
     print(f'Fetching collection exercise for {period}')
-    
+
     exercise_id = get_collection_exercise_id(survey_id, period)
     print(f'Exercise ID = {exercise_id}')
 
     link_sample_to_collection_exercise(sample_id, exercise_id)
     
     link_collection_instrument_to_collection_exercise(instrument_id, exercise_id)
+
+    time.sleep(10)
 
     execute_collection_exercise(exercise_id)
     exit(0)
