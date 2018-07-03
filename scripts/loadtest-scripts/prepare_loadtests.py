@@ -25,6 +25,7 @@ survey_id = os.getenv('SURVEY_ID', '75b19ea0-69a4-4c58-8d7f-4458c8f43f5c')
 survey_classifiers = os.getenv('SURVEY_CLASSIFIERS', '{"form_type":"0102","eq_id":"1"}')
 username = os.getenv('COLLECTION_INSTRUMENT_USERNAME', 'admin')
 password = os.getenv('COLLECTION_INSTRUMENT_PASSWORD', 'secret')
+polling_wait_time = int(os.getenv('POLLING_WAIT_TIME', '2'))
 
 # Collection instrument
 
@@ -103,6 +104,18 @@ def execute_collection_exercise(exercise_id):
 
     print('Collection exercise executed!')
 
+def get_collection_exercise_state(exercise_id):
+    url = f'{collection_exercise_url}/collectionexercises/{exercise_id}'
+
+    response = requests.get(url=url, auth=(username, password))
+
+    if response.status_code != requests.codes.ok:
+        error_exit(f'Failed to check status of collection exercise: {response.text}')
+
+    print(f'Current collection exercise state: {response.json()["state"])}')
+    return response.json()['state']
+
+
 def link_sample_to_collection_exercise(sample_id, exercise_id):
     url = f'{collection_exercise_url}/collectionexercises/link/{exercise_id}'
     payload = {"sampleSummaryIds": [str(sample_id)]}
@@ -137,6 +150,7 @@ def error_exit(message):
     print(message)
     exit(1)
 
+
 def main():
     instrument_id = get_collection_id_from_classifier(survey_classifiers)
 
@@ -160,7 +174,8 @@ def main():
     
     link_collection_instrument_to_collection_exercise(instrument_id, exercise_id)
 
-    time.sleep(10)
+    while(get_collection_exercise_state(exercise_id) != 'READY_FOR_LIVE'):
+        time.sleep(polling_wait_time)
 
     execute_collection_exercise(exercise_id)
     exit(0)
