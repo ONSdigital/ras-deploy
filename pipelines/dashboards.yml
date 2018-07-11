@@ -7,14 +7,14 @@ resources:
     branch: master
     private_key: ((git_key))
 
-- name: prunes-loadtest-space
+- name: rasrm-dashboard-space
   type: cf
   source:
-    api: ((loadtest_cloudfoundry_api))
-    username: ((loadtest_cloudfoundry_email))
-    password: ((loadtest_cloudfoundry_password))
-    organization: SDC
-    space: loadtest
+    api: ((cloudfoundry_api))
+    username: ((cloudfoundry_email))
+    password: ((cloudfoundry_password))
+    organization: rmras
+    space: dashboards
     skip_cert_check: true
 
 jobs:
@@ -42,7 +42,7 @@ jobs:
           cd sdc-dashboards
           pipenv install
           pipenv run python interpolate.py > ../interpolated-dashboard/index.html
-  - put: prunes-loadtest-space
+  - put: rasrm-dashboard-space
     params:
       manifest: sdc-dashboards/manifest.yml
       path: interpolated-dashboard
