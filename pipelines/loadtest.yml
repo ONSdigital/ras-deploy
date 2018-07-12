@@ -38,23 +38,23 @@ templates:
       SAMPLE_PASSWORD: ((loadtest_security_user_password))
 
     all_services: &loadtest_all_services
-    - ras-party-((loadtest_cloudfoundry_space))-deploy
-    - ras-frontstage-((loadtest_cloudfoundry_space))-deploy
-    - ras-frontstage-api-((loadtest_cloudfoundry_space))-deploy
-    - django-oauth2-test-((loadtest_cloudfoundry_space))-deploy
-    - response-operations-ui-((loadtest_cloudfoundry_space))-deploy
-    - ras-secure-message-((loadtest_cloudfoundry_space))-deploy
-    - ras-collection-instrument-((loadtest_cloudfoundry_space))-deploy
-    - rm-action-service-((loadtest_cloudfoundry_space))-deploy
-    - rm-actionexporter-service-((loadtest_cloudfoundry_space))-deploy
-    - rm-case-service-((loadtest_cloudfoundry_space))-deploy
-    - rm-collection-exercise-((loadtest_cloudfoundry_space))-deploy
-    - iac-service-((loadtest_cloudfoundry_space))-deploy
-    - rm-notify-gateway-((loadtest_cloudfoundry_space))-deploy
-    - rm-sample-service-((loadtest_cloudfoundry_space))-deploy
-    - rm-sdx-gateway-((loadtest_cloudfoundry_space))-deploy
-    - rm-survey-service-((loadtest_cloudfoundry_space))-deploy
-    - sdc-uaa-((loadtest_cloudfoundry_space))-deploy
+    - ras-party-deploy
+    - ras-frontstage-deploy
+    - ras-frontstage-api-deploy
+    - django-oauth2-test-deploy
+    - response-operations-ui-deploy
+    - ras-secure-message-deploy
+    - ras-collection-instrument-deploy
+    - rm-action-service-deploy
+    - rm-actionexporter-service-deploy
+    - rm-case-service-deploy
+    - rm-collection-exercise-deploy
+    - iac-service-deploy
+    - rm-notify-gateway-deploy
+    - rm-sample-service-deploy
+    - rm-sdx-gateway-deploy
+    - rm-survey-service-deploy
+    - sdc-uaa-deploy
 
     service_endpoints_for_python: &loadtest_service_endpoints_for_python
       ACTION_SERVICE_HOST: rm-action-service-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))
@@ -357,8 +357,8 @@ jobs:
       CLOUDFOUNDRY_ORG: ((loadtest_cloudfoundry_org))
       CLOUDFOUNDRY_SPACE: ((loadtest_cloudfoundry_space))
 
-- name: ras-party-((loadtest_cloudfoundry_space))-deploy
-  serial_groups: [ras-party-((loadtest_cloudfoundry_space))-deploy]
+- name: ras-party-deploy
+  serial_groups: [ras-party-deploy]
   plan:
   - get: ras-party-source
   - put: create-database
@@ -385,8 +385,8 @@ jobs:
         RAS_NOTIFY_SERVICE_URL: http://rm-notify-gateway-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))/emails/
         SEND_EMAIL_TO_GOV_NOTIFY: 'False'
 
-- name: ras-secure-message-((loadtest_cloudfoundry_space))-deploy
-  serial_groups: [ras-secure-message-((loadtest_cloudfoundry_space))-deploy]
+- name: ras-secure-message-deploy
+  serial_groups: [ras-secure-message-deploy]
   plan:
   - get: ras-secure-message-source
   - put: create-database
@@ -419,8 +419,8 @@ jobs:
         CLIENT_SECRET: ((loadtest_secure_message_client_secret))
         USE_UAA: '1'
 
-- name: ras-collection-instrument-((loadtest_cloudfoundry_space))-deploy
-  serial_groups: [ras-collection-instrument-((loadtest_cloudfoundry_space))-deploy]
+- name: ras-collection-instrument-loadtest-deploy
+  serial_groups: [ras-collection-instrument-loadtest-deploy]
   plan:
   - get: ras-collection-instrument-source
   - get: ras-deploy
@@ -464,8 +464,8 @@ jobs:
         RABBITMQ_AMQP_COLLECTION_INSTRUMENT: ((loadtest_rabbitmq_amqp_collection_instrument)) # What is this queue?
         RABBITMQ_AMQP_SURVEY_RESPONSE: ((loadtest_rabbitmq_amqp_survey_response))
 
-- name: ras-frontstage-((loadtest_cloudfoundry_space))-deploy
-  serial_groups: [ras-frontstage-((loadtest_cloudfoundry_space))-deploy]
+- name: ras-frontstage-deploy
+  serial_groups: [ras-frontstage-deploy]
   plan:
   - get: ras-frontstage-source
   - <<: *loadtest_create_rm_redis
@@ -480,8 +480,8 @@ jobs:
         JWT_SECRET: ((loadtest_jwt_secret))
         SECRET_KEY: ((loadtest_enrolement_code_encryption_key))
 
-- name: ras-frontstage-api-((loadtest_cloudfoundry_space))-deploy
-  serial_groups: [ras-frontstage-api-((loadtest_cloudfoundry_space))-deploy]
+- name: ras-frontstage-api-deploy
+  serial_groups: [ras-frontstage-api-deploy]
   plan:
   - get: ras-frontstage-api-source
   - put: cf-resource-((loadtest_cloudfoundry_space))
@@ -497,8 +497,8 @@ jobs:
         EQ_URL: 'https://eq-test/session?token='
         JSON_SECRET_KEYS: ((loadtest_json_secret_keys))
 
-- name: django-oauth2-test-((loadtest_cloudfoundry_space))-deploy
-  serial_groups: [django-oauth2-test-((loadtest_cloudfoundry_space))-deploy]
+- name: django-oauth2-test-deploy
+  serial_groups: [django-oauth2-test-deploy]
   plan:
   - get: django-oauth2-test-source
   - get: ras-deploy
@@ -570,8 +570,8 @@ jobs:
       CLOUDFOUNDRY_SPACE: ((loadtest_cloudfoundry_space))
       APP_NAME: django-oauth2-test-((loadtest_cloudfoundry_space))
 
-- name: response-operations-ui-((loadtest_cloudfoundry_space))-deploy
-  serial_groups: [response-operations-ui-((loadtest_cloudfoundry_space))-deploy]
+- name: response-operations-ui-deploy
+  serial_groups: [response-operations-ui-deploy]
   plan:
   - get: response-operations-ui-source
   - put: create-redis
@@ -596,8 +596,8 @@ jobs:
         UAA_CLIENT_ID: 'response_operations'
         UAA_CLIENT_SECRET: ((loadtest_response_operations_client_secret))
 
-- name: rm-action-service-((loadtest_cloudfoundry_space))-deploy
-  serial_groups: [rm-action-service-((loadtest_cloudfoundry_space))-deploy]
+- name: rm-action-service-deploy
+  serial_groups: [rm-action-service-deploy]
   plan:
   - get: rm-action-service-source
   - get: ras-deploy
@@ -618,8 +618,8 @@ jobs:
         <<: *loadtest_service_endpoints_for_java
         endpoints_enabled: 'false'
 
-- name: rm-actionexporter-service-((loadtest_cloudfoundry_space))-deploy
-  serial_groups: [rm-actionexporter-service-((loadtest_cloudfoundry_space))-deploy]
+- name: rm-actionexporter-service-deploy
+  serial_groups: [rm-actionexporter-service-deploy]
   plan:
   - get: rm-actionexporter-service-source
   - get: ras-deploy
@@ -644,8 +644,8 @@ jobs:
         sftp_port: '22'
         sftp_username: ((actionexporter_sftp_username))
 
-- name: rm-case-service-((loadtest_cloudfoundry_space))-deploy
-  serial_groups: [rm-case-service-((loadtest_cloudfoundry_space))-deploy]
+- name: rm-case-service-deploy
+  serial_groups: [rm-case-service-deploy]
   plan:
   - get: rm-case-service-source
   - get: ras-deploy
@@ -666,8 +666,8 @@ jobs:
         <<: *loadtest_service_endpoints_for_java
         endpoints_enabled: 'false'
 
-- name: rm-collection-exercise-((loadtest_cloudfoundry_space))-deploy
-  serial_groups: [rm-collection-exercise-((loadtest_cloudfoundry_space))-deploy]
+- name: rm-collection-exercise-deploy
+  serial_groups: [rm-collection-exercise-deploy]
   plan:
   - get: rm-collection-exercise-service-source
   - get: ras-deploy
@@ -690,8 +690,8 @@ jobs:
         SCHEDULES_VALIDATION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
         SCHEDULES_DISTRIBUTION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
 
-- name: iac-service-((loadtest_cloudfoundry_space))-deploy
-  serial_groups: [iac-service-((loadtest_cloudfoundry_space))-deploy]
+- name: iac-service-deploy
+  serial_groups: [iac-service-deploy]
   plan:
   - get: iac-service-source
   - get: ras-deploy
@@ -710,8 +710,8 @@ jobs:
         <<: *loadtest_service_endpoints_for_java
         endpoints_enabled: 'false'
 
-- name: rm-notify-gateway-((loadtest_cloudfoundry_space))-deploy
-  serial_groups: [rm-notify-gateway-((loadtest_cloudfoundry_space))-deploy]
+- name: rm-notify-gateway-deploy
+  serial_groups: [rm-notify-gateway-deploy]
   plan:
   - get: rm-notify-gateway-source
   - get: ras-deploy
@@ -734,8 +734,8 @@ jobs:
         notify_enabled: 'false'
         notify_onsSurveysRasEmailReminderTemplateId: '19a0aa89-797f-4a34-ad54-267fd581f2ef'
 
-- name: rm-sample-service-((loadtest_cloudfoundry_space))-deploy
-  serial_groups: [rm-sample-service-((loadtest_cloudfoundry_space))-deploy]
+- name: rm-sample-service-deploy
+  serial_groups: [rm-sample-service-deploy]
   plan:
   - get: rm-sample-service-source
   - get: ras-deploy
@@ -762,8 +762,8 @@ jobs:
         sftp_port: '22'
         sftp_username: ((sample_sftp_username))
 
-- name: rm-sdx-gateway-((loadtest_cloudfoundry_space))-deploy
-  serial_groups: [rm-sdx-gateway-((loadtest_cloudfoundry_space))-deploy]
+- name: rm-sdx-gateway-deploy
+  serial_groups: [rm-sdx-gateway-deploy]
   plan:
   - get: rm-sdx-gateway-source
   - get: ras-deploy
@@ -782,8 +782,8 @@ jobs:
         <<: *loadtest_security_user
         endpoints_enabled: 'false'
 
-- name: sdc-mock-gov-notify-((loadtest_cloudfoundry_space))-deploy
-  serial_groups: [sdc-mock-gov-notify-((loadtest_cloudfoundry_space))-deploy]
+- name: sdc-mock-gov-notify-deploy
+  serial_groups: [sdc-mock-gov-notify-deploy]
   plan:
   - get: sdc-mock-gov-notify-source
   - put: cf-resource-((loadtest_cloudfoundry_space))
@@ -792,8 +792,8 @@ jobs:
       manifest: sdc-mock-gov-notify-source/manifest.yml
       path: sdc-mock-gov-notify-source
 
-- name: rm-survey-service-((loadtest_cloudfoundry_space))-deploy
-  serial_groups: [rm-survey-service-((loadtest_cloudfoundry_space))-deploy]
+- name: rm-survey-service-deploy
+  serial_groups: [rm-survey-service-deploy]
   plan:
   - get: rm-survey-service-source
   - aggregate:
@@ -828,8 +828,8 @@ jobs:
         <<: *loadtest_security_user
         MIGRATION_SOURCE: 'file://db-migrations'
 
-- name: sdc-uaa-((loadtest_cloudfoundry_space))-deploy
-  serial_groups: [sdc-uaa-((loadtest_cloudfoundry_space))-deploy]
+- name: sdc-uaa-deploy
+  serial_groups: [sdc-uaa-deploy]
   plan:
   - get: sdc-uaa-source
   - task: build
@@ -926,58 +926,58 @@ jobs:
   - get: rasrm-acceptance-tests-source
     trigger: true
   - get: ras-party-source
-    passed: [ras-party-((loadtest_cloudfoundry_space))-deploy]
+    passed: [ras-party-deploy]
     trigger: true
   - get: ras-backstage-source
-    passed: [ras-backstage-((loadtest_cloudfoundry_space))-deploy]
+    passed: [ras-backstage-deploy]
     trigger: true
   - get: ras-frontstage-source
-    passed: [ras-frontstage-((loadtest_cloudfoundry_space))-deploy]
+    passed: [ras-frontstage-deploy]
     trigger: true
   - get: django-oauth2-test-source
-    passed: [django-oauth2-test-((loadtest_cloudfoundry_space))-deploy]
+    passed: [django-oauth2-test-deploy]
     trigger: true
   - get: response-operations-ui-source
-    passed: [response-operations-ui-((loadtest_cloudfoundry_space))-deploy]
+    passed: [response-operations-ui-deploy]
     trigger: true
   - get: ras-secure-message-source
-    passed: [ras-secure-message-((loadtest_cloudfoundry_space))-deploy]
+    passed: [ras-secure-message-deploy]
     trigger: true
   - get: ras-collection-instrument-source
-    passed: [ras-collection-instrument-((loadtest_cloudfoundry_space))-deploy]
+    passed: [ras-collection-instrument-deploy]
     trigger: true
   - get: rm-action-service-source
-    passed: [rm-action-service-((loadtest_cloudfoundry_space))-deploy]
+    passed: [rm-action-service-deploy]
     trigger: true
   - get: rm-actionexporter-service-source
-    passed: [rm-actionexporter-service-((loadtest_cloudfoundry_space))-deploy]
+    passed: [rm-actionexporter-service-deploy]
     trigger: true
   - get: rm-case-service-source
-    passed: [rm-case-service-((loadtest_cloudfoundry_space))-deploy]
+    passed: [rm-case-service-deploy]
     trigger: true
   - get: rm-collection-exercise-service-source
-    passed: [rm-collection-exercise-((loadtest_cloudfoundry_space))-deploy]
+    passed: [rm-collection-exercise-deploy]
     trigger: true
   - get: iac-service-source
-    passed: [iac-service-((loadtest_cloudfoundry_space))-deploy]
+    passed: [iac-service-deploy]
     trigger: true
   - get: rm-notify-gateway-source
-    passed: [rm-notify-gateway-((loadtest_cloudfoundry_space))-deploy]
+    passed: [rm-notify-gateway-deploy]
     trigger: true
   - get: rm-sample-service-source
-    passed: [rm-sample-service-((loadtest_cloudfoundry_space))-deploy]
+    passed: [rm-sample-service-deploy]
     trigger: true
   - get: rm-sdx-gateway-source
-    passed: [rm-sdx-gateway-((loadtest_cloudfoundry_space))-deploy]
+    passed: [rm-sdx-gateway-deploy]
     trigger: true
   - get: rm-survey-service-source
-    passed: [rm-survey-service-((loadtest_cloudfoundry_space))-deploy]
+    passed: [rm-survey-service-deploy]
     trigger: true
   - get: sdc-uaa-source
-    passed: [sdc-uaa-((loadtest_cloudfoundry_space))-deploy]
+    passed: [sdc-uaa-deploy]
     trigger: true
   - get: sdc-mock-gov-notify-source
-    passed: [sdc-mock-gov-notify-((loadtest_cloudfoundry_space))-deploy]
+    passed: [sdc-mock-gov-notify-deploy]
     trigger: true
   - task: acceptance-test-setup
     privileged: true
@@ -1028,25 +1028,25 @@ jobs:
 groups:
 - name: pipeline
   jobs:
-  - ras-party-((loadtest_cloudfoundry_space))-deploy
-  - ras-secure-message-((loadtest_cloudfoundry_space))-deploy
-  - ras-backstage-((loadtest_cloudfoundry_space))-deploy
-  - ras-collection-instrument-((loadtest_cloudfoundry_space))-deploy
-  - ras-frontstage-((loadtest_cloudfoundry_space))-deploy
-  - ras-frontstage-api-((loadtest_cloudfoundry_space))-deploy
-  - django-oauth2-test-((loadtest_cloudfoundry_space))-deploy
-  - response-operations-ui-((loadtest_cloudfoundry_space))-deploy
-  - rm-action-service-((loadtest_cloudfoundry_space))-deploy
-  - rm-actionexporter-service-((loadtest_cloudfoundry_space))-deploy
-  - rm-case-service-((loadtest_cloudfoundry_space))-deploy
-  - rm-collection-exercise-((loadtest_cloudfoundry_space))-deploy
-  - iac-service-((loadtest_cloudfoundry_space))-deploy
-  - rm-notify-gateway-((loadtest_cloudfoundry_space))-deploy
-  - rm-sample-service-((loadtest_cloudfoundry_space))-deploy
-  - rm-sdx-gateway-((loadtest_cloudfoundry_space))-deploy
-  - rm-survey-service-((loadtest_cloudfoundry_space))-deploy
-  - sdc-uaa-((loadtest_cloudfoundry_space))-deploy
-  - sdc-mock-gov-notify-((loadtest_cloudfoundry_space))-deploy
+  - ras-party-deploy
+  - ras-secure-message-deploy
+  - ras-backstage-deploy
+  - ras-collection-instrument-deploy
+  - ras-frontstage-deploy
+  - ras-frontstage-api-deploy
+  - django-oauth2-test-deploy
+  - response-operations-ui-deploy
+  - rm-action-service-deploy
+  - rm-actionexporter-service-deploy
+  - rm-case-service-deploy
+  - rm-collection-exercise-deploy
+  - iac-service-deploy
+  - rm-notify-gateway-deploy
+  - rm-sample-service-deploy
+  - rm-sdx-gateway-deploy
+  - rm-survey-service-deploy
+  - sdc-uaa-deploy
+  - sdc-mock-gov-notify-deploy
   - setup-collection-exercises
 - name: teardown
   jobs:
