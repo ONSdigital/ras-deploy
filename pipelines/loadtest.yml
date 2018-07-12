@@ -279,7 +279,7 @@ resources:
   type: git
   source:
     uri: git@github.com:ONSdigital/iac-service.git
-    branch: master
+    branch: stacktraces
     private_key: ((git_key))
 
 - name: rm-notify-gateway-source
@@ -315,6 +315,12 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/rasrm-acceptance-tests.git
+
+- name: sdc-mock-gov-notify-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/sdc-mock-gov-notify.git
+    branch: master
 ### END MICROSERVICE REPOS
 
 - name: cf-cli-resource-((loadtest_cloudfoundry_space))
@@ -776,6 +782,16 @@ jobs:
         <<: *loadtest_security_user
         endpoints_enabled: 'false'
 
+- name: sdc-mock-gov-notify-((loadtest_cloudfoundry_space))-deploy
+  serial_groups: [sdc-mock-gov-notify-((loadtest_cloudfoundry_space))-deploy]
+  plan:
+  - get: sdc-mock-gov-notify-source
+  - put: cf-resource-((loadtest_cloudfoundry_space))
+    params:
+      current_app_name: sdc-mock-gov-notify-((loadtest_cloudfoundry_space))
+      manifest: sdc-mock-gov-notify-source/manifest.yml
+      path: sdc-mock-gov-notify-source
+
 - name: rm-survey-service-((loadtest_cloudfoundry_space))-deploy
   serial_groups: [rm-survey-service-((loadtest_cloudfoundry_space))-deploy]
   plan:
@@ -960,6 +976,9 @@ jobs:
   - get: sdc-uaa-source
     passed: [sdc-uaa-((loadtest_cloudfoundry_space))-deploy]
     trigger: true
+  - get: sdc-mock-gov-notify-source
+    passed: [sdc-mock-gov-notify-((loadtest_cloudfoundry_space))-deploy]
+    trigger: true
   - task: acceptance-test-setup
     privileged: true
     config:
@@ -1027,6 +1046,7 @@ groups:
   - rm-sdx-gateway-((loadtest_cloudfoundry_space))-deploy
   - rm-survey-service-((loadtest_cloudfoundry_space))-deploy
   - sdc-uaa-((loadtest_cloudfoundry_space))-deploy
+  - sdc-mock-gov-notify-((loadtest_cloudfoundry_space))-deploy
   - setup-collection-exercises
 - name: teardown
   jobs:
