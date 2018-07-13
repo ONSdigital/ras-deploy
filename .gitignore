@@ -4,6 +4,7 @@
 # Secrets
 secrets.yml
 secrets/*.yml
+respondent-home-ui-vars.yml
 
 # DS Store
 .DS_Store
