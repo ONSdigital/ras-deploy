@@ -16,11 +16,11 @@ collection_instrument_upload_endpoint = \
 collection_instrument_link_endpoint = \
     os.getenv('COLLECTION_INSTRUMENT_LINK_ENDPOINT',
               '/collection-instrument-api/1.0.2/link-exercise')
-sample_url = \
-    os.getenv('SAMPLE_URL',
-              'http://localhost:8125')
-collection_exercise_url = \
-    os.getenv('COLLECTION_EXERCISE_URL', 'http://localhost:8145')
+sample_url = os.getenv('SAMPLE_URL', 'http://localhost:8125')
+party_url = os.getenv('PARTY_URL', 'http://localhost:8081')
+party_create_respondent_endpoint = os.getenv('PARTY_CREATE_RESPONDENT_ENDPOINT', '/party-api/v1/respondents')
+collection_exercise_url = os.getenv('COLLECTION_EXERCISE_URL', 'http://localhost:8145')
+iac_url = os.getenv('IAC_URL', 'http://localhost:8121')
 survey_id = os.getenv('SURVEY_ID', '75b19ea0-69a4-4c58-8d7f-4458c8f43f5c')
 survey_classifiers = os.getenv('SURVEY_CLASSIFIERS', '{"form_type":"0102","eq_id":"1"}')
 username = os.getenv('COLLECTION_INSTRUMENT_USERNAME', 'admin')
@@ -142,6 +142,19 @@ def upload_sample_file(filename):
 
     return response.json()['id']
 
+# Enrolment
+
+def create_enrolment_codes(count):
+    url = f'{iac_url}/iacs'
+    payload = {'count': count, 'createdBy': 'loadtest'}
+
+    response = requests.post(url=url, auth=(username, password), json=payload)
+
+    if response.status_code != requests.codes.created:
+        error_exit(f'Failed to create IACs: {response.text}')
+
+    print(f'Set up {count} IACs')
+    return response.json()
 
 def script_directory():
     return os.path.dirname(os.path.realpath(__file__))
@@ -159,6 +172,25 @@ def with_timeout(action):
             error_exit('Timed out')
 
         time.sleep(polling_wait_time)
+
+
+def create_user(email_address, first_name, last_name, user_password, telephone, enrolment_code):
+    url = f'{party_url}{party_create_respondent_endpoint}'
+    payload = {'emailAddress': email_address,
+               'firstName': first_name,
+               'lastName': last_name,
+               'password': user_password,
+               'telephone': telephone,
+               'enrolmentCode': enrolment_code,
+               }
+
+    response = requests.post(url=url, auth=(username, password), json=payload)
+
+    print(response.status_code)
+    if response.status_code != requests.codes.created:
+        error_exit(f'Failed to create user with email {email_address}: {response.text}')
+
+    return 'magic link thing'
 
 def main():
     instrument_id = get_collection_id_from_classifier(survey_classifiers)
@@ -186,6 +218,19 @@ def main():
     with_timeout(lambda: get_collection_exercise_state(exercise_id) not in ['READY_FOR_REVIEW', 'READY_FOR_LIVE'])
 
     execute_collection_exercise(exercise_id)
+
+    enrolment_codes = create_enrolment_codes(1)
+    for enrolment_code in enrolment_codes:
+        verify_link = create_user(enrolment_code=enrolment_code,
+                                  email_address='something@somewhere.com',
+                                  user_password='secret',
+                                  first_name='unique',
+                                  last_name='name',
+                                  telephone='01234567890')
+        # verify_user(verify_link)
+
     exit(0)
+
+
 
 main()

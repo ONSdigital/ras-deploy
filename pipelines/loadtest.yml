@@ -286,7 +286,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/rm-notify-gateway.git
-    branch: master
+    branch: use-gov-notify-mock
 
 - name: rm-sample-service-source
   type: git
@@ -731,8 +731,9 @@ jobs:
         endpoints_enabled: 'false'
         notify_apiKey: ((test_notify_api_key))
         notify_censusUacSmsTemplateId: '966731dc-ef2e-41ad-a828-8cdd95c81ebc'
-        notify_enabled: 'false'
+        notify_enabled: 'true'
         notify_onsSurveysRasEmailReminderTemplateId: '19a0aa89-797f-4a34-ad54-267fd581f2ef'
+        notify_endpointBaseUrl: https://sdc-mock-gov-notify-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))/gov_notify_api
 
 - name: rm-sample-service-deploy
   serial_groups: [rm-sample-service-deploy]
