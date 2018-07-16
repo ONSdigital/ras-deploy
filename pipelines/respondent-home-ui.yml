@@ -125,7 +125,7 @@ jobs:
         LOG_LEVEL: INFO
         ACCOUNT_SERVICE_URL: https://ohs-alpha.onsdigital.uk
         EQ_URL: https://eq.ons.gov.uk/session?token=
-        JSON_SECRET_KEYS: ((latest_json_secret_keys))
+        JSON_SECRET_KEYS: ((prod_json_secret_keys))
         CASE_URL: http://casesvc-prod.((prod_cloudfoundry_apps_domain))
         CASE_USERNAME: ((prod_security_user_name))
         CASE_PASSWORD: ((prod_security_user_password))
