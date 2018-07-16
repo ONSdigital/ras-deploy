@@ -1,0 +1,146 @@
+---
+resources:
+
+- name: respondent-home-ui-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/respondent-home-ui.git
+    branch: aiohttp-app
+
+- name: cf-resource-latest
+  type: cf
+  source:
+    api: ((cloudfoundry_api))
+    username: ((cloudfoundry_email))
+    password: ((cloudfoundry_password))
+    organization: rmras
+    space: concourse-latest
+    skip_cert_check: true
+
+- name: cf-resource-preprod
+  type: cf
+  source:
+    api: ((prod_cloudfoundry_api))
+    username: ((prod_cloudfoundry_email))
+    password: ((prod_cloudfoundry_password))
+    organization: rmras
+    space: preprod
+    skip_cert_check: true
+
+- name: cf-resource-prod
+  type: cf
+  source:
+    api: ((prod_cloudfoundry_api))
+    username: ((prod_cloudfoundry_email))
+    password: ((prod_cloudfoundry_password))
+    organization: rmras
+    space: prod
+    skip_cert_check: true
+
+jobs:
+- name: respondent-home-ui-latest-deploy
+  plan:
+  - get: respondent-home-ui-source
+    trigger: true
+  - put: push-app
+    resource: cf-resource-latest
+    params:
+      current_app_name: respondent-home-ui-latest
+      manifest: respondent-home-ui-source/manifest.yml
+      path: respondent-home-ui-source
+      environment_variables:
+        HOST: 0.0.0.0
+        LOG_LEVEL: INFO
+        ACCOUNT_SERVICE_URL: http://respondent-home-ui-latest.apps.devtest.onsclofo.uk
+        EQ_URL: https://staging-new-surveys.dev.eq.ons.digital/session?token=
+        JSON_SECRET_KEYS: ((latest_json_secret_keys))
+        CASE_URL: http://rm-case-service-concourse-latest.apps.devtest.onsclofo.uk
+        CASE_USERNAME: ((latest_security_user_name))
+        CASE_PASSWORD: ((latest_security_user_password))
+        COLLECTION_EXERCISE_URL: http://rm-collection-exercise-service-concourse-latest.apps.devtest.onsclofo.uk
+        COLLECTION_EXERCISE_USERNAME: ((latest_security_user_name))
+        COLLECTION_EXERCISE_PASSWORD: ((latest_security_user_password))
+        COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-concourse-latest.apps.devtest.onsclofo.uk
+        COLLECTION_INSTRUMENT_USERNAME: ((latest_security_user_name))
+        COLLECTION_INSTRUMENT_PASSWORD: ((latest_security_user_password))
+        IAC_URL: http://iac-service-concourse-latest.apps.devtest.onsclofo.uk
+        IAC_USERNAME: ((latest_security_user_name))
+        IAC_PASSWORD: ((latest_security_user_password))
+        PARTY_URL: http://ras-party-concourse-latest.apps.devtest.onsclofo.uk
+        PARTY_USERNAME: ((latest_security_user_name))
+        PARTY_PASSWORD: ((latest_security_user_password))
+        SURVEY_URL: http://rm-survey-service-concourse-latest.apps.devtest.onsclofo.uk
+        SURVEY_USERNAME: ((latest_security_user_name))
+        SURVEY_PASSWORD: ((latest_security_user_password))
+
+- name: respondent-home-ui-preprod-deploy
+  plan:
+  - get: respondent-home-ui-source
+    passed: [respondent-home-ui-latest-deploy]
+    trigger: true
+  - put: push-app
+    resource: cf-resource-preprod
+    params:
+      current_app_name: respondent-home-ui-preprod
+      manifest: respondent-home-ui-source/manifest.yml
+      path: respondent-home-ui-source
+      environment_variables:
+        HOST: 0.0.0.0
+        LOG_LEVEL: INFO
+        ACCOUNT_SERVICE_URL: http://respondent-home-ui-preprod.((prod_cloudfoundry_apps_domain))
+        EQ_URL: https://preprod-surveys.eq.ons.digital/session?token=
+        JSON_SECRET_KEYS: ((preprod_json_secret_keys))
+        CASE_URL: http://casesvc-preprod.((prod_cloudfoundry_apps_domain))
+        CASE_USERNAME: ((preprod_security_user_name))
+        CASE_PASSWORD: ((preprod_security_user_password))
+        COLLECTION_EXERCISE_URL: http://collectionexercisesvc-preprod.((prod_cloudfoundry_apps_domain))
+        COLLECTION_EXERCISE_USERNAME: ((preprod_security_user_name))
+        COLLECTION_EXERCISE_PASSWORD: ((preprod_security_user_password))
+        COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-preprod.((prod_cloudfoundry_apps_domain))
+        COLLECTION_INSTRUMENT_USERNAME: ((preprod_security_user_name))
+        COLLECTION_INSTRUMENT_PASSWORD: ((preprod_security_user_password))
+        IAC_URL: http://iacsvc-preprod.((prod_cloudfoundry_apps_domain))
+        IAC_USERNAME: ((preprod_security_user_name))
+        IAC_PASSWORD: ((preprod_security_user_password))
+        PARTY_URL: http://ras-party-service-preprod.((prod_cloudfoundry_apps_domain))
+        PARTY_USERNAME: ((preprod_security_user_name))
+        PARTY_PASSWORD: ((preprod_security_user_password))
+        SURVEY_URL: http://surveysvc-preprod.((prod_cloudfoundry_apps_domain))
+        SURVEY_USERNAME: ((preprod_security_user_name))
+        SURVEY_PASSWORD: ((preprod_security_user_password))
+
+- name: respondent-home-ui-prod-deploy
+  plan:
+  - get: respondent-home-ui-source
+    passed: [respondent-home-ui-preprod-deploy]
+    trigger: true
+  - put: push-app
+    resource: cf-resource-prod
+    params:
+      current_app_name: respondent-home-ui-prod
+      manifest: respondent-home-ui-source/manifest.yml
+      path: respondent-home-ui-source
+      environment_variables:
+        HOST: 0.0.0.0
+        LOG_LEVEL: INFO
+        ACCOUNT_SERVICE_URL: https://ohs-alpha.onsdigital.uk
+        EQ_URL: https://eq.ons.gov.uk/session?token=
+        JSON_SECRET_KEYS: ((prod_json_secret_keys))
+        CASE_URL: http://casesvc-prod.((prod_cloudfoundry_apps_domain))
+        CASE_USERNAME: ((prod_security_user_name))
+        CASE_PASSWORD: ((prod_security_user_password))
+        COLLECTION_EXERCISE_URL: http://collectionexercisesvc-prod.((prod_cloudfoundry_apps_domain))
+        COLLECTION_EXERCISE_USERNAME: ((prod_security_user_name))
+        COLLECTION_EXERCISE_PASSWORD: ((prod_security_user_password))
+        COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-prod.((prod_cloudfoundry_apps_domain))
+        COLLECTION_INSTRUMENT_USERNAME: ((prod_security_user_name))
+        COLLECTION_INSTRUMENT_PASSWORD: ((prod_security_user_password))
+        IAC_URL: http://iacsvc-prod.((prod_cloudfoundry_apps_domain))
+        IAC_USERNAME: ((prod_security_user_name))
+        IAC_PASSWORD: ((prod_security_user_password))
+        PARTY_URL: http://ras-party-service-prod.((prod_cloudfoundry_apps_domain))
+        PARTY_USERNAME: ((prod_security_user_name))
+        PARTY_PASSWORD: ((prod_security_user_password))
+        SURVEY_URL: http://surveysvc-prod.((prod_cloudfoundry_apps_domain))
+        SURVEY_USERNAME: ((prod_security_user_name))
+        SURVEY_PASSWORD: ((prod_security_user_password))
