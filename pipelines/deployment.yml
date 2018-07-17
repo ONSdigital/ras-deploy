@@ -1269,6 +1269,7 @@ jobs:
         <<: *ci_service_endpoints_for_java
         endpoints_enabled: 'false'
         planExecution_delayMilliSeconds: '10000'
+        SWAGGER_SETTINGS_SWAGGER_UI_ACTIVE: 'true'
 
 - name: rm-actionexporter-service-ci-deploy
   serial_groups: [rm-actionexporter-service-ci-deploy]
@@ -1299,6 +1300,7 @@ jobs:
         sftp_password: ((actionexporter_sftp_password))
         sftp_port: '22'
         sftp_username: ((actionexporter_sftp_username))
+        SWAGGER_SETTINGS_SWAGGER_UI_ACTIVE: 'true'
 
 - name: rm-case-service-ci-deploy
   serial_groups: [rm-case-service-ci-deploy]
@@ -1325,6 +1327,7 @@ jobs:
         <<: *ci_security_user
         <<: *ci_service_endpoints_for_java
         endpoints_enabled: 'false'
+        SWAGGER_SETTINGS_SWAGGER_UI_ACTIVE: 'true'
 
 - name: rm-collection-exercise-ci-deploy
   serial_groups: [rm-collection-exercise-ci-deploy]
@@ -1353,6 +1356,7 @@ jobs:
         endpoints_enabled: 'false'
         SCHEDULES_VALIDATION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
         SCHEDULES_DISTRIBUTION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
+        SWAGGER_SETTINGS_SWAGGER_UI_ACTIVE: 'true'
 
 - name: iac-service-ci-deploy
   serial_groups: [iac-service-ci-deploy]
@@ -1377,6 +1381,7 @@ jobs:
         <<: *ci_security_user
         <<: *ci_service_endpoints_for_java
         endpoints_enabled: 'false'
+        SWAGGER_SETTINGS_SWAGGER_UI_ACTIVE: 'true'
 
 - name: rm-notify-gateway-ci-deploy
   serial_groups: [rm-notify-gateway-ci-deploy]
@@ -1405,6 +1410,7 @@ jobs:
         notify_censusUacSmsTemplateId: '966731dc-ef2e-41ad-a828-8cdd95c81ebc'
         notify_enabled: 'false'
         notify_onsSurveysRasEmailReminderTemplateId: '19a0aa89-797f-4a34-ad54-267fd581f2ef'
+        SWAGGER_SETTINGS_SWAGGER_UI_ACTIVE: 'true'
 
 - name: rm-sample-service-ci-deploy
   serial_groups: [rm-sample-service-ci-deploy]
@@ -1439,6 +1445,7 @@ jobs:
         sftp_username: ((sample_sftp_username))
         LOGGING_LEVEL_uk.gov.ons.ctp.response.sample.scheduled.distribution: WARN
         LOGGING_LEVEL_uk.gov.ons.ctp.common.distributed: INFO
+        SWAGGER_SETTINGS_SWAGGER_UI_ACTIVE: 'true'
 
 - name: rm-sdx-gateway-ci-deploy
   serial_groups: [rm-sdx-gateway-ci-deploy]
@@ -1463,6 +1470,7 @@ jobs:
       environment_variables:
         <<: *ci_security_user
         endpoints_enabled: 'false'
+        SWAGGER_SETTINGS_SWAGGER_UI_ACTIVE: 'true'
 
 - name: rm-survey-service-ci-deploy
   serial_groups: [rm-survey-service-ci-deploy]
