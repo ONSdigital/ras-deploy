@@ -733,7 +733,7 @@ jobs:
         notify_censusUacSmsTemplateId: '966731dc-ef2e-41ad-a828-8cdd95c81ebc'
         notify_enabled: 'true'
         notify_onsSurveysRasEmailReminderTemplateId: '19a0aa89-797f-4a34-ad54-267fd581f2ef'
-        notify_endpointBaseUrl: https://sdc-mock-gov-notify-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))/gov_notify_api
+        notify_endpointBaseUrl: https://sdc-mock-gov-notify-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))
 
 - name: rm-sample-service-deploy
   serial_groups: [rm-sample-service-deploy]
@@ -787,6 +787,7 @@ jobs:
   serial_groups: [sdc-mock-gov-notify-deploy]
   plan:
   - get: sdc-mock-gov-notify-source
+    trigger: true
   - put: cf-resource-((loadtest_cloudfoundry_space))
     params:
       current_app_name: sdc-mock-gov-notify-((loadtest_cloudfoundry_space))
