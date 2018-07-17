@@ -115,7 +115,7 @@ jobs:
         SURVEY_USERNAME: ((latest_security_user_name))
         SURVEY_PASSWORD: ((latest_security_user_password))
         SAMPLE_URL: http://rm-sample-service-concourse-latest.apps.devtest.onsclofo.uk
-        SAMPLE_USERNAME: sdc.latest
+        SAMPLE_USERNAME: ((latest_security_user_name))
         SAMPLE_PASSWORD: ((latest_security_user_password))
 
 - name: respondent-home-ui-preprod-deploy
