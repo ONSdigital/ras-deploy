@@ -250,7 +250,7 @@ jobs:
       put: notify
       params:
         text:  |
-          Pre-production smoke tests failed. Check the build:
+          Production smoke tests failed. Check the build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: ras-deploy/tasks/respondent-home-ui/smoke_tests.yml
     params:
