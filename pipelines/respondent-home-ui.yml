@@ -246,12 +246,12 @@ jobs:
         SAMPLE_USERNAME: ((prod_security_user_name))
         SAMPLE_PASSWORD: ((prod_security_user_password))
   - task: smoke-tests
-    # on_failure:
-    #   put: notify
-    #   params:
-    #     text:  |
-    #       Pre-production smoke tests failed. Check the build:
-    #       $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Pre-production smoke tests failed. Check the build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: ras-deploy/tasks/respondent-home-ui/smoke_tests.yml
     params:
       RESPONDENT_HOME_URL: https://respondent-home-ui-prod.((prod_cloudfoundry_apps_domain))
