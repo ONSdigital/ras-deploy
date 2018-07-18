@@ -419,8 +419,8 @@ jobs:
         CLIENT_SECRET: ((loadtest_secure_message_client_secret))
         USE_UAA: '1'
 
-- name: ras-collection-instrument-loadtest-deploy
-  serial_groups: [ras-collection-instrument-loadtest-deploy]
+- name: ras-collection-instrument-deploy
+  serial_groups: [ras-collection-instrument-deploy]
   plan:
   - get: ras-collection-instrument-source
   - get: ras-deploy
