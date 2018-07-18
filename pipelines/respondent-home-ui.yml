@@ -162,12 +162,18 @@ jobs:
         SAMPLE_URL: http://samplesvc-preprod.((prod_cloudfoundry_apps_domain))
         SAMPLE_USERNAME: ((preprod_security_user_name))
         SAMPLE_PASSWORD: ((preprod_security_user_password))
-  - put: map-route-external-domain
+  - put: map-route-vpn-domain
     resource: cf-cli-resource-preprod
     params:
       command: map-route
       app_name: respondent-home-ui-preprod
       domain: rhpreprod.rmdev.onsdigital.uk
+  - put: map-route-ons-internal-domain
+    resource: cf-cli-resource-preprod
+    params:
+      command: map-route
+      app_name: respondent-home-ui-preprod
+      domain: ohs-alpha.onsdigital.uk
 
 - name: respondent-home-ui-prod-deploy
   plan:
@@ -213,9 +219,3 @@ jobs:
         SAMPLE_URL: http://samplesvc-prod.((prod_cloudfoundry_apps_domain))
         SAMPLE_USERNAME: ((prod_security_user_name))
         SAMPLE_PASSWORD: ((prod_security_user_password))
-  - put: map-route-external-domain
-    resource: cf-cli-resource-prod
-    params:
-      command: map-route
-      app_name: respondent-home-ui-prod
-      domain: ohs-alpha.onsdigital.uk
