@@ -930,9 +930,6 @@ jobs:
   - get: ras-party-source
     passed: [ras-party-deploy]
     trigger: true
-  - get: ras-backstage-source
-    passed: [ras-backstage-deploy]
-    trigger: true
   - get: ras-frontstage-source
     passed: [ras-frontstage-deploy]
     trigger: true
@@ -1032,7 +1029,6 @@ groups:
   jobs:
   - ras-party-deploy
   - ras-secure-message-deploy
-  - ras-backstage-deploy
   - ras-collection-instrument-deploy
   - ras-frontstage-deploy
   - ras-frontstage-api-deploy
