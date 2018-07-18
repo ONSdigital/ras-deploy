@@ -197,7 +197,7 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: ras-deploy/tasks/respondent-home-ui/smoke_tests.yml
     params:
-      RESPONDENT_HOME_URL: https://rhpreprod.rmdev.onsdigital.uk
+      RESPONDENT_HOME_URL: https://respondent-home-ui-preprod.((prod_cloudfoundry_apps_domain))
 
 - name: respondent-home-ui-prod-deploy
   serial: true
@@ -254,4 +254,4 @@ jobs:
     #       $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: ras-deploy/tasks/respondent-home-ui/smoke_tests.yml
     params:
-      RESPONDENT_HOME_URL: https://ohs-alpha.onsdigital.uk
+      RESPONDENT_HOME_URL: https://respondent-home-ui-prod.((prod_cloudfoundry_apps_domain))
