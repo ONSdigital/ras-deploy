@@ -164,7 +164,7 @@ jobs:
         SURVEY_URL: http://surveysvc-preprod.((preprod_cloudfoundry_apps_domain))
         SURVEY_USERNAME: ((preprod_security_user_name))
         SURVEY_PASSWORD: ((preprod_security_user_password))
-        SAMPLE_URL: http://samplesvc-preprod.((prod_cloudfoundry_apps_domain))
+        SAMPLE_URL: http://samplesvc-preprod.((preprod_cloudfoundry_apps_domain))
         SAMPLE_USERNAME: ((preprod_security_user_name))
         SAMPLE_PASSWORD: ((preprod_security_user_password))
   - put: map-route-vpn-domain
