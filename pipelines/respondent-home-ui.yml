@@ -31,9 +31,9 @@ resources:
 - name: cf-resource-preprod
   type: cf
   source:
-    api: ((prod_cloudfoundry_api))
-    username: ((prod_cloudfoundry_email))
-    password: ((prod_cloudfoundry_password))
+    api: ((preprod_cloudfoundry_api))
+    username: ((preprod_cloudfoundry_email))
+    password: ((preprod_cloudfoundry_password))
     organization: rmras
     space: preprod
     skip_cert_check: true
@@ -41,9 +41,9 @@ resources:
 - name: cf-cli-resource-preprod
   type: cf-cli-resource
   source:
-    api: ((prod_cloudfoundry_api))
-    username: ((prod_cloudfoundry_email))
-    password: ((prod_cloudfoundry_password))
+    api: ((preprod_cloudfoundry_api))
+    username: ((preprod_cloudfoundry_email))
+    password: ((preprod_cloudfoundry_password))
     org: rmras
     space: preprod
     skip_cert_check: true
@@ -141,25 +141,25 @@ jobs:
         ACCOUNT_SERVICE_URL: http://rhpreprod.rmdev.onsdigital.uk
         EQ_URL: https://preprod-surveys.eq.ons.digital/session?token=
         JSON_SECRET_KEYS: ((preprod_json_secret_keys))
-        CASE_URL: http://casesvc-preprod.((prod_cloudfoundry_apps_domain))
+        CASE_URL: http://casesvc-preprod.((preprod_cloudfoundry_apps_domain))
         CASE_USERNAME: ((preprod_security_user_name))
         CASE_PASSWORD: ((preprod_security_user_password))
-        COLLECTION_EXERCISE_URL: http://collectionexercisesvc-preprod.((prod_cloudfoundry_apps_domain))
+        COLLECTION_EXERCISE_URL: http://collectionexercisesvc-preprod.((preprod_cloudfoundry_apps_domain))
         COLLECTION_EXERCISE_USERNAME: ((preprod_security_user_name))
         COLLECTION_EXERCISE_PASSWORD: ((preprod_security_user_password))
-        COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-preprod.((prod_cloudfoundry_apps_domain))
+        COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-preprod.((preprod_cloudfoundry_apps_domain))
         COLLECTION_INSTRUMENT_USERNAME: ((preprod_security_user_name))
         COLLECTION_INSTRUMENT_PASSWORD: ((preprod_security_user_password))
-        IAC_URL: http://iacsvc-preprod.((prod_cloudfoundry_apps_domain))
+        IAC_URL: http://iacsvc-preprod.((preprod_cloudfoundry_apps_domain))
         IAC_USERNAME: ((preprod_security_user_name))
         IAC_PASSWORD: ((preprod_security_user_password))
-        PARTY_URL: http://ras-party-service-preprod.((prod_cloudfoundry_apps_domain))
+        PARTY_URL: http://ras-party-service-preprod.((preprod_cloudfoundry_apps_domain))
         PARTY_USERNAME: ((preprod_security_user_name))
         PARTY_PASSWORD: ((preprod_security_user_password))
-        SURVEY_URL: http://surveysvc-preprod.((prod_cloudfoundry_apps_domain))
+        SURVEY_URL: http://surveysvc-preprod.((preprod_cloudfoundry_apps_domain))
         SURVEY_USERNAME: ((preprod_security_user_name))
         SURVEY_PASSWORD: ((preprod_security_user_password))
-        SAMPLE_URL: http://samplesvc-preprod.((prod_cloudfoundry_apps_domain))
+        SAMPLE_URL: http://samplesvc-preprod.((preprod_cloudfoundry_apps_domain))
         SAMPLE_USERNAME: ((preprod_security_user_name))
         SAMPLE_PASSWORD: ((preprod_security_user_password))
   - put: map-route-vpn-domain
