@@ -1,6 +1,17 @@
 ---
-resources:
+resource_types:
+- name: cf-cli-resource
+  type: docker-image
+  source:
+    repository: nulldriver/cf-cli-resource
+    tag: latest
 
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+
+resources:
 - name: respondent-home-ui-source
   type: git
   source:
@@ -20,10 +31,20 @@ resources:
 - name: cf-resource-preprod
   type: cf
   source:
-    api: ((prod_cloudfoundry_api))
-    username: ((prod_cloudfoundry_email))
-    password: ((prod_cloudfoundry_password))
+    api: ((preprod_cloudfoundry_api))
+    username: ((preprod_cloudfoundry_email))
+    password: ((preprod_cloudfoundry_password))
     organization: rmras
+    space: preprod
+    skip_cert_check: true
+
+- name: cf-cli-resource-preprod
+  type: cf-cli-resource
+  source:
+    api: ((preprod_cloudfoundry_api))
+    username: ((preprod_cloudfoundry_email))
+    password: ((preprod_cloudfoundry_password))
+    org: rmras
     space: preprod
     skip_cert_check: true
 
@@ -37,6 +58,11 @@ resources:
     space: prod
     skip_cert_check: true
 
+- name: notify
+  type: slack-notification
+  source:
+    url: ((slack_webhook))
+
 jobs:
 - name: respondent-home-ui-latest-deploy
   plan:
@@ -44,6 +70,12 @@ jobs:
     trigger: true
   - put: push-app
     resource: cf-resource-latest
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Latest respondent-home-ui deployment failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: respondent-home-ui-latest
       manifest: respondent-home-ui-source/manifest.yml
@@ -72,6 +104,9 @@ jobs:
         SURVEY_URL: http://rm-survey-service-concourse-latest.apps.devtest.onsclofo.uk
         SURVEY_USERNAME: ((latest_security_user_name))
         SURVEY_PASSWORD: ((latest_security_user_password))
+        SAMPLE_URL: http://rm-sample-service-concourse-latest.apps.devtest.onsclofo.uk
+        SAMPLE_USERNAME: ((latest_security_user_name))
+        SAMPLE_PASSWORD: ((latest_security_user_password))
 
 - name: respondent-home-ui-preprod-deploy
   plan:
@@ -80,6 +115,12 @@ jobs:
     trigger: true
   - put: push-app
     resource: cf-resource-preprod
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Pre-production respondent-home-ui deployment failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: respondent-home-ui-preprod
       manifest: respondent-home-ui-source/manifest.yml
@@ -87,27 +128,42 @@ jobs:
       environment_variables:
         HOST: 0.0.0.0
         LOG_LEVEL: INFO
-        ACCOUNT_SERVICE_URL: http://respondent-home-ui-preprod.((prod_cloudfoundry_apps_domain))
+        ACCOUNT_SERVICE_URL: http://rhpreprod.rmdev.onsdigital.uk
         EQ_URL: https://preprod-surveys.eq.ons.digital/session?token=
         JSON_SECRET_KEYS: ((preprod_json_secret_keys))
-        CASE_URL: http://casesvc-preprod.((prod_cloudfoundry_apps_domain))
+        CASE_URL: http://casesvc-preprod.((preprod_cloudfoundry_apps_domain))
         CASE_USERNAME: ((preprod_security_user_name))
         CASE_PASSWORD: ((preprod_security_user_password))
-        COLLECTION_EXERCISE_URL: http://collectionexercisesvc-preprod.((prod_cloudfoundry_apps_domain))
+        COLLECTION_EXERCISE_URL: http://collectionexercisesvc-preprod.((preprod_cloudfoundry_apps_domain))
         COLLECTION_EXERCISE_USERNAME: ((preprod_security_user_name))
         COLLECTION_EXERCISE_PASSWORD: ((preprod_security_user_password))
-        COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-preprod.((prod_cloudfoundry_apps_domain))
+        COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-preprod.((preprod_cloudfoundry_apps_domain))
         COLLECTION_INSTRUMENT_USERNAME: ((preprod_security_user_name))
         COLLECTION_INSTRUMENT_PASSWORD: ((preprod_security_user_password))
-        IAC_URL: http://iacsvc-preprod.((prod_cloudfoundry_apps_domain))
+        IAC_URL: http://iacsvc-preprod.((preprod_cloudfoundry_apps_domain))
         IAC_USERNAME: ((preprod_security_user_name))
         IAC_PASSWORD: ((preprod_security_user_password))
-        PARTY_URL: http://ras-party-service-preprod.((prod_cloudfoundry_apps_domain))
+        PARTY_URL: http://ras-party-service-preprod.((preprod_cloudfoundry_apps_domain))
         PARTY_USERNAME: ((preprod_security_user_name))
         PARTY_PASSWORD: ((preprod_security_user_password))
-        SURVEY_URL: http://surveysvc-preprod.((prod_cloudfoundry_apps_domain))
+        SURVEY_URL: http://surveysvc-preprod.((preprod_cloudfoundry_apps_domain))
         SURVEY_USERNAME: ((preprod_security_user_name))
         SURVEY_PASSWORD: ((preprod_security_user_password))
+        SAMPLE_URL: http://samplesvc-preprod.((preprod_cloudfoundry_apps_domain))
+        SAMPLE_USERNAME: ((preprod_security_user_name))
+        SAMPLE_PASSWORD: ((preprod_security_user_password))
+  - put: map-route-vpn-domain
+    resource: cf-cli-resource-preprod
+    params:
+      command: map-route
+      app_name: respondent-home-ui-preprod
+      domain: rhpreprod.rmdev.onsdigital.uk
+  - put: map-route-ons-internal-domain
+    resource: cf-cli-resource-preprod
+    params:
+      command: map-route
+      app_name: respondent-home-ui-preprod
+      domain: ohs-alpha.onsdigital.uk
 
 - name: respondent-home-ui-prod-deploy
   plan:
@@ -116,6 +172,12 @@ jobs:
     trigger: true
   - put: push-app
     resource: cf-resource-prod
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Production respondent-home-ui deployment failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: respondent-home-ui-prod
       manifest: respondent-home-ui-source/manifest.yml
@@ -144,3 +206,6 @@ jobs:
         SURVEY_URL: http://surveysvc-prod.((prod_cloudfoundry_apps_domain))
         SURVEY_USERNAME: ((prod_security_user_name))
         SURVEY_PASSWORD: ((prod_security_user_password))
+        SAMPLE_URL: http://samplesvc-prod.((prod_cloudfoundry_apps_domain))
+        SAMPLE_USERNAME: ((prod_security_user_name))
+        SAMPLE_PASSWORD: ((prod_security_user_password))
