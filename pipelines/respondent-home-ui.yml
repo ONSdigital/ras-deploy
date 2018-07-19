@@ -65,6 +65,7 @@ resources:
 
 jobs:
 - name: respondent-home-ui-latest-deploy
+  serial: true
   plan:
   - get: respondent-home-ui-source
     trigger: true
@@ -107,8 +108,19 @@ jobs:
         SAMPLE_URL: http://rm-sample-service-concourse-latest.apps.devtest.onsclofo.uk
         SAMPLE_USERNAME: ((latest_security_user_name))
         SAMPLE_PASSWORD: ((latest_security_user_password))
+  - task: smoke-tests
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Latest smoke tests failed. Check the build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    file: respondent-home-ui-source/ci/smoke_tests.yml
+    params:
+      RESPONDENT_HOME_URL: https://respondent-home-ui-latest.apps.devtest.onsclofo.uk
 
 - name: respondent-home-ui-preprod-deploy
+  serial: true
   plan:
   - get: respondent-home-ui-source
     passed: [respondent-home-ui-latest-deploy]
@@ -164,8 +176,19 @@ jobs:
       command: map-route
       app_name: respondent-home-ui-preprod
       domain: ohs-alpha.onsdigital.uk
+  - task: smoke-tests
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Pre-production smoke tests failed. Check the build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    file: respondent-home-ui-source/ci/smoke_tests.yml
+    params:
+      RESPONDENT_HOME_URL: https://respondent-home-ui-preprod.((preprod_cloudfoundry_apps_domain))
 
 - name: respondent-home-ui-prod-deploy
+  serial: true
   plan:
   - get: respondent-home-ui-source
     passed: [respondent-home-ui-preprod-deploy]
@@ -209,3 +232,13 @@ jobs:
         SAMPLE_URL: http://samplesvc-prod.((prod_cloudfoundry_apps_domain))
         SAMPLE_USERNAME: ((prod_security_user_name))
         SAMPLE_PASSWORD: ((prod_security_user_password))
+  - task: smoke-tests
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Production smoke tests failed. Check the build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    file: respondent-home-ui-source/ci/smoke_tests.yml
+    params:
+      RESPONDENT_HOME_URL: https://respondent-home-ui-prod.((prod_cloudfoundry_apps_domain))
