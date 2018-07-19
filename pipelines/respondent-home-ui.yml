@@ -18,11 +18,6 @@ resources:
     uri: https://github.com/ONSdigital/respondent-home-ui.git
     branch: aiohttp-app
 
-- name: ras-deploy
-  type: git
-  source:
-    uri: https://github.com/ONSdigital/ras-deploy.git
-
 - name: cf-resource-latest
   type: cf
   source:
@@ -129,11 +124,20 @@ jobs:
         SAMPLE_URL: http://rm-sample-service-concourse-latest.apps.devtest.onsclofo.uk
         SAMPLE_USERNAME: ((latest_security_user_name))
         SAMPLE_PASSWORD: ((latest_security_user_password))
+  - task: smoke-tests
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Latest smoke tests failed. Check the build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    file: respondent-home-ui-source/tasks/respondent-home-ui/smoke_tests.yml
+    params:
+      RESPONDENT_HOME_URL: https://respondent-home-ui-latest.((prod_cloudfoundry_apps_domain))
 
 - name: respondent-home-ui-preprod-deploy
   serial: true
   plan:
-  - get: ras-deploy
   - get: respondent-home-ui-source
     passed: [respondent-home-ui-latest-deploy]
     trigger: true
@@ -195,14 +199,13 @@ jobs:
         text:  |
           Pre-production smoke tests failed. Check the build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-    file: ras-deploy/tasks/respondent-home-ui/smoke_tests.yml
+    file: respondent-home-ui-source/tasks/respondent-home-ui/smoke_tests.yml
     params:
       RESPONDENT_HOME_URL: https://respondent-home-ui-preprod.((preprod_cloudfoundry_apps_domain))
 
 - name: respondent-home-ui-prod-deploy
   serial: true
   plan:
-  - get: ras-deploy
   - get: respondent-home-ui-source
     passed: [respondent-home-ui-preprod-deploy]
     trigger: true
@@ -252,6 +255,6 @@ jobs:
         text:  |
           Production smoke tests failed. Check the build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-    file: ras-deploy/tasks/respondent-home-ui/smoke_tests.yml
+    file: respondent-home-ui-source/tasks/respondent-home-ui/smoke_tests.yml
     params:
       RESPONDENT_HOME_URL: https://respondent-home-ui-prod.((prod_cloudfoundry_apps_domain))
