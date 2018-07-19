@@ -115,9 +115,9 @@ jobs:
         text:  |
           Latest smoke tests failed. Check the build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-    file: respondent-home-ui-source/tasks/respondent-home-ui/smoke_tests.yml
+    file: respondent-home-ui-source/ci/smoke_tests.yml
     params:
-      RESPONDENT_HOME_URL: https://respondent-home-ui-latest.((prod_cloudfoundry_apps_domain))
+      RESPONDENT_HOME_URL: https://respondent-home-ui-latest.apps.devtest.onsclofo.uk
 
 - name: respondent-home-ui-preprod-deploy
   serial: true
@@ -183,7 +183,7 @@ jobs:
         text:  |
           Pre-production smoke tests failed. Check the build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-    file: respondent-home-ui-source/tasks/respondent-home-ui/smoke_tests.yml
+    file: respondent-home-ui-source/ci/smoke_tests.yml
     params:
       RESPONDENT_HOME_URL: https://respondent-home-ui-preprod.((preprod_cloudfoundry_apps_domain))
 
@@ -239,6 +239,6 @@ jobs:
         text:  |
           Production smoke tests failed. Check the build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-    file: respondent-home-ui-source/tasks/respondent-home-ui/smoke_tests.yml
+    file: respondent-home-ui-source/ci/smoke_tests.yml
     params:
       RESPONDENT_HOME_URL: https://respondent-home-ui-prod.((prod_cloudfoundry_apps_domain))
