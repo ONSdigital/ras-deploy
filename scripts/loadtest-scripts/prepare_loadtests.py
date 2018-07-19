@@ -27,6 +27,8 @@ username = os.getenv('COLLECTION_INSTRUMENT_USERNAME', 'admin')
 password = os.getenv('COLLECTION_INSTRUMENT_PASSWORD', 'secret')
 polling_wait_time = int(os.getenv('POLLING_WAIT_TIME', '2'))
 polling_retries = int(os.getenv('POLLING_RETRIES', '30'))
+period_override = os.getenv('COLLECTION_EXERCISE_PERIOD', None)
+
 
 # Collection instrument
 
@@ -39,10 +41,11 @@ def upload_collection_instrument():
     if response.status_code != requests.codes.ok:
         error_exit(f'Failed to set collection instrument: {response.text}')
 
+
 def link_collection_instrument_to_collection_exercise(instrument_id, exercise_id):
     url = f'{collection_instrument_url}{collection_instrument_link_endpoint}/{instrument_id}/{exercise_id}'
 
-    response = requests.post(url=url, auth=(username,password))
+    response = requests.post(url=url, auth=(username, password))
 
     if response.status_code != requests.codes.ok:
         error_exit(f'Failed to link collection instrument to exercise: {response.text}')
@@ -62,15 +65,18 @@ def get_collection_id_from_classifier(classifiers):
     results = response.json()
     return results[0]['id'] if len(results) > 0 else None
 
+
 # Collection exercise
 
 def get_previous_period():
     return (datetime.now() - relativedelta(months=1)).strftime('%Y%m')
 
+
 def get_collection_exercise_by_period(exercises, period):
     for exercise in exercises:
         if exercise['exerciseRef'] == period:
             return exercise
+
 
 def get_collection_exercise_id(survey_id, period):
     url = f'{collection_exercise_url}/collectionexercises/survey/{survey_id}'
@@ -78,7 +84,8 @@ def get_collection_exercise_id(survey_id, period):
     response = requests.get(url=url, auth=(username, password))
 
     if response.status_code != requests.codes.ok:
-        error_exit(f'Failed fetch collection exercises for survey {survey_id}: {response.text}')
+        error_exit(f'Failed to fetch collection exercises for survey {survey_id}'
+                   f'[{response.status_code}]: {response.text}')
 
     exercise = get_collection_exercise_by_period(response.json(), period)
 
@@ -105,6 +112,7 @@ def execute_collection_exercise(exercise_id):
 
     print('Collection exercise executed!')
 
+
 def get_collection_exercise_state(exercise_id):
     url = f'{collection_exercise_url}/collectionexercises/{exercise_id}'
 
@@ -128,6 +136,7 @@ def link_sample_to_collection_exercise(sample_id, exercise_id):
 
     print('Sample linked to collection exercise!')
 
+
 # Sample
 
 def upload_sample_file(filename):
@@ -141,6 +150,7 @@ def upload_sample_file(filename):
         error_exit(f'Failed to upload sample file: {response.text}')
 
     return response.json()['id']
+
 
 # Enrolment
 
@@ -156,6 +166,7 @@ def create_enrolment_codes(count):
     print(f'Set up {count} IACs')
     return response.json()
 
+
 def script_directory():
     return os.path.dirname(os.path.realpath(__file__))
 
@@ -163,6 +174,7 @@ def script_directory():
 def error_exit(message):
     print(message)
     exit(1)
+
 
 def with_timeout(action):
     count = 0
@@ -192,7 +204,20 @@ def create_user(email_address, first_name, last_name, user_password, telephone, 
 
     return 'magic link thing'
 
-def main():
+
+# Main support
+
+def get_collection_exercise():
+    period = period_override or get_previous_period()
+    print(f'Fetching collection exercise for {period}')
+
+    exercise_id = get_collection_exercise_id(survey_id, period)
+    print(f'Exercise ID = {exercise_id}')
+
+    return exercise_id
+
+
+def upload_and_link_collection_instrument(exercise_id):
     instrument_id = get_collection_id_from_classifier(survey_classifiers)
 
     if instrument_id is None:
@@ -202,24 +227,30 @@ def main():
     else:
         print(f'Collection instrument exists, ID = {instrument_id}')
 
-    sample_id = upload_sample_file('sample.csv')
-    print(f'Sample ID = {sample_id}')
-
-    period = get_previous_period()
-    print(f'Fetching collection exercise for {period}')
-
-    exercise_id = get_collection_exercise_id(survey_id, period)
-    print(f'Exercise ID = {exercise_id}')
-
-    link_sample_to_collection_exercise(sample_id, exercise_id)
-    
     link_collection_instrument_to_collection_exercise(instrument_id, exercise_id)
 
-    with_timeout(lambda: get_collection_exercise_state(exercise_id) not in ['READY_FOR_REVIEW', 'READY_FOR_LIVE'])
+
+def upload_and_link_sample(csv, exercise_id):
+    sample_id = upload_sample_file(csv)
+    print(f'Sample ID = {sample_id}')
+    link_sample_to_collection_exercise(sample_id, exercise_id)
+
+
+def main():
+    exercise_id = get_collection_exercise()
+
+    if get_collection_exercise_state(exercise_id) in ['LIVE', 'READY_FOR_LIVE']:
+        print('Quitting: The collection exercise has already been executed.')
+        return
+
+    upload_and_link_collection_instrument(exercise_id)
+    upload_and_link_sample('sample.csv', exercise_id)
+
+    with_timeout(lambda: get_collection_exercise_state(exercise_id) not in ['READY_FOR_REVIEW'])
 
     execute_collection_exercise(exercise_id)
 
-    with_timeout(lambda: get_collection_exercise_state(exercise_id) is not 'READY_FOR_LIVE')
+    with_timeout(lambda: get_collection_exercise_state(exercise_id) not in ['READY_FOR_LIVE', 'LIVE'])
 
     # get_iac_codes_for_all_cases_for_collect(exercise_id)
     #
@@ -234,7 +265,6 @@ def main():
     #     # verify_user(verify_link)
     #
     # exit(0)
-
 
 
 main()
