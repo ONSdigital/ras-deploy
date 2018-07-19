@@ -58,22 +58,6 @@ resources:
     space: prod
     skip_cert_check: true
 
-
-- name: notify
-  type: slack-notification
-  source:
-    url: ((slack_webhook))
-
-- name: cf-cli-resource-prod
-  type: cf-cli-resource
-  source:
-    api: ((prod_cloudfoundry_api))
-    username: ((prod_cloudfoundry_email))
-    password: ((prod_cloudfoundry_password))
-    org: rmras
-    space: prod
-    skip_cert_check: true
-
 - name: notify
   type: slack-notification
   source:
