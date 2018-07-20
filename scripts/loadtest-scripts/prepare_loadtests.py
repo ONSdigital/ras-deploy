@@ -33,6 +33,7 @@ config = {
 }
 sdc = SDCClient(config)
 
+
 def with_timeout(action):
     count = 0
     while action():
@@ -48,7 +49,7 @@ def get_collection_exercise():
         survey_id,
         period_override or collectionexerciseclient.get_previous_period())
 
-    print(f'Exercise ID = {exercise["id"]}')
+    logging.debug(f'Exercise ID = {exercise["id"]}')
 
     return exercise
 
@@ -68,7 +69,7 @@ def upload_and_link_collection_instrument(exercise_id):
 
 def upload_and_link_sample(csv, exercise_id):
     sample_id = sample.upload_sample_file(csv)
-    print(f'Sample ID = {sample_id}')
+    logging.debug(f'Sample ID = {sample_id}')
     sdc.collection_exercises.link_sample_to_collection_exercise(sample_id, exercise_id)
 
 
@@ -77,7 +78,7 @@ def main():
     exercise_id = exercise['id']
 
     if sdc.collection_exercises.get_state(exercise_id) in ['LIVE', 'READY_FOR_LIVE']:
-        print('Quitting: The collection exercise has already been executed.')
+        logging.info('Quitting: The collection exercise has already been executed.')
         return
 
     # There is work in progress which will remove the need for this step
