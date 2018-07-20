@@ -119,19 +119,5 @@ def main():
 
     with_timeout(lambda: ce.get_collection_exercise_state(exercise_id) not in ['READY_FOR_LIVE', 'LIVE'])
 
-    # get_iac_codes_for_all_cases_for_collect(exercise_id)
-    #
-    # enrolment_codes = create_enrolment_codes(1)
-    # for enrolment_code in enrolment_codes:
-    #     verify_link = create_user(enrolment_code=enrolment_code,
-    #                               email_address='something@somewhere.com',
-    #                               user_password='secret',
-    #                               first_name='unique',
-    #                               last_name='name',
-    #                               telephone='01234567890')
-    #     # verify_user(verify_link)
-    #
-    # exit(0)
-
 
 main()
