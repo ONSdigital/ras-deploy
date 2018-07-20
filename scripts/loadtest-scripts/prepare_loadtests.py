@@ -1,21 +1,10 @@
 import time
 import requests
 import os
+from loadtestscripts.clients.collectioninstrumentclient import CollectionInstrumentClient
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-collection_instrument_url = \
-    os.getenv('COLLECTION_INSTRUMENT_URL',
-              'http://localhost:8002')
-collection_instrument_search_endpoint = \
-    os.getenv('COLLECTION_INSTRUMENT_SEARCH_ENDPOINT',
-              '/collection-instrument-api/1.0.2/collectioninstrument')
-collection_instrument_upload_endpoint = \
-    os.getenv('COLLECTION_INSTRUMENT_UPLOAD_ENDPOINT',
-              '/collection-instrument-api/1.0.2/upload')
-collection_instrument_link_endpoint = \
-    os.getenv('COLLECTION_INSTRUMENT_LINK_ENDPOINT',
-              '/collection-instrument-api/1.0.2/link-exercise')
 sample_url = os.getenv('SAMPLE_URL', 'http://localhost:8125')
 party_url = os.getenv('PARTY_URL', 'http://localhost:8081')
 party_create_respondent_endpoint = os.getenv('PARTY_CREATE_RESPONDENT_ENDPOINT', '/party-api/v1/respondents')
@@ -27,40 +16,6 @@ username = os.getenv('COLLECTION_INSTRUMENT_USERNAME', 'admin')
 password = os.getenv('COLLECTION_INSTRUMENT_PASSWORD', 'secret')
 polling_wait_time = int(os.getenv('POLLING_WAIT_TIME', '2'))
 polling_retries = int(os.getenv('POLLING_RETRIES', '30'))
-
-# Collection instrument
-
-def upload_collection_instrument():
-    upload_params = {'survey_id': survey_id, 'classifiers': survey_classifiers}
-    url = collection_instrument_url + collection_instrument_upload_endpoint
-
-    response = requests.post(url=url, params=upload_params, auth=(username, password))
-
-    if response.status_code != requests.codes.ok:
-        error_exit(f'Failed to set collection instrument: {response.text}')
-
-def link_collection_instrument_to_collection_exercise(instrument_id, exercise_id):
-    url = f'{collection_instrument_url}{collection_instrument_link_endpoint}/{instrument_id}/{exercise_id}'
-
-    response = requests.post(url=url, auth=(username,password))
-
-    if response.status_code != requests.codes.ok:
-        error_exit(f'Failed to link collection instrument to exercise: {response.text}')
-
-    print('Collection instrument linked to exercise!')
-
-
-def get_collection_id_from_classifier(classifiers):
-    search_params = {'searchString': classifiers}
-    url = collection_instrument_url + collection_instrument_search_endpoint
-
-    response = requests.get(url=url, params=search_params, auth=(username, password))
-
-    if response.status_code != requests.codes.ok:
-        error_exit(f'Failed to check for collection instrument: {response.text}')
-
-    results = response.json()
-    return results[0]['id'] if len(results) > 0 else None
 
 # Collection exercise
 
@@ -193,11 +148,12 @@ def create_user(email_address, first_name, last_name, user_password, telephone, 
     return 'magic link thing'
 
 def main():
-    instrument_id = get_collection_id_from_classifier(survey_classifiers)
+    ci = CollectionInstrumentClient(username, password)
+    instrument_id = ci.get_collection_id_from_classifier(survey_classifiers)
 
     if instrument_id is None:
-        upload_collection_instrument()
-        instrument_id = get_collection_id_from_classifier(survey_classifiers)
+        ci.upload_collection_instrument()
+        instrument_id = ci.get_collection_id_from_classifier(survey_classifiers)
         print(f'Created collection instrument, ID = {instrument_id}')
     else:
         print(f'Collection instrument exists, ID = {instrument_id}')
