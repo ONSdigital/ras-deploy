@@ -617,6 +617,7 @@ jobs:
         <<: *loadtest_security_user
         <<: *loadtest_service_endpoints_for_java
         endpoints_enabled: 'false'
+        PLAN_EXECUTION_DELAY_MILLI_SECONDS: '1000'
 
 - name: rm-actionexporter-service-deploy
   serial_groups: [rm-actionexporter-service-deploy]
