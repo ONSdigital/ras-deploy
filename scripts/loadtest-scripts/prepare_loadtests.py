@@ -2,6 +2,7 @@ import time
 import requests
 import os
 
+from clients.actionclient import ActionClient
 from clients.collectionexerciseclient import CollectionExerciseClient
 from clients.collectioninstrumentclient import CollectionInstrumentClient
 from clients.sampleclient import SampleClient
@@ -9,6 +10,7 @@ from clients.sampleclient import SampleClient
 party_url = os.getenv('PARTY_URL', 'http://localhost:8081')
 party_create_respondent_endpoint = os.getenv('PARTY_CREATE_RESPONDENT_ENDPOINT',
                                              '/party-api/v1/respondents')
+action_url = os.getenv('ACTION_URL', 'http://localhost:8151')
 iac_url = os.getenv('IAC_URL', 'http://localhost:8121')
 survey_id = os.getenv('SURVEY_ID', '75b19ea0-69a4-4c58-8d7f-4458c8f43f5c')
 survey_classifiers = os.getenv('SURVEY_CLASSIFIERS',
@@ -109,6 +111,14 @@ def main():
     if ce.get_collection_exercise_state(exercise_id) in ['LIVE', 'READY_FOR_LIVE']:
         print('Quitting: The collection exercise has already been executed.')
         return
+
+    # There is work in progress which will remove the need for this step
+    action_client = ActionClient(http_client=requests,
+                                 collection_exercise_client=CollectionExerciseClient(username, password),
+                                 service_url=action_url,
+                                 service_username=username,
+                                 service_password=password)
+    action_client.add_action_rule_to_collection_exercise(exercise_id)
 
     upload_and_link_collection_instrument(exercise_id)
     upload_and_link_sample('sample.csv', exercise_id)
