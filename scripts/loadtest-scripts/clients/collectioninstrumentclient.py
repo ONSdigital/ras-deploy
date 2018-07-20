@@ -1,6 +1,6 @@
 from clients.http.httpcodeexception import HTTPCodeException
 import os
-
+import logging
 import requests
 
 collection_instrument_url = \
@@ -42,7 +42,7 @@ class CollectionInstrumentClient:
             raise HTTPCodeException(response.codes.ok, response.status_code,
                                     f'Failed to link collection instrument to exercise: {response.text}')
 
-        print('Collection instrument linked to exercise!')
+        logging.info('Collection instrument linked to exercise!')
 
     def get_collection_id_from_classifier(self, classifiers):
         search_params = {'searchString': classifiers}

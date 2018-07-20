@@ -1,7 +1,6 @@
 import os
 import time
-
-import requests
+import logging
 
 from clients import SDCClient, collectionexerciseclient
 from clients.collectionexerciseclient import CollectionExerciseClient, \
@@ -34,58 +33,15 @@ config = {
 }
 sdc = SDCClient(config)
 
-# Enrolment
-
-def create_enrolment_codes(count):
-    url = f'{iac_url}/iacs'
-    payload = {'count': count, 'createdBy': 'loadtest'}
-
-    response = requests.post(url=url, auth=(username, password), json=payload)
-
-    if response.status_code != requests.codes.created:
-        error_exit(f'Failed to create IACs: {response.text}')
-
-    print(f'Set up {count} IACs')
-    return response.json()
-
-
-def error_exit(message):
-    print(message)
-    exit(1)
-
-
 def with_timeout(action):
     count = 0
     while action():
         count += 1
         if count >= polling_retries:
-            error_exit('Timed out')
+            raise BaseException(f"Operation timed out")
 
         time.sleep(polling_wait_time)
 
-
-def create_user(email_address, first_name, last_name, user_password, telephone,
-                enrolment_code):
-    url = f'{party_url}{party_create_respondent_endpoint}'
-    payload = {'emailAddress': email_address,
-               'firstName': first_name,
-               'lastName': last_name,
-               'password': user_password,
-               'telephone': telephone,
-               'enrolmentCode': enrolment_code,
-               }
-
-    response = requests.post(url=url, auth=(username, password), json=payload)
-
-    print(response.status_code)
-    if response.status_code != requests.codes.created:
-        error_exit(
-            f'Failed to create user with email {email_address}: {response.text}')
-
-    return 'magic link thing'
-
-
-# Main support
 
 def get_collection_exercise():
     exercise = sdc.collection_exercises.get_by_survey_and_period(
@@ -103,9 +59,9 @@ def upload_and_link_collection_instrument(exercise_id):
     if instrument_id is None:
         ci.upload_collection_instrument(survey_id, survey_classifiers)
         instrument_id = ci.get_collection_id_from_classifier(survey_classifiers)
-        print(f'Created collection instrument, ID = {instrument_id}')
+        logging.info(f'Created collection instrument, ID = {instrument_id}')
     else:
-        print(f'Collection instrument exists, ID = {instrument_id}')
+        logging.info(f'Collection instrument exists, ID = {instrument_id}')
 
     ci.link_collection_instrument_to_collection_exercise(instrument_id, exercise_id)
 
