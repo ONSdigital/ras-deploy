@@ -617,6 +617,7 @@ jobs:
         <<: *loadtest_security_user
         <<: *loadtest_service_endpoints_for_java
         endpoints_enabled: 'false'
+        PLAN_EXECUTION_DELAY_MILLI_SECONDS: '1000'
 
 - name: rm-actionexporter-service-deploy
   serial_groups: [rm-actionexporter-service-deploy]
@@ -890,6 +891,26 @@ jobs:
         SPACE: ((loadtest_cloudfoundry_space))
         CLIENT: secure_message
         PASSWORD: ((loadtest_secure_message_client_secret))
+        ADMIN_SECRET: ((loadtest_uaa_admin_secret))
+        UAA_URL: 'uaa-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))'
+      run:
+        dir: sdc-uaa-source
+        path: sh
+        args:
+        - './scripts/jenkins/add_client.sh'
+  - task: create-response_operations-client
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: kennethreitz/pipenv
+      inputs:
+        - name: sdc-uaa-source
+      params:
+        SPACE: ((loadtest_cloudfoundry_space))
+        CLIENT: response_operations
+        PASSWORD: ((loadtest_response_operations_client_secret))
         ADMIN_SECRET: ((loadtest_uaa_admin_secret))
         UAA_URL: 'uaa-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))'
       run:
