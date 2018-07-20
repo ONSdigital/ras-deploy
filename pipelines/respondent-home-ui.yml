@@ -108,6 +108,8 @@ jobs:
         SAMPLE_URL: http://rm-sample-service-concourse-latest.apps.devtest.onsclofo.uk
         SAMPLE_USERNAME: ((latest_security_user_name))
         SAMPLE_PASSWORD: ((latest_security_user_password))
+        SECRET_KEY: ((latest_rh_secret_key))
+
   - task: smoke-tests
     on_failure:
       put: notify
@@ -164,6 +166,8 @@ jobs:
         SAMPLE_URL: http://samplesvc-preprod.((preprod_cloudfoundry_apps_domain))
         SAMPLE_USERNAME: ((preprod_security_user_name))
         SAMPLE_PASSWORD: ((preprod_security_user_password))
+        SECRET_KEY: ((preprod_rh_secret_key))
+
   - put: map-route-vpn-domain
     resource: cf-cli-resource-preprod
     params:
@@ -232,6 +236,8 @@ jobs:
         SAMPLE_URL: http://samplesvc-prod.((prod_cloudfoundry_apps_domain))
         SAMPLE_USERNAME: ((prod_security_user_name))
         SAMPLE_PASSWORD: ((prod_security_user_password))
+        SECRET_KEY: ((prod_rh_secret_key))
+
   - task: smoke-tests
     on_failure:
       put: notify
