@@ -1,12 +1,9 @@
-import requests
-
 from clients.collectionexerciseclient import CollectionExerciseClient
-from clients.httpclient import HTTPClient
-from clients.httpcodeexception import HTTPCodeException
+from clients.statuscodecheckinghttpclient import StatusCodeCheckingHTTPClient
 
 
 class ActionClient:
-    def __init__(self, http_client: HTTPClient,
+    def __init__(self, http_client: StatusCodeCheckingHTTPClient,
                  collection_exercise_client: CollectionExerciseClient,
                  service_url: str):
         self.http_client = http_client
@@ -21,18 +18,15 @@ class ActionClient:
 
         b_case_action_plan_id = case_types['B']['actionPlanId']
 
-        response = self.http_client.post(url=f'{self.service_url}/actionrules',
-                                         json={
-                                             "actionPlanId": b_case_action_plan_id,
-                                             "actionTypeName": "BSNL",
-                                             "name": "BSNL+0",
-                                             "description": "Description for BSNL+0",
-                                             "daysOffset": 0,
-                                             "priority": 1})
-
-        if response.status_code != requests.codes.created:
-            raise HTTPCodeException(requests.codes.created, response.status_code,
-            'Failed to create Action Rule')
+        self.http_client.post(url=f'{self.service_url}/actionrules',
+                              expected_status=201,
+                              json={
+                                  "actionPlanId": b_case_action_plan_id,
+                                  "actionTypeName": "BSNL",
+                                  "name": "BSNL+0",
+                                  "description": "Description for BSNL+0",
+                                  "daysOffset": 0,
+                                  "priority": 1})
 
     @staticmethod
     def _get_case_types_from_exercise(collection_exercise):

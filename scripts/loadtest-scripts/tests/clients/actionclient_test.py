@@ -4,7 +4,6 @@ from unittest.mock import Mock, MagicMock
 from requests import Response
 
 from clients.actionclient import ActionClient
-from clients.httpcodeexception import HTTPCodeException
 
 
 class ActionClientTest(unittest.TestCase):
@@ -50,6 +49,7 @@ class ActionClientTest(unittest.TestCase):
 
         self.http_client.post.assert_called_with(
             url=f'{self.ACTION_SERVICE_URL}/actionrules',
+            expected_status=201,
             json={'actionPlanId': self.BUSINESS_CASE_ACTION_PLAN_ID,
                   'actionTypeName': 'BSNL',
                   'name': 'BSNL+0',
@@ -57,18 +57,3 @@ class ActionClientTest(unittest.TestCase):
                   'daysOffset': 0,
                   'priority': 1}
         )
-
-    def test_add_action_rule_raises_if_status_code_is_not_201(self):
-        self.http_response.status_code = 400
-
-        self.collection_exercise_client.get_collection_exercise = Mock(
-            return_value={
-                'caseTypes': [
-                    {
-                        'actionPlanId': '739a2d07-6804-41eb-b6d2-5d8332f04abe',
-                        'sampleUnitType': 'B'
-                    }
-                ]})
-
-        with (self.assertRaises(HTTPCodeException)):
-            self.client.add_action_rule_to_collection_exercise(self.EXERCISE_ID)

@@ -5,7 +5,9 @@ import os
 from clients.actionclient import ActionClient
 from clients.collectionexerciseclient import CollectionExerciseClient
 from clients.collectioninstrumentclient import CollectionInstrumentClient
+from clients.httpclient import HTTPClient
 from clients.sampleclient import SampleClient
+from clients.statuscodecheckinghttpclient import StatusCodeCheckingHTTPClient
 
 party_url = os.getenv('PARTY_URL', 'http://localhost:8081')
 party_create_respondent_endpoint = os.getenv('PARTY_CREATE_RESPONDENT_ENDPOINT',
@@ -113,11 +115,10 @@ def main():
         return
 
     # There is work in progress which will remove the need for this step
-    action_client = ActionClient(http_client=requests,
+    http_client = StatusCodeCheckingHTTPClient(HTTPClient(username=username, password=password))
+    action_client = ActionClient(http_client=http_client,
                                  collection_exercise_client=CollectionExerciseClient(username, password),
-                                 service_url=action_url,
-                                 service_username=username,
-                                 service_password=password)
+                                 service_url=action_url)
     action_client.add_action_rule_to_collection_exercise(exercise_id)
 
     upload_and_link_collection_instrument(exercise_id)
