@@ -60,7 +60,7 @@ class SDCClientIntegrationTest(unittest.TestCase):
             body=json.dumps(collection_exercise),
             status=200)
 
-        result = self.client.collection_exercises.get_collection_exercise(exercise_id)
+        result = self.client.collection_exercises.get_by_id(exercise_id)
 
         self.assertEqual(collection_exercise, result)
 

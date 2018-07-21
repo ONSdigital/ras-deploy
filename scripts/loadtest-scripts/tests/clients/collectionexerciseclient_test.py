@@ -23,32 +23,32 @@ class CollectionExerciseClientTest(unittest.TestCase):
                                                self.SERVICE_PASSWORD)
 
     @patch('requests.get')
-    def test_get_collection_exercise_makes_a_get_request(self, get):
+    def test_get_by_id_makes_a_get_request(self, get):
         http_response = self._http_response(b'{"example": "value"}', 200)
         get.return_value = http_response
 
-        self.client.get_collection_exercise(self.EXERCISE_ID)
+        self.client.get_by_id(self.EXERCISE_ID)
 
         get.assert_called_with(
             url=f'http://localhost:8145/collectionexercises/{self.EXERCISE_ID}',
             auth=(self.SERVICE_USERNAME, self.SERVICE_PASSWORD))
 
     @patch('requests.get')
-    def test_get_collection_exercise_returns_the_exercise(self, get):
+    def test_get_by_id_returns_the_exercise(self, get):
         http_response = self._http_response(b'{"example": "value"}', 200)
         get.return_value = http_response
 
-        result = self.client.get_collection_exercise(self.EXERCISE_ID)
+        result = self.client.get_by_id(self.EXERCISE_ID)
 
         self.assertEqual({'example': 'value'}, result)
 
     @patch('requests.get')
-    def test_get_collection_exercise_raises_if_request_failed(self, get):
+    def test_get_by_id_raises_if_request_failed(self, get):
         http_response = self._http_response(b'Error', 500)
         get.return_value = http_response
 
         with (self.assertRaises(HTTPCodeException)):
-            self.client.get_collection_exercise(self.EXERCISE_ID)
+            self.client.get_by_id(self.EXERCISE_ID)
 
     def _http_response(self, content, status_code):
         http_response = Response()

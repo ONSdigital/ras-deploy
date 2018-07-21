@@ -9,7 +9,7 @@ class ActionClient:
         self.collection_exercise_client = collection_exercise_client
 
     def add_rule_for_collection_exercise(self, exercise_id):
-        collection_exercise = self.collection_exercise_client.get_collection_exercise(
+        collection_exercise = self.collection_exercise_client.get_by_id(
             exercise_id)
 
         case_types = self._get_case_types_from_exercise(collection_exercise)

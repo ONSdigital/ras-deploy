@@ -29,7 +29,7 @@ class ActionClientTest(unittest.TestCase):
         self.http_client.post = MagicMock(return_value=self.http_response)
 
         self.collection_exercise_client = Mock()
-        self.collection_exercise_client.get_collection_exercise = MagicMock(
+        self.collection_exercise_client.get_by_id = MagicMock(
             return_value=self.COLLECTION_EXERCISE)
 
         self.client = ActionClient(http_client=self.http_client,
@@ -38,8 +38,7 @@ class ActionClientTest(unittest.TestCase):
     def test_add_action_rule_fetches_the_collection_exercise(self):
         self.client.add_rule_for_collection_exercise(self.EXERCISE_ID)
 
-        self.collection_exercise_client \
-            .get_collection_exercise \
+        self.collection_exercise_client.get_by_id \
             .assert_called_with(self.EXERCISE_ID)
 
     def test_add_action_rule_makes_a_post_request(self):

@@ -74,7 +74,7 @@ class CollectionExerciseClient:
 
         print('Sample linked to collection exercise!')
 
-    def get_collection_exercise(self, exercise_id):
+    def get_by_id(self, exercise_id):
         url = f'{collection_exercise_url}/collectionexercises/{exercise_id}'
 
         response = requests.get(url=url, auth=(self.username, self.password))
