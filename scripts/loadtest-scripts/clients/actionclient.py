@@ -16,7 +16,7 @@ class ActionClient:
 
         b_case_action_plan_id = case_types['B']['actionPlanId']
 
-        self.http_client.post(url='/actionrules',
+        self.http_client.post(path='/actionrules',
                               expected_status=201,
                               json={
                                   "actionPlanId": b_case_action_plan_id,

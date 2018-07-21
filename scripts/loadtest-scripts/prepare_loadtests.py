@@ -1,14 +1,13 @@
-import time
-import requests
 import os
+import time
 
-from clients import http
-from clients.actionclient import ActionClient
-from clients.collectionexerciseclient import CollectionExerciseClient
+import requests
+
+from clients import SDCClient
+from clients.collectionexerciseclient import CollectionExerciseClient, \
+    collection_exercise_url
 from clients.collectioninstrumentclient import CollectionInstrumentClient
-from clients.http.authenticatedhttpclient import AuthenticatedHTTPClient
 from clients.sampleclient import SampleClient
-from clients.http.statuscodecheckinghttpclient import StatusCodeCheckingHTTPClient
 
 party_url = os.getenv('PARTY_URL', 'http://localhost:8081')
 party_create_respondent_endpoint = os.getenv('PARTY_CREATE_RESPONDENT_ENDPOINT',
@@ -109,6 +108,14 @@ def upload_and_link_sample(csv, exercise_id):
 
 
 def main():
+    config = {
+        'service_username': username,
+        'service_password': password,
+        'action_url': action_url,
+        'collection_exercise_url': collection_exercise_url,
+    }
+    sdc = SDCClient(config)
+
     exercise_id = get_collection_exercise()
 
     if ce.get_collection_exercise_state(exercise_id) in ['LIVE', 'READY_FOR_LIVE']:
@@ -116,9 +123,7 @@ def main():
         return
 
     # There is work in progress which will remove the need for this step
-    action_client = ActionClient(http_client=http.factory.create(action_url, username, password),
-                                 collection_exercise_client=CollectionExerciseClient(username, password))
-    action_client.add_action_rule_to_collection_exercise(exercise_id)
+    sdc.actions.add_action_rule_to_collection_exercise(exercise_id)
 
     upload_and_link_collection_instrument(exercise_id)
     upload_and_link_sample('sample.csv', exercise_id)

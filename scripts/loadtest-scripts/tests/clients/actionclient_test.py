@@ -46,7 +46,7 @@ class ActionClientTest(unittest.TestCase):
         self.client.add_action_rule_to_collection_exercise(self.EXERCISE_ID)
 
         self.http_client.post.assert_called_with(
-            url='/actionrules',
+            path='/actionrules',
             expected_status=201,
             json={'actionPlanId': self.BUSINESS_CASE_ACTION_PLAN_ID,
                   'actionTypeName': 'BSNL',
