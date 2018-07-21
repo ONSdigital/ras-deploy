@@ -2,16 +2,17 @@ import requests
 
 
 class AuthenticatedHTTPClient:
-    def __init__(self, username: str, password: str):
+    def __init__(self, client, username: str, password: str):
+        self.client = client
         self.username = username
         self.password = password
 
     def get(self, **kwargs):
         auth = (self.username, self.password)
 
-        return requests.get(**kwargs, auth=auth)
+        return self.client.get(**kwargs, auth=auth)
 
     def post(self, **kwargs):
         auth = (self.username, self.password)
 
-        return requests.post(**kwargs, auth=auth)
+        return self.client.post(**kwargs, auth=auth)

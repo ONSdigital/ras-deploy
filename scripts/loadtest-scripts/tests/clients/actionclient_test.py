@@ -7,7 +7,6 @@ from clients.actionclient import ActionClient
 
 
 class ActionClientTest(unittest.TestCase):
-    ACTION_SERVICE_URL = 'https://rm-action-service.cloudfoundry'
     EXERCISE_ID = '9281d5b4-c1bf-4322-9f34-683b266bc3b2'
     BUSINESS_CASE_ACTION_PLAN_ID = '4d8be6f8-492e-4ef9-b741-d178499736dd'
     COLLECTION_EXERCISE = {
@@ -34,8 +33,7 @@ class ActionClientTest(unittest.TestCase):
             return_value=self.COLLECTION_EXERCISE)
 
         self.client = ActionClient(http_client=self.http_client,
-                                   collection_exercise_client=self.collection_exercise_client,
-                                   service_url=self.ACTION_SERVICE_URL)
+                                   collection_exercise_client=self.collection_exercise_client)
 
     def test_add_action_rule_fetches_the_collection_exercise(self):
         self.client.add_action_rule_to_collection_exercise(self.EXERCISE_ID)
@@ -48,7 +46,7 @@ class ActionClientTest(unittest.TestCase):
         self.client.add_action_rule_to_collection_exercise(self.EXERCISE_ID)
 
         self.http_client.post.assert_called_with(
-            url=f'{self.ACTION_SERVICE_URL}/actionrules',
+            url='/actionrules',
             expected_status=201,
             json={'actionPlanId': self.BUSINESS_CASE_ACTION_PLAN_ID,
                   'actionTypeName': 'BSNL',

@@ -4,11 +4,9 @@ from clients.http.statuscodecheckinghttpclient import StatusCodeCheckingHTTPClie
 
 class ActionClient:
     def __init__(self, http_client: StatusCodeCheckingHTTPClient,
-                 collection_exercise_client: CollectionExerciseClient,
-                 service_url: str):
+                 collection_exercise_client: CollectionExerciseClient):
         self.http_client = http_client
         self.collection_exercise_client = collection_exercise_client
-        self.service_url = service_url
 
     def add_action_rule_to_collection_exercise(self, exercise_id):
         collection_exercise = self.collection_exercise_client.get_collection_exercise(
@@ -18,7 +16,7 @@ class ActionClient:
 
         b_case_action_plan_id = case_types['B']['actionPlanId']
 
-        self.http_client.post(url=f'{self.service_url}/actionrules',
+        self.http_client.post(url='/actionrules',
                               expected_status=201,
                               json={
                                   "actionPlanId": b_case_action_plan_id,

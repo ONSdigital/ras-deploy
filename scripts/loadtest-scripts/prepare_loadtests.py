@@ -2,6 +2,7 @@ import time
 import requests
 import os
 
+from clients import http
 from clients.actionclient import ActionClient
 from clients.collectionexerciseclient import CollectionExerciseClient
 from clients.collectioninstrumentclient import CollectionInstrumentClient
@@ -115,10 +116,8 @@ def main():
         return
 
     # There is work in progress which will remove the need for this step
-    http_client = StatusCodeCheckingHTTPClient(AuthenticatedHTTPClient(username=username, password=password))
-    action_client = ActionClient(http_client=http_client,
-                                 collection_exercise_client=CollectionExerciseClient(username, password),
-                                 service_url=action_url)
+    action_client = ActionClient(http_client=http.factory.create(action_url, username, password),
+                                 collection_exercise_client=CollectionExerciseClient(username, password))
     action_client.add_action_rule_to_collection_exercise(exercise_id)
 
     upload_and_link_collection_instrument(exercise_id)
