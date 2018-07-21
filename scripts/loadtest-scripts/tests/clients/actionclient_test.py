@@ -36,14 +36,14 @@ class ActionClientTest(unittest.TestCase):
                                    collection_exercise_client=self.collection_exercise_client)
 
     def test_add_action_rule_fetches_the_collection_exercise(self):
-        self.client.add_action_rule_to_collection_exercise(self.EXERCISE_ID)
+        self.client.add_rule_for_collection_exercise(self.EXERCISE_ID)
 
         self.collection_exercise_client \
             .get_collection_exercise \
             .assert_called_with(self.EXERCISE_ID)
 
     def test_add_action_rule_makes_a_post_request(self):
-        self.client.add_action_rule_to_collection_exercise(self.EXERCISE_ID)
+        self.client.add_rule_for_collection_exercise(self.EXERCISE_ID)
 
         self.http_client.post.assert_called_with(
             path='/actionrules',

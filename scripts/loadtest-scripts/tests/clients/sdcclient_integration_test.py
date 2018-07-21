@@ -40,7 +40,7 @@ class SDCClientIntegrationTest(unittest.TestCase):
             body=json.dumps(collection_exercise),
             status=201)
 
-        self.client.actions.add_action_rule_to_collection_exercise(exercise_id)
+        self.client.actions.add_rule_for_collection_exercise(exercise_id)
 
     @httpretty.activate
     def test_collection_exercise_client(self):

@@ -8,7 +8,7 @@ class ActionClient:
         self.http_client = http_client
         self.collection_exercise_client = collection_exercise_client
 
-    def add_action_rule_to_collection_exercise(self, exercise_id):
+    def add_rule_for_collection_exercise(self, exercise_id):
         collection_exercise = self.collection_exercise_client.get_collection_exercise(
             exercise_id)
 

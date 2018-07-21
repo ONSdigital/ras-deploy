@@ -123,7 +123,7 @@ def main():
         return
 
     # There is work in progress which will remove the need for this step
-    sdc.actions.add_action_rule_to_collection_exercise(exercise_id)
+    sdc.actions.add_rule_for_collection_exercise(exercise_id)
 
     upload_and_link_collection_instrument(exercise_id)
     upload_and_link_sample('sample.csv', exercise_id)
