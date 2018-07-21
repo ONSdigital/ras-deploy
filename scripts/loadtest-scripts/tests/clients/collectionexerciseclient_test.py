@@ -1,11 +1,10 @@
-import os
 import unittest
 from unittest.mock import Mock, MagicMock, patch
 
 from requests import Response
 
 from clients.collectionexerciseclient import CollectionExerciseClient
-from clients.httpcodeexception import HTTPCodeException
+from clients.http.httpcodeexception import HTTPCodeException
 
 
 class CollectionExerciseClientTest(unittest.TestCase):

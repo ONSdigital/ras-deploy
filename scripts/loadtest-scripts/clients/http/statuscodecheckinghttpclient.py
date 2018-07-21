@@ -1,11 +1,11 @@
-from clients.httpclient import HTTPClient
-from clients.httpcodeexception import HTTPCodeException
+from clients.http.authenticatedhttpclient import AuthenticatedHTTPClient
+from clients.http.httpcodeexception import HTTPCodeException
 
 
 class StatusCodeCheckingHTTPClient:
     EXPECTED_STATUS_KEY = 'expected_status'
 
-    def __init__(self, client: HTTPClient):
+    def __init__(self, client: AuthenticatedHTTPClient):
         self.client = client
 
     def get(self, **kwargs):

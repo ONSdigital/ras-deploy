@@ -3,15 +3,15 @@ from unittest.mock import patch
 
 from requests import Response
 
-from clients.httpclient import HTTPClient
+from clients.http.authenticatedhttpclient import AuthenticatedHTTPClient
 
 
-class HTTPClientTest(unittest.TestCase):
+class AuthenticatedHTTPClientTest(unittest.TestCase):
     USER = 'example-service-username'
     PASSWORD = 'very-secret-service-password'
 
     def setUp(self):
-        self.client = HTTPClient(self.USER, self.PASSWORD)
+        self.client = AuthenticatedHTTPClient(self.USER, self.PASSWORD)
 
     @patch('requests.get')
     def test_get_delegates_request_to_requests_library(self, get):
