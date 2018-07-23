@@ -1,4 +1,4 @@
-from .httpcodeexception import HTTPCodeException
+from clients.http.httpcodeexception import HTTPCodeException
 import os
 
 import requests

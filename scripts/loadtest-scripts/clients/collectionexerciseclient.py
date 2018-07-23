@@ -1,85 +1,65 @@
-import datetime
+from datetime import datetime
 import os
 
 import requests
 from dateutil.relativedelta import relativedelta
 
-from clients.httpcodeexception import HTTPCodeException
+from clients.http.httpcodeexception import HTTPCodeException
 
-collection_exercise_url = os.getenv('COLLECTION_EXERCISE_URL', 'http://localhost:8145')
+collection_exercise_url = os.getenv('COLLECTION_EXERCISE_URL',
+                                    'http://localhost:8145')
 
 
 class CollectionExerciseClient:
-    def __init__(self, username, password):
-        self.username = username
-        self.password = password
+    def __init__(self, http_client):
+        self.http_client = http_client
 
-    def get_collection_exercise_id(self, survey_id):
-        url = f'{collection_exercise_url}/collectionexercises/survey/{survey_id}'
+    def get_by_survey_and_period(self, survey_id, period):
+        path = f'/collectionexercises/survey/{survey_id}'
 
-        response = requests.get(url=url, auth=(self.username, self.password))
+        response = self.http_client.get(path=path)
 
-        if response.status_code != requests.codes.ok:
-            raise HTTPCodeException(response.codes.ok, response.status_code,
-                                    f'Failed to fetch collection exercises for survey {survey_id}: {response.text}')
-
-        exercise = get_collection_exercise_by_period(response.json(), get_previous_period())
+        exercise = self._get_collection_exercise_by_period(response.json(), period)
 
         if exercise is None:
-            raise HTTPCodeException(response.codes.ok, response.status_code,
-                                    f'No collection exercise found for period {period} of {survey_id}')
+            raise Exception(
+                f'No collection exercise found for period {period} of {survey_id}')
 
-        return exercise['id']
+        return exercise
 
-    def execute_collection_exercise(self, exercise_id):
-        url = f'{collection_exercise_url}/collectionexerciseexecution/{exercise_id}'
+    def execute(self, exercise_id):
+        path = f'/collectionexerciseexecution/{exercise_id}'
 
-        response = requests.post(url=url, auth=(self.username, self.password))
-
-        if response.status_code == requests.codes.not_found:
-            raise HTTPCodeException(response.codes.ok, response.status_code,
-                                    f'Failed to retrieve collection exercise: {exercise_id}')
-
-        if response.status_code != requests.codes.bad_request:
-            print(f'Collection exercise {exercise_id} has already been executed')
-            return
-
-        if response.status_code != requests.codes.ok:
-            raise HTTPCodeException(response.codes.ok, response.status_code,
-                                    f'Error executing collection exercise {exercise_id}: {response.text}')
+        self.http_client.post(path=path, expected_status=200)
 
         print('Collection exercise executed!')
 
-    def get_collection_exercise_state(self, exercise_id):
-        url = f'{collection_exercise_url}/collectionexercises/{exercise_id}'
+    def get_state(self, exercise_id):
+        state = self.get_by_id(exercise_id)['state']
 
-        response = requests.get(url=url, auth=(self.username, self.password))
+        print(f'Current collection exercise state: {state}')
 
-        if response.status_code != requests.codes.ok:
-            raise HTTPCodeException(response.codes.ok, response.status_code,
-                                    f'Failed to check status of collection exercise: {response.text}')
-
-        print(f'Current collection exercise state: {response.json()["state"]}')
-        return response.json()['state']
+        return state
 
     def link_sample_to_collection_exercise(self, sample_id, exercise_id):
-        url = f'{collection_exercise_url}/collectionexercises/link/{exercise_id}'
+        path = f'/collectionexercises/link/{exercise_id}'
         payload = {"sampleSummaryIds": [str(sample_id)]}
 
-        response = requests.put(url=url, auth=(self.username, self.password), json=payload)
-
-        if response.status_code != requests.codes.ok:
-            raise HTTPCodeException(response.codes.ok, response.status_code,
-                                    f'Failed to link sample to collection exercise: {response.text}')
+        self.http_client.put(path=path, json=payload)
 
         print('Sample linked to collection exercise!')
+
+    def get_by_id(self, exercise_id):
+        response = self.http_client.get(path=f'/collectionexercises/{exercise_id}')
+
+        return response.json()
+
+    @staticmethod
+    def _get_collection_exercise_by_period(exercises, period):
+        for exercise in exercises:
+            if exercise['exerciseRef'] == period:
+                return exercise
 
 
 def get_previous_period():
     return (datetime.now() - relativedelta(months=1)).strftime('%Y%m')
-
-
-def get_collection_exercise_by_period(exercises, period):
-    for exercise in exercises:
-        if exercise['exerciseRef'] == period:
-            return exercise
