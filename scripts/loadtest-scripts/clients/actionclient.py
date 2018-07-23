@@ -9,6 +9,8 @@ class ActionClient:
         self.collection_exercise_client = collection_exercise_client
 
     def add_rule_for_collection_exercise(self, exercise_id):
+        print('Finding action plan ID for collection exercise {exercise_id}')
+
         collection_exercise = self.collection_exercise_client.get_by_id(
             exercise_id)
 
@@ -16,6 +18,10 @@ class ActionClient:
 
         b_case_action_plan_id = case_types['B']['actionPlanId']
 
+        print(f'Found B case action plan ID: {b_case_action_plan_id}')
+
+        print(f'Creating action rule with 0 day offset')
+        
         self.http_client.post(path='/actionrules',
                               expected_status=201,
                               json={
