@@ -30,21 +30,7 @@ class CollectionExerciseClient:
     def execute(self, exercise_id):
         path = f'/collectionexerciseexecution/{exercise_id}'
 
-        response = self.http_client.post(path=path)
-
-        if response.status_code == requests.codes.not_found:
-            raise HTTPCodeException('not 404', response.status_code,
-                                    f'Failed to retrieve collection exercise: {exercise_id}')
-
-        if response.status_code == requests.codes.bad_request:
-            print(f'Collection exercise {exercise_id} has already been executed')
-            return
-
-        if response.status_code != requests.codes.ok:
-            raise HTTPCodeException(
-                requests.codes.ok,
-                response.status_code,
-                f'Error executing collection exercise {exercise_id}: {response.text}')
+        self.http_client.post(path=path, expected_status=200)
 
         print('Collection exercise executed!')
 

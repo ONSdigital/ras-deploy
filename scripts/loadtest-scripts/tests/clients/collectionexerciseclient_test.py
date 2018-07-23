@@ -64,44 +64,8 @@ class CollectionExerciseClientTest(unittest.TestCase):
         self.client.execute(exercise_id)
 
         self.http_client.post.assert_called_with(
-            path=f'/collectionexerciseexecution/{exercise_id}')
-
-    def test_execute_raise_for_a_404_response(self):
-        http_response = self._http_response(b'{}', 404)
-        self.http_client.post.return_value = Mock()
-        self.http_client.post.return_value = http_response
-
-        exercise_id = '66d6ac26-9bca-4f60-a87a-1bd1f792710c'
-
-        with self.assertRaises(HTTPCodeException) as context:
-            self.client.execute(exercise_id)
-
-        self.assertEqual(
-            f'Failed to retrieve collection exercise: 66d6ac26-9bca-4f60-a87a-1bd1f792710c',
-            context.exception.message)
-
-    def test_execute_treats_400_as_already_executed(self):
-        http_response = self._http_response(b'{}', 400)
-        self.http_client.post.return_value = Mock()
-        self.http_client.post.return_value = http_response
-
-        exercise_id = '66d6ac26-9bca-4f60-a87a-1bd1f792710c'
-
-        self.client.execute(exercise_id)
-
-    def test_execute_raise_for_not_200_response(self):
-        http_response = self._http_response(b'{"response": "value"}', 500)
-        self.http_client.post.return_value = Mock()
-        self.http_client.post.return_value = http_response
-
-        exercise_id = '66d6ac26-9bca-4f60-a87a-1bd1f792710c'
-
-        with self.assertRaises(HTTPCodeException) as context:
-            self.client.execute(exercise_id)
-
-        self.assertEqual(
-            f'Error executing collection exercise {exercise_id}: {{"response": "value"}}',
-            context.exception.message)
+            path=f'/collectionexerciseexecution/{exercise_id}',
+            expected_status=200)
 
     def test_get_by_survey_and_period(self):
         exercises = [
