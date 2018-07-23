@@ -59,6 +59,7 @@ templates:
     service_endpoints_for_python: &loadtest_service_endpoints_for_python
       ACTION_SERVICE_HOST: rm-action-service-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))
       ACTION_SERVICE_PORT: '80'
+      ACTION_URL: http://rm-action-service-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))
       ACTION_EXPORTER_HOST: rm-actionexporter-service-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))
       ACTION_EXPORTER_PORT: '80'
       CASE_URL: http://rm-case-service-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))
