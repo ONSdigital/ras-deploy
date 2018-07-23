@@ -16,7 +16,6 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/respondent-home-ui.git
-    branch: aiohttp-app
 
 - name: cf-resource-latest
   type: cf
