@@ -19,9 +19,6 @@ class CollectionExerciseClient:
 
         response = self.http_client.get(path=path)
 
-        for ce in response.json():
-            print(ce['exerciseRef'])
-
         exercise = self._get_collection_exercise_by_period(response.json(), period)
 
         if exercise is None:
