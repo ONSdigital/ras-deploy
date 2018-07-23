@@ -76,6 +76,41 @@ class StatusCodeCheckingHTTPClientTest(unittest.TestCase):
             'POST http://example.com returned an unexpected status code 201 (expected 200): body'),
             context.exception)
 
+    def test_put_delegates_request_works_with_no_expected_status(self):
+        requests_response = self._stub_put_response(200)
+
+        response = self.client.put(url='http://example.com',
+                                    json={'ok': 'true'})
+
+        self.decorated_client.put.assert_called_with(url='http://example.com',
+                                                      json={'ok': 'true'})
+        self.assertEqual(requests_response, response)
+
+    def test_put_delegates_request_to_decorated_client(self):
+        requests_response = self._stub_put_response(200)
+
+        response = self.client.put(url='http://example.com',
+                                    json={'ok': 'true'},
+                                    expected_status=200)
+
+        self.decorated_client.put.assert_called_with(url='http://example.com',
+                                                      json={'ok': 'true'})
+        self.assertEqual(requests_response, response)
+
+    def test_put_raises_for_unexpected_status_codes(self):
+        self._stub_put_response(201, 'body')
+
+        with self.assertRaises(HTTPCodeException) as context:
+            self.client.put(url='http://example.com',
+                             json={'ok': 'true'},
+                             expected_status=200)
+
+
+        self.assertEqual(HTTPCodeException(
+            200, 201,
+            'PUT http://example.com returned an unexpected status code 201 (expected 200): body'),
+            context.exception)
+
     def _stub_get_response(self, status_code, body='default content'):
         response = Response()
         response.status_code = status_code
@@ -93,5 +128,15 @@ class StatusCodeCheckingHTTPClientTest(unittest.TestCase):
         response._content = bytes(body, 'utf-8')
 
         self.decorated_client.post = MagicMock(return_value=response)
+
+        return response
+
+    def _stub_put_response(self, status_code, body='default content'):
+        response = Response()
+        response.status_code = status_code
+        response.encoding = 'utf-8'
+        response._content = bytes(body, 'utf-8')
+
+        self.decorated_client.put = MagicMock(return_value=response)
 
         return response

@@ -28,6 +28,7 @@ class SDCClientIntegrationTest(unittest.TestCase):
                 }
             ]
         }
+
         httpretty.register_uri(
             httpretty.GET,
             f'http://localhost:8145/collectionexercises/{exercise_id}',
@@ -37,7 +38,7 @@ class SDCClientIntegrationTest(unittest.TestCase):
         httpretty.register_uri(
             httpretty.POST,
             f'http://action.services.com/actionrules',
-            body=json.dumps(collection_exercise),
+            body=json.dumps('OK'),
             status=201)
 
         self.client.actions.add_rule_for_collection_exercise(exercise_id)

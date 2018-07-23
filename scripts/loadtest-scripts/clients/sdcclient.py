@@ -20,6 +20,9 @@ class SDCClient:
 
     @property
     def collection_exercises(self):
-        return CollectionExerciseClient(
+        http_client = http.factory.create(
+            base_url=self.config['collection_exercise_url'],
             username=self.config['service_username'],
             password=self.config['service_password'])
+
+        return CollectionExerciseClient(http_client)

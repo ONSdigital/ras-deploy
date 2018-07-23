@@ -1,5 +1,6 @@
+import json
 import unittest
-from unittest.mock import Mock, MagicMock, patch
+from unittest.mock import Mock, MagicMock
 
 from requests import Response
 
@@ -8,10 +9,6 @@ from clients.http.httpcodeexception import HTTPCodeException
 
 
 class CollectionExerciseClientTest(unittest.TestCase):
-    EXERCISE_ID = '66d6ac26-9bca-4f60-a87a-1bd1f792710c'
-    SERVICE_USERNAME = 'example-user'
-    SERVICE_PASSWORD = 'example-pass'
-
     def setUp(self):
         self.http_response = Response()
         self.http_response.status_code = 200
@@ -19,40 +16,126 @@ class CollectionExerciseClientTest(unittest.TestCase):
         self.http_client = Mock()
         self.http_client.post = MagicMock(return_value=self.http_response)
 
-        self.client = CollectionExerciseClient(self.SERVICE_USERNAME,
-                                               self.SERVICE_PASSWORD)
+        self.client = CollectionExerciseClient(http_client=self.http_client)
 
-    @patch('requests.get')
-    def test_get_by_id_makes_a_get_request(self, get):
+    def test_get_by_id(self):
         http_response = self._http_response(b'{"example": "value"}', 200)
-        get.return_value = http_response
+        self.http_client.get.return_value = Mock()
+        self.http_client.get.return_value = http_response
 
-        self.client.get_by_id(self.EXERCISE_ID)
+        exercise_id = '66d6ac26-9bca-4f60-a87a-1bd1f792710c'
 
-        get.assert_called_with(
-            url=f'http://localhost:8145/collectionexercises/{self.EXERCISE_ID}',
-            auth=(self.SERVICE_USERNAME, self.SERVICE_PASSWORD))
+        result = self.client.get_by_id(exercise_id)
 
-    @patch('requests.get')
-    def test_get_by_id_returns_the_exercise(self, get):
-        http_response = self._http_response(b'{"example": "value"}', 200)
-        get.return_value = http_response
-
-        result = self.client.get_by_id(self.EXERCISE_ID)
-
+        self.http_client.get.assert_called_with(
+            path=f'/collectionexercises/{exercise_id}')
         self.assertEqual({'example': 'value'}, result)
 
-    @patch('requests.get')
-    def test_get_by_id_raises_if_request_failed(self, get):
-        http_response = self._http_response(b'Error', 500)
-        get.return_value = http_response
+    def test_get_state(self):
+        http_response = self._http_response(b'{"state": "LIVE"}', 200)
+        self.http_client.get.return_value = Mock()
+        self.http_client.get.return_value = http_response
 
-        with (self.assertRaises(HTTPCodeException)):
-            self.client.get_by_id(self.EXERCISE_ID)
+        exercise_id = '66d6ac26-9bca-4f60-a87a-1bd1f792710c'
 
-    def _http_response(self, content, status_code):
+        result = self.client.get_state(exercise_id)
+
+        self.http_client.get.assert_called_with(
+            path=f'/collectionexercises/{exercise_id}')
+        self.assertEqual('LIVE', result)
+
+    def test_link_sample_to_collection_exercise(self):
+        http_response = self._http_response(b'{"state": "LIVE"}', 200)
+        self.http_client.put.return_value = Mock()
+        self.http_client.put.return_value = http_response
+
+        exercise_id = '66d6ac26-9bca-4f60-a87a-1bd1f792710c'
+        sample_id = '33989db1-2cc0-4459-a939-7292003d0340'
+
+        self.client.link_sample_to_collection_exercise(sample_id, exercise_id)
+
+        self.http_client.put.assert_called_with(
+            path=f'/collectionexercises/link/{exercise_id}',
+            json={'sampleSummaryIds': [sample_id]})
+
+    def test_execute_makes_posts_to_the_collection_exercise_service(self):
+        exercise_id = '66d6ac26-9bca-4f60-a87a-1bd1f792710c'
+
+        self.client.execute(exercise_id)
+
+        self.http_client.post.assert_called_with(
+            path=f'/collectionexerciseexecution/{exercise_id}')
+
+    def test_execute_raise_for_a_404_response(self):
+        http_response = self._http_response(b'{}', 404)
+        self.http_client.post.return_value = Mock()
+        self.http_client.post.return_value = http_response
+
+        exercise_id = '66d6ac26-9bca-4f60-a87a-1bd1f792710c'
+
+        with self.assertRaises(HTTPCodeException) as context:
+            self.client.execute(exercise_id)
+
+        self.assertEqual(
+            f'Failed to retrieve collection exercise: 66d6ac26-9bca-4f60-a87a-1bd1f792710c',
+            context.exception.message)
+
+    def test_execute_treats_400_as_already_executed(self):
+        http_response = self._http_response(b'{}', 400)
+        self.http_client.post.return_value = Mock()
+        self.http_client.post.return_value = http_response
+
+        exercise_id = '66d6ac26-9bca-4f60-a87a-1bd1f792710c'
+
+        self.client.execute(exercise_id)
+
+    def test_execute_raise_for_not_200_response(self):
+        http_response = self._http_response(b'{"response": "value"}', 500)
+        self.http_client.post.return_value = Mock()
+        self.http_client.post.return_value = http_response
+
+        exercise_id = '66d6ac26-9bca-4f60-a87a-1bd1f792710c'
+
+        with self.assertRaises(HTTPCodeException) as context:
+            self.client.execute(exercise_id)
+
+        self.assertEqual(
+            f'Error executing collection exercise {exercise_id}: {{"response": "value"}}',
+            context.exception.message)
+
+    def test_get_by_survey_and_period(self):
+        exercises = [
+            {'exerciseRef': '201805'},
+            {'exerciseRef': '201806'},
+        ]
+
+        http_response = self._http_response(bytes(json.dumps(exercises), 'utf-8'), 200)
+        self.http_client.get.return_value = Mock()
+        self.http_client.get.return_value = http_response
+
+        survey_id = '66d6ac26-9bca-4f60-a87a-1bd1f792710c'
+
+        exercise = self.client.get_by_survey_and_period(survey_id, '201805')
+
+        self.http_client.get.assert_called_with(
+            path=f'/collectionexercises/survey/{survey_id}')
+        self.assertEqual({'exerciseRef': '201805'}, exercise)
+
+    def test_get_by_survey_and_period_raises_if_exercise_not_found(self):
+        http_response = self._http_response(b'[]', 200)
+        self.http_client.get.return_value = Mock()
+        self.http_client.get.return_value = http_response
+
+        survey_id = '66d6ac26-9bca-4f60-a87a-1bd1f792710c'
+
+        with self.assertRaises(Exception):
+            self.client.get_by_survey_and_period(survey_id, '201802')
+
+    @staticmethod
+    def _http_response(content, status_code):
         http_response = Response()
         http_response.status_code = status_code
         http_response._content = content
         http_response.encoding = 'utf-8'
+
         return http_response

@@ -13,6 +13,11 @@ class BaseURLHTTPClient:
 
         return self.client.post(**args)
 
+    def put(self, **kwargs):
+        args = self._get_args(kwargs)
+
+        return self.client.put(**args)
+
     def _get_args(self, kwargs):
         args = kwargs.copy()
         if 'path' not in args:

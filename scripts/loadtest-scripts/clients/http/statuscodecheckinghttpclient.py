@@ -25,6 +25,15 @@ class StatusCodeCheckingHTTPClient:
 
         return response
 
+    def put(self, **kwargs):
+        args = self._parse_args(kwargs)
+
+        response = self.client.put(**args)
+
+        self._assert_success('PUT', kwargs, response)
+
+        return response
+
     def _parse_args(self, kwargs):
         args = kwargs.copy()
 

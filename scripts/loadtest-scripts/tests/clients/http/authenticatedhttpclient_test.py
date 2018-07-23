@@ -43,3 +43,16 @@ class AuthenticatedHTTPClientTest(unittest.TestCase):
             json={'ok': 'true'},
             auth=(self.USER, self.PASSWORD))
         self.assertEqual(requests_response, response)
+
+    def test_put_delegates_request_to_requests_library(self):
+        requests_response = Response()
+        self.decorated_client.put.return_value = requests_response
+
+        response = self.client.put(url='http://example.com',
+                                   json={'ok': 'true'})
+
+        self.decorated_client.put.assert_called_with(
+            url='http://example.com',
+            json={'ok': 'true'},
+            auth=(self.USER, self.PASSWORD))
+        self.assertEqual(requests_response, response)

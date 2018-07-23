@@ -1,18 +1,13 @@
-import requests
-
-
 class AuthenticatedHTTPClient:
     def __init__(self, client, username: str, password: str):
         self.client = client
-        self.username = username
-        self.password = password
+        self.auth = (username, password)
 
     def get(self, **kwargs):
-        auth = (self.username, self.password)
-
-        return self.client.get(**kwargs, auth=auth)
+        return self.client.get(**kwargs, auth=self.auth)
 
     def post(self, **kwargs):
-        auth = (self.username, self.password)
+        return self.client.post(**kwargs, auth=self.auth)
 
-        return self.client.post(**kwargs, auth=auth)
+    def put(self, **kwargs):
+        return self.client.put(**kwargs, auth=self.auth)
