@@ -45,3 +45,12 @@ class HTTPClientFactoryTest(unittest.TestCase):
 
         with self.assertRaises(HTTPCodeException):
             self.client.get(url='http://something.com', expected_status=200)
+
+    @patch('requests.get')
+    def test_it_handles_errors_when_path_parameter_is_provided(self, get):
+        response = Response()
+        response.status_code = 404
+        get.return_value = response
+
+        with self.assertRaises(HTTPCodeException):
+            self.client.get(path='/endpoint', expected_status=200)

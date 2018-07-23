@@ -7,7 +7,7 @@ from clients.http.statuscodecheckinghttpclient import \
 
 
 def create(base_url, username, password):
-    return StatusCodeCheckingHTTPClient(
-        BaseURLHTTPClient(
-            AuthenticatedHTTPClient(requests, username, password),
-            base_url))
+    return BaseURLHTTPClient(
+        StatusCodeCheckingHTTPClient(
+            AuthenticatedHTTPClient(requests, username, password)),
+        base_url)

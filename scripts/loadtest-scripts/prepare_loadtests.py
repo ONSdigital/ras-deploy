@@ -120,8 +120,6 @@ def main():
     exercise = get_collection_exercise()
     exercise_id = exercise['id']
 
-    print(repr(exercise))
-
     if sdc.collection_exercises.get_state(exercise_id) in ['LIVE', 'READY_FOR_LIVE']:
         print('Quitting: The collection exercise has already been executed.')
         return

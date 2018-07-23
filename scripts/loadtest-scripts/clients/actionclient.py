@@ -21,7 +21,7 @@ class ActionClient:
         print(f'Found B case action plan ID: {b_case_action_plan_id}')
 
         print(f'Creating action rule with 0 day offset')
-        
+
         self.http_client.post(path='/actionrules',
                               expected_status=201,
                               json={
