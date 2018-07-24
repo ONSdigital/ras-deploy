@@ -3,8 +3,7 @@ import time
 import logging
 
 from clients import SDCClient, collectionexerciseclient
-from clients.collectionexerciseclient import CollectionExerciseClient, \
-    collection_exercise_url
+from clients.collectionexerciseclient import collection_exercise_url
 from clients.collectioninstrumentclient import CollectionInstrumentClient
 from clients.sampleclient import SampleClient
 
@@ -21,6 +20,7 @@ password = os.getenv('COLLECTION_INSTRUMENT_PASSWORD', 'secret')
 polling_wait_time = int(os.getenv('POLLING_WAIT_TIME', '2'))
 polling_retries = int(os.getenv('POLLING_RETRIES', '30'))
 period_override = os.getenv('COLLECTION_EXERCISE_PERIOD', None)
+logging_level = os.getenv('LOGGING_LEVEL', 'INFO')
 
 ci = CollectionInstrumentClient(username, password)
 sample = SampleClient(username, password)
@@ -74,6 +74,7 @@ def upload_and_link_sample(csv, exercise_id):
 
 
 def main():
+    logging.basicConfig(level=logging.getLevelName(logging_level))
     exercise = get_collection_exercise()
     exercise_id = exercise['id']
 
