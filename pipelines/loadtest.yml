@@ -209,7 +209,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-deploy.git
-    branch: loadtest-pipeline
+    branch: master
 
 - name: ras-party-source
   type: git
@@ -245,7 +245,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/django-oauth2-test.git
-    branch: release_15-branch
+    branch: master
 
 - name: response-operations-ui-source
   type: git
@@ -280,14 +280,14 @@ resources:
   type: git
   source:
     uri: git@github.com:ONSdigital/iac-service.git
-    branch: stacktraces
+    branch: master
     private_key: ((git_key))
 
 - name: rm-notify-gateway-source
   type: git
   source:
     uri: https://github.com/ONSdigital/rm-notify-gateway.git
-    branch: use-gov-notify-mock
+    branch: master
 
 - name: rm-sample-service-source
   type: git
