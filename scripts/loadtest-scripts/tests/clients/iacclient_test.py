@@ -13,7 +13,7 @@ class IACClientTest(unittest.TestCase):
         self.sftp_client.ls = Mock()
         self.sftp_client.ls.return_value = ['a-file.csv']
         self.sftp_client.get = Mock()
-        self.sftp_client.get.return_value = ''
+        self.sftp_client.get.return_value = b''
         self.sftp_client.delete = Mock()
 
         self.iac_client = IACClient(sftp_client=self.sftp_client,
@@ -25,7 +25,7 @@ class IACClientTest(unittest.TestCase):
                                  expected_codes=0)
 
         self.sftp_client.ls.assert_called_with(
-            f'{self.BASE_DIR}/BSNOT_*_201806_11062018_*.csv')
+            self.BASE_DIR,'BSNOT_*_201806_11062018_*.csv')
 
     def test_download_raises_if_file_is_not_found(self):
         self.sftp_client.ls.return_value = []
@@ -65,11 +65,12 @@ class IACClientTest(unittest.TestCase):
             [call.get('the-file.csv'), call.delete('the-file.csv')])
 
     def test_download_returns_the_iac_codes(self):
-        self.sftp_client.get.return_value = \
-            '49900000008:lpt3932m4yxs:NOTSTARTED:null:null:null:null:null:FE\n' + \
-            '49900000007:p2js5r9m2gbz:NOTSTARTED:null:null:null:null:null:FE\n' + \
-            '49900000005:5sypjcp7rjyg:NOTSTARTED:null:null:null:null:null:FE\n' + \
-            '49900000006:22yr5vmdxbx6:NOTSTARTED:null:null:null:null:null:FE\n'
+        self.sftp_client.get.return_value = bytes(
+            '49900000008:lpt3932m4yxs:NOTSTARTED:null:null:null:null:null:FE\n'
+            '49900000007:p2js5r9m2gbz:NOTSTARTED:null:null:null:null:null:FE\n'
+            '49900000005:5sypjcp7rjyg:NOTSTARTED:null:null:null:null:null:FE\n'
+            '49900000006:22yr5vmdxbx6:NOTSTARTED:null:null:null:null:null:FE\n',
+            'utf-8')
 
         result = self.iac_client.download(period='201807',
                                           generated_date='03072018',
@@ -98,11 +99,12 @@ class IACClientTest(unittest.TestCase):
 
     def test_download_does_not_delete_the_file_if_not_expected_num_of_iacs(
             self):
-        self.sftp_client.get.return_value = \
-            '49900000008:lpt3932m4yxs:NOTSTARTED:null:null:null:null:null:FE\n' + \
-            '49900000007:p2js5r9m2gbz:NOTSTARTED:null:null:null:null:null:FE\n' + \
-            '49900000005:5sypjcp7rjyg:NOTSTARTED:null:null:null:null:null:FE\n' + \
-            '49900000006:22yr5vmdxbx6:NOTSTARTED:null:null:null:null:null:FE\n'
+        self.sftp_client.get.return_value = bytes(
+            '49900000008:lpt3932m4yxs:NOTSTARTED:null:null:null:null:null:FE\n'
+            '49900000007:p2js5r9m2gbz:NOTSTARTED:null:null:null:null:null:FE\n'
+            '49900000005:5sypjcp7rjyg:NOTSTARTED:null:null:null:null:null:FE\n'
+            '49900000006:22yr5vmdxbx6:NOTSTARTED:null:null:null:null:null:FE\n',
+            'utf-8')
 
         with self.assertRaises(IncorrectNumberOfIACCodes) as context:
             self.iac_client.download(period='201807',

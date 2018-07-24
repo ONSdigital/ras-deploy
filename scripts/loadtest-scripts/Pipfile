@@ -6,10 +6,12 @@ name = "pypi"
 [packages]
 requests = "*"
 python-dateutil = "*"
+paramiko = "*"
 
 [dev-packages]
 pytest = "*"
 httpretty = "*"
+pytest-sftpserver = "*"
 
 [requires]
 python_version = "3.6"

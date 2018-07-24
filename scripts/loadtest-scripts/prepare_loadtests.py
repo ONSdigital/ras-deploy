@@ -94,5 +94,4 @@ def main():
 
     with_timeout(lambda: sdc.collection_exercises.get_state(exercise_id) not in ['READY_FOR_LIVE', 'LIVE'])
 
-
 main()
