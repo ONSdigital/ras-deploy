@@ -34,9 +34,9 @@ config = {
 sdc = SDCClient(config)
 
 
-def with_timeout(action):
+def wait_for(action):
     count = 0
-    while action():
+    while not action():
         count += 1
         if count >= polling_retries:
             raise BaseException(f"Operation timed out")
@@ -88,10 +88,11 @@ def main():
     upload_and_link_collection_instrument(exercise_id)
     upload_and_link_sample('sample.csv', exercise_id)
 
-    with_timeout(lambda: sdc.collection_exercises.get_state(exercise_id) not in ['READY_FOR_REVIEW'])
+    wait_for(lambda: sdc.collection_exercises.get_state(exercise_id) in ['READY_FOR_REVIEW'])
 
     sdc.collection_exercises.execute(exercise_id)
 
-    with_timeout(lambda: sdc.collection_exercises.get_state(exercise_id) not in ['READY_FOR_LIVE', 'LIVE'])
+    wait_for(lambda: sdc.collection_exercises.get_state(exercise_id) in ['READY_FOR_LIVE', 'LIVE'])
+
 
 main()
