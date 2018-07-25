@@ -9,6 +9,7 @@ python-dateutil = "*"
 
 [dev-packages]
 pytest = "*"
+httpretty = "*"
 
 [requires]
 python_version = "3.6"
