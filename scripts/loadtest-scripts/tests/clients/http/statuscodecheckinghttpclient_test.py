@@ -4,7 +4,8 @@ from unittest.mock import MagicMock, Mock
 from requests import Response
 
 from clients.http.httpcodeexception import HTTPCodeException
-from clients.http.statuscodecheckinghttpclient import StatusCodeCheckingHTTPClient
+from clients.http.statuscodecheckinghttpclient import \
+    StatusCodeCheckingHTTPClient
 
 
 class StatusCodeCheckingHTTPClientTest(unittest.TestCase):
@@ -70,7 +71,6 @@ class StatusCodeCheckingHTTPClientTest(unittest.TestCase):
                              json={'ok': 'true'},
                              expected_status=200)
 
-
         self.assertEqual(HTTPCodeException(
             200, 201,
             'POST http://example.com returned an unexpected status code 201 (expected 200): body'),
@@ -80,21 +80,21 @@ class StatusCodeCheckingHTTPClientTest(unittest.TestCase):
         requests_response = self._stub_put_response(200)
 
         response = self.client.put(url='http://example.com',
-                                    json={'ok': 'true'})
+                                   json={'ok': 'true'})
 
         self.decorated_client.put.assert_called_with(url='http://example.com',
-                                                      json={'ok': 'true'})
+                                                     json={'ok': 'true'})
         self.assertEqual(requests_response, response)
 
     def test_put_delegates_request_to_decorated_client(self):
         requests_response = self._stub_put_response(200)
 
         response = self.client.put(url='http://example.com',
-                                    json={'ok': 'true'},
-                                    expected_status=200)
+                                   json={'ok': 'true'},
+                                   expected_status=200)
 
         self.decorated_client.put.assert_called_with(url='http://example.com',
-                                                      json={'ok': 'true'})
+                                                     json={'ok': 'true'})
         self.assertEqual(requests_response, response)
 
     def test_put_raises_for_unexpected_status_codes(self):
@@ -102,9 +102,8 @@ class StatusCodeCheckingHTTPClientTest(unittest.TestCase):
 
         with self.assertRaises(HTTPCodeException) as context:
             self.client.put(url='http://example.com',
-                             json={'ok': 'true'},
-                             expected_status=200)
-
+                            json={'ok': 'true'},
+                            expected_status=200)
 
         self.assertEqual(HTTPCodeException(
             200, 201,
