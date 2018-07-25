@@ -1,5 +1,6 @@
 from datetime import datetime
 import os
+import logging
 
 import requests
 from dateutil.relativedelta import relativedelta
@@ -32,12 +33,12 @@ class CollectionExerciseClient:
 
         self.http_client.post(path=path, expected_status=200)
 
-        print('Collection exercise executed!')
+        logging.info('Collection exercise executed!')
 
     def get_state(self, exercise_id):
         state = self.get_by_id(exercise_id)['state']
 
-        print(f'Current collection exercise state: {state}')
+        logging.debug(f'Current collection exercise state: {state}')
 
         return state
 
@@ -47,7 +48,7 @@ class CollectionExerciseClient:
 
         self.http_client.put(path=path, json=payload)
 
-        print('Sample linked to collection exercise!')
+        logging.info('Sample linked to collection exercise!')
 
     def get_by_id(self, exercise_id):
         response = self.http_client.get(path=f'/collectionexercises/{exercise_id}')
