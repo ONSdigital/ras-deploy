@@ -1,3 +1,5 @@
+import datetime
+import logging
 import os
 import time
 import logging
@@ -5,12 +7,12 @@ import logging
 from clients import SDCClient, collectionexerciseclient
 from clients.collectionexerciseclient import collection_exercise_url
 from clients.collectioninstrumentclient import CollectionInstrumentClient
+from clients.iac_client import RemoteFileNotFoundException
 from clients.sampleclient import SampleClient
 
 party_url = os.getenv('PARTY_URL', 'http://localhost:8081')
 party_create_respondent_endpoint = os.getenv('PARTY_CREATE_RESPONDENT_ENDPOINT',
                                              '/party-api/v1/respondents')
-action_url = os.getenv('ACTION_URL', 'http://localhost:8151')
 iac_url = os.getenv('IAC_URL', 'http://localhost:8121')
 survey_id = os.getenv('SURVEY_ID', '75b19ea0-69a4-4c58-8d7f-4458c8f43f5c')
 survey_classifiers = os.getenv('SURVEY_CLASSIFIERS',
@@ -25,33 +27,49 @@ logging_level = os.getenv('LOGGING_LEVEL', 'INFO')
 ci = CollectionInstrumentClient(username, password)
 sample = SampleClient(username, password)
 
+logging.getLogger().setLevel(logging.DEBUG)
+
 config = {
     'service_username': username,
     'service_password': password,
-    'action_url': action_url,
+    'action_url': os.getenv('ACTION_URL', 'http://localhost:8151'),
     'collection_exercise_url': collection_exercise_url,
+    'sftp_host': os.getenv('SFTP_HOST'),
+    'sftp_port': int(os.getenv('SFTP_PORT', '22')),
+    'actionexporter_sftp_username':
+        os.getenv('ACTION_EXPORTER_SFTP_USERNAME'),
+    'actionexporter_sftp_password':
+        os.getenv('ACTION_EXPORTER_SFTP_PASSWORD'),
 }
 sdc = SDCClient(config)
 
 
 def wait_for(action):
     count = 0
-    while not action():
+    result = action()
+    while not result:
         count += 1
         if count >= polling_retries:
             raise BaseException(f"Operation timed out")
 
         time.sleep(polling_wait_time)
+        result = action()
+
+    return result
 
 
 def get_collection_exercise():
     exercise = sdc.collection_exercises.get_by_survey_and_period(
         survey_id,
-        period_override or collectionexerciseclient.get_previous_period())
+        collection_exercise_period())
 
     logging.debug(f'Exercise ID = {exercise["id"]}')
 
     return exercise
+
+
+def collection_exercise_period():
+    return period_override or collectionexerciseclient.get_previous_period()
 
 
 def upload_and_link_collection_instrument(exercise_id):
@@ -64,13 +82,29 @@ def upload_and_link_collection_instrument(exercise_id):
     else:
         logging.info(f'Collection instrument exists, ID = {instrument_id}')
 
-    ci.link_collection_instrument_to_collection_exercise(instrument_id, exercise_id)
+    ci.link_collection_instrument_to_collection_exercise(instrument_id,
+                                                         exercise_id)
 
 
 def upload_and_link_sample(csv, exercise_id):
     sample_id = sample.upload_sample_file(csv)
+
     logging.debug(f'Sample ID = {sample_id}')
-    sdc.collection_exercises.link_sample_to_collection_exercise(sample_id, exercise_id)
+
+    sdc.collection_exercises \
+        .link_sample_to_collection_exercise(sample_id, exercise_id)
+
+
+def download_iac_codes(period, expected_codes):
+    try:
+        today = datetime.date.today().strftime('%d%m%Y')
+
+        return sdc.iac_codes.download(
+            period=collection_exercise_period(),
+            generated_date=today,
+            expected_codes=expected_codes)
+    except (RemoteFileNotFoundException):
+        return None
 
 
 def main():
@@ -88,11 +122,22 @@ def main():
     upload_and_link_collection_instrument(exercise_id)
     upload_and_link_sample('sample.csv', exercise_id)
 
-    wait_for(lambda: sdc.collection_exercises.get_state(exercise_id) in ['READY_FOR_REVIEW'])
+    # Magic number: should be taken from num lines in sample file
+    sample_size = 1
+
+    wait_for(lambda: sdc.collection_exercises.get_state(exercise_id) in [
+        'READY_FOR_REVIEW'])
 
     sdc.collection_exercises.execute(exercise_id)
 
-    wait_for(lambda: sdc.collection_exercises.get_state(exercise_id) in ['READY_FOR_LIVE', 'LIVE'])
+    wait_for(lambda: sdc.collection_exercises.get_state(exercise_id) in [
+        'READY_FOR_LIVE', 'LIVE'])
+
+    iac_codes = wait_for(lambda: download_iac_codes(
+        period=collection_exercise_period(),
+        expected_codes=sample_size))
+
+    print(iac_codes)
 
 
 main()

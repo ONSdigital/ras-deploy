@@ -2,19 +2,31 @@ import json
 import unittest
 
 import httpretty
+import pytest
 
 from clients import SDCClient
 
 
+@pytest.mark.usefixtures('sftpserver')
 class SDCClientIntegrationTest(unittest.TestCase):
     def setUp(self):
+        self.client = SDCClient(self._config())
+
+    def _config(self, override={}):
         config = {
             'service_username': 'example-service-username',
             'service_password': 'example-service-password',
             'action_url': 'http://action.services.com',
             'collection_exercise_url': 'http://localhost:8145',
+            'sftp_host': 'sftp.example.com',
+            'sftp_port': 22,
+            'actionexporter_sftp_password': 'sftp-password',
+            'actionexporter_sftp_username': 'sftp-username',
         }
-        self.client = SDCClient(config)
+
+        config.update(override)
+
+        return config
 
     @httpretty.activate
     def test_action_client(self):
@@ -65,4 +77,22 @@ class SDCClientIntegrationTest(unittest.TestCase):
 
         self.assertEqual(collection_exercise, result)
 
+    def test_iac_codes(self):
+        files = {
+            'BSD': {
+                'BSNOT_11_201806_11062018_999.csv':
+                    '49900000008:iac-code:NOTSTARTED:null:null:null:null:null:FE\n'}}
 
+        with self.sftpserver.serve_content(files):
+            client = SDCClient(self._config({
+                'sftp_host': self.sftpserver.host,
+                'sftp_port': self.sftpserver.port,
+                'actionexporter_sftp_username': 'the-username',
+                'actionexporter_sftp_password': 'the-password',
+            }))
+
+            codes = client.iac_codes.download(period='201806',
+                                              generated_date='11062018',
+                                              expected_codes=1)
+
+            self.assertEquals(['iac-code'], codes)

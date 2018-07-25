@@ -1066,8 +1066,10 @@ groups:
   - rm-sdx-gateway-deploy
   - rm-survey-service-deploy
   - sdc-uaa-deploy
-  - sdc-mock-gov-notify-deploy
   - setup-collection-exercises
+- name: mock
+  jobs:
+  - sdc-mock-gov-notify-deploy
 - name: teardown
   jobs:
   - ((loadtest_cloudfoundry_space))-teardown

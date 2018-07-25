@@ -23,7 +23,7 @@ class IACClient:
 
         self._assert_one_file_found(files, glob_path=glob_path)
 
-        return files[0]
+        return f'{self.base_dir}/{files[0]}'
 
     @staticmethod
     def _assert_one_file_found(files, glob_path):
@@ -67,3 +67,6 @@ class IncorrectNumberOfIACCodes(Exception):
     def __init__(self, expected, results):
         self.message = f"Expected {expected} IAC codes; " + \
                        f"got {len(results)} - {results}"
+
+    def __str__(self):
+        return self.message

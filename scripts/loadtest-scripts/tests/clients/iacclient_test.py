@@ -25,7 +25,7 @@ class IACClientTest(unittest.TestCase):
                                  expected_codes=0)
 
         self.sftp_client.ls.assert_called_with(
-            self.BASE_DIR,'BSNOT_*_201806_11062018_*.csv')
+            self.BASE_DIR, 'BSNOT_*_201806_11062018_*.csv')
 
     def test_download_raises_if_file_is_not_found(self):
         self.sftp_client.ls.return_value = []
@@ -62,7 +62,8 @@ class IACClientTest(unittest.TestCase):
                                  expected_codes=0)
 
         self.sftp_client.assert_has_calls(
-            [call.get('the-file.csv'), call.delete('the-file.csv')])
+            [call.get(f'{self.BASE_DIR}/the-file.csv'),
+             call.delete(f'{self.BASE_DIR}/the-file.csv')])
 
     def test_download_returns_the_iac_codes(self):
         self.sftp_client.get.return_value = bytes(

@@ -1,4 +1,5 @@
 import fnmatch
+import logging
 
 import paramiko
 
@@ -18,14 +19,23 @@ class SFTPClient:
         self.client.close()
         self.transport.close()
 
-    def ls(self, dir, glob_pattern):
-        all_files = self.client.listdir(dir)
+    def ls(self, path, glob_pattern):
+        logging.debug(
+            f'SFTP: Listing remote files matching {path}/{glob_pattern}')
 
-        return fnmatch.filter(all_files, glob_pattern)
+        all_files = self.client.listdir(path)
+        filtered_files = fnmatch.filter(all_files, glob_pattern)
+
+        logging.debug(f'SFTP: Found {filtered_files}')
+
+        return filtered_files
 
     def get(self, path):
+        logging.debug(f'SFTP: Getting remote file {path}')
+
         with self.client.open(path, "r") as sftp_file:
             return sftp_file.read()
 
     def delete(self, path):
+        logging.debug(f'SFTP: Deleting remote file {path}')
         self.client.remove(path)
