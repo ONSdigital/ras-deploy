@@ -11,13 +11,22 @@ class SFTPClient:
         self.password = password
         self.port = port
 
-        self.transport = paramiko.Transport((self.host, self.port))
-        self.transport.connect(username=self.username, password=self.password)
-        self.client = paramiko.SFTPClient.from_transport(self.transport)
+        self.ssh = paramiko.SSHClient()
+
+        # This must be set so that connections from containers without the
+        # host key can continue. There is no test for this line of code.
+        self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+        self.ssh.connect(hostname=self.host,
+                         port=self.port,
+                         username=self.username,
+                         password=self.password)
+
+        self.client = self.ssh.open_sftp()
 
     def __del__(self):
         self.client.close()
-        self.transport.close()
+        self.ssh.close()
 
     def ls(self, path, glob_pattern):
         logging.debug(
