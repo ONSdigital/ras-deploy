@@ -12,6 +12,7 @@ paramiko = "*"
 pytest = "*"
 httpretty = "*"
 pytest-sftpserver = "*"
+pycodestyle = "*"
 
 [requires]
 python_version = "3.6"
