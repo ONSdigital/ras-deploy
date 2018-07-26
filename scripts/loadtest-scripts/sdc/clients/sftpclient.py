@@ -20,7 +20,12 @@ class SFTPClient:
         self.ssh.connect(hostname=self.host,
                          port=self.port,
                          username=self.username,
-                         password=self.password)
+                         password=self.password,
+                         # The following 2 settings are required to stop
+                         # paramiko from using public keys. There is are no
+                         # tests covering these settings.
+                         allow_agent=False,
+                         look_for_keys=False)
 
         self.client = self.ssh.open_sftp()
 

@@ -3,11 +3,14 @@ import logging
 import os
 import time
 
+from sdc import csvfile
 from sdc.clients import SDCClient, collectionexerciseclient
 from sdc.clients.collectionexerciseclient import collection_exercise_url
 from sdc.clients.collectioninstrumentclient import CollectionInstrumentClient
 from sdc.clients.iac_client import RemoteFileNotFoundException
 from sdc.clients.sampleclient import SampleClient
+
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 party_url = os.getenv('PARTY_URL', 'http://localhost:8081')
 party_create_respondent_endpoint = os.getenv('PARTY_CREATE_RESPONDENT_ENDPOINT',
@@ -92,15 +95,14 @@ def upload_and_link_sample(csv, exercise_id):
         .link_sample_to_collection_exercise(sample_id, exercise_id)
 
 
-def download_iac_codes(period, expected_codes):
+def download_iac_codes(period, expected_codes, today):
     try:
-        today = datetime.date.today().strftime('%d%m%Y')
-
         return sdc.iac_codes.download(
-            period=collection_exercise_period(),
+            period=period,
             generated_date=today,
             expected_codes=expected_codes)
-    except (RemoteFileNotFoundException):
+
+    except RemoteFileNotFoundException:
         return None
 
 
@@ -119,10 +121,11 @@ def main():
     sdc.actions.add_rule_for_collection_exercise(exercise_id)
 
     upload_and_link_collection_instrument(exercise_id)
-    upload_and_link_sample('sample.csv', exercise_id)
 
-    # Magic number: should be taken from num lines in sample file
-    sample_size = 1
+    sample_file = f'{SCRIPT_DIR}/sample.csv'
+    sample_size = csvfile.num_lines(filename=sample_file, delimiter=':')
+    upload_and_link_sample(sample_file, exercise_id)
+    logging.debug(f'Uploaded sample with {sample_size} sample units.')
 
     wait_for(lambda: sdc.collection_exercises.get_state(exercise_id) in [
         'READY_FOR_REVIEW'])
@@ -132,9 +135,12 @@ def main():
     wait_for(lambda: sdc.collection_exercises.get_state(exercise_id) in [
         'READY_FOR_LIVE', 'LIVE'])
 
+    today = datetime.date.today().strftime('%d%m%Y')
+
     iac_codes = wait_for(lambda: download_iac_codes(
         period=collection_exercise_period(),
-        expected_codes=sample_size))
+        expected_codes=sample_size,
+        today=today))
 
     print(iac_codes)
 
