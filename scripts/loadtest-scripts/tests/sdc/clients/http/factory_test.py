@@ -3,8 +3,8 @@ from unittest.mock import patch
 
 from requests import Response
 
-from clients.http import factory
-from clients.http.httpcodeexception import HTTPCodeException
+from sdc.clients.http import factory
+from sdc.clients.http.httpcodeexception import HTTPCodeException
 
 
 class HTTPClientFactoryTest(unittest.TestCase):

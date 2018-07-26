@@ -2,7 +2,7 @@ import unittest
 
 import pytest
 
-from clients.sftpclient import SFTPClient
+from sdc.clients.sftpclient import SFTPClient
 
 
 @pytest.mark.usefixtures('sftpserver')

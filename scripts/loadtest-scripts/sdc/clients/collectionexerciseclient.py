@@ -1,11 +1,8 @@
-from datetime import datetime
-import os
 import logging
+import os
+from datetime import datetime
 
-import requests
 from dateutil.relativedelta import relativedelta
-
-from clients.http.httpcodeexception import HTTPCodeException
 
 collection_exercise_url = os.getenv('COLLECTION_EXERCISE_URL',
                                     'http://localhost:8145')

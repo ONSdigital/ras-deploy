@@ -2,13 +2,12 @@ import datetime
 import logging
 import os
 import time
-import logging
 
-from clients import SDCClient, collectionexerciseclient
-from clients.collectionexerciseclient import collection_exercise_url
-from clients.collectioninstrumentclient import CollectionInstrumentClient
-from clients.iac_client import RemoteFileNotFoundException
-from clients.sampleclient import SampleClient
+from sdc.clients import SDCClient, collectionexerciseclient
+from sdc.clients.collectionexerciseclient import collection_exercise_url
+from sdc.clients.collectioninstrumentclient import CollectionInstrumentClient
+from sdc.clients.iac_client import RemoteFileNotFoundException
+from sdc.clients.sampleclient import SampleClient
 
 party_url = os.getenv('PARTY_URL', 'http://localhost:8081')
 party_create_respondent_endpoint = os.getenv('PARTY_CREATE_RESPONDENT_ENDPOINT',
@@ -26,8 +25,6 @@ logging_level = os.getenv('LOGGING_LEVEL', 'INFO')
 
 ci = CollectionInstrumentClient(username, password)
 sample = SampleClient(username, password)
-
-logging.getLogger().setLevel(logging.DEBUG)
 
 config = {
     'service_username': username,
@@ -112,8 +109,10 @@ def main():
     exercise = get_collection_exercise()
     exercise_id = exercise['id']
 
-    if sdc.collection_exercises.get_state(exercise_id) in ['LIVE', 'READY_FOR_LIVE']:
-        logging.info('Quitting: The collection exercise has already been executed.')
+    if sdc.collection_exercises.get_state(exercise_id) in ['LIVE',
+                                                           'READY_FOR_LIVE']:
+        logging.info(
+            'Quitting: The collection exercise has already been executed.')
         return
 
     # There is work in progress which will remove the need for this step

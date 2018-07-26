@@ -3,7 +3,7 @@ from unittest.mock import Mock, MagicMock
 
 from requests import Response
 
-from clients.http.baseurlhttpclient import BaseURLHTTPClient
+from sdc.clients.http.baseurlhttpclient import BaseURLHTTPClient
 
 
 class BaseURLHTTPClientTest(unittest.TestCase):

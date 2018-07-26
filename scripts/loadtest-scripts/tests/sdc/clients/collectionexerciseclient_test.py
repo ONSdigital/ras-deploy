@@ -4,8 +4,7 @@ from unittest.mock import Mock, MagicMock
 
 from requests import Response
 
-from clients.collectionexerciseclient import CollectionExerciseClient
-from clients.http.httpcodeexception import HTTPCodeException
+from sdc.clients.collectionexerciseclient import CollectionExerciseClient
 
 
 class CollectionExerciseClientTest(unittest.TestCase):

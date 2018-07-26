@@ -3,7 +3,7 @@ from unittest.mock import patch, Mock, MagicMock
 
 from requests import Response
 
-from clients.http.authenticatedhttpclient import AuthenticatedHTTPClient
+from sdc.clients.http.authenticatedhttpclient import AuthenticatedHTTPClient
 
 
 class AuthenticatedHTTPClientTest(unittest.TestCase):

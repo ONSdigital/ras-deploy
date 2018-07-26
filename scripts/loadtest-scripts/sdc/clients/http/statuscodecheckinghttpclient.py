@@ -1,4 +1,4 @@
-from clients.http.httpcodeexception import HTTPCodeException
+from sdc.clients.http.httpcodeexception import HTTPCodeException
 
 
 class StatusCodeCheckingHTTPClient:

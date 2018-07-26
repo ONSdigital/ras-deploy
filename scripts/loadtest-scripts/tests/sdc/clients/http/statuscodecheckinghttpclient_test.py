@@ -3,8 +3,8 @@ from unittest.mock import MagicMock, Mock
 
 from requests import Response
 
-from clients.http.httpcodeexception import HTTPCodeException
-from clients.http.statuscodecheckinghttpclient import \
+from sdc.clients.http.httpcodeexception import HTTPCodeException
+from sdc.clients.http.statuscodecheckinghttpclient import \
     StatusCodeCheckingHTTPClient
 
 
