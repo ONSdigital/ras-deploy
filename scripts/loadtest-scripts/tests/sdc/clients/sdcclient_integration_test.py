@@ -4,7 +4,7 @@ import unittest
 import httpretty
 import pytest
 
-from clients import SDCClient
+from sdc.clients import SDCClient
 
 
 @pytest.mark.usefixtures('sftpserver')

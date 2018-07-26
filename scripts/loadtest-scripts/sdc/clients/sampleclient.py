@@ -1,6 +1,6 @@
 import os
 
-from clients.http.httpcodeexception import HTTPCodeException
+from sdc.clients.http.httpcodeexception import HTTPCodeException
 import requests
 
 sample_url = os.getenv('SAMPLE_URL', 'http://localhost:8125')

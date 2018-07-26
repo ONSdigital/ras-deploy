@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock, call
 
-from clients.iac_client import IACClient, RemoteFileNotFoundException, \
+from sdc.clients.iac_client import IACClient, RemoteFileNotFoundException, \
     MultipleRemoteFilesFoundException, IncorrectNumberOfIACCodes
 
 

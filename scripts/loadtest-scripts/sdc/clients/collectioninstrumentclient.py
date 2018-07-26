@@ -1,4 +1,4 @@
-from clients.http.httpcodeexception import HTTPCodeException
+from sdc.clients.http.httpcodeexception import HTTPCodeException
 import os
 import logging
 import requests

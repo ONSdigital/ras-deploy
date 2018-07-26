@@ -1,5 +1,5 @@
-from clients.collectionexerciseclient import CollectionExerciseClient
-from clients.http.statuscodecheckinghttpclient import StatusCodeCheckingHTTPClient
+from sdc.clients.collectionexerciseclient import CollectionExerciseClient
+from sdc.clients.http.statuscodecheckinghttpclient import StatusCodeCheckingHTTPClient
 
 
 class ActionClient:

@@ -1,9 +1,9 @@
-from clients import http
-from clients.actionclient import ActionClient
-from clients.collectionexerciseclient import CollectionExerciseClient
-from clients.http import factory
-from clients.iac_client import IACClient
-from clients.sftpclient import SFTPClient
+from sdc.clients import http
+from sdc.clients.actionclient import ActionClient
+from sdc.clients.collectionexerciseclient import CollectionExerciseClient
+from sdc.clients.http import factory
+from sdc.clients.iac_client import IACClient
+from sdc.clients.sftpclient import SFTPClient
 
 
 class SDCClient:

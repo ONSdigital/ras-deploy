@@ -3,7 +3,7 @@ from unittest.mock import Mock, MagicMock
 
 from requests import Response
 
-from clients.actionclient import ActionClient
+from sdc.clients.actionclient import ActionClient
 
 
 class ActionClientTest(unittest.TestCase):

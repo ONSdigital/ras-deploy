@@ -1,8 +1,8 @@
 import requests
 
-from clients.http.authenticatedhttpclient import AuthenticatedHTTPClient
-from clients.http.baseurlhttpclient import BaseURLHTTPClient
-from clients.http.statuscodecheckinghttpclient import \
+from sdc.clients.http.authenticatedhttpclient import AuthenticatedHTTPClient
+from sdc.clients.http.baseurlhttpclient import BaseURLHTTPClient
+from sdc.clients.http.statuscodecheckinghttpclient import \
     StatusCodeCheckingHTTPClient
 
 
