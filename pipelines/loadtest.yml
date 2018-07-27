@@ -995,7 +995,7 @@ jobs:
         - |
           pipenv install --dev
           ./setup_data.sh https://github.com/ONSdigital/rm-tools.git
-  - task: prepare-loadtests
+  - task: execute-collection-exercise
     privileged: true
     config:
       platform: linux
@@ -1006,13 +1006,16 @@ jobs:
           tag: latest
       inputs:
       - name: ras-deploy
-      params:
+      outputs:
+      - name: exercise-config
+      params: &loadtest_script_config
         <<: *loadtest_security_user
         <<: *loadtest_service_endpoints_for_python
         SFTP_HOST: ((sftp_host))
         SFTP_PORT: 22
         ACTION_EXPORTER_SFTP_USERNAME: ((actionexporter_sftp_username))
         ACTION_EXPORTER_SFTP_PASSWORD: ((actionexporter_sftp_password))
+        LOGGING_LEVEL: DEBUG
       run:
         dir: ras-deploy/scripts/loadtest-scripts
         path: sh
@@ -1020,7 +1023,29 @@ jobs:
         - '-exc'
         - |
           pipenv install --deploy
-          pipenv run python prepare_loadtests.py
+          pipenv run python execute_collection_exercise.py >../../../exercise-config/exercise.json
+  - task: register-users
+    privileged: true
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: kennethreitz/pipenv
+          tag: latest
+      inputs:
+      - name: ras-deploy
+      - name: exercise-config
+      params:
+        <<: *loadtest_script_config
+      run:
+        dir: ras-deploy/scripts/loadtest-scripts
+        path: sh
+        args:
+        - '-exc'
+        - |
+          pipenv install --deploy
+          pipenv run python register_users.py ../../../exercise-config/exercise.json
 
 groups:
 - name: pipeline

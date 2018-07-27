@@ -22,6 +22,9 @@ class SDCClientIntegrationTest(unittest.TestCase):
             'sftp_port': 22,
             'actionexporter_sftp_password': 'sftp-password',
             'actionexporter_sftp_username': 'sftp-username',
+            'iac_url': 'http://iac.services.com',
+            'party_url': 'http://party.services.com',
+            'party_create_respondent_endpoint': '/party-api/v1/respondents',
         }
 
         config.update(override)
