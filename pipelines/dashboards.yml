@@ -7,6 +7,11 @@ resources:
     branch: master
     private_key: ((git_key))
 
+- name: rasrm-swagger-dashboard
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rasrm-swagger-dashboard.git
+
 - name: rasrm-dashboard-space
   type: cf
   source:
@@ -18,7 +23,7 @@ resources:
     skip_cert_check: true
 
 jobs:
-- name: deploy-dashboard
+- name: deploy-performance-dashboard
   serial: true
   plan:
   - get: sdc-dashboards
@@ -46,3 +51,26 @@ jobs:
     params:
       manifest: sdc-dashboards/manifest.yml
       path: interpolated-dashboard
+
+- name: deploy-swagger-dashboard
+  serial: true
+  plan:
+  - get: rasrm-swagger-dashboard
+    trigger: true
+  - task: interpolate
+    file: rasrm-swagger-dashboard/ci/interpolate.yml
+    params:
+      SECURITY_USER_USERNAME: ((security_user_name))
+      SECURITY_USER_PASSWORD: ((security_user_password))
+  - put: rasrm-dashboard-space
+    params:
+      manifest: rasrm-swagger-dashboard/manifest.yml
+      path: interpolated-dashboard
+
+groups:
+- name: performance
+  jobs:
+  - deploy-performance-dashboard
+- name: swagger
+  jobs:
+  - deploy-swagger-dashboard
