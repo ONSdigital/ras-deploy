@@ -1,3 +1,4 @@
+import logging
 import os
 
 import requests
@@ -26,5 +27,9 @@ class SampleClient:
             expected_status=requests.codes.ok,
         )
 
-        return response.json()['state']
+        state = response.json()['state']
+
+        logging.debug(f'Current sample state for {sample_id}: {state}')
+
+        return state
 
