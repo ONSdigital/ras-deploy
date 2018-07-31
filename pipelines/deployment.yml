@@ -985,7 +985,7 @@ jobs:
   - get: ci-teardown-timer
     trigger: true
   - task: clear-space
-    file: ras-deploy/tasks/clear_space.yml
+    file: ras-deploy/tasks/cloudfoundry-scripts/clear_space.yml
     params:
       CLOUDFOUNDRY_API: ((cloudfoundry_api))
       CLOUDFOUNDRY_EMAIL: ((cloudfoundry_email))

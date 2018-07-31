@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import sys
 
@@ -28,15 +29,17 @@ def main():
         exit(1)
 
     with open(sys.argv[1], 'r') as file:
-        config = json.load(file)
+        exercise_config = json.load(file)
+
+    logging.debug(f'Exercise config loaded: {exercise_config}')
 
     sdc = SDCClient(sdcclient.config_from_env())
 
     iac_codes = wait_for(lambda: download_iac_codes(
         sdc_client=sdc,
-        period=config['collection_exercise_period'],
-        expected_codes=config['sample_size'],
-        today=config['execution_date']))
+        period=exercise_config['collection_exercise_period'],
+        expected_codes=exercise_config['sample_size'],
+        today=exercise_config['execution_date']))
 
     print(iac_codes)
 
