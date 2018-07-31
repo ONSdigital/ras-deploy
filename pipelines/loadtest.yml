@@ -40,7 +40,6 @@ templates:
     all_services: &loadtest_all_services
     - ras-party-deploy
     - ras-frontstage-deploy
-    - ras-frontstage-api-deploy
     - django-oauth2-test-deploy
     - response-operations-ui-deploy
     - ras-secure-message-deploy
@@ -75,8 +74,6 @@ templates:
       COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
       DJANGO_SERVICE_HOST: django-oauth2-test-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))
       DJANGO_SERVICE_PORT: '80'
-      FRONTSTAGE_API_SERVICE_HOST: ras-frontstage-api-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))
-      FRONTSTAGE_API_SERVICE_PORT: '80'
       FRONTSTAGE_SERVICE_HOST: ras-frontstage-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))
       FRONTSTAGE_SERVICE_PORT: '80'
       IAC_URL: http://iac-service-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))
@@ -101,8 +98,6 @@ templates:
       RAS_CASE_SERVICE_PORT: '80'
       RAS_COLLEX_SERVICE_HOST: rm-collection-exercise-service-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))
       RAS_COLLEX_SERVICE_PORT: '80'
-      RAS_FRONTSTAGE_API_HOST: ras-frontstage-api-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))
-      RAS_FRONTSTAGE_API_PORT: '80'
       RAS_IAC_SERVICE_HOST: iac-service-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))
       RAS_IAC_SERVICE_PORT: '80'
       RAS_OAUTH_SERVICE_HOST: django-oauth2-test-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))
@@ -233,12 +228,6 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-frontstage.git
-    branch: master
-
-- name: ras-frontstage-api-source
-  type: git
-  source:
-    uri: https://github.com/ONSdigital/ras-frontstage-api.git
     branch: master
 
 - name: django-oauth2-test-source
@@ -480,23 +469,6 @@ jobs:
         <<: *loadtest_service_endpoints_for_python
         JWT_SECRET: ((loadtest_jwt_secret))
         SECRET_KEY: ((loadtest_enrolement_code_encryption_key))
-
-- name: ras-frontstage-api-deploy
-  serial_groups: [ras-frontstage-api-deploy]
-  plan:
-  - get: ras-frontstage-api-source
-  - put: cf-resource-((loadtest_cloudfoundry_space))
-    params:
-      current_app_name: ras-frontstage-api-((loadtest_cloudfoundry_space))
-      manifest: ras-frontstage-api-source/manifest.yml
-      path: ras-frontstage-api-source
-      environment_variables:
-        <<: *loadtest_security_user
-        <<: *loadtest_service_endpoints_for_python
-        DJANGO_CLIENT_ID: 'ons@ons.gov'
-        DJANGO_CLIENT_SECRET: 'password'
-        EQ_URL: 'https://eq-test/session?token='
-        JSON_SECRET_KEYS: ((loadtest_json_secret_keys))
 
 - name: django-oauth2-test-deploy
   serial_groups: [django-oauth2-test-deploy]
@@ -1053,7 +1025,6 @@ groups:
   - ras-secure-message-deploy
   - ras-collection-instrument-deploy
   - ras-frontstage-deploy
-  - ras-frontstage-api-deploy
   - django-oauth2-test-deploy
   - response-operations-ui-deploy
   - rm-action-service-deploy
