@@ -1295,12 +1295,13 @@ jobs:
       environment_variables:
         <<: *ci_security_user
         endpoints_enabled: 'false'
-        exportSchedule_cronExpression: '0 * * * * ?'
+        exportSchedule_cronExpression: '* * * * * *'
         sftp_host: ((sftp_host))
         sftp_password: ((actionexporter_sftp_password))
         sftp_port: '22'
         sftp_username: ((actionexporter_sftp_username))
         SWAGGER_SETTINGS_SWAGGER_UI_ACTIVE: 'true'
+        LOGGING_LEVEL_uk.gov.ons.ctp.response.action.export.scheduled: WARN
 
 - name: rm-case-service-ci-deploy
   serial_groups: [rm-case-service-ci-deploy]
@@ -2104,11 +2105,12 @@ jobs:
       environment_variables:
         <<: *latest_security_user
         endpoints_enabled: 'false'
-        exportSchedule_cronExpression: '0 * * * * ?'
+        exportSchedule_cronExpression: '* * * * * *'
         sftp_host: ((sftp_host))
         sftp_password: ((actionexporter_sftp_password))
         sftp_port: '22'
         sftp_username: ((actionexporter_sftp_username))
+        LOGGING_LEVEL_uk.gov.ons.ctp.response.action.export.scheduled: WARN
 
 - name: rm-case-service-latest-deploy
   serial_groups: [rm-case-service-latest-deploy]
