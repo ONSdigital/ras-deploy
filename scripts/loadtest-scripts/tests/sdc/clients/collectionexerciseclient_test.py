@@ -2,23 +2,21 @@ import json
 import unittest
 from unittest.mock import Mock, MagicMock
 
-from requests import Response
-
 from sdc.clients.collectionexerciseclient import CollectionExerciseClient
+from tests.shared.requests import Requests
 
 
-class CollectionExerciseClientTest(unittest.TestCase):
+class CollectionExerciseClientTest(unittest.TestCase, Requests):
     def setUp(self):
-        self.http_response = Response()
-        self.http_response.status_code = 200
+        http_response = self.http_response(status_code=200)
 
         self.http_client = Mock()
-        self.http_client.post = MagicMock(return_value=self.http_response)
+        self.http_client.post = MagicMock(return_value=http_response)
 
         self.client = CollectionExerciseClient(http_client=self.http_client)
 
     def test_get_by_id(self):
-        http_response = self._http_response(b'{"example": "value"}', 200)
+        http_response = self.http_response(status_code=200, body=b'{"example": "value"}')
         self.http_client.get.return_value = Mock()
         self.http_client.get.return_value = http_response
 
@@ -31,7 +29,7 @@ class CollectionExerciseClientTest(unittest.TestCase):
         self.assertEqual({'example': 'value'}, result)
 
     def test_get_state(self):
-        http_response = self._http_response(b'{"state": "LIVE"}', 200)
+        http_response = self.http_response(status_code=200, body=b'{"state": "LIVE"}')
         self.http_client.get.return_value = Mock()
         self.http_client.get.return_value = http_response
 
@@ -44,7 +42,7 @@ class CollectionExerciseClientTest(unittest.TestCase):
         self.assertEqual('LIVE', result)
 
     def test_link_sample_to_collection_exercise(self):
-        http_response = self._http_response(b'{"state": "LIVE"}', 200)
+        http_response = self.http_response(status_code=200, body=b'{"state": "LIVE"}')
         self.http_client.put.return_value = Mock()
         self.http_client.put.return_value = http_response
 
@@ -72,7 +70,7 @@ class CollectionExerciseClientTest(unittest.TestCase):
             {'exerciseRef': '201806'},
         ]
 
-        http_response = self._http_response(bytes(json.dumps(exercises), 'utf-8'), 200)
+        http_response = self.http_response(status_code=200, body=bytes(json.dumps(exercises), 'utf-8'))
         self.http_client.get.return_value = Mock()
         self.http_client.get.return_value = http_response
 
@@ -85,7 +83,7 @@ class CollectionExerciseClientTest(unittest.TestCase):
         self.assertEqual({'exerciseRef': '201805'}, exercise)
 
     def test_get_by_survey_and_period_raises_if_exercise_not_found(self):
-        http_response = self._http_response(b'[]', 200)
+        http_response = self.http_response(status_code=200, body=b'[]')
         self.http_client.get.return_value = Mock()
         self.http_client.get.return_value = http_response
 
@@ -94,11 +92,3 @@ class CollectionExerciseClientTest(unittest.TestCase):
         with self.assertRaises(Exception):
             self.client.get_by_survey_and_period(survey_id, '201802')
 
-    @staticmethod
-    def _http_response(content, status_code):
-        http_response = Response()
-        http_response.status_code = status_code
-        http_response._content = content
-        http_response.encoding = 'utf-8'
-
-        return http_response

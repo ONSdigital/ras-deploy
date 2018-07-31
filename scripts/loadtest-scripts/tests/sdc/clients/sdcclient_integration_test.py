@@ -1,5 +1,6 @@
 import json
 import unittest
+from io import StringIO
 
 import httpretty
 import pytest
@@ -18,6 +19,7 @@ class SDCClientIntegrationTest(unittest.TestCase):
             'service_password': 'example-service-password',
             'action_url': 'http://action.services.com',
             'collection_exercise_url': 'http://localhost:8145',
+            'sample_url': 'http://sample.services.com',
             'sftp_host': 'sftp.example.com',
             'sftp_port': 22,
             'actionexporter_sftp_password': 'sftp-password',
@@ -99,3 +101,20 @@ class SDCClientIntegrationTest(unittest.TestCase):
                                               expected_codes=1)
 
             self.assertEquals(['iac-code'], codes)
+
+    @httpretty.activate
+    def test_samples(self):
+        sample_id = '1429b8df-d657-44bb-a59a-7a298d4ed08f'
+
+        httpretty.register_uri(
+            httpretty.POST,
+            f'http://sample.services.com/samples/B/fileupload',
+            body=json.dumps({'id': sample_id}),
+            status=201)
+
+        file = StringIO('file contents')
+        result = self.client.samples.upload_file(file)
+
+        self.assertEqual(sample_id, result)
+
+

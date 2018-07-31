@@ -6,7 +6,6 @@ import os
 from sdc import csvfile
 from sdc.clients import SDCClient, collectionexerciseclient, sdcclient
 from sdc.clients.collectioninstrumentclient import CollectionInstrumentClient
-from sdc.clients.sampleclient import SampleClient
 from sdc.utils import wait_for, logger
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -22,7 +21,6 @@ logger.initialise_from_env()
 config = sdcclient.config_from_env()
 ci = CollectionInstrumentClient(config['service_username'],
                                 config['service_password'])
-sample = SampleClient(config['service_username'], config['service_password'])
 sdc = SDCClient(config)
 
 
@@ -49,12 +47,15 @@ def upload_and_link_collection_instrument(survey_id,
 
 
 def upload_and_link_sample(sdc, csv, exercise_id):
-    sample_id = sample.upload_sample_file(csv)
+    with open(csv, 'rb') as fh:
+        sample_id = sdc.samples.upload_file(fh)
 
     logging.debug(f'Sample ID = {sample_id}')
 
     sdc.collection_exercises \
         .link_sample_to_collection_exercise(sample_id, exercise_id)
+
+    return sample_id
 
 
 def main():
@@ -86,8 +87,10 @@ def main():
         collection_instruments=ci,
         exercise_id=exercise_id)
 
-    upload_and_link_sample(sdc=sdc, csv=sample_file, exercise_id=exercise_id)
+    sample_id = upload_and_link_sample(sdc=sdc, csv=sample_file, exercise_id=exercise_id)
     logging.debug(f'Uploaded sample with {sample_size} sample units.')
+
+    wait_for(lambda: sdc.samples.get_state(sample_id) == 'ACTIVE')
 
     wait_for(lambda: sdc.collection_exercises.get_state(exercise_id) in [
         'READY_FOR_REVIEW'])

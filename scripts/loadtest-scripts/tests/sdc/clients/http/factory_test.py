@@ -5,9 +5,10 @@ from requests import Response
 
 from sdc.clients.http import factory
 from sdc.clients.http.httpcodeexception import HTTPCodeException
+from tests.shared.requests import Requests
 
 
-class HTTPClientFactoryTest(unittest.TestCase):
+class HTTPClientFactoryTest(unittest.TestCase, Requests):
     BASE_URL = 'http://example.com'
     PASSWORD = 'example-pass'
     USERNAME = 'example-user'
@@ -39,8 +40,7 @@ class HTTPClientFactoryTest(unittest.TestCase):
 
     @patch('requests.get')
     def test_it_is_a_status_code_checking_http_client(self, get):
-        response = Response()
-        response.status_code = 404
+        response = self.http_response(status_code=404)
         get.return_value = response
 
         with self.assertRaises(HTTPCodeException):
@@ -48,8 +48,7 @@ class HTTPClientFactoryTest(unittest.TestCase):
 
     @patch('requests.get')
     def test_it_handles_errors_when_path_parameter_is_provided(self, get):
-        response = Response()
-        response.status_code = 404
+        response = self.http_response(status_code=404)
         get.return_value = response
 
         with self.assertRaises(HTTPCodeException):

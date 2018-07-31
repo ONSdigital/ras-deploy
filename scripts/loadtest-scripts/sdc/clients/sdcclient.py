@@ -9,6 +9,7 @@ from sdc.clients.collectionexerciseclient import CollectionExerciseClient, \
     collection_exercise_url
 from sdc.clients.http import factory
 from sdc.clients.iac_client import IACClient
+from sdc.clients.sampleclient import SampleClient
 from sdc.clients.sftpclient import SFTPClient
 
 URL_SCHEMA = Regex(r'^https?://')
@@ -22,6 +23,7 @@ CONFIG_SCHEMA = Schema({
     'party_url': URL_SCHEMA,
     'party_create_respondent_endpoint': NON_EMPTY_STRING_SCHEMA,
     'collection_exercise_url': URL_SCHEMA,
+    'sample_url': URL_SCHEMA,
     'sftp_host': NON_EMPTY_STRING_SCHEMA,
     'sftp_port': int,
     'actionexporter_sftp_username': NON_EMPTY_STRING_SCHEMA,
@@ -36,20 +38,14 @@ class SDCClient:
 
     @property
     def actions(self):
-        http_client = http.factory.create(
-            base_url=self.config['action_url'],
-            username=self.config['service_username'],
-            password=self.config['service_password'])
+        http_client = self._create_http_client(self.config['action_url'])
 
         return ActionClient(http_client=http_client,
                             collection_exercise_client=self.collection_exercises)
 
     @property
     def collection_exercises(self):
-        http_client = http.factory.create(
-            base_url=self.config['collection_exercise_url'],
-            username=self.config['service_username'],
-            password=self.config['service_password'])
+        http_client = self._create_http_client(self.config['collection_exercise_url'])
 
         return CollectionExerciseClient(http_client)
 
@@ -64,6 +60,18 @@ class SDCClient:
 
         return IACClient(sftp_client=self.action_exporter_sftp_client, base_dir='BSD')
 
+    @property
+    def samples(self):
+        http_client = self._create_http_client(self.config['sample_url'])
+
+        return SampleClient(http_client=http_client)
+
+    def _create_http_client(self, url):
+        return http.factory.create(
+            base_url=url,
+            username=self.config['service_username'],
+            password=self.config['service_password'])
+
 
 def config_from_env():
     config = CONFIG_SCHEMA.validate({
@@ -77,6 +85,7 @@ def config_from_env():
         'party_create_respondent_endpoint': os.getenv(
             'PARTY_CREATE_RESPONDENT_ENDPOINT', '/party-api/v1/respondents'),
         'collection_exercise_url': collection_exercise_url,
+        'sample_url': os.getenv('SAMPLE_URL', 'http://localhost:8125'),
         'sftp_host': os.getenv('SFTP_HOST'),
         'sftp_port': int(os.getenv('SFTP_PORT', '22')),
         'actionexporter_sftp_username':
