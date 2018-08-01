@@ -142,7 +142,7 @@ jobs:
         HOST: 0.0.0.0
         LOG_LEVEL: INFO
         ACCOUNT_SERVICE_URL: http://rhpreprod.rmdev.onsdigital.uk
-        EQ_URL: https://eq.onsdigital.uk//session?token=
+        EQ_URL: https://eq.onsdigital.uk/session?token=
         JSON_SECRET_KEYS: ((preprod_json_secret_keys))
         CASE_URL: http://casesvc-preprod.((preprod_cloudfoundry_apps_domain))
         CASE_USERNAME: ((preprod_security_user_name))
