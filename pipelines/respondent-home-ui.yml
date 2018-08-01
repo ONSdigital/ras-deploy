@@ -84,7 +84,7 @@ jobs:
         HOST: 0.0.0.0
         LOG_LEVEL: INFO
         ACCOUNT_SERVICE_URL: http://respondent-home-ui-latest.apps.devtest.onsclofo.uk
-        EQ_URL: https://staging-new-surveys.dev.eq.ons.digital/session?token=
+        EQ_URL: https://staging-new-surveys.dev.eq.ons.digital
         JSON_SECRET_KEYS: ((latest_json_secret_keys))
         CASE_URL: http://rm-case-service-concourse-latest.apps.devtest.onsclofo.uk
         CASE_USERNAME: ((latest_security_user_name))
@@ -142,7 +142,7 @@ jobs:
         HOST: 0.0.0.0
         LOG_LEVEL: INFO
         ACCOUNT_SERVICE_URL: http://rhpreprod.rmdev.onsdigital.uk
-        EQ_URL: https://preprod-surveys.eq.ons.digital/session?token=
+        EQ_URL: https://preprod-surveys.eq.ons.digital
         JSON_SECRET_KEYS: ((preprod_json_secret_keys))
         CASE_URL: http://casesvc-preprod.((preprod_cloudfoundry_apps_domain))
         CASE_USERNAME: ((preprod_security_user_name))
@@ -213,7 +213,7 @@ jobs:
         HOST: 0.0.0.0
         LOG_LEVEL: INFO
         ACCOUNT_SERVICE_URL: https://ohs-alpha.onsdigital.uk
-        EQ_URL: https://eq.ons.gov.uk/session?token=
+        EQ_URL: https://eq.ons.gov.uk
         JSON_SECRET_KEYS: ((prod_json_secret_keys))
         CASE_URL: http://casesvc-prod.((prod_cloudfoundry_apps_domain))
         CASE_USERNAME: ((prod_security_user_name))
