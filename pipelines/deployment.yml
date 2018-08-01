@@ -1129,7 +1129,7 @@ jobs:
       environment_variables:
         <<: *ci_security_user
         <<: *ci_service_endpoints_for_python
-        EQ_URL: 'https://eq-test'
+        EQ_URL: 'https://eq-test/session?token='
         JSON_SECRET_KEYS: ((ci_json_secret_keys))
         JWT_SECRET: ((ci_jwt_secret))
         OAUTH_CLIENT_ID: 'ons@ons.gov'
@@ -1948,7 +1948,7 @@ jobs:
       environment_variables:
         <<: *latest_security_user
         <<: *latest_service_endpoints_for_python
-        EQ_URL: 'https://eq-test'
+        EQ_URL: 'https://eq-test/session?token='
         JWT_SECRET: ((latest_jwt_secret))
         JSON_SECRET_KEYS: ((latest_json_secret_keys))
         OAUTH_CLIENT_ID: 'ons@ons.gov'
@@ -2662,7 +2662,7 @@ disabled-jobs:
       environment_variables:
         <<: *preprod_security_user
         <<: *preprod_service_endpoints_for_python
-        EQ_URL: 'https://eq-test'
+        EQ_URL: 'https://eq-test/session?token='
         JSON_SECRET_KEYS: ((preprod_json_secret_keys))
         JWT_SECRET: ((preprod_jwt_secret))
         OAUTH_CLIENT_ID: 'ons@ons.gov'
@@ -3375,7 +3375,7 @@ disabled-jobs:
       environment_variables:
         <<: *prod_security_user
         <<: *prod_service_endpoints_for_python
-        EQ_URL: 'https://eq-test'
+        EQ_URL: 'https://eq-test/session?token='
         JSON_SECRET_KEYS: ((prod_json_secret_keys))
         JWT_SECRET: ((prod_jwt_secret))
         OAUTH_CLIENT_ID: 'ons@ons.gov'
