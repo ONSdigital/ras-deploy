@@ -81,14 +81,14 @@ def main():
     # There is work in progress which will remove the need for this step
     sdc.actions.add_rule_for_collection_exercise(exercise_id)
 
+    sample_id = upload_and_link_sample(sdc=sdc, csv=sample_file, exercise_id=exercise_id)
+    logging.debug(f'Uploaded sample with {sample_size} sample units.')
+
     upload_and_link_collection_instrument(
         survey_id=survey_id,
         survey_classifiers=SURVEY_CLASSIFIERS,
         collection_instruments=ci,
         exercise_id=exercise_id)
-
-    sample_id = upload_and_link_sample(sdc=sdc, csv=sample_file, exercise_id=exercise_id)
-    logging.debug(f'Uploaded sample with {sample_size} sample units.')
 
     wait_for(lambda: sdc.samples.get_state(sample_id) == 'ACTIVE')
 
