@@ -209,6 +209,7 @@ jobs:
       manifest: respondent-home-ui-source/manifest.yml
       path: respondent-home-ui-source
       environment_variables:
+        APP_SETTINGS: ProductionConfig
         HOST: 0.0.0.0
         LOG_LEVEL: INFO
         ACCOUNT_SERVICE_URL: https://ohs-alpha.onsdigital.uk
