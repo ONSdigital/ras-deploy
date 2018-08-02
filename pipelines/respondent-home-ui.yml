@@ -141,7 +141,7 @@ jobs:
       environment_variables:
         HOST: 0.0.0.0
         LOG_LEVEL: INFO
-        ACCOUNT_SERVICE_URL: http://rhpreprod.rmdev.onsdigital.uk
+        ACCOUNT_SERVICE_URL: https://ohs-alpha.onsdigital.uk
         EQ_URL: https://eq.onsdigital.uk
         JSON_SECRET_KEYS: ((preprod_json_secret_keys))
         CASE_URL: http://casesvc-preprod.((preprod_cloudfoundry_apps_domain))
@@ -211,7 +211,7 @@ jobs:
       environment_variables:
         HOST: 0.0.0.0
         LOG_LEVEL: INFO
-        ACCOUNT_SERVICE_URL: https://ohs-alpha.onsdigital.uk
+        ACCOUNT_SERVICE_URL: # respondent home domain TBC
         EQ_URL: https://eq.ons.gov.uk
         JSON_SECRET_KEYS: ((prod_json_secret_keys))
         CASE_URL: http://casesvc-prod.((prod_cloudfoundry_apps_domain))
