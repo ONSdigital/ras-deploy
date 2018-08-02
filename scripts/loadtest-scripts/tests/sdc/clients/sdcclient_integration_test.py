@@ -19,6 +19,7 @@ class SDCClientIntegrationTest(unittest.TestCase):
             'service_password': 'example-service-password',
             'action_url': 'http://action.services.com',
             'collection_exercise_url': 'http://localhost:8145',
+            'collection_instrument_url': 'http://ci.services.com',
             'sample_url': 'http://sample.services.com',
             'sftp_host': 'sftp.example.com',
             'sftp_port': 22,
@@ -108,7 +109,7 @@ class SDCClientIntegrationTest(unittest.TestCase):
 
         httpretty.register_uri(
             httpretty.POST,
-            f'http://sample.services.com/samples/B/fileupload',
+            'http://sample.services.com/samples/B/fileupload',
             body=json.dumps({'id': sample_id}),
             status=201)
 
@@ -117,4 +118,17 @@ class SDCClientIntegrationTest(unittest.TestCase):
 
         self.assertEqual(sample_id, result)
 
+    @httpretty.activate
+    def test_collection_instruments(self):
+        survey_id = '6ee65e4d-ecc0-4144-936c-d87c0775b383'
+        survey_classifiers = {'classifier': 'xxx'}
 
+        httpretty.register_uri(
+            httpretty.POST,
+            'http://ci.services.com/collection-instrument-api/1.0.2/upload',
+            body='',
+            status=200)
+
+        self.client.collection_instruments.upload(
+            survey_id=survey_id,
+            survey_classifiers=survey_classifiers)

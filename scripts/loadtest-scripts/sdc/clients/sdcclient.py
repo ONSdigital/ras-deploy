@@ -7,6 +7,7 @@ from sdc.clients import http
 from sdc.clients.actionclient import ActionClient
 from sdc.clients.collectionexerciseclient import CollectionExerciseClient, \
     collection_exercise_url
+from sdc.clients.collectioninstrumentclient import CollectionInstrumentClient
 from sdc.clients.http import factory
 from sdc.clients.iac_client import IACClient
 from sdc.clients.sampleclient import SampleClient
@@ -23,6 +24,7 @@ CONFIG_SCHEMA = Schema({
     'party_url': URL_SCHEMA,
     'party_create_respondent_endpoint': NON_EMPTY_STRING_SCHEMA,
     'collection_exercise_url': URL_SCHEMA,
+    'collection_instrument_url': URL_SCHEMA,
     'sample_url': URL_SCHEMA,
     'sftp_host': NON_EMPTY_STRING_SCHEMA,
     'sftp_port': int,
@@ -66,6 +68,11 @@ class SDCClient:
 
         return SampleClient(http_client=http_client)
 
+    @property
+    def collection_instruments(self):
+        http_client = self._create_http_client(self.config['collection_instrument_url'])
+        return CollectionInstrumentClient(http_client=http_client)
+
     def _create_http_client(self, url):
         return http.factory.create(
             base_url=url,
@@ -85,6 +92,8 @@ def config_from_env():
         'party_create_respondent_endpoint': os.getenv(
             'PARTY_CREATE_RESPONDENT_ENDPOINT', '/party-api/v1/respondents'),
         'collection_exercise_url': collection_exercise_url,
+        'collection_instrument_url':
+            os.getenv('COLLECTION_INSTRUMENT_URL', 'http://localhost:8002'),
         'sample_url': os.getenv('SAMPLE_URL', 'http://localhost:8125'),
         'sftp_host': os.getenv('SFTP_HOST'),
         'sftp_port': int(os.getenv('SFTP_PORT', '22')),

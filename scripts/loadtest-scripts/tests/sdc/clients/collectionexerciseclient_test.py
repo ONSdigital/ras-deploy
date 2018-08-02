@@ -1,6 +1,6 @@
 import json
 import unittest
-from unittest.mock import Mock, MagicMock
+from unittest.mock import Mock
 
 from sdc.clients.collectionexerciseclient import CollectionExerciseClient
 from tests.shared.requests import Requests
@@ -11,13 +11,13 @@ class CollectionExerciseClientTest(unittest.TestCase, Requests):
         http_response = self.http_response(status_code=200)
 
         self.http_client = Mock()
-        self.http_client.post = MagicMock(return_value=http_response)
+        self.http_client.post.return_value = http_response
 
         self.client = CollectionExerciseClient(http_client=self.http_client)
 
     def test_get_by_id(self):
-        http_response = self.http_response(status_code=200, body=b'{"example": "value"}')
-        self.http_client.get.return_value = Mock()
+        http_response = self.http_response(status_code=200,
+                                           body=b'{"example": "value"}')
         self.http_client.get.return_value = http_response
 
         exercise_id = '66d6ac26-9bca-4f60-a87a-1bd1f792710c'
@@ -29,8 +29,8 @@ class CollectionExerciseClientTest(unittest.TestCase, Requests):
         self.assertEqual({'example': 'value'}, result)
 
     def test_get_state(self):
-        http_response = self.http_response(status_code=200, body=b'{"state": "LIVE"}')
-        self.http_client.get.return_value = Mock()
+        http_response = self.http_response(status_code=200,
+                                           body=b'{"state": "LIVE"}')
         self.http_client.get.return_value = http_response
 
         exercise_id = '66d6ac26-9bca-4f60-a87a-1bd1f792710c'
@@ -42,8 +42,8 @@ class CollectionExerciseClientTest(unittest.TestCase, Requests):
         self.assertEqual('LIVE', result)
 
     def test_link_sample_to_collection_exercise(self):
-        http_response = self.http_response(status_code=200, body=b'{"state": "LIVE"}')
-        self.http_client.put.return_value = Mock()
+        http_response = self.http_response(status_code=200,
+                                           body=b'{"state": "LIVE"}')
         self.http_client.put.return_value = http_response
 
         exercise_id = '66d6ac26-9bca-4f60-a87a-1bd1f792710c'
@@ -66,12 +66,13 @@ class CollectionExerciseClientTest(unittest.TestCase, Requests):
 
     def test_get_by_survey_and_period(self):
         exercises = [
-            {'exerciseRef': '201805'},
-            {'exerciseRef': '201806'},
+            {'id': 'may-id', 'exerciseRef': '201805'},
+            {'id': 'june-id', 'exerciseRef': '201806'},
         ]
 
-        http_response = self.http_response(status_code=200, body=bytes(json.dumps(exercises), 'utf-8'))
-        self.http_client.get.return_value = Mock()
+        http_response = self.http_response(
+            status_code=200,
+            body=bytes(json.dumps(exercises), 'utf-8'))
         self.http_client.get.return_value = http_response
 
         survey_id = '66d6ac26-9bca-4f60-a87a-1bd1f792710c'
@@ -80,11 +81,10 @@ class CollectionExerciseClientTest(unittest.TestCase, Requests):
 
         self.http_client.get.assert_called_with(
             path=f'/collectionexercises/survey/{survey_id}')
-        self.assertEqual({'exerciseRef': '201805'}, exercise)
+        self.assertEqual({'id': 'may-id', 'exerciseRef': '201805'}, exercise)
 
     def test_get_by_survey_and_period_raises_if_exercise_not_found(self):
         http_response = self.http_response(status_code=200, body=b'[]')
-        self.http_client.get.return_value = Mock()
         self.http_client.get.return_value = http_response
 
         survey_id = '66d6ac26-9bca-4f60-a87a-1bd1f792710c'

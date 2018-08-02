@@ -1,6 +1,6 @@
-from sdc.clients.http.httpcodeexception import HTTPCodeException
-import os
 import logging
+import os
+
 import requests
 
 collection_instrument_url = \
@@ -18,41 +18,33 @@ collection_instrument_link_endpoint = \
 
 
 class CollectionInstrumentClient:
-    def __init__(self, username, password):
-        self.username = username
-        self.password = password
+    def __init__(self, http_client):
+        self.http_client = http_client
 
-    def upload_collection_instrument(self, survey_id, survey_classifiers):
+    def upload(self, survey_id, survey_classifiers):
         upload_params = {'survey_id': survey_id, 'classifiers': survey_classifiers}
-        url = collection_instrument_url + collection_instrument_upload_endpoint
 
-        response = requests.post(url=url, params=upload_params, auth=(self.username, self.password))
+        self.http_client.post(
+            path=collection_instrument_upload_endpoint,
+            params=upload_params,
+            expected_status=requests.codes.ok)
 
-        if response.status_code != requests.codes.ok:
-            raise HTTPCodeException(response.codes.ok, response.status_code,
-                                    f'Failed to set collection instrument: {response.text}')
+    def link_to_collection_exercise(self, instrument_id, exercise_id):
+        path = f'{collection_instrument_link_endpoint}/{instrument_id}/{exercise_id}'
 
-    def link_collection_instrument_to_collection_exercise(self, instrument_id, exercise_id):
+        self.http_client.post(path=path, expected_status=requests.codes.ok)
+        logging.debug('Collection instrument linked to exercise!')
 
-        url = f'{collection_instrument_url}{collection_instrument_link_endpoint}/{instrument_id}/{exercise_id}'
-
-        response = requests.post(url=url, auth=(self.username, self.password))
-
-        if response.status_code != requests.codes.ok:
-            raise HTTPCodeException(response.codes.ok, response.status_code,
-                                    f'Failed to link collection instrument to exercise: {response.text}')
-
-        logging.info('Collection instrument linked to exercise!')
-
-    def get_collection_id_from_classifier(self, classifiers):
+    def get_id_from_classifier(self, classifiers):
         search_params = {'searchString': classifiers}
-        url = collection_instrument_url + collection_instrument_search_endpoint
+        path = collection_instrument_search_endpoint
 
-        response = requests.get(url=url, params=search_params, auth=(self.username, self.password))
-
-        if response.status_code != requests.codes.ok:
-            raise HTTPCodeException(response.codes.ok, response.status_code,
-                                    f'Failed to check for collection instrument: {response.text}')
+        response = self.http_client.get(
+            path=path,
+            params=search_params,
+            expected_status=requests.codes.ok
+        )
 
         results = response.json()
+
         return results[0]['id'] if len(results) > 0 else None
