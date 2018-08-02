@@ -313,6 +313,11 @@ resources:
     branch: master
 ### END MICROSERVICE REPOS
 
+- name: healthcheck-timer
+  type: time
+  source:
+    interval: 1m
+
 - name: cf-cli-resource-((loadtest_cloudfoundry_space))
   type: cf-cli-resource
   source:
@@ -339,7 +344,7 @@ jobs:
   plan:
   - get: ras-deploy
   - task: clear-space
-    file: ras-deploy/tasks/clear_space.yml
+    file: ras-deploy/tasks/cloudfoundry-scripts/clear_space.yml
     params:
       CLOUDFOUNDRY_API: ((loadtest_cloudfoundry_api))
       CLOUDFOUNDRY_EMAIL: ((loadtest_cloudfoundry_email))
@@ -915,10 +920,33 @@ jobs:
         args:
         - './scripts/jenkins/add_user.sh'
 
+- name: ras-deploy-tests
+  plan:
+  - get: ras-deploy
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: kennethreitz/pipenv
+          tag: latest
+      inputs:
+      - name: ras-deploy
+      run:
+        dir: ras-deploy
+        path: sh
+        args:
+        - '-exc'
+        - |
+          make test
+
 - name: setup-collection-exercises
   serial_groups: *loadtest_all_services
   plan:
   - get: ras-deploy
+    passed: [ras-deploy-tests]
   - get: rasrm-acceptance-tests-source
     trigger: true
   - get: ras-party-source
@@ -972,6 +1000,8 @@ jobs:
   - get: sdc-mock-gov-notify-source
     passed: [sdc-mock-gov-notify-deploy]
     trigger: true
+  - task: check-status-of-apps
+    file: ras-deploy/tasks/cloudfoundry-scripts/health_check.yml
   - task: acceptance-test-setup
     privileged: true
     config:
@@ -995,7 +1025,49 @@ jobs:
         - |
           pipenv install --dev
           ./setup_data.sh https://github.com/ONSdigital/rm-tools.git
-  - task: prepare-loadtests
+
+- name: execute-exercise
+  serial_groups: *loadtest_all_services
+  plan:
+  - get: ras-deploy
+    passed: [setup-collection-exercises]
+  - get: ras-party-source
+    passed: [setup-collection-exercises]
+  - get: ras-frontstage-source
+    passed: [setup-collection-exercises]
+  - get: django-oauth2-test-source
+    passed: [setup-collection-exercises]
+  - get: response-operations-ui-source
+    passed: [setup-collection-exercises]
+  - get: ras-secure-message-source
+    passed: [setup-collection-exercises]
+  - get: ras-collection-instrument-source
+    passed: [setup-collection-exercises]
+  - get: rm-action-service-source
+    passed: [setup-collection-exercises]
+  - get: rm-actionexporter-service-source
+    passed: [setup-collection-exercises]
+  - get: rm-case-service-source
+    passed: [setup-collection-exercises]
+  - get: rm-collection-exercise-service-source
+    passed: [setup-collection-exercises]
+  - get: iac-service-source
+    passed: [setup-collection-exercises]
+  - get: rm-notify-gateway-source
+    passed: [setup-collection-exercises]
+  - get: rm-sample-service-source
+    passed: [setup-collection-exercises]
+  - get: rm-sdx-gateway-source
+    passed: [setup-collection-exercises]
+  - get: rm-survey-service-source
+    passed: [setup-collection-exercises]
+  - get: sdc-uaa-source
+    passed: [setup-collection-exercises]
+  - get: sdc-mock-gov-notify-source
+    passed: [setup-collection-exercises]
+  - task: check-status-of-apps
+    file: ras-deploy/tasks/cloudfoundry-scripts/health_check.yml
+  - task: execute-collection-exercise
     privileged: true
     config:
       platform: linux
@@ -1006,13 +1078,16 @@ jobs:
           tag: latest
       inputs:
       - name: ras-deploy
-      params:
+      outputs:
+      - name: exercise-config
+      params: &loadtest_script_config
         <<: *loadtest_security_user
         <<: *loadtest_service_endpoints_for_python
         SFTP_HOST: ((sftp_host))
         SFTP_PORT: 22
         ACTION_EXPORTER_SFTP_USERNAME: ((actionexporter_sftp_username))
         ACTION_EXPORTER_SFTP_PASSWORD: ((actionexporter_sftp_password))
+        LOGGING_LEVEL: DEBUG
       run:
         dir: ras-deploy/scripts/loadtest-scripts
         path: sh
@@ -1020,7 +1095,38 @@ jobs:
         - '-exc'
         - |
           pipenv install --deploy
-          pipenv run python prepare_loadtests.py
+          pipenv run python execute_collection_exercise.py >../../../exercise-config/exercise.json
+  - task: register-users
+    privileged: true
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: kennethreitz/pipenv
+          tag: latest
+      inputs:
+      - name: ras-deploy
+      - name: exercise-config
+      params:
+        <<: *loadtest_script_config
+      run:
+        dir: ras-deploy/scripts/loadtest-scripts
+        path: sh
+        args:
+        - '-exc'
+        - |
+          pipenv install --deploy
+          pipenv run python register_users.py ../../../exercise-config/exercise.json
+
+- name: platform-status
+  plan:
+  - get: healthcheck-timer
+    trigger: true
+  - get: ras-deploy
+    passed: [ras-deploy-tests]
+  - task: check-status-of-apps
+    file: ras-deploy/tasks/cloudfoundry-scripts/health_check.yml
 
 groups:
 - name: pipeline
@@ -1042,9 +1148,14 @@ groups:
   - rm-survey-service-deploy
   - sdc-uaa-deploy
   - setup-collection-exercises
-- name: mock
+  - execute-exercise
+- name: support
   jobs:
   - sdc-mock-gov-notify-deploy
-- name: teardown
+  - ras-deploy-tests
+- name: status
+  jobs:
+  - platform-status
+- name: actions
   jobs:
   - ((loadtest_cloudfoundry_space))-teardown

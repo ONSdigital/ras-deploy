@@ -1,14 +1,13 @@
 import unittest
 from unittest.mock import MagicMock, Mock
 
-from requests import Response
-
 from sdc.clients.http.httpcodeexception import HTTPCodeException
 from sdc.clients.http.statuscodecheckinghttpclient import \
     StatusCodeCheckingHTTPClient
+from tests.shared.requests import Requests
 
 
-class StatusCodeCheckingHTTPClientTest(unittest.TestCase):
+class StatusCodeCheckingHTTPClientTest(unittest.TestCase, Requests):
     def setUp(self):
         self.decorated_client = Mock()
         self.client = StatusCodeCheckingHTTPClient(self.decorated_client)
@@ -111,31 +110,19 @@ class StatusCodeCheckingHTTPClientTest(unittest.TestCase):
             context.exception)
 
     def _stub_get_response(self, status_code, body='default content'):
-        response = Response()
-        response.status_code = status_code
-        response.encoding = 'utf-8'
-        response._content = bytes(body, 'utf-8')
-
+        response = self.http_response(status_code=status_code, body=bytes(body, 'utf-8'))
         self.decorated_client.get = MagicMock(return_value=response)
 
         return response
 
     def _stub_post_response(self, status_code, body='default content'):
-        response = Response()
-        response.status_code = status_code
-        response.encoding = 'utf-8'
-        response._content = bytes(body, 'utf-8')
-
+        response = self.http_response(status_code=status_code, body=bytes(body, 'utf-8'))
         self.decorated_client.post = MagicMock(return_value=response)
 
         return response
 
     def _stub_put_response(self, status_code, body='default content'):
-        response = Response()
-        response.status_code = status_code
-        response.encoding = 'utf-8'
-        response._content = bytes(body, 'utf-8')
-
+        response = self.http_response(status_code=status_code, body=bytes(body, 'utf-8'))
         self.decorated_client.put = MagicMock(return_value=response)
 
         return response

@@ -13,6 +13,8 @@ class CollectionExerciseClient:
         self.http_client = http_client
 
     def get_by_survey_and_period(self, survey_id, period):
+        logging.debug(f'Getting collection exercise for survey {survey_id} and period {period}')
+
         path = f'/collectionexercises/survey/{survey_id}'
 
         response = self.http_client.get(path=path)
@@ -22,6 +24,8 @@ class CollectionExerciseClient:
         if exercise is None:
             raise Exception(
                 f'No collection exercise found for period {period} of {survey_id}')
+
+        logging.debug(f'Found exercise with ID {exercise["id"]}')
 
         return exercise
 

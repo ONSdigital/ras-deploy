@@ -1,5 +1,6 @@
 import json
 import unittest
+from io import StringIO
 
 import httpretty
 import pytest
@@ -18,10 +19,15 @@ class SDCClientIntegrationTest(unittest.TestCase):
             'service_password': 'example-service-password',
             'action_url': 'http://action.services.com',
             'collection_exercise_url': 'http://localhost:8145',
+            'collection_instrument_url': 'http://ci.services.com',
+            'sample_url': 'http://sample.services.com',
             'sftp_host': 'sftp.example.com',
             'sftp_port': 22,
             'actionexporter_sftp_password': 'sftp-password',
             'actionexporter_sftp_username': 'sftp-username',
+            'iac_url': 'http://iac.services.com',
+            'party_url': 'http://party.services.com',
+            'party_create_respondent_endpoint': '/party-api/v1/respondents',
         }
 
         config.update(override)
@@ -96,3 +102,33 @@ class SDCClientIntegrationTest(unittest.TestCase):
                                               expected_codes=1)
 
             self.assertEquals(['iac-code'], codes)
+
+    @httpretty.activate
+    def test_samples(self):
+        sample_id = '1429b8df-d657-44bb-a59a-7a298d4ed08f'
+
+        httpretty.register_uri(
+            httpretty.POST,
+            'http://sample.services.com/samples/B/fileupload',
+            body=json.dumps({'id': sample_id}),
+            status=201)
+
+        file = StringIO('file contents')
+        result = self.client.samples.upload_file(file)
+
+        self.assertEqual(sample_id, result)
+
+    @httpretty.activate
+    def test_collection_instruments(self):
+        survey_id = '6ee65e4d-ecc0-4144-936c-d87c0775b383'
+        survey_classifiers = {'classifier': 'xxx'}
+
+        httpretty.register_uri(
+            httpretty.POST,
+            'http://ci.services.com/collection-instrument-api/1.0.2/upload',
+            body='',
+            status=200)
+
+        self.client.collection_instruments.upload(
+            survey_id=survey_id,
+            survey_classifiers=survey_classifiers)

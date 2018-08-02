@@ -11,4 +11,5 @@ inputs:
 - name: ras-deploy
 
 run:
-  path: ras-deploy/scripts/clear_space.sh
+  path: ras-deploy/scripts/cloudfoundry-scripts/health_check.sh
+
