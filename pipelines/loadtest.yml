@@ -1009,13 +1009,17 @@ jobs:
       params:
         <<: *loadtest_security_user
         <<: *loadtest_service_endpoints_for_python
+        SFTP_HOST: ((sftp_host))
+        SFTP_PORT: 22
+        ACTION_EXPORTER_SFTP_USERNAME: ((actionexporter_sftp_username))
+        ACTION_EXPORTER_SFTP_PASSWORD: ((actionexporter_sftp_password))
       run:
         dir: ras-deploy/scripts/loadtest-scripts
         path: sh
         args:
         - '-exc'
         - |
-          pipenv install
+          pipenv install --deploy
           pipenv run python prepare_loadtests.py
 
 groups:
