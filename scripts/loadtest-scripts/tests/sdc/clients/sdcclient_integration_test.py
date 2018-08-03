@@ -1,5 +1,6 @@
 import json
 import unittest
+from datetime import datetime, timedelta
 from io import StringIO
 
 import httpretty
@@ -18,6 +19,8 @@ class SDCClientIntegrationTest(unittest.TestCase):
             'service_username': 'example-service-username',
             'service_password': 'example-service-password',
             'action_url': 'http://action.services.com',
+            'case_url': 'http://case.services.com',
+            'iac_url': 'http://iac.services.com',
             'collection_exercise_url': 'http://localhost:8145',
             'collection_instrument_url': 'http://ci.services.com',
             'sample_url': 'http://sample.services.com',
@@ -25,7 +28,6 @@ class SDCClientIntegrationTest(unittest.TestCase):
             'sftp_port': 22,
             'actionexporter_sftp_password': 'sftp-password',
             'actionexporter_sftp_username': 'sftp-username',
-            'iac_url': 'http://iac.services.com',
             'party_url': 'http://party.services.com',
             'party_create_respondent_endpoint': '/party-api/v1/respondents',
         }
@@ -35,7 +37,7 @@ class SDCClientIntegrationTest(unittest.TestCase):
         return config
 
     @httpretty.activate
-    def test_action_client(self):
+    def test_actions(self):
         exercise_id = '1429b8df-d657-44bb-a59a-7a298d4ed08f'
 
         collection_exercise = {
@@ -59,10 +61,14 @@ class SDCClientIntegrationTest(unittest.TestCase):
             body=json.dumps('OK'),
             status=201)
 
-        self.client.actions.add_rule_for_collection_exercise(exercise_id)
+        yesterday = datetime.now() - timedelta(days=1)
+
+        self.client.actions.add_rule_for_collection_exercise(
+            exercise_id=exercise_id,
+            trigger_time=yesterday)
 
     @httpretty.activate
-    def test_collection_exercise_client(self):
+    def test_collection_exercises(self):
         exercise_id = '1429b8df-d657-44bb-a59a-7a298d4ed08f'
 
         collection_exercise = {
@@ -132,3 +138,34 @@ class SDCClientIntegrationTest(unittest.TestCase):
         self.client.collection_instruments.upload(
             survey_id=survey_id,
             survey_classifiers=survey_classifiers)
+
+    @httpretty.activate
+    def test_cases_property(self):
+        iac_code = 'p2js5r9m2gbz'
+
+        httpretty.register_uri(
+            httpretty.GET,
+            f'http://case.services.com/cases/iac/{iac_code}',
+            body=json.dumps({'id': 'case-id'}),
+            status=200)
+
+        case = self.client.cases.find_by_iac(iac_code)
+        self.assertEqual({'id': 'case-id'}, case )
+
+    @httpretty.activate
+    def test_users(self):
+        iac_code = 'p2js5r9m2gbz'
+
+        httpretty.register_uri(
+            httpretty.POST,
+            f'http://party.services.com/party-api/v1/respondents',
+            body=json.dumps({}),
+            status=200)
+
+        self.client.users.register(
+            email_address='user1@example.com',
+            first_name='User',
+            last_name='One',
+            password='Top5ecret',
+            telephone='0123456789',
+            enrolment_code=iac_code)

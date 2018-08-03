@@ -1,7 +1,9 @@
 import unittest
 from unittest.mock import Mock, call
 
-from sdc.clients.iac_client import IACClient, RemoteFileNotFoundException, \
+from requests import Response
+
+from sdc.clients.iacclient import IACClient, RemoteFileNotFoundException, \
     MultipleRemoteFilesFoundException, IncorrectNumberOfIACCodes
 
 
@@ -16,7 +18,10 @@ class IACClientTest(unittest.TestCase):
         self.sftp_client.get.return_value = b''
         self.sftp_client.delete = Mock()
 
-        self.iac_client = IACClient(sftp_client=self.sftp_client,
+        self.http_client = Mock()
+
+        self.iac_client = IACClient(http_client=self.http_client,
+                                    sftp_client=self.sftp_client,
                                     base_dir=self.BASE_DIR)
 
     def test_download_checks_if_the_ls(self):
@@ -117,3 +122,28 @@ class IACClientTest(unittest.TestCase):
             "'lpt3932m4yxs', 'p2js5r9m2gbz', '5sypjcp7rjyg', '22yr5vmdxbx6'"
             "]",
             context.exception.message)
+
+    def test_get_metadata_for_makes_a_get_request_to_the_iac_service(self):
+        self._mock_http_get_reponse(b'{}')
+
+        iac_code = 'lpt3932m4yxs'
+
+        self.iac_client.get_metadata_for(iac_code)
+
+        self.http_client.get.assert_called_with(
+            path=f'/iacs/{iac_code}',
+            expected_status=200)
+
+    def test_get_metadata_for_returns_the_dict(self):
+        self._mock_http_get_reponse(b'{"x": "1"}')
+
+        metadata = self.iac_client.get_metadata_for('lpt3932m4yxs')
+
+        self.assertEqual({'x': '1'}, metadata)
+
+    def _mock_http_get_reponse(self, content):
+        response = Response()
+        response._content = content
+        response.encoding = 'utf-8'
+        self.http_client.get = Mock()
+        self.http_client.get.return_value = response

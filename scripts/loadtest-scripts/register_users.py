@@ -3,8 +3,10 @@ import logging
 import os
 import sys
 
+from num2words import num2words
+
 from sdc.clients import SDCClient, sdcclient
-from sdc.clients.iac_client import RemoteFileNotFoundException
+from sdc.clients.iacclient import RemoteFileNotFoundException
 from sdc.utils import wait_for, logger
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -41,7 +43,20 @@ def main():
         expected_codes=exercise_config['sample_size'],
         today=exercise_config['execution_date']))
 
-    print(iac_codes)
+    logging.debug(f'FOUND IAC CODES {iac_codes}')
+
+    count = 0
+    for code in iac_codes:
+        logging.debug(f'REGISTERING USER WITH CODE {code}')
+        count += 1
+        sdc.users.register(
+            email_address=f'user-{exercise_config["collection_exercise_period"]}-{count}@example.com',
+            first_name='User',
+            last_name=num2words(count),
+            password='Top5ecret',
+            telephone='0123456789',
+            enrolment_code=code
+        )
 
 
 main()

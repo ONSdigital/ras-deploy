@@ -1,4 +1,5 @@
 import unittest
+from datetime import datetime, timedelta
 from unittest.mock import Mock, MagicMock
 
 from requests import Response
@@ -36,21 +37,29 @@ class ActionClientTest(unittest.TestCase):
                                    collection_exercise_client=self.collection_exercise_client)
 
     def test_add_action_rule_fetches_the_collection_exercise(self):
-        self.client.add_rule_for_collection_exercise(self.EXERCISE_ID)
+        self.client.add_rule_for_collection_exercise(
+            exercise_id=self.EXERCISE_ID,
+            trigger_time=datetime.now())
 
         self.collection_exercise_client.get_by_id \
             .assert_called_with(self.EXERCISE_ID)
 
     def test_add_action_rule_makes_a_post_request(self):
-        self.client.add_rule_for_collection_exercise(self.EXERCISE_ID)
+        yesterday = datetime.now() - timedelta(days=1)
 
+        self.client.add_rule_for_collection_exercise(
+            exercise_id=self.EXERCISE_ID,
+            trigger_time=yesterday
+        )
+
+        iso_yesterday = yesterday.strftime("%Y-%m-%dT%H:%M:00.000+0000")
         self.http_client.post.assert_called_with(
             path='/actionrules',
             expected_status=201,
             json={'actionPlanId': self.BUSINESS_CASE_ACTION_PLAN_ID,
                   'actionTypeName': 'BSNL',
-                  'name': 'BSNL+0',
-                  'description': 'Description for BSNL+0',
-                  'daysOffset': 0,
+                  'name': f'BSNL-{iso_yesterday}',
+                  'description': f'Description for BSNL-{iso_yesterday}',
+                  'triggerDateTime': iso_yesterday,
                   'priority': 1}
         )

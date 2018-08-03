@@ -1,19 +1,28 @@
 import csv
+import logging
 from io import StringIO
 
 
 class IACClient:
-    def __init__(self, sftp_client, base_dir):
+    def __init__(self, http_client, sftp_client, base_dir):
+        self.http_client = http_client
         self.sftp_client = sftp_client
         self.base_dir = base_dir
 
     def download(self, period, generated_date, expected_codes):
         file = self._get_remote_filename(period, generated_date)
         csv_content = self.sftp_client.get(file).decode('utf-8')
+        logging.debug(f'Downloaded file with content: {csv_content}')
         results = self._parse_file(csv_content, expected_codes)
         self.sftp_client.delete(file)
 
         return results
+
+    def get_metadata_for(self, iac_code):
+        response = self.http_client.get(path=f'/iacs/{iac_code}',
+                                        expected_status=200)
+
+        return response.json()
 
     def _get_remote_filename(self, period, generated_date):
         glob_pattern = f'BSNOT_*_{period}_{generated_date}_*.csv'

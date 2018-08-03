@@ -5,11 +5,46 @@ import paramiko
 
 
 class SFTPClient:
+
     def __init__(self, host, username, password, port=22):
         self.host = host
         self.username = username
         self.password = password
         self.port = port
+
+    def __del__(self):
+        self._disconnect_from_sftp_server()
+
+    def ls(self, path, glob_pattern):
+        self._connect_to_sftp_server()
+
+        logging.debug(
+            f'SFTP: Listing remote files matching {path}/{glob_pattern}')
+
+        all_files = self.client.listdir(path)
+        filtered_files = fnmatch.filter(all_files, glob_pattern)
+
+        logging.debug(f'SFTP: Found {filtered_files}')
+
+        return filtered_files
+
+    def get(self, path):
+        self._connect_to_sftp_server()
+
+        logging.debug(f'SFTP: Getting remote file {path}')
+
+        with self.client.open(path, "r") as sftp_file:
+            return sftp_file.read()
+
+    def delete(self, path):
+        self._connect_to_sftp_server()
+
+        logging.debug(f'SFTP: Deleting remote file {path}')
+        self.client.remove(path)
+
+    def _connect_to_sftp_server(self):
+        if hasattr(self, 'ssh'):
+            return
 
         self.ssh = paramiko.SSHClient()
 
@@ -29,27 +64,44 @@ class SFTPClient:
 
         self.client = self.ssh.open_sftp()
 
-    def __del__(self):
-        self.client.close()
-        self.ssh.close()
+    def _disconnect_from_sftp_server(self):
+        if hasattr(self, 'client'):
+            self.client.close()
+            self.ssh.close()
 
-    def ls(self, path, glob_pattern):
-        logging.debug(
-            f'SFTP: Listing remote files matching {path}/{glob_pattern}')
 
-        all_files = self.client.listdir(path)
-        filtered_files = fnmatch.filter(all_files, glob_pattern)
 
-        logging.debug(f'SFTP: Found {filtered_files}')
 
-        return filtered_files
 
-    def get(self, path):
-        logging.debug(f'SFTP: Getting remote file {path}')
 
-        with self.client.open(path, "r") as sftp_file:
-            return sftp_file.read()
 
-    def delete(self, path):
-        logging.debug(f'SFTP: Deleting remote file {path}')
-        self.client.remove(path)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
