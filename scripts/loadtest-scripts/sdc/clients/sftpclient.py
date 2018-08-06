@@ -5,7 +5,6 @@ import paramiko
 
 
 class SFTPClient:
-
     def __init__(self, host, username, password, port=22):
         self.host = host
         self.username = username
@@ -68,40 +67,3 @@ class SFTPClient:
         if hasattr(self, 'client'):
             self.client.close()
             self.ssh.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
