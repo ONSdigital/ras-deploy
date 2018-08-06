@@ -1113,6 +1113,7 @@ jobs:
       - name: exercise-config
       params:
         <<: *loadtest_script_config
+        NOTIFY_MOCK_URL: http://sdc-mock-gov-notify-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))
       run:
         dir: ras-deploy/scripts/loadtest-scripts
         path: sh

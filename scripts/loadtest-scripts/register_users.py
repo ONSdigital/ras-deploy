@@ -43,20 +43,28 @@ def main():
         expected_codes=exercise_config['sample_size'],
         today=exercise_config['execution_date']))
 
-    logging.debug(f'FOUND IAC CODES {iac_codes}')
+    logging.debug(f'Found IAC codes {iac_codes}')
 
     count = 0
+    users = []
     for code in iac_codes:
-        logging.debug(f'REGISTERING USER WITH CODE {code}')
+        logging.debug(f'Registering user with code {code}')
         count += 1
+        email_address = f'user-{exercise_config["collection_exercise_period"]}-{count}@example.com'
+        users.append(email_address)
         sdc.users.register(
-            email_address=f'user-{exercise_config["collection_exercise_period"]}-{count}@example.com',
+            email_address=email_address,
             first_name='User',
             last_name=num2words(count),
             password='Top5ecret',
             telephone='0123456789',
             enrolment_code=code
         )
+
+    # Activate user
+    logging.info('Verifying user accounts')
+    for email_address in users:
+        sdc.users.verify(email_address)
 
 
 main()
