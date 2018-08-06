@@ -7,8 +7,8 @@ from sdc.clients import http
 from sdc.clients.actions import Actions
 from sdc.clients.services.actionserviceclient import ActionServiceClient
 from sdc.clients.services.caseserviceclient import CaseServiceClient
-from sdc.clients.collectionexerciseclient import CollectionExerciseClient
-from sdc.clients.collectionexerciseclient import collection_exercise_url
+from sdc.clients.services.collectionexerciseserviceclient import CollectionExerciseServiceClient
+from sdc.clients.services.collectionexerciseserviceclient import collection_exercise_url
 from sdc.clients.collectioninstrumentclient import CollectionInstrumentClient
 from sdc.clients.http import factory
 from sdc.clients.iacclient import IACClient
@@ -57,7 +57,7 @@ class SDCClient:
     def collection_exercises(self):
         http_client = self._create_http_client(self.config['collection_exercise_url'])
 
-        return CollectionExerciseClient(http_client)
+        return CollectionExerciseServiceClient(http_client)
 
     @property
     def iac_codes(self):

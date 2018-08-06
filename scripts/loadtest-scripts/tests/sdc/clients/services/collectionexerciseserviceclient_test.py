@@ -2,18 +2,18 @@ import json
 import unittest
 from unittest.mock import Mock
 
-from sdc.clients.collectionexerciseclient import CollectionExerciseClient
+from sdc.clients.services.collectionexerciseserviceclient import CollectionExerciseServiceClient
 from tests.shared.requests import Requests
 
 
-class CollectionExerciseClientTest(unittest.TestCase, Requests):
+class CollectionExerciseServiceClientTest(unittest.TestCase, Requests):
     def setUp(self):
         http_response = self.http_response(status_code=200)
 
         self.http_client = Mock()
         self.http_client.post.return_value = http_response
 
-        self.client = CollectionExerciseClient(http_client=self.http_client)
+        self.client = CollectionExerciseServiceClient(http_client=self.http_client)
 
     def test_get_by_id(self):
         http_response = self.http_response(status_code=200,

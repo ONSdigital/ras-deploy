@@ -8,7 +8,7 @@ collection_exercise_url = os.getenv('COLLECTION_EXERCISE_URL',
                                     'http://localhost:8145')
 
 
-class CollectionExerciseClient:
+class CollectionExerciseServiceClient:
     def __init__(self, http_client):
         self.http_client = http_client
 
@@ -64,6 +64,3 @@ class CollectionExerciseClient:
             if exercise['exerciseRef'] == period:
                 return exercise
 
-
-def get_previous_period():
-    return (datetime.now() - relativedelta(months=1)).strftime('%Y%m')

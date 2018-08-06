@@ -1,11 +1,11 @@
 import logging
 
-from sdc.clients.collectionexerciseclient import CollectionExerciseClient
+from sdc.clients.services.collectionexerciseserviceclient import CollectionExerciseServiceClient
 
 
 class Actions:
     def __init__(self,
-                 collection_exercise_client: CollectionExerciseClient,
+                 collection_exercise_client: CollectionExerciseServiceClient,
                  action_service_client):
         self.action_service_client = action_service_client
         self.collection_exercise_client = collection_exercise_client
