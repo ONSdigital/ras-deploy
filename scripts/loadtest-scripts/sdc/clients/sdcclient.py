@@ -5,13 +5,15 @@ from schema import Schema, Regex, And
 
 from sdc.clients import http
 from sdc.clients.actionclient import ActionClient
-from sdc.clients.collectionexerciseclient import CollectionExerciseClient, \
-    collection_exercise_url
+from sdc.clients.caseclient import CaseClient
+from sdc.clients.collectionexerciseclient import CollectionExerciseClient
+from sdc.clients.collectionexerciseclient import collection_exercise_url
 from sdc.clients.collectioninstrumentclient import CollectionInstrumentClient
 from sdc.clients.http import factory
-from sdc.clients.iac_client import IACClient
+from sdc.clients.iacclient import IACClient
 from sdc.clients.sampleclient import SampleClient
 from sdc.clients.sftpclient import SFTPClient
+from sdc.clients.userclient import UserClient
 
 URL_SCHEMA = Regex(r'^https?://')
 NON_EMPTY_STRING_SCHEMA = And(str, len)
@@ -20,6 +22,7 @@ CONFIG_SCHEMA = Schema({
     'service_username': NON_EMPTY_STRING_SCHEMA,
     'service_password': NON_EMPTY_STRING_SCHEMA,
     'action_url': URL_SCHEMA,
+    'case_url': URL_SCHEMA,
     'iac_url': URL_SCHEMA,
     'party_url': URL_SCHEMA,
     'party_create_respondent_endpoint': NON_EMPTY_STRING_SCHEMA,
@@ -60,7 +63,9 @@ class SDCClient:
                 password=self.config['actionexporter_sftp_password'],
                 port=self.config['sftp_port'])
 
-        return IACClient(sftp_client=self.action_exporter_sftp_client, base_dir='BSD')
+        return IACClient(http_client=self._create_http_client(self.config['iac_url']),
+                         sftp_client=self.action_exporter_sftp_client,
+                         base_dir='BSD')
 
     @property
     def samples(self):
@@ -72,6 +77,21 @@ class SDCClient:
     def collection_instruments(self):
         http_client = self._create_http_client(self.config['collection_instrument_url'])
         return CollectionInstrumentClient(http_client=http_client)
+
+    @property
+    def cases(self):
+        http_client = http.factory.create(
+            base_url=self.config['case_url'],
+            username=self.config['service_username'],
+            password=self.config['service_password'])
+
+        return CaseClient(http_client=http_client)
+
+    @property
+    def users(self):
+        http_client = self._create_http_client(self.config['party_url'])
+
+        return UserClient(http_client=http_client)
 
     def _create_http_client(self, url):
         return http.factory.create(
@@ -88,6 +108,7 @@ def config_from_env():
                                       'secret'),
         'action_url': os.getenv('ACTION_URL', 'http://localhost:8151'),
         'iac_url': os.getenv('IAC_URL', 'http://localhost:8121'),
+        'case_url': os.getenv('CASE_URL', 'http://localhost:8171'),
         'party_url': os.getenv('PARTY_URL', 'http://localhost:8081'),
         'party_create_respondent_endpoint': os.getenv(
             'PARTY_CREATE_RESPONDENT_ENDPOINT', '/party-api/v1/respondents'),

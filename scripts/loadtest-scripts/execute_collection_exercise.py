@@ -86,6 +86,7 @@ def main():
     survey_id = SURVEY_ID
     exercise_period = collection_exercise_period()
     sample_file = f'{SCRIPT_DIR}/sample.csv'
+    yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
 
     exercise = sdc.collection_exercises.get_by_survey_and_period(
         survey_id,
@@ -99,12 +100,16 @@ def main():
         return
 
     # There is work in progress which will remove the need for this step
-    sdc.actions.add_rule_for_collection_exercise(exercise_id)
+    sdc.actions.add_rule_for_collection_exercise(exercise_id=exercise_id,
+                                                 trigger_time=yesterday)
 
     sample = upload_sample(sdc=sdc, csv=sample_file)
     sample_id = sample['sample_id']
 
-    instrument_id = upload_collection_instrument(survey_classifiers=SURVEY_CLASSIFIERS, survey_id=survey_id)
+    instrument_id = upload_collection_instrument(
+        survey_classifiers=SURVEY_CLASSIFIERS,
+        survey_id=survey_id
+    )
 
     link_collection_instrument_and_sample_to_collection_exercise(
         exercise_id=exercise_id,

@@ -8,6 +8,7 @@ requests = "*"
 python-dateutil = "*"
 paramiko = "*"
 schema = "*"
+"num2words" = "*"
 
 [dev-packages]
 pytest = "*"

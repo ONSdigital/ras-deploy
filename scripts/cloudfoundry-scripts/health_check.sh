@@ -5,7 +5,6 @@ set -e
 
 APPS=$(
 cat <<EOM
-ras-frontstage-api-sit
 ras-party-sit
 ras-secure-message-sit
 rm-notify-gateway-sit

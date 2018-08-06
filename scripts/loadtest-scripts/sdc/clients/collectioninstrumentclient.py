@@ -33,7 +33,7 @@ class CollectionInstrumentClient:
         path = f'{collection_instrument_link_endpoint}/{instrument_id}/{exercise_id}'
 
         self.http_client.post(path=path, expected_status=requests.codes.ok)
-        logging.debug('Collection instrument linked to exercise!')
+        logging.info('Collection instrument linked to exercise!')
 
     def get_id_from_classifier(self, classifiers):
         search_params = {'searchString': classifiers}

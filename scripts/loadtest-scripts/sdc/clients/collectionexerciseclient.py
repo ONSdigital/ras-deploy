@@ -13,7 +13,7 @@ class CollectionExerciseClient:
         self.http_client = http_client
 
     def get_by_survey_and_period(self, survey_id, period):
-        logging.debug(f'Getting collection exercise for survey {survey_id} and period {period}')
+        logging.info(f'Getting collection exercise for survey {survey_id} and period {period}')
 
         path = f'/collectionexercises/survey/{survey_id}'
 
@@ -31,6 +31,8 @@ class CollectionExerciseClient:
 
     def execute(self, exercise_id):
         path = f'/collectionexerciseexecution/{exercise_id}'
+
+        logging.info(f'Executing collection exercise {exercise_id}')
 
         self.http_client.post(path=path, expected_status=200)
 
