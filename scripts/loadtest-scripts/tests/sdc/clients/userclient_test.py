@@ -9,7 +9,7 @@ class UserClientTest(unittest.TestCase):
         self.http_client = Mock()
         self.client = userclient.UserClient(http_client=self.http_client)
 
-    def test_enrol_fetches_the_case_by_iac(self):
+    def test_register_fetches_the_case_by_enrolment_code(self):
         enrolment_code = '4d7bjg7s8gq6'
 
         self.client.register(
@@ -34,24 +34,3 @@ class UserClientTest(unittest.TestCase):
             },
             expected_status=200
         )
-
-
-def create_account(registration_data):
-    logger.debug('Attempting to create account')
-
-    url = f"{app.config['PARTY_URL']}/party-api/v1/respondents"
-    registration_data['status'] = 'CREATED'
-    response = requests.post(url, auth=app.config['PARTY_AUTH'], json=registration_data)
-
-    try:
-        response.raise_for_status()
-    except requests.exceptions.HTTPError:
-        if response.status_code == 400:
-            message = 'Email has already been used'
-        else:
-            message = 'Failed to create account'
-        raise ApiError(logger, response,
-                       log_level='debug' if response.status_code == 400 else 'error',
-                       message=message)
-
-    logger.debug('Successfully created account')

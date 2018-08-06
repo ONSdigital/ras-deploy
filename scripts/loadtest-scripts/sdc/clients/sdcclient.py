@@ -11,7 +11,7 @@ from sdc.clients.services.collectionexerciseserviceclient import CollectionExerc
 from sdc.clients.services.collectionexerciseserviceclient import collection_exercise_url
 from sdc.clients.services.collectioninstrumentserviceclient import CollectionInstrumentServiceClient
 from sdc.clients.http import factory
-from sdc.clients.iacclient import IACClient
+from sdc.clients.enrolmentcodes import EnrolmentCodes
 from sdc.clients.notifymockclient import NotifyMockClient
 from sdc.clients.sampleclient import SampleClient
 from sdc.clients.sftpclient import SFTPClient
@@ -60,7 +60,7 @@ class SDCClient:
         return CollectionExerciseServiceClient(http_client)
 
     @property
-    def iac_codes(self):
+    def enrolment_codes(self):
         if not self.action_exporter_sftp_client:
             self.action_exporter_sftp_client = SFTPClient(
                 host=self.config['sftp_host'],
@@ -68,9 +68,8 @@ class SDCClient:
                 password=self.config['actionexporter_sftp_password'],
                 port=self.config['sftp_port'])
 
-        return IACClient(http_client=self._create_http_client(self.config['iac_url']),
-                         sftp_client=self.action_exporter_sftp_client,
-                         base_dir='BSD')
+        return EnrolmentCodes(sftp_client=self.action_exporter_sftp_client,
+                              base_dir='BSD')
 
     @property
     def samples(self):
