@@ -13,7 +13,7 @@ from sdc.clients.services.collectioninstrumentserviceclient import CollectionIns
 from sdc.clients.http import factory
 from sdc.clients.enrolmentcodes import EnrolmentCodes
 from sdc.clients.notifymockclient import NotifyMockClient
-from sdc.clients.sampleclient import SampleClient
+from sdc.clients.services.sampleserviceclient import SampleServiceClient
 from sdc.clients.sftpclient import SFTPClient
 from sdc.clients.userclient import UserClient
 from sdc.clients.users import Users
@@ -75,7 +75,7 @@ class SDCClient:
     def samples(self):
         http_client = self._create_http_client(self.config['sample_url'])
 
-        return SampleClient(http_client=http_client)
+        return SampleServiceClient(http_client=http_client)
 
     @property
     def collection_instruments(self):
