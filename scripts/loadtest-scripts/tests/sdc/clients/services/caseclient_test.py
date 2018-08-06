@@ -3,13 +3,13 @@ from unittest.mock import Mock
 
 from requests import Response
 
-from sdc.clients.caseclient import CaseClient
+from sdc.clients.services.caseserviceclient import CaseServiceClient
 
 
-class CaseClientTest(unittest.TestCase):
+class CaseServiceClientTest(unittest.TestCase):
     def setUp(self):
         self.http_client = Mock()
-        self.client = CaseClient(self.http_client)
+        self.client = CaseServiceClient(self.http_client)
 
     def test_find_by_iac_makes_a_get_request_to_the_case_service(self):
         iac = '4d7bjg7s8gq6'

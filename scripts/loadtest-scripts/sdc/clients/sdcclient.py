@@ -6,7 +6,7 @@ from schema import Schema, Regex, And
 from sdc.clients import http
 from sdc.clients.actions import Actions
 from sdc.clients.services.actionserviceclient import ActionServiceClient
-from sdc.clients.caseclient import CaseClient
+from sdc.clients.services.caseserviceclient import CaseServiceClient
 from sdc.clients.collectionexerciseclient import CollectionExerciseClient
 from sdc.clients.collectionexerciseclient import collection_exercise_url
 from sdc.clients.collectioninstrumentclient import CollectionInstrumentClient
@@ -90,7 +90,7 @@ class SDCClient:
             username=self.config['service_username'],
             password=self.config['service_password'])
 
-        return CaseClient(http_client=http_client)
+        return CaseServiceClient(http_client=http_client)
 
     @property
     def users(self):
