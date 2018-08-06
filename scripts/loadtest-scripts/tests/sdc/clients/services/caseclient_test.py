@@ -3,7 +3,7 @@ from unittest.mock import Mock
 
 from requests import Response
 
-from sdc.clients.services.caseserviceclient import CaseServiceClient
+from sdc.clients.services import CaseServiceClient
 
 
 class CaseServiceClientTest(unittest.TestCase):

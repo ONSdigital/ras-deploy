@@ -1,6 +1,6 @@
 import logging
 
-from sdc.clients.services.collectionexerciseserviceclient import CollectionExerciseServiceClient
+from sdc.clients.services import CollectionExerciseServiceClient
 
 
 class Actions:

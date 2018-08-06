@@ -5,17 +5,14 @@ from schema import Schema, Regex, And
 
 from sdc.clients import http
 from sdc.clients.actions import Actions
-from sdc.clients.services.actionserviceclient import ActionServiceClient
-from sdc.clients.services.caseserviceclient import CaseServiceClient
-from sdc.clients.services.collectionexerciseserviceclient import CollectionExerciseServiceClient
-from sdc.clients.services.collectionexerciseserviceclient import collection_exercise_url
-from sdc.clients.services.collectioninstrumentserviceclient import CollectionInstrumentServiceClient
-from sdc.clients.http import factory
 from sdc.clients.enrolmentcodes import EnrolmentCodes
+from sdc.clients.http import factory
 from sdc.clients.notifymockclient import NotifyMockClient
-from sdc.clients.services.sampleserviceclient import SampleServiceClient
+from sdc.clients.services import ActionServiceClient, CaseServiceClient, \
+    CollectionExerciseServiceClient, CollectionInstrumentServiceClient, \
+    PartyServiceClient, SampleServiceClient
+from sdc.clients.services.collectionexerciseserviceclient import collection_exercise_url
 from sdc.clients.sftpclient import SFTPClient
-from sdc.clients.services.partyserviceclient import PartyServiceClient
 from sdc.clients.users import Users
 
 URL_SCHEMA = Regex(r'^https?://')

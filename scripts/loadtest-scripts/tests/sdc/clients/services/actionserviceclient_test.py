@@ -2,7 +2,7 @@ import unittest
 from datetime import timedelta, datetime
 from unittest.mock import Mock
 
-from sdc.clients.services.actionserviceclient import ActionServiceClient
+from sdc.clients.services import ActionServiceClient
 
 
 class ActionServiceClientTest(unittest.TestCase):

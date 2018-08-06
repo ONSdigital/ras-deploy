@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock
 
-from sdc.clients.services.collectioninstrumentserviceclient import CollectionInstrumentServiceClient
+from sdc.clients.services import CollectionInstrumentServiceClient
 from tests.shared.requests import Requests
 
 

@@ -2,7 +2,7 @@ import json
 import unittest
 from unittest.mock import Mock
 
-from sdc.clients.services.collectionexerciseserviceclient import CollectionExerciseServiceClient
+from sdc.clients.services import CollectionExerciseServiceClient
 from tests.shared.requests import Requests
 
 
