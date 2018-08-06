@@ -17,7 +17,7 @@ collection_instrument_link_endpoint = \
               '/collection-instrument-api/1.0.2/link-exercise')
 
 
-class CollectionInstrumentClient:
+class CollectionInstrumentServiceClient:
     def __init__(self, http_client):
         self.http_client = http_client
 

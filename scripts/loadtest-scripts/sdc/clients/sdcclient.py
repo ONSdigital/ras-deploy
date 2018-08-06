@@ -9,7 +9,7 @@ from sdc.clients.services.actionserviceclient import ActionServiceClient
 from sdc.clients.services.caseserviceclient import CaseServiceClient
 from sdc.clients.services.collectionexerciseserviceclient import CollectionExerciseServiceClient
 from sdc.clients.services.collectionexerciseserviceclient import collection_exercise_url
-from sdc.clients.collectioninstrumentclient import CollectionInstrumentClient
+from sdc.clients.services.collectioninstrumentserviceclient import CollectionInstrumentServiceClient
 from sdc.clients.http import factory
 from sdc.clients.iacclient import IACClient
 from sdc.clients.notifymockclient import NotifyMockClient
@@ -81,7 +81,7 @@ class SDCClient:
     @property
     def collection_instruments(self):
         http_client = self._create_http_client(self.config['collection_instrument_url'])
-        return CollectionInstrumentClient(http_client=http_client)
+        return CollectionInstrumentServiceClient(http_client=http_client)
 
     @property
     def cases(self):
