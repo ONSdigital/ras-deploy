@@ -4,10 +4,10 @@ from unittest.mock import Mock, MagicMock
 
 from requests import Response
 
-from sdc.clients.actionclient import ActionClient
+from sdc.clients.actions import Actions
 
 
-class ActionClientTest(unittest.TestCase):
+class ActionsTest(unittest.TestCase):
     EXERCISE_ID = '9281d5b4-c1bf-4322-9f34-683b266bc3b2'
     BUSINESS_CASE_ACTION_PLAN_ID = '4d8be6f8-492e-4ef9-b741-d178499736dd'
     COLLECTION_EXERCISE = {
@@ -33,8 +33,8 @@ class ActionClientTest(unittest.TestCase):
         self.collection_exercise_client.get_by_id = MagicMock(
             return_value=self.COLLECTION_EXERCISE)
 
-        self.client = ActionClient(http_client=self.http_client,
-                                   collection_exercise_client=self.collection_exercise_client)
+        self.client = Actions(http_client=self.http_client,
+                              collection_exercise_client=self.collection_exercise_client)
 
     def test_add_action_rule_fetches_the_collection_exercise(self):
         self.client.add_rule_for_collection_exercise(

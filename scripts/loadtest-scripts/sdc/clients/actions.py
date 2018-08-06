@@ -4,7 +4,7 @@ from sdc.clients.collectionexerciseclient import CollectionExerciseClient
 from sdc.clients.http.statuscodecheckinghttpclient import StatusCodeCheckingHTTPClient
 
 
-class ActionClient:
+class Actions:
     def __init__(self, http_client: StatusCodeCheckingHTTPClient,
                  collection_exercise_client: CollectionExerciseClient):
         self.http_client = http_client
