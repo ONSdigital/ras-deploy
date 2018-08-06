@@ -1,15 +1,15 @@
 import unittest
 from unittest.mock import Mock
 
-from sdc.clients import userclient
+from sdc.clients.services import partyserviceclient
 
 
-class UserClientTest(unittest.TestCase):
+class PartyServiceClientTest(unittest.TestCase):
     def setUp(self):
         self.http_client = Mock()
-        self.client = userclient.UserClient(http_client=self.http_client)
+        self.client = partyserviceclient.PartyServiceClient(http_client=self.http_client)
 
-    def test_register_fetches_the_case_by_enrolment_code(self):
+    def test_register(self):
         enrolment_code = '4d7bjg7s8gq6'
 
         self.client.register(

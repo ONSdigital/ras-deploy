@@ -15,7 +15,7 @@ from sdc.clients.enrolmentcodes import EnrolmentCodes
 from sdc.clients.notifymockclient import NotifyMockClient
 from sdc.clients.services.sampleserviceclient import SampleServiceClient
 from sdc.clients.sftpclient import SFTPClient
-from sdc.clients.userclient import UserClient
+from sdc.clients.services.partyserviceclient import PartyServiceClient
 from sdc.clients.users import Users
 
 URL_SCHEMA = Regex(r'^https?://')
@@ -94,7 +94,7 @@ class SDCClient:
     @property
     def users(self):
         http_client = self._create_http_client(self.config['party_url'])
-        user_client = UserClient(http_client=http_client)
+        user_client = PartyServiceClient(http_client=http_client)
         notify_client = self.messages
 
         return Users(user_client=user_client, notify_client=notify_client)
