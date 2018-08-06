@@ -7,6 +7,7 @@ import httpretty
 import pytest
 
 from sdc.clients import SDCClient
+from sdc.clients.users import NoVerificationEmailFound
 
 
 @pytest.mark.usefixtures('sftpserver')
@@ -14,7 +15,8 @@ class SDCClientIntegrationTest(unittest.TestCase):
     def setUp(self):
         self.client = SDCClient(self._config())
 
-    def _config(self, override={}):
+    @staticmethod
+    def _config(override={}):
         config = {
             'service_username': 'example-service-username',
             'service_password': 'example-service-password',
@@ -22,6 +24,7 @@ class SDCClientIntegrationTest(unittest.TestCase):
             'case_url': 'http://case.services.com',
             'iac_url': 'http://iac.services.com',
             'collection_exercise_url': 'http://localhost:8145',
+            'notify_mock_url': 'http://notify-mock.services.com',
             'collection_instrument_url': 'http://ci.services.com',
             'sample_url': 'http://sample.services.com',
             'sftp_host': 'sftp.example.com',
@@ -153,12 +156,12 @@ class SDCClientIntegrationTest(unittest.TestCase):
         self.assertEqual({'id': 'case-id'}, case )
 
     @httpretty.activate
-    def test_users(self):
+    def test_users_register(self):
         iac_code = 'p2js5r9m2gbz'
 
         httpretty.register_uri(
             httpretty.POST,
-            f'http://party.services.com/party-api/v1/respondents',
+            'http://party.services.com/party-api/v1/respondents',
             body=json.dumps({}),
             status=200)
 
@@ -169,3 +172,30 @@ class SDCClientIntegrationTest(unittest.TestCase):
             password='Top5ecret',
             telephone='0123456789',
             enrolment_code=iac_code)
+
+    @httpretty.activate
+    def test_users_activate(self):
+        httpretty.register_uri(
+            httpretty.GET,
+            'http://notify-mock.services.com/inbox/emails/user1%40example.com',
+            body=json.dumps([]),
+            status=200)
+
+        with self.assertRaises(NoVerificationEmailFound):
+            self.client.users.verify('user1@example.com')
+
+    @httpretty.activate
+    def test_messages(self):
+        messages = [
+            {'message': 'first-message'},
+            {'message': 'second-message'}]
+
+        httpretty.register_uri(
+            httpretty.GET,
+            'http://notify-mock.services.com/inbox/emails/matt%40example.com',
+            body=json.dumps(messages),
+            status=200)
+
+        response = self.client.messages.get_emails_for('matt@example.com')
+
+        self.assertEqual(messages, response)
