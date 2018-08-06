@@ -1,13 +1,13 @@
 import logging
 
 from sdc.clients.collectionexerciseclient import CollectionExerciseClient
-from sdc.clients.http.statuscodecheckinghttpclient import StatusCodeCheckingHTTPClient
 
 
 class Actions:
-    def __init__(self, http_client: StatusCodeCheckingHTTPClient,
-                 collection_exercise_client: CollectionExerciseClient):
-        self.http_client = http_client
+    def __init__(self,
+                 collection_exercise_client: CollectionExerciseClient,
+                 action_service_client):
+        self.action_service_client = action_service_client
         self.collection_exercise_client = collection_exercise_client
 
     def add_rule_for_collection_exercise(self, exercise_id, trigger_time):
@@ -22,19 +22,14 @@ class Actions:
 
         logging.info(f'Creating action rule with 0 day offset')
 
-        iso_trigger_time = trigger_time.strftime("%Y-%m-%dT%H:%M:00.000+0000")
-        action_rule = {'actionPlanId': b_case_action_plan_id,
-                       'actionTypeName': 'BSNL',
-                       'name': f'BSNL-{iso_trigger_time}',
-                       'description': f'Description for BSNL-{iso_trigger_time}',
-                       'triggerDateTime': iso_trigger_time,
-                       'priority': 1}
-
-        logging.debug(f'Creating new action rule {action_rule}')
-
-        self.http_client.post(path='/actionrules',
-                              expected_status=201,
-                              json=action_rule)
+        self.action_service_client.create_action_rule(
+            action_plan_id=b_case_action_plan_id,
+            action_type_name='BSNL',
+            name=f'BSNL-{trigger_time}',
+            description=f'Description for BSNL-{trigger_time}',
+            trigger_date_time=trigger_time,
+            priority=1
+        )
 
     @staticmethod
     def _get_case_types_from_exercise(collection_exercise):

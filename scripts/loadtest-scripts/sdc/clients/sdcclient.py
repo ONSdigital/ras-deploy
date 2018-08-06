@@ -5,6 +5,7 @@ from schema import Schema, Regex, And
 
 from sdc.clients import http
 from sdc.clients.actions import Actions
+from sdc.clients.services.actionserviceclient import ActionServiceClient
 from sdc.clients.caseclient import CaseClient
 from sdc.clients.collectionexerciseclient import CollectionExerciseClient
 from sdc.clients.collectionexerciseclient import collection_exercise_url
@@ -47,8 +48,9 @@ class SDCClient:
     @property
     def actions(self):
         http_client = self._create_http_client(self.config['action_url'])
+        action_service_client = ActionServiceClient(http_client=http_client)
 
-        return Actions(http_client=http_client,
+        return Actions(action_service_client=action_service_client,
                        collection_exercise_client=self.collection_exercises)
 
     @property
