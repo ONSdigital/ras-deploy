@@ -1,0 +1,22 @@
+language: python
+sudo: required
+dist: trusty
+python: '3.6'
+
+# before_install:
+
+cache:
+  - pip
+
+install:
+  - cd scripts/loadtest-scripts
+  - pip install pipenv==8.3.2
+  - pipenv install --dev --deploy
+
+script:
+  - cd scripts/loadtest-scripts
+  - pipenv run python -m pytest
+
+branches:
+  only:
+    - master
