@@ -4,14 +4,12 @@ import os
 from schema import Schema, Regex, And
 
 from sdc.clients import http
-from sdc.clients.actions import Actions
 from sdc.clients.enrolmentcodes import EnrolmentCodes
 from sdc.clients.http import factory
 from sdc.clients.notifymockclient import NotifyMockClient
-from sdc.clients.services import ActionServiceClient, CaseServiceClient, \
+from sdc.clients.services import CaseServiceClient, \
     CollectionExerciseServiceClient, CollectionInstrumentServiceClient, \
     PartyServiceClient, SampleServiceClient
-from sdc.clients.services.collectionexerciseserviceclient import collection_exercise_url
 from sdc.clients.sftpclient import SFTPClient
 from sdc.clients.users import Users
 
@@ -21,7 +19,6 @@ NON_EMPTY_STRING_SCHEMA = And(str, len)
 CONFIG_SCHEMA = Schema({
     'service_username': NON_EMPTY_STRING_SCHEMA,
     'service_password': NON_EMPTY_STRING_SCHEMA,
-    'action_url': URL_SCHEMA,
     'case_url': URL_SCHEMA,
     'iac_url': URL_SCHEMA,
     'notify_mock_url': URL_SCHEMA,
@@ -41,14 +38,6 @@ class SDCClient:
     def __init__(self, config):
         self.config = CONFIG_SCHEMA.validate(config)
         self.action_exporter_sftp_client = None
-
-    @property
-    def actions(self):
-        http_client = self._create_http_client(self.config['action_url'])
-        action_service_client = ActionServiceClient(http_client=http_client)
-
-        return Actions(action_service_client=action_service_client,
-                       collection_exercise_client=self.collection_exercises)
 
     @property
     def collection_exercises(self):
@@ -114,14 +103,14 @@ def config_from_env():
                                       'admin'),
         'service_password': os.getenv('COLLECTION_INSTRUMENT_PASSWORD',
                                       'secret'),
-        'action_url': os.getenv('ACTION_URL', 'http://localhost:8151'),
         'iac_url': os.getenv('IAC_URL', 'http://localhost:8121'),
         'case_url': os.getenv('CASE_URL', 'http://localhost:8171'),
         'party_url': os.getenv('PARTY_URL', 'http://localhost:8081'),
         'party_create_respondent_endpoint': os.getenv(
             'PARTY_CREATE_RESPONDENT_ENDPOINT', '/party-api/v1/respondents'),
         'notify_mock_url': os.getenv('NOTIFY_MOCK_URL'),
-        'collection_exercise_url': collection_exercise_url,
+        'collection_exercise_url': os.getenv('COLLECTION_EXERCISE_URL',
+                                             'http://localhost:8145'),
         'collection_instrument_url':
             os.getenv('COLLECTION_INSTRUMENT_URL', 'http://localhost:8002'),
         'sample_url': os.getenv('SAMPLE_URL', 'http://localhost:8125'),

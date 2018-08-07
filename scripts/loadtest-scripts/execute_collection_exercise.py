@@ -92,7 +92,6 @@ def main():
     survey_id = SURVEY_ID
     exercise_period = collection_exercise_period()
     sample_file = f'{SCRIPT_DIR}/sample.csv'
-    yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
 
     exercise = sdc.collection_exercises.get_by_survey_and_period(
         survey_id,
@@ -104,10 +103,6 @@ def main():
         logging.info(
             'Quitting: The collection exercise has already been executed.')
         return
-
-    # There is work in progress which will remove the need for this step
-    sdc.actions.add_rule_for_collection_exercise(exercise_id=exercise_id,
-                                                 trigger_time=yesterday)
 
     sample = upload_sample(sdc=sdc, csv=sample_file)
     sample_id = sample['sample_id']

@@ -40,37 +40,6 @@ class TestSDCClientIntegration(unittest.TestCase):
         return config
 
     @httpretty.activate
-    def test_actions(self):
-        exercise_id = '1429b8df-d657-44bb-a59a-7a298d4ed08f'
-
-        collection_exercise = {
-            'caseTypes': [
-                {
-                    'actionPlanId': 'BUSINESS_CASE_ACTION_PLAN_ID',
-                    'sampleUnitType': 'B'
-                }
-            ]
-        }
-
-        httpretty.register_uri(
-            httpretty.GET,
-            f'http://localhost:8145/collectionexercises/{exercise_id}',
-            body=json.dumps(collection_exercise),
-            status=200)
-
-        httpretty.register_uri(
-            httpretty.POST,
-            f'http://action.services.com/actionrules',
-            body=json.dumps('OK'),
-            status=201)
-
-        yesterday = datetime.now() - timedelta(days=1)
-
-        self.client.actions.add_rule_for_collection_exercise(
-            exercise_id=exercise_id,
-            trigger_time=yesterday)
-
-    @httpretty.activate
     def test_collection_exercises(self):
         exercise_id = '1429b8df-d657-44bb-a59a-7a298d4ed08f'
 

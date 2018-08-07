@@ -1,11 +1,4 @@
 import logging
-import os
-from datetime import datetime
-
-from dateutil.relativedelta import relativedelta
-
-collection_exercise_url = os.getenv('COLLECTION_EXERCISE_URL',
-                                    'http://localhost:8145')
 
 
 class CollectionExerciseServiceClient:
@@ -63,4 +56,3 @@ class CollectionExerciseServiceClient:
         for exercise in exercises:
             if exercise['exerciseRef'] == period:
                 return exercise
-
