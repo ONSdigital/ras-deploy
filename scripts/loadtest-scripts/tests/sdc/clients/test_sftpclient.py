@@ -6,7 +6,7 @@ from sdc.clients.sftpclient import SFTPClient
 
 
 @pytest.mark.usefixtures('sftpserver')
-class SFTPClientTest(unittest.TestCase):
+class TestSFTPClient(unittest.TestCase):
     def test_ls_lists_files_matching_a_glob_pattern(self):
         files = {
             'readme.txt': 'Text file in the root',

@@ -6,7 +6,7 @@ from requests import Response
 from sdc.clients.http.authenticatedhttpclient import AuthenticatedHTTPClient
 
 
-class AuthenticatedHTTPClientTest(unittest.TestCase):
+class TestAuthenticatedHTTPClient(unittest.TestCase):
     USER = 'example-service-username'
     PASSWORD = 'very-secret-service-password'
 

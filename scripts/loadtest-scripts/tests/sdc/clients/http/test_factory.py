@@ -1,14 +1,12 @@
 import unittest
 from unittest.mock import patch
 
-from requests import Response
-
 from sdc.clients.http import factory
 from sdc.clients.http.httpcodeexception import HTTPCodeException
 from tests.shared.requests import Requests
 
 
-class HTTPClientFactoryTest(unittest.TestCase, Requests):
+class TestHTTPClientFactory(unittest.TestCase, Requests):
     BASE_URL = 'http://example.com'
     PASSWORD = 'example-pass'
     USERNAME = 'example-user'

@@ -5,7 +5,7 @@ from unittest.mock import Mock
 from sdc.clients.actions import Actions
 
 
-class ActionsTest(unittest.TestCase):
+class TestActions(unittest.TestCase):
     EXERCISE_ID = '9281d5b4-c1bf-4322-9f34-683b266bc3b2'
     BUSINESS_CASE_ACTION_PLAN_ID = '4d8be6f8-492e-4ef9-b741-d178499736dd'
     COLLECTION_EXERCISE = {

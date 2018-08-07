@@ -6,7 +6,7 @@ from sdc.clients.notifymockclient import NotifyMockClient
 from tests.shared.requests import Requests
 
 
-class NotifyMockClientTest(unittest.TestCase, Requests):
+class TestNotifyMockClient(unittest.TestCase, Requests):
     def setUp(self):
         self.http_client = Mock()
         self.client = NotifyMockClient(self.http_client)

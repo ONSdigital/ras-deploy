@@ -7,7 +7,7 @@ from sdc.clients.enrolmentcodes import EnrolmentCodes, RemoteFileNotFoundExcepti
     MultipleRemoteFilesFoundException, IncorrectNumberOfEnrolmentCodes
 
 
-class EnrolmentCodesTest(unittest.TestCase):
+class TestEnrolmentCodes(unittest.TestCase):
     BASE_DIR = 'BSD'
 
     def setUp(self):
