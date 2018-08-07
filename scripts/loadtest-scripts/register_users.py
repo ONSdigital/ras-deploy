@@ -14,9 +14,14 @@ SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 logger.initialise_from_env()
 
 
-def download_enrolment_codes(sdc_client, period, expected_codes, today):
+def download_enrolment_codes(sdc_client,
+                             period,
+                             expected_codes,
+                             today,
+                             survey_ref):
     try:
         return sdc_client.enrolment_codes.download(
+            survey_ref=survey_ref,
             period=period,
             generated_date=today,
             expected_codes=expected_codes)
@@ -37,8 +42,11 @@ def main():
 
     sdc = SDCClient(sdcclient.config_from_env())
 
+    survey = sdc.surveys.get_by_id(exercise_config['survey_id'])
+
     enrolment_codes = wait_for(lambda: download_enrolment_codes(
         sdc_client=sdc,
+        survey_ref=survey['survey_ref'],
         period=exercise_config['collection_exercise_period'],
         expected_codes=exercise_config['sample_size'],
         today=exercise_config['execution_date']))

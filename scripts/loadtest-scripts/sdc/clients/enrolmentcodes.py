@@ -8,8 +8,8 @@ class EnrolmentCodes:
         self.sftp_client = sftp_client
         self.base_dir = base_dir
 
-    def download(self, period, generated_date, expected_codes):
-        file = self._get_remote_filename(period, generated_date)
+    def download(self, survey_ref, generated_date, expected_codes, period):
+        file = self._get_remote_filename(survey_ref, period, generated_date)
         csv_content = self.sftp_client.get(file).decode('utf-8')
         logging.debug(f'Downloaded file with content: {csv_content}')
         results = self._parse_file(csv_content, expected_codes)
@@ -17,8 +17,8 @@ class EnrolmentCodes:
 
         return results
 
-    def _get_remote_filename(self, period, generated_date):
-        glob_pattern = f'BSNOT_*_{period}_{generated_date}_*.csv'
+    def _get_remote_filename(self, survey_ref, period, generated_date):
+        glob_pattern = f'BSNOT_{survey_ref}_{period}_{generated_date}_*.csv'
         glob_path = f'{self.base_dir}/{glob_pattern}'
 
         files = self.sftp_client.ls(self.base_dir, glob_pattern)

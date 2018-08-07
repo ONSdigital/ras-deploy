@@ -3,7 +3,8 @@ from unittest.mock import Mock, call
 
 from requests import Response
 
-from sdc.clients.enrolmentcodes import EnrolmentCodes, RemoteFileNotFoundException, \
+from sdc.clients.enrolmentcodes import EnrolmentCodes, \
+    RemoteFileNotFoundException, \
     MultipleRemoteFilesFoundException, IncorrectNumberOfEnrolmentCodes
 
 
@@ -22,24 +23,26 @@ class TestEnrolmentCodes(unittest.TestCase):
                                               base_dir=self.BASE_DIR)
 
     def test_download_checks_if_the_ls(self):
-        self.enrolment_codes.download(period='201806',
+        self.enrolment_codes.download(survey_ref='011',
+                                      period='201806',
                                       generated_date='11062018',
                                       expected_codes=0)
 
         self.sftp_client.ls.assert_called_with(
-            self.BASE_DIR, 'BSNOT_*_201806_11062018_*.csv')
+            self.BASE_DIR, 'BSNOT_011_201806_11062018_*.csv')
 
     def test_download_raises_if_file_is_not_found(self):
         self.sftp_client.ls.return_value = []
 
         with self.assertRaises(RemoteFileNotFoundException) as context:
-            self.enrolment_codes.download(period='201804',
+            self.enrolment_codes.download(survey_ref='022',
+                                          period='201804',
                                           generated_date='01042018',
                                           expected_codes=1)
 
         self.assertEqual(
             f"No files found matching "
-            f"'{self.BASE_DIR}/BSNOT_*_201804_01042018_*.csv'",
+            f"'{self.BASE_DIR}/BSNOT_022_201804_01042018_*.csv'",
             context.exception.message
         )
 
@@ -47,19 +50,21 @@ class TestEnrolmentCodes(unittest.TestCase):
         self.sftp_client.ls.return_value = ['file1.csv', 'file2.csv']
 
         with self.assertRaises(MultipleRemoteFilesFoundException) as context:
-            self.enrolment_codes.download(period='201804',
+            self.enrolment_codes.download(survey_ref='033',
+                                          period='201804',
                                           generated_date='01042018',
                                           expected_codes=2)
         self.assertEqual(
             f"Expected 1 file matching "
-            f"'{self.BASE_DIR}/BSNOT_*_201804_01042018_*.csv'; "
+            f"'{self.BASE_DIR}/BSNOT_033_201804_01042018_*.csv'; "
             f"found 2 - ['file1.csv', 'file2.csv']",
             context.exception.message)
 
     def test_download_deletes_the_file_after_getting_it(self):
         self.sftp_client.ls.return_value = ['the-file.csv']
 
-        self.enrolment_codes.download(period='201807',
+        self.enrolment_codes.download(survey_ref='044',
+                                      period='201807',
                                       generated_date='03072018',
                                       expected_codes=0)
 
@@ -75,7 +80,8 @@ class TestEnrolmentCodes(unittest.TestCase):
             '49900000006:22yr5vmdxbx6:NOTSTARTED:null:null:null:null:null:FE\n',
             'utf-8')
 
-        result = self.enrolment_codes.download(period='201807',
+        result = self.enrolment_codes.download(survey_ref='055',
+                                               period='201807',
                                                generated_date='03072018',
                                                expected_codes=4)
 
@@ -94,7 +100,8 @@ class TestEnrolmentCodes(unittest.TestCase):
             'con:tent\n'
 
         with self.assertRaises(Exception):
-            self.enrolment_codes.download(period='201807',
+            self.enrolment_codes.download(survey_ref='066',
+                                          period='201807',
                                           generated_date='03072018',
                                           expected_codes=2)
 
@@ -110,7 +117,8 @@ class TestEnrolmentCodes(unittest.TestCase):
             'utf-8')
 
         with self.assertRaises(IncorrectNumberOfEnrolmentCodes) as context:
-            self.enrolment_codes.download(period='201807',
+            self.enrolment_codes.download(survey_ref='077',
+                                          period='201807',
                                           generated_date='03072018',
                                           expected_codes=5)
 
