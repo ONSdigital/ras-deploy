@@ -3,7 +3,7 @@ import logging
 import requests
 
 
-class UserClient:
+class PartyServiceClient:
     def __init__(self, http_client):
         self.http_client = http_client
 

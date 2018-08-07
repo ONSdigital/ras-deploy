@@ -3,9 +3,8 @@ import logging
 from io import StringIO
 
 
-class IACClient:
-    def __init__(self, http_client, sftp_client, base_dir):
-        self.http_client = http_client
+class EnrolmentCodes:
+    def __init__(self, sftp_client, base_dir):
         self.sftp_client = sftp_client
         self.base_dir = base_dir
 
@@ -17,12 +16,6 @@ class IACClient:
         self.sftp_client.delete(file)
 
         return results
-
-    def get_metadata_for(self, iac_code):
-        response = self.http_client.get(path=f'/iacs/{iac_code}',
-                                        expected_status=200)
-
-        return response.json()
 
     def _get_remote_filename(self, period, generated_date):
         glob_pattern = f'BSNOT_*_{period}_{generated_date}_*.csv'
@@ -50,8 +43,8 @@ class IACClient:
         results = [r[1] for r in results]
 
         if len(results) != expected_codes:
-            raise IncorrectNumberOfIACCodes(expected=expected_codes,
-                                            results=results)
+            raise IncorrectNumberOfEnrolmentCodes(expected=expected_codes,
+                                                  results=results)
         return results
 
     @staticmethod
@@ -72,9 +65,9 @@ class MultipleRemoteFilesFoundException(Exception):
                        f"found {len(results)} - {results}"
 
 
-class IncorrectNumberOfIACCodes(Exception):
+class IncorrectNumberOfEnrolmentCodes(Exception):
     def __init__(self, expected, results):
-        self.message = f"Expected {expected} IAC codes; " + \
+        self.message = f"Expected {expected} enrolment codes; " + \
                        f"got {len(results)} - {results}"
 
     def __str__(self):

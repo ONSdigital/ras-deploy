@@ -6,7 +6,7 @@ import sys
 from num2words import num2words
 
 from sdc.clients import SDCClient, sdcclient
-from sdc.clients.iacclient import RemoteFileNotFoundException
+from sdc.clients.enrolmentcodes import RemoteFileNotFoundException
 from sdc.utils import wait_for, logger
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -14,9 +14,9 @@ SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 logger.initialise_from_env()
 
 
-def download_iac_codes(sdc_client, period, expected_codes, today):
+def download_enrolment_codes(sdc_client, period, expected_codes, today):
     try:
-        return sdc_client.iac_codes.download(
+        return sdc_client.enrolment_codes.download(
             period=period,
             generated_date=today,
             expected_codes=expected_codes)
@@ -37,17 +37,17 @@ def main():
 
     sdc = SDCClient(sdcclient.config_from_env())
 
-    iac_codes = wait_for(lambda: download_iac_codes(
+    enrolment_codes = wait_for(lambda: download_enrolment_codes(
         sdc_client=sdc,
         period=exercise_config['collection_exercise_period'],
         expected_codes=exercise_config['sample_size'],
         today=exercise_config['execution_date']))
 
-    logging.debug(f'Found IAC codes {iac_codes}')
+    logging.debug(f'Found enrolment codes {enrolment_codes}')
 
     count = 0
     users = []
-    for code in iac_codes:
+    for code in enrolment_codes:
         logging.debug(f'Registering user with code {code}')
         count += 1
         email_address = f'user-{exercise_config["collection_exercise_period"]}-{count}@example.com'

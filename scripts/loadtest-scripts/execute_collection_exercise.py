@@ -3,8 +3,10 @@ import json
 import logging
 import os
 
+from dateutil.relativedelta import relativedelta
+
 from sdc import csvfile
-from sdc.clients import SDCClient, collectionexerciseclient, sdcclient
+from sdc.clients import SDCClient, sdcclient
 from sdc.utils import wait_for, logger
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -21,8 +23,12 @@ config = sdcclient.config_from_env()
 sdc = SDCClient(config)
 
 
+def get_previous_period():
+    return (datetime.datetime.now() - relativedelta(months=1)).strftime('%Y%m')
+
+
 def collection_exercise_period():
-    return PERIOD_OVERRIDE or collectionexerciseclient.get_previous_period()
+    return PERIOD_OVERRIDE or get_previous_period()
 
 
 def upload_and_link_collection_instrument(survey_id,

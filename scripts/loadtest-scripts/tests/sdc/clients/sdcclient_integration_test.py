@@ -92,11 +92,11 @@ class SDCClientIntegrationTest(unittest.TestCase):
 
         self.assertEqual(collection_exercise, result)
 
-    def test_iac_codes(self):
+    def test_enrolment_codes(self):
         files = {
             'BSD': {
                 'BSNOT_11_201806_11062018_999.csv':
-                    '49900000008:iac-code:NOTSTARTED:null:null:null:null:null:FE\n'}}
+                    '49900000008:enrolment-code:NOTSTARTED:null:null:null:null:null:FE\n'}}
 
         with self.sftpserver.serve_content(files):
             client = SDCClient(self._config({
@@ -106,11 +106,11 @@ class SDCClientIntegrationTest(unittest.TestCase):
                 'actionexporter_sftp_password': 'the-password',
             }))
 
-            codes = client.iac_codes.download(period='201806',
-                                              generated_date='11062018',
-                                              expected_codes=1)
+            codes = client.enrolment_codes.download(period='201806',
+                                                    generated_date='11062018',
+                                                    expected_codes=1)
 
-            self.assertEquals(['iac-code'], codes)
+            self.assertEquals(['enrolment-code'], codes)
 
     @httpretty.activate
     def test_samples(self):
@@ -144,20 +144,20 @@ class SDCClientIntegrationTest(unittest.TestCase):
 
     @httpretty.activate
     def test_cases_property(self):
-        iac_code = 'p2js5r9m2gbz'
+        enrolment_code = 'p2js5r9m2gbz'
 
         httpretty.register_uri(
             httpretty.GET,
-            f'http://case.services.com/cases/iac/{iac_code}',
+            f'http://case.services.com/cases/iac/{enrolment_code}',
             body=json.dumps({'id': 'case-id'}),
             status=200)
 
-        case = self.client.cases.find_by_iac(iac_code)
+        case = self.client.cases.find_by_enrolment_code(enrolment_code)
         self.assertEqual({'id': 'case-id'}, case )
 
     @httpretty.activate
     def test_users_register(self):
-        iac_code = 'p2js5r9m2gbz'
+        enrolment_code = 'p2js5r9m2gbz'
 
         httpretty.register_uri(
             httpretty.POST,
@@ -171,7 +171,7 @@ class SDCClientIntegrationTest(unittest.TestCase):
             last_name='One',
             password='Top5ecret',
             telephone='0123456789',
-            enrolment_code=iac_code)
+            enrolment_code=enrolment_code)
 
     @httpretty.activate
     def test_users_activate(self):

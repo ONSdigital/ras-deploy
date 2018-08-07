@@ -6,7 +6,7 @@ import requests
 sample_url = os.getenv('SAMPLE_URL', 'http://localhost:8125')
 
 
-class SampleClient:
+class SampleServiceClient:
     def __init__(self, http_client):
         self.http_client = http_client
 

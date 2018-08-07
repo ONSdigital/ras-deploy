@@ -1,14 +1,14 @@
 import unittest
 from unittest.mock import Mock
 
-from sdc.clients.collectioninstrumentclient import CollectionInstrumentClient
+from sdc.clients.services import CollectionInstrumentServiceClient
 from tests.shared.requests import Requests
 
 
-class CollectionInstrumentClientTest(unittest.TestCase, Requests):
+class CollectionInstrumentServiceClientTest(unittest.TestCase, Requests):
     def setUp(self):
         self.http_client = Mock()
-        self.client = CollectionInstrumentClient(http_client=self.http_client)
+        self.client = CollectionInstrumentServiceClient(http_client=self.http_client)
 
     def test_upload(self):
         survey_id = 'be11e5ed-f2ce-4838-8222-57e793e97a5b'

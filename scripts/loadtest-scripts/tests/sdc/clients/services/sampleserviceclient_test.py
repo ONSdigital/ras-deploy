@@ -2,15 +2,15 @@ import json
 import unittest
 from unittest.mock import Mock
 
-from sdc.clients.sampleclient import SampleClient
+from sdc.clients.services import SampleServiceClient
 from tests.shared.requests import Requests
 
 
-class SampleClientTest(unittest.TestCase, Requests):
+class SampleServiceClientTest(unittest.TestCase, Requests):
     def setUp(self):
         self.http_client = Mock()
 
-        self.client = SampleClient(http_client=self.http_client)
+        self.client = SampleServiceClient(http_client=self.http_client)
 
     def test_upload_file(self):
         file_handle = 'file-handle'

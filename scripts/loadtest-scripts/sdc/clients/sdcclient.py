@@ -4,17 +4,15 @@ import os
 from schema import Schema, Regex, And
 
 from sdc.clients import http
-from sdc.clients.actionclient import ActionClient
-from sdc.clients.caseclient import CaseClient
-from sdc.clients.collectionexerciseclient import CollectionExerciseClient
-from sdc.clients.collectionexerciseclient import collection_exercise_url
-from sdc.clients.collectioninstrumentclient import CollectionInstrumentClient
+from sdc.clients.actions import Actions
+from sdc.clients.enrolmentcodes import EnrolmentCodes
 from sdc.clients.http import factory
-from sdc.clients.iacclient import IACClient
 from sdc.clients.notifymockclient import NotifyMockClient
-from sdc.clients.sampleclient import SampleClient
+from sdc.clients.services import ActionServiceClient, CaseServiceClient, \
+    CollectionExerciseServiceClient, CollectionInstrumentServiceClient, \
+    PartyServiceClient, SampleServiceClient
+from sdc.clients.services.collectionexerciseserviceclient import collection_exercise_url
 from sdc.clients.sftpclient import SFTPClient
-from sdc.clients.userclient import UserClient
 from sdc.clients.users import Users
 
 URL_SCHEMA = Regex(r'^https?://')
@@ -47,18 +45,19 @@ class SDCClient:
     @property
     def actions(self):
         http_client = self._create_http_client(self.config['action_url'])
+        action_service_client = ActionServiceClient(http_client=http_client)
 
-        return ActionClient(http_client=http_client,
-                            collection_exercise_client=self.collection_exercises)
+        return Actions(action_service_client=action_service_client,
+                       collection_exercise_client=self.collection_exercises)
 
     @property
     def collection_exercises(self):
         http_client = self._create_http_client(self.config['collection_exercise_url'])
 
-        return CollectionExerciseClient(http_client)
+        return CollectionExerciseServiceClient(http_client)
 
     @property
-    def iac_codes(self):
+    def enrolment_codes(self):
         if not self.action_exporter_sftp_client:
             self.action_exporter_sftp_client = SFTPClient(
                 host=self.config['sftp_host'],
@@ -66,20 +65,19 @@ class SDCClient:
                 password=self.config['actionexporter_sftp_password'],
                 port=self.config['sftp_port'])
 
-        return IACClient(http_client=self._create_http_client(self.config['iac_url']),
-                         sftp_client=self.action_exporter_sftp_client,
-                         base_dir='BSD')
+        return EnrolmentCodes(sftp_client=self.action_exporter_sftp_client,
+                              base_dir='BSD')
 
     @property
     def samples(self):
         http_client = self._create_http_client(self.config['sample_url'])
 
-        return SampleClient(http_client=http_client)
+        return SampleServiceClient(http_client=http_client)
 
     @property
     def collection_instruments(self):
         http_client = self._create_http_client(self.config['collection_instrument_url'])
-        return CollectionInstrumentClient(http_client=http_client)
+        return CollectionInstrumentServiceClient(http_client=http_client)
 
     @property
     def cases(self):
@@ -88,12 +86,12 @@ class SDCClient:
             username=self.config['service_username'],
             password=self.config['service_password'])
 
-        return CaseClient(http_client=http_client)
+        return CaseServiceClient(http_client=http_client)
 
     @property
     def users(self):
         http_client = self._create_http_client(self.config['party_url'])
-        user_client = UserClient(http_client=http_client)
+        user_client = PartyServiceClient(http_client=http_client)
         notify_client = self.messages
 
         return Users(user_client=user_client, notify_client=notify_client)
