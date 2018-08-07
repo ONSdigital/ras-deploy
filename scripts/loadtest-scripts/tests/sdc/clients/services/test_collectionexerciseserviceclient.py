@@ -91,4 +91,3 @@ class TestCollectionExerciseServiceClient(unittest.TestCase, Requests):
 
         with self.assertRaises(Exception):
             self.client.get_by_survey_and_period(survey_id, '201802')
-
