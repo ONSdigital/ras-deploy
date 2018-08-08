@@ -31,7 +31,7 @@ preproduction and production
 
 ### RAS/RM Load Test Pipeline
 
-Filename: `pipelines/loadtest.yml`
+Filename: `pipelines/performance.yml`
 
 This pipeline deploys the required RAS and RM services to a Cloud Foundry for load testing.
 
