@@ -199,7 +199,6 @@ resource_types:
   source:
     repository: cfcommunity/slack-notification-resource
 
-### START MICROSERVICE REPOS
 resources:
 - name: ras-deploy
   type: git
@@ -207,6 +206,13 @@ resources:
     uri: https://github.com/ONSdigital/ras-deploy.git
     branch: master
 
+- name: rasrm-performance-tests
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rasrm-performance-tests
+    branch: master
+
+### START MICROSERVICE REPOS
 - name: ras-party-source
   type: git
   source:
@@ -625,6 +631,7 @@ jobs:
         sftp_password: ((actionexporter_sftp_password))
         sftp_port: '22'
         sftp_username: ((actionexporter_sftp_username))
+        sftp_directory: performance_pipeline/
 
 - name: rm-case-service-deploy
   serial_groups: [rm-case-service-deploy]
@@ -923,33 +930,10 @@ jobs:
         args:
         - './scripts/jenkins/add_user.sh'
 
-- name: ras-deploy-tests
-  plan:
-  - get: ras-deploy
-    trigger: true
-  - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: kennethreitz/pipenv
-          tag: latest
-      inputs:
-      - name: ras-deploy
-      run:
-        dir: ras-deploy
-        path: sh
-        args:
-        - '-exc'
-        - |
-          make test
-
 - name: setup-collection-exercises
   serial_groups: *loadtest_all_services
   plan:
   - get: ras-deploy
-    passed: [ras-deploy-tests]
   - get: rasrm-acceptance-tests-source
     trigger: true
   - get: ras-party-source
@@ -1034,6 +1018,7 @@ jobs:
   plan:
   - get: ras-deploy
     passed: [setup-collection-exercises]
+  - get: rasrm-performance-tests
   - get: ras-party-source
     passed: [setup-collection-exercises]
   - get: ras-frontstage-source
@@ -1080,7 +1065,7 @@ jobs:
           repository: kennethreitz/pipenv
           tag: latest
       inputs:
-      - name: ras-deploy
+      - name: rasrm-performance-tests
       outputs:
       - name: exercise-config
       params: &loadtest_script_config
@@ -1088,17 +1073,19 @@ jobs:
         <<: *loadtest_service_endpoints_for_python
         SFTP_HOST: ((sftp_host))
         SFTP_PORT: 22
+        SFTP_BASE_DIR: performance_pipeline/
         ACTION_EXPORTER_SFTP_USERNAME: ((actionexporter_sftp_username))
         ACTION_EXPORTER_SFTP_PASSWORD: ((actionexporter_sftp_password))
         LOGGING_LEVEL: DEBUG
+        NOTIFY_MOCK_URL: http://sdc-mock-gov-notify-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))
       run:
-        dir: ras-deploy/scripts/loadtest-scripts
+        dir: rasrm-performance-tests
         path: sh
         args:
         - '-exc'
         - |
           pipenv install --deploy
-          pipenv run python execute_collection_exercise.py >../../../exercise-config/exercise.json
+          pipenv run python execute_collection_exercise.py >../exercise-config/exercise.json
   - task: register-users
     privileged: true
     config:
@@ -1109,26 +1096,24 @@ jobs:
           repository: kennethreitz/pipenv
           tag: latest
       inputs:
-      - name: ras-deploy
+      - name: rasrm-performance-tests
       - name: exercise-config
       params:
         <<: *loadtest_script_config
-        NOTIFY_MOCK_URL: http://sdc-mock-gov-notify-((loadtest_cloudfoundry_space)).((loadtest_cloudfoundry_apps_domain))
       run:
-        dir: ras-deploy/scripts/loadtest-scripts
+        dir: rasrm-performance-tests
         path: sh
         args:
         - '-exc'
         - |
           pipenv install --deploy
-          pipenv run python register_users.py ../../../exercise-config/exercise.json
+          pipenv run python register_users.py ../exercise-config/exercise.json
 
 - name: platform-status
   plan:
   - get: healthcheck-timer
     trigger: true
   - get: ras-deploy
-    passed: [ras-deploy-tests]
   - task: check-status-of-apps
     file: ras-deploy/tasks/cloudfoundry-scripts/health_check.yml
 
@@ -1156,7 +1141,6 @@ groups:
 - name: support
   jobs:
   - sdc-mock-gov-notify-deploy
-  - ras-deploy-tests
 - name: status
   jobs:
   - platform-status
