@@ -4,7 +4,7 @@ from unittest.mock import Mock
 from sdc.clients.services import partyserviceclient
 
 
-class PartyServiceClientTest(unittest.TestCase):
+class TestPartyServiceClient(unittest.TestCase):
     def setUp(self):
         self.http_client = Mock()
         self.client = partyserviceclient.PartyServiceClient(http_client=self.http_client)

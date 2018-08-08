@@ -8,7 +8,7 @@ from sdc.clients.users import Users, NoVerificationEmailFound, MultipleEmailsFou
 from tests.shared.requests import Requests
 
 
-class UsersTest(unittest.TestCase, Requests):
+class TestUsers(unittest.TestCase, Requests):
     VERIFICATION_LINK = \
         "http://frontstage.services.com/register/activate-account/" \
         "InVzZXItMjAxODA1LTFAZXhhbXBsZS5jb20i.DkXhaw.DbfocE4M99mRWhu3HbBVVRavjsY"

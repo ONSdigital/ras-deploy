@@ -5,7 +5,7 @@ from unittest.mock import Mock
 from sdc.clients.services import ActionServiceClient
 
 
-class ActionServiceClientTest(unittest.TestCase):
+class TestActionServiceClient(unittest.TestCase):
     def setUp(self):
         self.http_client = Mock()
         self.client = ActionServiceClient(self.http_client)

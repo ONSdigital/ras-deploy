@@ -11,7 +11,7 @@ from sdc.clients.users import NoVerificationEmailFound
 
 
 @pytest.mark.usefixtures('sftpserver')
-class SDCClientIntegrationTest(unittest.TestCase):
+class TestSDCClientIntegration(unittest.TestCase):
     def setUp(self):
         self.client = SDCClient(self._config())
 

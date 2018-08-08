@@ -6,7 +6,7 @@ from sdc.clients.services import CollectionExerciseServiceClient
 from tests.shared.requests import Requests
 
 
-class CollectionExerciseServiceClientTest(unittest.TestCase, Requests):
+class TestCollectionExerciseServiceClient(unittest.TestCase, Requests):
     def setUp(self):
         http_response = self.http_response(status_code=200)
 

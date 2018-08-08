@@ -6,7 +6,7 @@ from requests import Response
 from sdc.clients.services import CaseServiceClient
 
 
-class CaseServiceClientTest(unittest.TestCase):
+class TestCaseServiceClient(unittest.TestCase):
     def setUp(self):
         self.http_client = Mock()
         self.client = CaseServiceClient(self.http_client)

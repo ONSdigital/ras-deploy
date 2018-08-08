@@ -6,7 +6,7 @@ from requests import Response
 from sdc.clients.http.baseurlhttpclient import BaseURLHTTPClient
 
 
-class BaseURLHTTPClientTest(unittest.TestCase):
+class TestBaseURLHTTPClient(unittest.TestCase):
     BASE_URL = 'http://example.com/api'
     GET_RESPONSE = Response()
     POST_RESPONSE = Response()

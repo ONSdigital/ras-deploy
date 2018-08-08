@@ -5,7 +5,7 @@ from sdc.clients.services import CollectionInstrumentServiceClient
 from tests.shared.requests import Requests
 
 
-class CollectionInstrumentServiceClientTest(unittest.TestCase, Requests):
+class TestCollectionInstrumentServiceClient(unittest.TestCase, Requests):
     def setUp(self):
         self.http_client = Mock()
         self.client = CollectionInstrumentServiceClient(http_client=self.http_client)

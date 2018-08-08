@@ -6,7 +6,7 @@ from sdc.clients.services import SampleServiceClient
 from tests.shared.requests import Requests
 
 
-class SampleServiceClientTest(unittest.TestCase, Requests):
+class TestSampleServiceClient(unittest.TestCase, Requests):
     def setUp(self):
         self.http_client = Mock()
 
