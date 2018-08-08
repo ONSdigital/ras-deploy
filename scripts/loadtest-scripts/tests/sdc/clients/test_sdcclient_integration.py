@@ -27,6 +27,7 @@ class TestSDCClientIntegration(unittest.TestCase):
             'notify_mock_url': 'http://notify-mock.services.com',
             'collection_instrument_url': 'http://ci.services.com',
             'sample_url': 'http://sample.services.com',
+            'survey_url': 'http://survey.services.com',
             'sftp_host': 'sftp.example.com',
             'sftp_port': 22,
             'actionexporter_sftp_password': 'sftp-password',
@@ -75,7 +76,8 @@ class TestSDCClientIntegration(unittest.TestCase):
                 'actionexporter_sftp_password': 'the-password',
             }))
 
-            codes = client.enrolment_codes.download(period='201806',
+            codes = client.enrolment_codes.download(survey_ref='11',
+                                                    period='201806',
                                                     generated_date='11062018',
                                                     expected_codes=1)
 
@@ -168,3 +170,18 @@ class TestSDCClientIntegration(unittest.TestCase):
         response = self.client.messages.get_emails_for('matt@example.com')
 
         self.assertEqual(messages, response)
+
+    @httpretty.activate
+    def test_surveys(self):
+        survey_id = '4995ecb5-cda1-4b91-b89f-3f95e2e7922e'
+        survey = {'surveyRef': '001'}
+
+        httpretty.register_uri(
+            httpretty.GET,
+            f'http://survey.services.com/surveys/{survey_id}',
+            body=json.dumps(survey),
+            status=200)
+
+        response = self.client.surveys.get_by_id(survey_id)
+
+        self.assertEqual(survey, response)

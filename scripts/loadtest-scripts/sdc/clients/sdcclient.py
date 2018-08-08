@@ -9,7 +9,7 @@ from sdc.clients.http import factory
 from sdc.clients.notifymockclient import NotifyMockClient
 from sdc.clients.services import CaseServiceClient, \
     CollectionExerciseServiceClient, CollectionInstrumentServiceClient, \
-    PartyServiceClient, SampleServiceClient
+    PartyServiceClient, SampleServiceClient, SurveyServiceClient
 from sdc.clients.sftpclient import SFTPClient
 from sdc.clients.users import Users
 
@@ -27,6 +27,7 @@ CONFIG_SCHEMA = Schema({
     'collection_exercise_url': URL_SCHEMA,
     'collection_instrument_url': URL_SCHEMA,
     'sample_url': URL_SCHEMA,
+    'survey_url': URL_SCHEMA,
     'sftp_host': NON_EMPTY_STRING_SCHEMA,
     'sftp_port': int,
     'actionexporter_sftp_username': NON_EMPTY_STRING_SCHEMA,
@@ -78,6 +79,10 @@ class SDCClient:
         return CaseServiceClient(http_client=http_client)
 
     @property
+    def surveys(self):
+        return SurveyServiceClient(self._create_http_client(self.config['survey_url']))
+
+    @property
     def users(self):
         http_client = self._create_http_client(self.config['party_url'])
         user_client = PartyServiceClient(http_client=http_client)
@@ -114,6 +119,7 @@ def config_from_env():
         'collection_instrument_url':
             os.getenv('COLLECTION_INSTRUMENT_URL', 'http://localhost:8002'),
         'sample_url': os.getenv('SAMPLE_URL', 'http://localhost:8125'),
+        'survey_url': os.getenv('SURVEY_URL', 'http://localhost:8080'),
         'sftp_host': os.getenv('SFTP_HOST'),
         'sftp_port': int(os.getenv('SFTP_PORT', '22')),
         'actionexporter_sftp_username':
