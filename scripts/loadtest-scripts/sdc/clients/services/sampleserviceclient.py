@@ -32,4 +32,3 @@ class SampleServiceClient:
         logging.debug(f'Current sample state for {sample_id}: {state}')
 
         return state
-

@@ -1,6 +1,5 @@
 import json
 import unittest
-from datetime import datetime, timedelta
 from io import StringIO
 
 import httpretty
@@ -124,7 +123,7 @@ class TestSDCClientIntegration(unittest.TestCase):
             status=200)
 
         case = self.client.cases.find_by_enrolment_code(enrolment_code)
-        self.assertEqual({'id': 'case-id'}, case )
+        self.assertEqual({'id': 'case-id'}, case)
 
     @httpretty.activate
     def test_users_register(self):
