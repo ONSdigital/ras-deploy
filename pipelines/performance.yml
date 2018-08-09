@@ -479,6 +479,8 @@ jobs:
       environment_variables:
         <<: *performance_security_user
         <<: *performance_service_endpoints_for_python
+        EQ_URL: 'https://eq-test/session?token='
+        JSON_SECRET_KEYS: ((performance_json_secret_keys))
         JWT_SECRET: ((performance_jwt_secret))
         OAUTH_CLIENT_ID: 'ons@ons.gov'
         OAUTH_CLIENT_SECRET: 'password'
