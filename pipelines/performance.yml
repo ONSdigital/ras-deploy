@@ -206,10 +206,10 @@ resources:
     uri: https://github.com/ONSdigital/ras-deploy.git
     branch: master
 
-- name: rasrm-performance-tests
+- name: ras-rm-performance-tests
   type: git
   source:
-    uri: https://github.com/ONSdigital/rasrm-performance-tests
+    uri: https://github.com/ONSdigital/ras-rm-performance-tests
     branch: master
 
 ### START MICROSERVICE REPOS
@@ -1018,7 +1018,7 @@ jobs:
   plan:
   - get: ras-deploy
     passed: [setup-collection-exercises]
-  - get: rasrm-performance-tests
+  - get: ras-rm-performance-tests
   - get: ras-party-source
     passed: [setup-collection-exercises]
   - get: ras-frontstage-source
@@ -1065,7 +1065,7 @@ jobs:
           repository: kennethreitz/pipenv
           tag: latest
       inputs:
-      - name: rasrm-performance-tests
+      - name: ras-rm-performance-tests
       outputs:
       - name: exercise-config
       params: &performance_script_config
@@ -1079,7 +1079,7 @@ jobs:
         LOGGING_LEVEL: DEBUG
         NOTIFY_MOCK_URL: http://sdc-mock-gov-notify-((performance_cloudfoundry_space)).((performance_cloudfoundry_apps_domain))
       run:
-        dir: rasrm-performance-tests
+        dir: ras-rm-performance-tests
         path: sh
         args:
         - '-exc'
@@ -1096,12 +1096,12 @@ jobs:
           repository: kennethreitz/pipenv
           tag: latest
       inputs:
-      - name: rasrm-performance-tests
+      - name: ras-rm-performance-tests
       - name: exercise-config
       params:
         <<: *performance_script_config
       run:
-        dir: rasrm-performance-tests
+        dir: ras-rm-performance-tests
         path: sh
         args:
         - '-exc'
