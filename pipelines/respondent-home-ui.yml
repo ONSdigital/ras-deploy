@@ -173,12 +173,6 @@ jobs:
       command: map-route
       app_name: respondent-home-ui-preprod
       domain: rhpreprod.rmdev.onsdigital.uk
-  - put: map-route-ons-internal-domain
-    resource: cf-cli-resource-preprod
-    params:
-      command: map-route
-      app_name: respondent-home-ui-preprod
-      domain: ohs-alpha.onsdigital.uk
   - task: smoke-tests
     on_failure:
       put: notify
