@@ -1,0 +1,61 @@
+---
+resources:
+- name: rasrm-ops-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rasrm-ops.git
+
+- name: cf-resource-latest
+  type: cf
+  source:
+    api: ((cloudfoundry_api))
+    username: ((cloudfoundry_email))
+    password: ((cloudfoundry_password))
+    organization: rmras
+    space: concourse-latest
+    skip_cert_check: true
+
+- name: cf-resource-preprod
+  type: cf
+  source:
+    api: ((preprod_cloudfoundry_api))
+    username: ((preprod_cloudfoundry_email))
+    password: ((preprod_cloudfoundry_password))
+    organization: rmras
+    space: preprod
+    skip_cert_check: true
+
+jobs:
+- name: rasrm-ops-latest-deploy
+  serial: true
+  plan:
+  - get: rasrm-ops-source
+    trigger: true
+  - put: push-app
+    resource: cf-resource-latest
+    params:
+      current_app_name: rasrm-ops-latest
+      manifest: rasrm-ops-source/manifest.yml
+      path: rasrm-ops-source
+      environment_variables:
+        USERNAME: ((latest_username))
+        PASSWORD: ((latest_password))
+        SERVICE_DOMAIN_SUFFIX: apps.devtest.onsclofo.uk
+        APP_SETTINGS: CIConfig
+
+- name: rasrm-ops-preprod-deploy
+  serial: true
+  plan:
+  - get: rasrm-ops-source
+    passed: [rasrm-ops-latest-deploy]
+    trigger: true
+  - put: push-app
+    resource: cf-resource-preprod
+    params:
+      current_app_name: rasrm-ops-preprod
+      manifest: rasrm-ops-source/manifest.yml
+      path: rasrm-ops-source
+      environment_variables:
+        USERNAME: ((preprod_username))
+        PASSWORD: ((preprod_password))
+        SERVICE_DOMAIN_SUFFIX: ((preprod_cloudfoundry_apps_domain))
