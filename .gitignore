@@ -5,6 +5,7 @@
 secrets.yml
 secrets/*.yml
 respondent-home-ui-vars.yml
+concourse-secrets.zip
 
 # DS Store
 .DS_Store
