@@ -79,7 +79,7 @@ jobs:
   - put: push-app
     resource: cf-resource-prod
     params:
-      current_app_name: rasrm-ops
+      current_app_name: rasrm-ops-prod
       manifest: rasrm-ops-source/manifest.yml
       path: rasrm-ops-source
       environment_variables:
