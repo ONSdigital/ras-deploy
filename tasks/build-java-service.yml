@@ -15,7 +15,7 @@ outputs:
     path: target
 
 caches:
-  - path: repository-name/.m2/
+  - path: .m2/repository
 
 run:
   path: sh
