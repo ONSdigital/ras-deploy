@@ -14,10 +14,14 @@ outputs:
   - name: target
     path: target
 
+caches:
+  - path: repository-name/.m2/
+
 run:
   path: sh
   args:
   - -exc
   - |
-    mvn --settings repository-name/.maven.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -Dhttp.wait.skip -f repository-name/pom.xml
+    mkdir -p .m2/repository
+    mvn --settings repository-name/.maven.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -Dhttp.wait.skip -f repository-name/pom.xml -Dmaven.repo.local=.m2/repository
     cp -r repository-name/target/ .
