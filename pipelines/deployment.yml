@@ -6,6 +6,8 @@ templates:
       actionSvc_connectionConfig_username: ((ci_security_user_name))
       caseSvc_connectionConfig_username: ((ci_security_user_name))
       caseSvc_connectionConfig_password: ((ci_security_user_password))
+      commsTemplateSvc_connectionConfig_username: ((ci_security_user_name))
+      commsTemplateSvc_connectionConfig_password: ((ci_security_user_password))
       collectionExerciseSvc_connectionConfig_username: ((ci_security_user_name))
       collectionExerciseSvc_connectionConfig_password: ((ci_security_user_password))
       collectionInstrumentSvc_connectionConfig_username: ((ci_security_user_name))
@@ -22,6 +24,8 @@ templates:
       surveySvc_connectionConfig_password: ((ci_security_user_password))
       CASE_USERNAME: ((ci_security_user_name))
       CASE_PASSWORD: ((ci_security_user_password))
+      COMMS_TEMPLATE_USERNAME: ((ci_security_user_name))
+      COMMS_TEMPLATE_PASSWORD: ((ci_security_password))
       COLLECTION_EXERCISE_USERNAME: ((ci_security_user_name))
       COLLECTION_EXERCISE_PASSWORD: ((ci_security_user_password))
       COLLECTION_INSTRUMENT_USERNAME: ((ci_security_user_name))
@@ -48,6 +52,7 @@ templates:
     - rm-actionexporter-service-ci-deploy
     - rm-case-service-ci-deploy
     - rm-collection-exercise-ci-deploy
+    - rm-comms-template-service-ci-deploy
     - iac-service-ci-deploy
     - rm-notify-gateway-ci-deploy
     - rm-sample-service-ci-deploy
@@ -87,6 +92,8 @@ templates:
       PARTY_URL: http://ras-party-ci.apps.devtest.onsclofo.uk
       RM_CASE_SERVICE_HOST: rm-case-service-ci.apps.devtest.onsclofo.uk
       RM_CASE_SERVICE_PORT: '80'
+      RM_COMMS_TEMPLATE_SERVICE_HOST: rm-comms-template-service-ci.apps.devtest.onsclofo.uk
+      RM_COMMS_TEMPLATE_SERVICE_PORT: '80'
       RM_COLLECTION_EXERCISE_SERVICE_HOST: rm-collection-exercise-service-ci.apps.devtest.onsclofo.uk
       RM_COLLECTION_EXERCISE_SERVICE_PORT: '80'
       RM_IAC_SERVICE_HOST: iac-service-ci.apps.devtest.onsclofo.uk
@@ -193,6 +200,8 @@ templates:
       actionSvc_connectionConfig_username: ((latest_security_user_name))
       caseSvc_connectionConfig_username: ((latest_security_user_name))
       caseSvc_connectionConfig_password: ((latest_security_user_password))
+      commsTemplateSvc_connectionConfig_username: ((latest_security_user_name))
+      commsTemplateSvc_connectionConfig_password: ((latest_security_user_password
       collectionExerciseSvc_connectionConfig_username: ((latest_security_user_name))
       collectionExerciseSvc_connectionConfig_password: ((latest_security_user_password))
       collectionInstrumentSvc_connectionConfig_username: ((latest_security_user_name))
@@ -209,6 +218,8 @@ templates:
       surveySvc_connectionConfig_password: ((latest_security_user_password))
       CASE_USERNAME: ((latest_security_user_name))
       CASE_PASSWORD: ((latest_security_user_password))
+      COMMS_TEMPLATE_SERVICE_USERNAME: ((latest_security_user_name))
+      COMMS_TEMPLATE_SERVICE_PASSWORD: ((latest_security_user_password))
       COLLECTION_EXERCISE_USERNAME: ((latest_security_user_name))
       COLLECTION_EXERCISE_PASSWORD: ((latest_security_user_password))
       COLLECTION_INSTRUMENT_USERNAME: ((latest_security_user_name))
@@ -234,6 +245,7 @@ templates:
     - rm-action-service-latest-deploy
     - rm-actionexporter-service-latest-deploy
     - rm-case-service-latest-deploy
+    - rm-comms-template-service-latest-deploy
     - rm-collection-exercise-latest-deploy
     - iac-service-latest-deploy
     - rm-notify-gateway-latest-deploy
@@ -274,6 +286,8 @@ templates:
       PARTY_URL: http://ras-party-concourse-latest.apps.devtest.onsclofo.uk
       RM_CASE_SERVICE_HOST: rm-case-service-concourse-latest.apps.devtest.onsclofo.uk
       RM_CASE_SERVICE_PORT: '80'
+      RM_COMMS_TEMPLATE_SERVICE_HOST: rm-comms-template-service-concourse-latest.apps.devtest.onsclofo.uk
+      RM_COMMS_TEMPLATE_SERVICE_PORT: '80'
       RM_COLLECTION_EXERCISE_SERVICE_HOST: rm-collection-exercise-service-concourse-latest.apps.devtest.onsclofo.uk
       RM_COLLECTION_EXERCISE_SERVICE_PORT: '80'
       RM_IAC_SERVICE_HOST: iac-service-concourse-latest.apps.devtest.onsclofo.uk
@@ -380,6 +394,8 @@ templates:
       actionSvc_connectionConfig_username: ((preprod_security_user_name))
       caseSvc_connectionConfig_username: ((preprod_security_user_name))
       caseSvc_connectionConfig_password: ((preprod_security_user_password))
+      commsTemplateSvc_connectionConfig_username: ((preprod_security_user_name))
+      commsTemplateSvc_connectionConfig_password: ((preprod_security_user_password))
       collectionExerciseSvc_connectionConfig_username: ((preprod_security_user_name))
       collectionExerciseSvc_connectionConfig_password: ((preprod_security_user_password))
       collectionInstrumentSvc_connectionConfig_username: ((preprod_security_user_name))
@@ -396,6 +412,8 @@ templates:
       surveySvc_connectionConfig_password: ((preprod_security_user_password))
       CASE_USERNAME: ((preprod_security_user_name))
       CASE_PASSWORD: ((preprod_security_user_password))
+      COMMS_TEMPLATE_USERNAME: ((preprod_security_user_name))
+      COMMS_TEMPLATE_PASSWORD: ((preprod_security_user_password))
       COLLECTION_EXERCISE_USERNAME: ((preprod_security_user_name))
       COLLECTION_EXERCISE_PASSWORD: ((preprod_security_user_password))
       COLLECTION_INSTRUMENT_USERNAME: ((preprod_security_user_name))
@@ -421,6 +439,7 @@ templates:
     - rm-action-service-preprod-deploy
     - rm-actionexporter-service-preprod-deploy
     - rm-case-service-preprod-deploy
+    - rm-comms-templates-service-preprod-deploy
     - rm-collection-exercise-preprod-deploy
     - iac-service-preprod-deploy
     - rm-notify-gateway-preprod-deploy
@@ -461,6 +480,8 @@ templates:
       PARTY_URL: http://ras-party-concourse-preprod.apps.devtest.onsclofo.uk
       RM_CASE_SERVICE_HOST: rm-case-service-concourse-preprod.apps.devtest.onsclofo.uk
       RM_CASE_SERVICE_PORT: '80'
+      RM_COMMS_SERVICE_TEMPLATE_HOST: rm-comms-template-service-concourse-preprod.apps.devtest.onscloufo.uk
+      RM_COMMS_SERVICE_TEMPLATE_PORT: '80'
       RM_COLLECTION_EXERCISE_SERVICE_HOST: rm-collection-exercise-service-concourse-preprod.apps.devtest.onsclofo.uk
       RM_COLLECTION_EXERCISE_SERVICE_PORT: '80'
       RM_IAC_SERVICE_HOST: iac-service-concourse-preprod.apps.devtest.onsclofo.uk
@@ -567,6 +588,8 @@ templates:
       actionSvc_connectionConfig_username: ((prod_security_user_name))
       caseSvc_connectionConfig_username: ((prod_security_user_name))
       caseSvc_connectionConfig_password: ((prod_security_user_password))
+      commsTemplateSvc_connectionConfig_username: ((prod_security_user_name))
+      commsTemplateSvc_connectionConfig_password: ((prod_security_user_password))
       collectionExerciseSvc_connectionConfig_username: ((prod_security_user_name))
       collectionExerciseSvc_connectionConfig_password: ((prod_security_user_password))
       collectionInstrumentSvc_connectionConfig_username: ((prod_security_user_name))
@@ -608,6 +631,7 @@ templates:
     - rm-action-service-prod-deploy
     - rm-actionexporter-service-prod-deploy
     - rm-case-service-prod-deploy
+    - rm-comms-template-service-prod-deploy
     - rm-collection-exercise-prod-deploy
     - iac-service-prod-deploy
     - rm-notify-gateway-prod-deploy
@@ -648,6 +672,8 @@ templates:
       PARTY_URL: http://ras-party-concourse-prod.apps.devtest.onsclofo.uk
       RM_CASE_SERVICE_HOST: rm-case-service-concourse-prod.apps.devtest.onsclofo.uk
       RM_CASE_SERVICE_PORT: '80'
+      RM_COMMS_TEMPLATE_SERVICE_HOST: rm-comms-template-service-concourse-prod.apps.devtest.onscloufo.uk
+      RM_COMMS_TEMPLATE_SERVICE_PORT: '80'
       RM_COLLECTION_EXERCISE_SERVICE_HOST: rm-collection-exercise-service-concourse-prod.apps.devtest.onsclofo.uk
       RM_COLLECTION_EXERCISE_SERVICE_PORT: '80'
       RM_IAC_SERVICE_HOST: iac-service-concourse-prod.apps.devtest.onsclofo.uk
@@ -822,6 +848,12 @@ resources:
     uri: https://github.com/ONSdigital/rm-case-service.git
     branch: master
 
+- name: rm-comms-template-service
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-comms-template-service.git
+    branch: master
+
 - name: rm-collection-exercise-service-source
   type: git
   source:
@@ -976,6 +1008,7 @@ disabled-resources:
     organization: rmras
     space: concourse-prod
     skip_cert_check: true
+
 
 jobs:
 - name: ci-teardown
@@ -1164,7 +1197,7 @@ jobs:
           repository: paasmule/curl-ssl-git
           tag: "latest"
       inputs:
-        - name: django-oauth2-test-source
+        e- name: django-oauth2-test-source
       outputs:
         - name: django-oauth2-test-source-git-info
       run:
@@ -1359,6 +1392,36 @@ jobs:
         SCHEDULES_DISTRIBUTION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
         SWAGGER_SETTINGS_SWAGGER_UI_ACTIVE: 'true'
 
+- name: rm-comms-template-service-ci-deploy
+  serial_groups: [rm-comms-template-service-ci-deploy]
+  plan:
+  - get: rm-comms-template-service-source
+    trigger: true
+  - get: ci-teardown-timer
+    trigger: true
+    passed: [ci-teardown]
+  - put: create-redis
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: elasticache-broker
+      plan: small
+      service_instance: ras-redis
+      timeout: 1800
+      wait_for_service: true
+  - put: cf-resource-ci
+    params:
+      current_app_name: rm-comms-template-service
+      manifest: rm-comms-template-service/manifest.yml
+      path: rm-comms-template-service-source
+      environment_variables:
+        <<: *ci_security_user
+        <<: *ci_service_endpoints_for_python
+        JSON_SECRET_KEYS: ((ci_json_secret_keys))
+        JWT_SECRET: ((ci_jwt_secret))
+        SECRET_KEY: ((ci_enrolement_code_encryption_key))
+        endpoints_enabled: 'false'
+
 - name: iac-service-ci-deploy
   serial_groups: [iac-service-ci-deploy]
   plan:
@@ -1491,10 +1554,10 @@ jobs:
           source:
             repository: golang
         inputs:
-          - name: rm-survey-service-source
+        - name: rm-survey-service-source
         outputs:
-          - name: rm-survey-service-build
-            path: rm-survey-service
+        - name: rm-survey-service-build
+          path: rm-survey-service
         run:
           path: sh
           args:
@@ -1668,6 +1731,9 @@ jobs:
   - get: rm-collection-exercise-service-source
     passed: [rm-collection-exercise-ci-deploy]
     trigger: true
+  - get: rm-comms-template-service-source
+    passed: [rm-comms-template-service-ci-deploy]
+    trigger: true
   - get: iac-service-source
     passed: [iac-service-ci-deploy]
     trigger: true
@@ -1766,9 +1832,11 @@ jobs:
   - get: rm-collection-exercise-service-source
     passed: [rm-collection-exercise-ci-deploy]
     trigger: true
+  - get: rm-comms-template-service-source
+    passed: [rm-comms-template-service-ci-deploy]
+    trigger: true
   - get: iac-service-source
     passed: [iac-service-ci-deploy]
-    trigger: true
   - get: rm-notify-gateway-source
     passed: [rm-notify-gateway-ci-deploy]
     trigger: true
@@ -2162,6 +2230,32 @@ jobs:
         SCHEDULES_VALIDATION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
         SCHEDULES_DISTRIBUTION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
 
+- name: rm-comms-template-service-latest-deploy
+  serial_groups: [rm-comms-template-service-latest-deploy]
+  plan:
+  - get: rm-comms-template-service-source
+    trigger: true
+    passed: [ci-rasrm-acceptance-tests, ci-securemessage-acceptance-tests]
+  - put: create-redis
+    resource: cf-cli-resource-latest
+    params:
+      command: create-service
+      service: elasticache-broker
+      plan: small
+      service_instance: ras-redis
+      timeout: 1800
+      wait_for_service: true
+  - put: cf-resource-latest
+    params:
+      current_app_name: rm-comms-template-service-latest
+      manifest: rm-comms-template-service-source/manifest.yml
+      path: rm-comms-template-service-source
+      environment_variables:
+        <<: *latest_security_user
+        <<: *latest_service_endpoints_for_python
+        REDIS_SERVICE: ras-redis
+        endpoints_enabled: 'false'
+
 - name: iac-service-latest-deploy
   serial_groups: [iac-service-latest-deploy]
   plan:
@@ -2281,7 +2375,7 @@ jobs:
           - name: rm-survey-service-source
         outputs:
           - name: rm-survey-service-build
-            path: rm-survey-service
+          path: rm-survey-service
         run:
           path: sh
           args:
@@ -2317,7 +2411,7 @@ jobs:
         - name: sdc-uaa-source
       outputs:
         - name: sdc-uaa-build
-          path: sdc-uaa-build
+        path: sdc-uaa-build
       params:
         UAA_PRIVATE_KEY: ((latest_uaa_private_key))
         UAA_CERTIFICATE: ((latest_uaa_certificate))
@@ -2451,6 +2545,9 @@ jobs:
   - get: rm-collection-exercise-service-source
     passed: [rm-collection-exercise-latest-deploy]
     trigger: true
+  - get: rm-comms-template-service-source
+    passed: [rm-comms-template-service-latest-deploy]
+    trigger: true
   - get: iac-service-source
     passed: [iac-service-latest-deploy]
     trigger: true
@@ -2516,6 +2613,8 @@ disabled-jobs:
   - get: rm-case-service-source
     passed: [latest-acceptance-tests]
   - get: rm-collection-exercise-service-source
+    passed: [latest-acceptance-tests]
+  - get: rm-comms-template-service-source
     passed: [latest-acceptance-tests]
   - get: iac-service-source
     passed: [latest-acceptance-tests]
@@ -2880,6 +2979,33 @@ disabled-jobs:
         SCHEDULES_VALIDATION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
         SCHEDULES_DISTRIBUTION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
 
+- name: rm-comms-template-service-preprod-deploy
+  disable_manual_trigger: true
+  serial_groups: [rm-comms-template-service-preprod-deploy]
+  plan:
+  - get: rm-comms-template-service-source
+    trigger: true
+    passed: [preprod-trigger]
+  - put: create-redis
+    resource: cf-cli-resource-preprod
+    params:
+      command: create-service
+      service: elasticache-broker
+      plan: small
+      service_instance: ras-redis
+      timeout: 1800
+      wait_for_service: true
+  - put: cf-resource-preprod
+    params:
+      current_app_name: rm-comms-template-service-concourse-preprod
+      manifest: rm-comms-template-service-source/manifest.yml
+      path: rm-comms-template-service-source
+      environment_variables:
+        <<: *preprod_security_user
+        <<: *preprod_service_endpoints_for_python
+        UAA_CLIENT_ID: 'rm-comms-template-service'
+        UAA_CLIENT_SECRET: ((rm-comms-template-service_client_secret))
+
 - name: iac-service-preprod-deploy
   disable_manual_trigger: true
   serial_groups: [iac-service-preprod-deploy]
@@ -3004,7 +3130,7 @@ disabled-jobs:
           - name: rm-survey-service-source
         outputs:
           - name: rm-survey-service-build
-            path: rm-survey-service
+          path: rm-survey-service
         run:
           path: sh
           args:
@@ -3174,6 +3300,9 @@ disabled-jobs:
   - get: rm-collection-exercise-service-source
     passed: [rm-collection-exercise-preprod-deploy]
     trigger: true
+  - get: rm-comms-template-service-source
+    passed: [rm-comms-template-service-preprod-deploy]
+    trigger: true
   - get: iac-service-source
     passed: [iac-service-preprod-deploy]
     trigger: true
@@ -3226,9 +3355,11 @@ disabled-jobs:
     passed: [preprod-smoke-tests]
   - get: rm-actionexporter-service-source
     passed: [preprod-smoke-tests]
-  - get: rm-case-service-source
+  - get: rm-case-service-source-source
     passed: [preprod-smoke-tests]
   - get: rm-collection-exercise-service-source
+    passed: [preprod-smoke-tests]
+  - get: rm-comms-template-service-source
     passed: [preprod-smoke-tests]
   - get: iac-service-source
     passed: [preprod-smoke-tests]
@@ -3409,9 +3540,9 @@ disabled-jobs:
           repository: paasmule/curl-ssl-git
           tag: "latest"
       inputs:
-        - name: django-oauth2-test-source
+      - name: django-oauth2-test-source
       outputs:
-        - name: django-oauth2-test-source-git-info
+      - name: django-oauth2-test-source-git-info
       run:
         path: sh
         args:
@@ -3592,6 +3723,34 @@ disabled-jobs:
         endpoints_enabled: 'false'
         SCHEDULES_VALIDATION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
         SCHEDULES_DISTRIBUTION_SCHEDULE_DELAY_MILLI_SECONDS: '1000'
+
+- name: rm-comms-template-service-prod-deploy
+  disable_manual_trigger: true
+  serial_groups: [rm-comms-template-service-prod-deploy]
+  plan:
+  - get: rm-comms-template-service-source
+    trigger: true
+    passed: [prod-trigger]
+  - put: create-redis
+    resource: cf-cli-resource-prod
+    params:
+      command: create-service
+      service: elasticache-broker
+      plan: small
+      service_instance: ras-redis
+      timeout: 1800
+      wait_for_service: true
+  - put: cf-resource-prod
+    params:
+      current_app_name: rm-comms-template-service-concourse-prod
+      manifest: rm-comms-template-service/manifest.yml
+      path: rm-comms-template-service-source
+      environment_variables:
+        <<: *prod_service_endpoints_for_python
+        <<: *prod_security_user
+        REDIS_SERVICE: ras-redis
+        UAA_CLIENT_ID: 'rm-comms-template-service'
+        UAA_CLIENT_SECRET: ((prod_rm_comms_template_service_client_secret)
 
 - name: iac-service-prod-deploy
   disable_manual_trigger: true
@@ -3886,6 +4045,9 @@ disabled-jobs:
     trigger: true
   - get: rm-collection-exercise-service-source
     passed: [rm-collection-exercise-prod-deploy]
+    trigger: true
+  - get: rm-comms-template-service-source
+    passed: [rm-comms-template-service-prod-deploy]
     trigger: true
   - get: iac-service-source
     passed: [iac-service-prod-deploy]
