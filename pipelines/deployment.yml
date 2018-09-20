@@ -6,8 +6,8 @@ templates:
       actionSvc_connectionConfig_username: ((ci_security_user_name))
       caseSvc_connectionConfig_username: ((ci_security_user_name))
       caseSvc_connectionConfig_password: ((ci_security_user_password))
-      commsTemplateSvc_connectionConfig_username: ((ci_security_user_name))
-      commsTemplateSvc_connectionConfig_password: ((ci_security_user_password))
+      commsTemplateService_connectionConfig_username: ((ci_security_user_name))
+      commsTemplateService_connectionConfig_password: ((ci_security_user_password))
       collectionExerciseSvc_connectionConfig_username: ((ci_security_user_name))
       collectionExerciseSvc_connectionConfig_password: ((ci_security_user_password))
       collectionInstrumentSvc_connectionConfig_username: ((ci_security_user_name))
@@ -24,8 +24,6 @@ templates:
       surveySvc_connectionConfig_password: ((ci_security_user_password))
       CASE_USERNAME: ((ci_security_user_name))
       CASE_PASSWORD: ((ci_security_user_password))
-      COMMS_TEMPLATE_USERNAME: ((ci_security_user_name))
-      COMMS_TEMPLATE_PASSWORD: ((ci_security_password))
       COLLECTION_EXERCISE_USERNAME: ((ci_security_user_name))
       COLLECTION_EXERCISE_PASSWORD: ((ci_security_user_password))
       COLLECTION_INSTRUMENT_USERNAME: ((ci_security_user_name))
@@ -200,8 +198,8 @@ templates:
       actionSvc_connectionConfig_username: ((latest_security_user_name))
       caseSvc_connectionConfig_username: ((latest_security_user_name))
       caseSvc_connectionConfig_password: ((latest_security_user_password))
-      commsTemplateSvc_connectionConfig_username: ((latest_security_user_name))
-      commsTemplateSvc_connectionConfig_password: ((latest_security_user_password
+      commsTemplateService_connectionConfig_username: ((latest_security_user_name))
+      commsTemplateService_connectionConfig_password: ((latest_security_user_password
       collectionExerciseSvc_connectionConfig_username: ((latest_security_user_name))
       collectionExerciseSvc_connectionConfig_password: ((latest_security_user_password))
       collectionInstrumentSvc_connectionConfig_username: ((latest_security_user_name))
@@ -218,8 +216,6 @@ templates:
       surveySvc_connectionConfig_password: ((latest_security_user_password))
       CASE_USERNAME: ((latest_security_user_name))
       CASE_PASSWORD: ((latest_security_user_password))
-      COMMS_TEMPLATE_SERVICE_USERNAME: ((latest_security_user_name))
-      COMMS_TEMPLATE_SERVICE_PASSWORD: ((latest_security_user_password))
       COLLECTION_EXERCISE_USERNAME: ((latest_security_user_name))
       COLLECTION_EXERCISE_PASSWORD: ((latest_security_user_password))
       COLLECTION_INSTRUMENT_USERNAME: ((latest_security_user_name))
@@ -394,8 +390,8 @@ templates:
       actionSvc_connectionConfig_username: ((preprod_security_user_name))
       caseSvc_connectionConfig_username: ((preprod_security_user_name))
       caseSvc_connectionConfig_password: ((preprod_security_user_password))
-      commsTemplateSvc_connectionConfig_username: ((preprod_security_user_name))
-      commsTemplateSvc_connectionConfig_password: ((preprod_security_user_password))
+      commsTemplateService_connectionConfig_username: ((preprod_security_user_name))
+      commsTemplateService_connectionConfig_password: ((preprod_security_user_password))
       collectionExerciseSvc_connectionConfig_username: ((preprod_security_user_name))
       collectionExerciseSvc_connectionConfig_password: ((preprod_security_user_password))
       collectionInstrumentSvc_connectionConfig_username: ((preprod_security_user_name))
@@ -412,8 +408,6 @@ templates:
       surveySvc_connectionConfig_password: ((preprod_security_user_password))
       CASE_USERNAME: ((preprod_security_user_name))
       CASE_PASSWORD: ((preprod_security_user_password))
-      COMMS_TEMPLATE_USERNAME: ((preprod_security_user_name))
-      COMMS_TEMPLATE_PASSWORD: ((preprod_security_user_password))
       COLLECTION_EXERCISE_USERNAME: ((preprod_security_user_name))
       COLLECTION_EXERCISE_PASSWORD: ((preprod_security_user_password))
       COLLECTION_INSTRUMENT_USERNAME: ((preprod_security_user_name))
@@ -588,8 +582,8 @@ templates:
       actionSvc_connectionConfig_username: ((prod_security_user_name))
       caseSvc_connectionConfig_username: ((prod_security_user_name))
       caseSvc_connectionConfig_password: ((prod_security_user_password))
-      commsTemplateSvc_connectionConfig_username: ((prod_security_user_name))
-      commsTemplateSvc_connectionConfig_password: ((prod_security_user_password))
+      commsTemplateService_connectionConfig_username: ((prod_security_user_name))
+      commsTemplateService_connectionConfig_password: ((prod_security_user_password))
       collectionExerciseSvc_connectionConfig_username: ((prod_security_user_name))
       collectionExerciseSvc_connectionConfig_password: ((prod_security_user_password))
       collectionInstrumentSvc_connectionConfig_username: ((prod_security_user_name))
@@ -1197,7 +1191,7 @@ jobs:
           repository: paasmule/curl-ssl-git
           tag: "latest"
       inputs:
-        e- name: django-oauth2-test-source
+        - name: django-oauth2-test-source
       outputs:
         - name: django-oauth2-test-source-git-info
       run:
@@ -1400,14 +1394,14 @@ jobs:
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
-  - put: create-redis
+  - put: create-database
     resource: cf-cli-resource-ci
     params:
       command: create-service
-      service: elasticache-broker
-      plan: small
-      service_instance: ras-redis
-      timeout: 1800
+      service: rds
+      plan: shared-psql
+      service_instance: rm-commstemplate-db
+      timeout: 300
       wait_for_service: true
   - put: cf-resource-ci
     params:
@@ -1416,11 +1410,6 @@ jobs:
       path: rm-comms-template-service-source
       environment_variables:
         <<: *ci_security_user
-        <<: *ci_service_endpoints_for_python
-        JSON_SECRET_KEYS: ((ci_json_secret_keys))
-        JWT_SECRET: ((ci_jwt_secret))
-        SECRET_KEY: ((ci_enrolement_code_encryption_key))
-        endpoints_enabled: 'false'
 
 - name: iac-service-ci-deploy
   serial_groups: [iac-service-ci-deploy]
@@ -1554,9 +1543,9 @@ jobs:
           source:
             repository: golang
         inputs:
-        - name: rm-survey-service-source
+          - name: rm-survey-service-source
         outputs:
-        - name: rm-survey-service-build
+          - name: rm-survey-service-build
           path: rm-survey-service
         run:
           path: sh
@@ -1837,6 +1826,7 @@ jobs:
     trigger: true
   - get: iac-service-source
     passed: [iac-service-ci-deploy]
+    trigger: true
   - get: rm-notify-gateway-source
     passed: [rm-notify-gateway-ci-deploy]
     trigger: true
@@ -2236,14 +2226,14 @@ jobs:
   - get: rm-comms-template-service-source
     trigger: true
     passed: [ci-rasrm-acceptance-tests, ci-securemessage-acceptance-tests]
-  - put: create-redis
+  - put: create-database
     resource: cf-cli-resource-latest
     params:
       command: create-service
-      service: elasticache-broker
-      plan: small
-      service_instance: ras-redis
-      timeout: 1800
+      service: rds
+      plan: shared-psql
+      service_instance: rm-commstemplate-db
+      timeout: 300
       wait_for_service: true
   - put: cf-resource-latest
     params:
@@ -2252,9 +2242,6 @@ jobs:
       path: rm-comms-template-service-source
       environment_variables:
         <<: *latest_security_user
-        <<: *latest_service_endpoints_for_python
-        REDIS_SERVICE: ras-redis
-        endpoints_enabled: 'false'
 
 - name: iac-service-latest-deploy
   serial_groups: [iac-service-latest-deploy]
@@ -2986,14 +2973,14 @@ disabled-jobs:
   - get: rm-comms-template-service-source
     trigger: true
     passed: [preprod-trigger]
-  - put: create-redis
+  - put: create-database
     resource: cf-cli-resource-preprod
     params:
       command: create-service
-      service: elasticache-broker
-      plan: small
-      service_instance: ras-redis
-      timeout: 1800
+      service: rds
+      plan: shared-psql
+      service_instance: rm-commstemplate-db
+      timeout: 300
       wait_for_service: true
   - put: cf-resource-preprod
     params:
@@ -3002,9 +2989,6 @@ disabled-jobs:
       path: rm-comms-template-service-source
       environment_variables:
         <<: *preprod_security_user
-        <<: *preprod_service_endpoints_for_python
-        UAA_CLIENT_ID: 'rm-comms-template-service'
-        UAA_CLIENT_SECRET: ((rm-comms-template-service_client_secret))
 
 - name: iac-service-preprod-deploy
   disable_manual_trigger: true
@@ -3355,7 +3339,7 @@ disabled-jobs:
     passed: [preprod-smoke-tests]
   - get: rm-actionexporter-service-source
     passed: [preprod-smoke-tests]
-  - get: rm-case-service-source-source
+  - get: rm-case-service-source
     passed: [preprod-smoke-tests]
   - get: rm-collection-exercise-service-source
     passed: [preprod-smoke-tests]
@@ -3540,9 +3524,9 @@ disabled-jobs:
           repository: paasmule/curl-ssl-git
           tag: "latest"
       inputs:
-      - name: django-oauth2-test-source
+        - name: django-oauth2-test-source
       outputs:
-      - name: django-oauth2-test-source-git-info
+        - name: django-oauth2-test-source-git-info
       run:
         path: sh
         args:
@@ -3731,14 +3715,14 @@ disabled-jobs:
   - get: rm-comms-template-service-source
     trigger: true
     passed: [prod-trigger]
-  - put: create-redis
+  - put: create-database
     resource: cf-cli-resource-prod
     params:
       command: create-service
-      service: elasticache-broker
-      plan: small
-      service_instance: ras-redis
-      timeout: 1800
+      service: rds
+      plan: shared-psql
+      service_instance: rm-commstemplate-db
+      timeout: 300
       wait_for_service: true
   - put: cf-resource-prod
     params:
@@ -3746,11 +3730,7 @@ disabled-jobs:
       manifest: rm-comms-template-service/manifest.yml
       path: rm-comms-template-service-source
       environment_variables:
-        <<: *prod_service_endpoints_for_python
         <<: *prod_security_user
-        REDIS_SERVICE: ras-redis
-        UAA_CLIENT_ID: 'rm-comms-template-service'
-        UAA_CLIENT_SECRET: ((prod_rm_comms_template_service_client_secret)
 
 - name: iac-service-prod-deploy
   disable_manual_trigger: true
