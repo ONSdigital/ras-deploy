@@ -920,9 +920,8 @@ resources:
 - name: ci-teardown-timer
   type: time
   source:
-    start: 3:00 PM
-    stop: 4:00 PM
-    location: Europe/London
+    start: 6AM
+    stop: 7AM
 
 - name: cf-cli-resource-latest
   type: cf-cli-resource
