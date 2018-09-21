@@ -842,7 +842,7 @@ resources:
     uri: https://github.com/ONSdigital/rm-case-service.git
     branch: master
 
-- name: rm-comms-template-service
+- name: rm-comms-template-service-source
   type: git
   source:
     uri: https://github.com/ONSdigital/rm-comms-template-service.git
@@ -920,8 +920,9 @@ resources:
 - name: ci-teardown-timer
   type: time
   source:
-    start: 6AM
-    stop: 7AM
+    start: 3:00 PM
+    stop: 4:00 PM
+    location: Europe/London
 
 - name: cf-cli-resource-latest
   type: cf-cli-resource
@@ -1002,7 +1003,6 @@ disabled-resources:
     organization: rmras
     space: concourse-prod
     skip_cert_check: true
-
 
 jobs:
 - name: ci-teardown
@@ -1405,8 +1405,8 @@ jobs:
       wait_for_service: true
   - put: cf-resource-ci
     params:
-      current_app_name: rm-comms-template-service
-      manifest: rm-comms-template-service/manifest.yml
+      current_app_name: rm-comms-template-service-ci
+      manifest: rm-comms-template-service-source/manifest.yml
       path: rm-comms-template-service-source
       environment_variables:
         <<: *ci_security_user
@@ -1546,7 +1546,7 @@ jobs:
           - name: rm-survey-service-source
         outputs:
           - name: rm-survey-service-build
-          path: rm-survey-service
+            path: rm-survey-service
         run:
           path: sh
           args:
@@ -2362,7 +2362,7 @@ jobs:
           - name: rm-survey-service-source
         outputs:
           - name: rm-survey-service-build
-          path: rm-survey-service
+            path: rm-survey-service
         run:
           path: sh
           args:
@@ -2398,7 +2398,7 @@ jobs:
         - name: sdc-uaa-source
       outputs:
         - name: sdc-uaa-build
-        path: sdc-uaa-build
+          path: sdc-uaa-build
       params:
         UAA_PRIVATE_KEY: ((latest_uaa_private_key))
         UAA_CERTIFICATE: ((latest_uaa_certificate))
@@ -3114,7 +3114,7 @@ disabled-jobs:
           - name: rm-survey-service-source
         outputs:
           - name: rm-survey-service-build
-          path: rm-survey-service
+            path: rm-survey-service
         run:
           path: sh
           args:
@@ -3727,7 +3727,7 @@ disabled-jobs:
   - put: cf-resource-prod
     params:
       current_app_name: rm-comms-template-service-concourse-prod
-      manifest: rm-comms-template-service/manifest.yml
+      manifest: rm-comms-template-service-source/manifest.yml
       path: rm-comms-template-service-source
       environment_variables:
         <<: *prod_security_user
