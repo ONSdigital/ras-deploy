@@ -199,7 +199,7 @@ templates:
       caseSvc_connectionConfig_username: ((latest_security_user_name))
       caseSvc_connectionConfig_password: ((latest_security_user_password))
       commsTemplateService_connectionConfig_username: ((latest_security_user_name))
-      commsTemplateService_connectionConfig_password: ((latest_security_user_password
+      commsTemplateService_connectionConfig_password: ((latest_security_user_password))
       collectionExerciseSvc_connectionConfig_username: ((latest_security_user_name))
       collectionExerciseSvc_connectionConfig_password: ((latest_security_user_password))
       collectionInstrumentSvc_connectionConfig_username: ((latest_security_user_name))
