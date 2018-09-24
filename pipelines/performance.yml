@@ -36,11 +36,16 @@ templates:
       SURVEY_PASSWORD: ((performance_security_user_password))
       SAMPLE_USERNAME: ((performance_security_user_name))
       SAMPLE_PASSWORD: ((performance_security_user_password))
+      RAS_OAUTH_CLIENT_ID: ((performance_security_user_name))
+      RAS_OAUTH_CLIENT_SECRET: ((performance_security_user_password))
+      OAUTH_CLIENT_ID: ((performance_security_user_name))
+      OAUTH_CLIENT_SECRET: ((performance_security_user_password))
 
     all_services: &performance_all_services
     - ras-party-deploy
     - ras-frontstage-deploy
     - django-oauth2-test-deploy
+    - ras-rm-auth-service-deploy
     - response-operations-ui-deploy
     - ras-secure-message-deploy
     - ras-collection-instrument-deploy
@@ -72,7 +77,7 @@ templates:
       COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-((performance_cloudfoundry_space)).((performance_cloudfoundry_apps_domain))
       COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-((performance_cloudfoundry_space)).((performance_cloudfoundry_apps_domain))
       COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
-      DJANGO_SERVICE_HOST: django-oauth2-test-((performance_cloudfoundry_space)).((performance_cloudfoundry_apps_domain))
+      DJANGO_SERVICE_HOST: ras-rm-auth-service-((performance_cloudfoundry_space)).((performance_cloudfoundry_apps_domain))
       DJANGO_SERVICE_PORT: '80'
       FRONTSTAGE_SERVICE_HOST: ras-frontstage-((performance_cloudfoundry_space)).((performance_cloudfoundry_apps_domain))
       FRONTSTAGE_SERVICE_PORT: '80'
@@ -81,7 +86,7 @@ templates:
       IAC_SERVICE_PORT: '80'
       NOTIFY_GATEWAY_SERVICE_HOST: rm-notify-gateway-((performance_cloudfoundry_space)).((performance_cloudfoundry_apps_domain))
       NOTIFY_GATEWAY_SERVICE_PORT: '80'
-      OAUTH_URL: http://django-oauth2-test-((performance_cloudfoundry_space)).((performance_cloudfoundry_apps_domain))
+      OAUTH_URL: http://ras-rm-auth-service-((performance_cloudfoundry_space)).((performance_cloudfoundry_apps_domain))
       PARTY_URL: http://ras-party-((performance_cloudfoundry_space)).((performance_cloudfoundry_apps_domain))
       PARTY_SERVICE_HOST: ras-party-((performance_cloudfoundry_space)).((performance_cloudfoundry_apps_domain))
       PARTY_SERVICE_PORT: '80'
@@ -101,7 +106,7 @@ templates:
       RAS_COLLEX_SERVICE_PORT: '80'
       RAS_IAC_SERVICE_HOST: iac-service-((performance_cloudfoundry_space)).((performance_cloudfoundry_apps_domain))
       RAS_IAC_SERVICE_PORT: '80'
-      RAS_OAUTH_SERVICE_HOST: django-oauth2-test-((performance_cloudfoundry_space)).((performance_cloudfoundry_apps_domain))
+      RAS_OAUTH_SERVICE_HOST: ras-rm-auth-service-((performance_cloudfoundry_space)).((performance_cloudfoundry_apps_domain))
       RAS_OAUTH_SERVICE_PORT: '80'
       RAS_PARTY_SERVICE_HOST: ras-party-((performance_cloudfoundry_space)).((performance_cloudfoundry_apps_domain))
       RAS_PARTY_SERVICE_PORT: '80'
@@ -248,6 +253,11 @@ resources:
   source:
     uri: https://github.com/ONSdigital/django-oauth2-test.git
     branch: master
+
+- name: ras-rm-auth-service-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-rm-auth-service.git
 
 - name: response-operations-ui-source
   type: git
@@ -564,6 +574,29 @@ jobs:
       CLOUDFOUNDRY_ORG: ((performance_cloudfoundry_org))
       CLOUDFOUNDRY_SPACE: ((performance_cloudfoundry_space))
       APP_NAME: django-oauth2-test-((performance_cloudfoundry_space))
+
+- name: ras-rm-auth-service-deploy
+  serial_groups: [ras-rm-auth-service-deploy]
+  plan:
+  - get: ras-rm-auth-service-source
+  - put: create-database
+    resource: cf-cli-resource-((performance_cloudfoundry_space))
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: oauth-db
+      timeout: 300
+      wait_for_service: true
+  - put: cf-resource-((performance_cloudfoundry_space))
+    params:
+      current_app_name: ras-rm-auth-service-((performance_cloudfoundry_space))
+      manifest: ras-rm-auth-service-source/manifest.yml
+      path: ras-rm-auth-service-source
+      environment_variables:
+        SECURITY_USER_NAME: 'ons@ons.gov'
+        SECURITY_USER_PASSWORD: 'password'
+
 
 - name: response-operations-ui-deploy
   serial_groups: [response-operations-ui-deploy]
@@ -953,6 +986,9 @@ jobs:
   - get: django-oauth2-test-source
     passed: [django-oauth2-test-deploy]
     trigger: true
+  - get: ras-rm-auth-service-source
+    passed: [ras-rm-auth-service-deploy]
+    trigger: true
   - get: response-operations-ui-source
     passed: [response-operations-ui-deploy]
     trigger: true
@@ -1032,6 +1068,8 @@ jobs:
   - get: ras-frontstage-source
     passed: [setup-collection-exercises]
   - get: django-oauth2-test-source
+    passed: [setup-collection-exercises]
+  - get: ras-rm-auth-service-source
     passed: [setup-collection-exercises]
   - get: response-operations-ui-source
     passed: [setup-collection-exercises]
@@ -1148,6 +1186,7 @@ groups:
   - ras-collection-instrument-deploy
   - ras-frontstage-deploy
   - django-oauth2-test-deploy
+  - ras-rm-auth-service-deploy
   - response-operations-ui-deploy
   - rm-action-service-deploy
   - rm-actionexporter-service-deploy
