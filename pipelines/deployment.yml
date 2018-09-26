@@ -44,6 +44,7 @@ templates:
     - ras-frontstage-ci-deploy
     - django-oauth2-test-ci-deploy
     - response-operations-ui-ci-deploy
+    - response-operations-social-ui-ci-deploy
     - ras-secure-message-ci-deploy
     - ras-collection-instrument-ci-deploy
     - rm-action-service-ci-deploy
@@ -122,6 +123,8 @@ templates:
       RAS_SURVEY_SERVICE_PORT: '80'
       RESPONSE_OPERATIONS_UI_HOST: response-operations-ui-ci.apps.devtest.onsclofo.uk
       RESPONSE_OPERATIONS_UI_PORT: '80'
+      RESPONSE_OPERATIONS_SOCIAL_UI_HOST: response-operations-social-ui-ci.apps.devtest.onsclofo.uk
+      RESPONSE_OPERATIONS_SOCIAL_UI_PORT: '80'
       SAMPLE_SERVICE_HOST: rm-sample-service-ci.apps.devtest.onsclofo.uk
       SAMPLE_SERVICE_PORT: '80'
       SAMPLE_URL: http://rm-sample-service-ci.apps.devtest.onsclofo.uk
@@ -824,6 +827,11 @@ resources:
   source:
     uri: https://github.com/ONSdigital/response-operations-ui.git
 
+- name: response-operations-social-ui-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/response-operations-social-ui.git
+
 - name: rm-action-service-source
   type: git
   source:
@@ -1269,6 +1277,35 @@ jobs:
         UAA_CLIENT_ID: 'response_operations'
         UAA_CLIENT_SECRET: ((ci_response_operations_client_secret))
 
+- name: response-operations-social-ui-ci-deploy
+  serial_groups: [response-operations-social-ui-ci-deploy]
+  plan:
+  - get: response-operations-social-ui-source
+    trigger: true
+  - get: ci-teardown-timer
+    trigger: true
+    passed: [ci-teardown]
+  - put: create-redis
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: elasticache-broker
+      plan: small
+      service_instance: ras-redis
+      timeout: 1800
+      wait_for_service: true
+  - put: cf-resource-ci
+    params:
+      current_app_name: response-operations-social-ui-ci
+      manifest: response-operations-social-ui-source/manifest.yml
+      path: response-operations-social-ui-source
+      environment_variables:
+        <<: *ci_security_user
+        <<: *ci_service_endpoints_for_python
+        REDIS_SERVICE: ras-redis
+        UAA_CLIENT_ID: 'response_operations_social'
+        UAA_CLIENT_SECRET: ((ci_response_operations_social_client_secret))
+
 - name: rm-action-service-ci-deploy
   serial_groups: [rm-action-service-ci-deploy]
   plan:
@@ -1700,6 +1737,9 @@ jobs:
     trigger: true
   - get: response-operations-ui-source
     passed: [response-operations-ui-ci-deploy]
+    trigger: true
+  - get: response-operations-social-ui-source
+    passed: [response-operations-social-ui-ci-deploy]
     trigger: true
   - get: ras-secure-message-source
     passed: [ras-secure-message-ci-deploy]
