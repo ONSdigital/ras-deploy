@@ -318,6 +318,8 @@ templates:
       RAS_SURVEY_SERVICE_PORT: '80'
       RESPONSE_OPERATIONS_UI_HOST: response-operations-ui-concourse-latest.apps.devtest.onsclofo.uk
       RESPONSE_OPERATIONS_UI_PORT: '80'
+      RESPONSE_OPERATIONS_SOCIAL_UI_HOST: response-operations-social-ui-concourse-latest.apps.devtest.onsclofo.uk
+      RESPONSE_OPERATIONS_SOCIAL_UI_PORT: '80'
       SAMPLE_SERVICE_HOST: rm-sample-service-concourse-latest.apps.devtest.onsclofo.uk
       SAMPLE_SERVICE_PORT: '80'
       SAMPLE_URL: http://rm-sample-service-concourse-latest.apps.devtest.onsclofo.uk
@@ -2201,7 +2203,7 @@ jobs:
         <<: *latest_service_endpoints_for_python
         RAS_SECURE_MESSAGING_JWT_SECRET: ((latest_jwt_secret))
         REDIS_SERVICE: ras-redis
-        UAA_CLIENT_ID: 'response_operations'
+        UAA_CLIENT_ID: 'response_operations_social'
         UAA_CLIENT_SECRET: ((latest_response_operations_social_client_secret))
 
 - name: rm-action-service-latest-deploy
