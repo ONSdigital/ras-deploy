@@ -239,6 +239,7 @@ templates:
     - ras-frontstage-latest-deploy
     - django-oauth2-test-latest-deploy
     - response-operations-ui-latest-deploy
+    - response-operations-social-ui-latest-deploy
     - ras-secure-message-latest-deploy
     - ras-collection-instrument-latest-deploy
     - rm-action-service-latest-deploy
@@ -1692,6 +1693,26 @@ jobs:
         path: sh
         args:
         - './scripts/jenkins/add_client.sh'
+  - task: create-response_operations_social-client
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: kennethreitz/pipenv
+      inputs:
+        - name: sdc-uaa-source
+      params:
+        SPACE: ci
+        CLIENT: response_operations_social
+        PASSWORD: ((ci_response_operations_social_client_secret))
+        ADMIN_SECRET: ((ci_uaa_admin_secret))
+        UAA_URL: 'uaa-ci.apps.devtest.onsclofo.uk'
+      run:
+        dir: sdc-uaa-source
+        path: sh
+        args:
+        - './scripts/jenkins/add_client.sh'
   - task: create-uaa-user
     config:
       platform: linux
@@ -2155,6 +2176,34 @@ jobs:
         UAA_CLIENT_ID: 'response_operations'
         UAA_CLIENT_SECRET: ((latest_response_operations_client_secret))
 
+- name: response-operations-social-ui-latest-deploy
+  serial_groups: [response-operations-social-ui-latest-deploy]
+  plan:
+  - get: response-operations-social-ui-source
+    trigger: true
+    passed: [ci-rasrm-acceptance-tests]
+  - put: create-redis
+    resource: cf-cli-resource-latest
+    params:
+      command: create-service
+      service: elasticache-broker
+      plan: small
+      service_instance: ras-redis
+      timeout: 1800
+      wait_for_service: true
+  - put: cf-resource-latest
+    params:
+      current_app_name: response-operations-social-ui-concourse-latest
+      manifest: response-operations-social-ui-source/manifest.yml
+      path: response-operations-social-ui-source
+      environment_variables:
+        <<: *latest_security_user
+        <<: *latest_service_endpoints_for_python
+        RAS_SECURE_MESSAGING_JWT_SECRET: ((latest_jwt_secret))
+        REDIS_SERVICE: ras-redis
+        UAA_CLIENT_ID: 'response_operations'
+        UAA_CLIENT_SECRET: ((latest_response_operations_social_client_secret))
+
 - name: rm-action-service-latest-deploy
   serial_groups: [rm-action-service-latest-deploy]
   plan:
@@ -2509,6 +2558,26 @@ jobs:
         path: sh
         args:
         - './scripts/jenkins/add_client.sh'
+  - task: create-response_operations_social-client
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: kennethreitz/pipenv
+      inputs:
+        - name: sdc-uaa-source
+      params:
+        SPACE: concourse-latest
+        CLIENT: response_operations_social
+        PASSWORD: ((latest_response_operations_social_client_secret))
+        ADMIN_SECRET: ((latest_uaa_admin_secret))
+        UAA_URL: 'uaa-concourse-latest.apps.devtest.onsclofo.uk'
+      run:
+        dir: sdc-uaa-source
+        path: sh
+        args:
+        - './scripts/jenkins/add_client.sh'
   - task: create-uaa-user
     config:
       platform: linux
@@ -2552,6 +2621,9 @@ jobs:
     trigger: true
   - get: response-operations-ui-source
     passed: [response-operations-ui-latest-deploy]
+    trigger: true
+  - get: response-operations-social-ui-source
+    passed: [response-operations-social-ui-latest-deploy]
     trigger: true
   - get: ras-secure-message-source
     passed: [ras-secure-message-latest-deploy]
