@@ -1,0 +1,269 @@
+---
+resource_types:
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+
+- name: cf-cli-resource
+  type: docker-image
+  source:
+    repository: nulldriver/cf-cli-resource
+    tag: latest
+
+resources:
+- name: response-operations-social-ui-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/response-operations-social-ui.git
+
+- name: cf-resource-latest
+  type: cf
+  source:
+    api: ((cloudfoundry_api))
+    username: ((cloudfoundry_email))
+    password: ((cloudfoundry_password))
+    organization: rmras
+    space: concourse-latest
+    skip_cert_check: true
+
+- name: cf-resource-preprod
+  type: cf
+  source:
+    api: ((preprod_cloudfoundry_api))
+    username: ((preprod_cloudfoundry_email))
+    password: ((preprod_cloudfoundry_password))
+    organization: rmras
+    space: preprod
+    skip_cert_check: true
+
+- name: cf-resource-prod
+  type: cf
+  source:
+    api: ((prod_cloudfoundry_api))
+    username: ((prod_cloudfoundry_email))
+    password: ((prod_cloudfoundry_password))
+    organization: rmras
+    space: prod
+    skip_cert_check: true
+
+- name: cf-cli-resource-latest
+  type: cf-cli-resource
+  source:
+    api: ((cloudfoundry_api))
+    username: ((cloudfoundry_email))
+    password: ((cloudfoundry_password))
+    org: rmras
+    space: concourse-latest
+    skip_cert_check: true
+
+- name: cf-cli-resource-preprod
+  type: cf-cli-resource
+  source:
+    api: ((cloudfoundry_api))
+    username: ((cloudfoundry_email))
+    password: ((cloudfoundry_password))
+    org: rmras
+    space: preprod
+    skip_cert_check: true
+
+- name: cf-cli-resource-prod
+  type: cf-cli-resource
+  source:
+    api: ((cloudfoundry_api))
+    username: ((cloudfoundry_email))
+    password: ((cloudfoundry_password))
+    org: rmras
+    space: prod
+    skip_cert_check: true
+
+- name: notify
+  type: slack-notification
+  source:
+    url: ((slack_webhook))
+
+jobs:
+- name: response-operations-social-ui-latest-deploy
+  serial: true
+  plan:
+  - get: response-operations-social-ui-source
+    trigger: true
+  - task: run tests
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: python, tag: 3.6}
+      inputs:
+        - name: response-operations-social-ui-source
+      run:
+        path: sh
+        args:
+          - -exc
+          - |
+            cd response-operations-social-ui-source
+            pip install -U pipenv
+            pipenv install --dev
+            pipenv run pytest tests --cov-report term-missing --cov response_operations_social_ui --capture no
+  - put: create-redis
+    resource: cf-cli-resource-latest
+    params:
+      command: create-service
+      service: elasticache-broker
+      plan: small
+      service_instance: ras-redis
+      timeout: 1800
+      wait_for_service: true
+  - put: push-app
+    resource: cf-resource-latest
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Latest response-operations-social-ui deployment failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    params:
+      current_app_name: response-operations-social-ui-latest
+      manifest: response-operations-social-ui-source/manifest.yml
+      path: response-operations-social-ui-source
+      environment_variables:
+        APP_SETTINGS: Config
+        CASE_URL: http://rm-case-service-concourse-latest.apps.devtest.onsclofo.uk
+        IAC_URL: http://iac-service-concourse-latest.apps.devtest.onsclofo.uk
+        SAMPLE_URL: http://rm-sample-service-concourse-latest.apps.devtest.onsclofo.uk
+        UAA_SERVICE_URL: http://uaa-concourse-latest.apps.devtest.onsclofo.uk
+        UAA_CLIENT_ID: 'response_operations_social'
+        UAA_CLIENT_SECRET: ((latest_response_operations_social_client_secret))
+        CASE_USERNAME: ((latest_security_user_name))
+        CASE_PASSWORD: ((latest_security_user_password))
+        IAC_USERNAME: ((latest_security_user_name))
+        IAC_PASSWORD: ((latest_security_user_password))
+        SAMPLE_USERNAME: ((latest_security_user_name))
+        SAMPLE_PASSWORD: ((latest_security_user_password))
+        SECURITY_USER_NAME: ((latest_security_user_name))
+        SECURITY_USER_PASSWORD: ((latest_security_user_password))
+        REDIS_SERVICE: ras-redis
+
+- name: response-operations-social-ui-preprod-deploy
+  serial: true
+  plan:
+  - get: response-operations-social-ui-source
+    passed: [response-operations-social-ui-latest-deploy]
+    trigger: true
+  - task: run tests
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: python, tag: 3.6}
+      inputs:
+        - name: response-operations-social-ui-source
+      run:
+        path: sh
+        args:
+          - -exc
+          - |
+            cd response-operations-social-ui-source
+            pip install -U pipenv
+            pipenv install --dev
+            pipenv run pytest tests --cov-report term-missing --cov response_operations_social_ui --capture no
+  - put: create-redis
+    resource: cf-cli-resource-preprod
+    params:
+      command: create-service
+      service: elasticache-broker
+      plan: small
+      service_instance: res-ops-redis
+      timeout: 1800
+      wait_for_service: true
+  - put: push-app
+    resource: cf-resource-preprod
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Pre-production response-operations-social-ui deployment failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    params:
+      current_app_name: response-operations-social-ui-preprod
+      manifest: response-operations-social-ui-source/manifest.yml
+      path: response-operations-social-ui-source
+      environment_variables:
+        APP_SETTINGS: Config
+        CASE_URL: http://rm-case-service-concourse-preprod.((preprod_cloudfoundry_apps_domain))
+        IAC_URL: http://iac-service-concourse-preprod.((preprod_cloudfoundry_apps_domain))
+        SAMPLE_URL: http://rm-sample-service-concourse-preprod.((preprod_cloudfoundry_apps_domain))
+        UAA_SERVICE_URL: http://uaa-concourse-preprod.((preprod_cloudfoundry_apps_domain))
+        UAA_CLIENT_ID: 'response_operations_social'
+        UAA_CLIENT_SECRET: ((preprod_response_operations_social_client_secret))
+        CASE_USERNAME: ((preprod_security_user_name))
+        CASE_PASSWORD: ((preprod_security_user_password))
+        IAC_USERNAME: ((preprod_security_user_name))
+        IAC_PASSWORD: ((preprod_security_user_password))
+        SAMPLE_USERNAME: ((preprod_security_user_name))
+        SAMPLE_PASSWORD: ((preprod_security_user_password))
+        SECURITY_USER_NAME: ((preprod_security_user_name))
+        SECURITY_USER_PASSWORD: ((preprod_security_user_password))
+        REDIS_SERVICE: res-ops-redis
+
+- name: response-operations-social-ui-prod-deploy
+  serial: true
+  plan:
+  - get: response-operations-social-ui-source
+    passed: [response-operations-social-ui-preprod-deploy]
+    trigger: true
+  - task: run tests
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: python, tag: 3.6}
+      inputs:
+        - name: response-operations-social-ui-source
+      run:
+        path: sh
+        args:
+          - -exc
+          - |
+            cd response-operations-social-ui-source
+            pip install -U pipenv
+            pipenv install --dev
+            pipenv run pytest tests --cov-report term-missing --cov response_operations_social_ui --capture no
+  - put: create-redis
+    resource: cf-cli-resource-prod
+    params:
+      command: create-service
+      service: elasticache-broker
+      plan: small
+      service_instance: res-ops-redis
+      timeout: 1800
+      wait_for_service: true
+  - put: push-app
+    resource: cf-resource-prod
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Production response-operations-social-ui deployment failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    params:
+      current_app_name: response-operations-social-ui-prod
+      manifest: response-operations-social-ui-source/manifest.yml
+      path: response-operations-social-ui-source
+      environment_variables:
+        APP_SETTINGS: Config
+        CASE_URL: http://rm-case-service-concourse-prod.((prod_cloudfoundry_apps_domain))
+        IAC_URL: http://iac-service-concourse-prod.((prod_cloudfoundry_apps_domain))
+        SAMPLE_URL: http://rm-sample-service-concourse-prod.((prod_cloudfoundry_apps_domain))
+        UAA_SERVICE_URL: http://uaa-concourse-prod.((prod_cloudfoundry_apps_domain))
+        UAA_CLIENT_ID: 'response_operations_social'
+        UAA_CLIENT_SECRET: ((prod_response_operations_social_client_secret))
+        CASE_USERNAME: ((prod_security_user_name))
+        CASE_PASSWORD: ((prod_security_user_password))
+        IAC_USERNAME: ((prod_security_user_name))
+        IAC_PASSWORD: ((prod_security_user_password))
+        SAMPLE_USERNAME: ((prod_security_user_name))
+        SAMPLE_PASSWORD: ((prod_security_user_password))
+        SECURITY_USER_NAME: ((prod_security_user_name))
+        SECURITY_USER_PASSWORD: ((prod_security_user_password))
+        REDIS_SERVICE: res-ops-redis
