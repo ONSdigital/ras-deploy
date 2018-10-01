@@ -98,6 +98,12 @@ jobs:
   - task: run-unit-tests
     file: ras-deploy/tasks/python-unit-tests.yml
     input_mapping: { repository-name: response-operations-social-ui-source }
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Latest response-operations-social-ui unit tests failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   - put: create-redis
     resource: cf-cli-resource-latest
     params:
@@ -147,6 +153,12 @@ jobs:
   - task: run-unit-tests
     file: ras-deploy/tasks/python-unit-tests.yml
     input_mapping: { repository-name: response-operations-social-ui-source }
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Pre-production response-operations-social-ui unit tests failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   - put: create-redis
     resource: cf-cli-resource-preprod
     params:
@@ -196,6 +208,12 @@ jobs:
   - task: run-unit-tests
     file: ras-deploy/tasks/python-unit-tests.yml
     input_mapping: { repository-name: response-operations-social-ui-source }
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Production response-operations-social-ui unit tests failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   - put: create-redis
     resource: cf-cli-resource-prod
     params:
