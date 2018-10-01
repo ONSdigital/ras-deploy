@@ -17,6 +17,12 @@ resources:
   source:
     uri: https://github.com/ONSdigital/response-operations-social-ui.git
 
+- name: ras-deploy
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-deploy.git
+    branch: master
+
 - name: cf-resource-latest
   type: cf
   source:
@@ -88,23 +94,10 @@ jobs:
   plan:
   - get: response-operations-social-ui-source
     trigger: true
-  - task: run tests
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source: {repository: python, tag: 3.6}
-      inputs:
-        - name: response-operations-social-ui-source
-      run:
-        path: sh
-        args:
-          - -exc
-          - |
-            cd response-operations-social-ui-source
-            pip install -U pipenv
-            pipenv install --dev
-            pipenv run pytest tests --cov-report term-missing --cov response_operations_social_ui --capture no
+  - get: ras-deploy
+  - task: run-unit-tests
+    file: ras-deploy/tasks/python-unit-tests.yml
+    input_mapping: { repository-name: response-operations-social-ui-source }
   - put: create-redis
     resource: cf-cli-resource-latest
     params:
@@ -150,23 +143,10 @@ jobs:
   - get: response-operations-social-ui-source
     passed: [response-operations-social-ui-latest-deploy]
     trigger: true
-  - task: run tests
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source: {repository: python, tag: 3.6}
-      inputs:
-        - name: response-operations-social-ui-source
-      run:
-        path: sh
-        args:
-          - -exc
-          - |
-            cd response-operations-social-ui-source
-            pip install -U pipenv
-            pipenv install --dev
-            pipenv run pytest tests --cov-report term-missing --cov response_operations_social_ui --capture no
+  - get: ras-deploy
+  - task: run-unit-tests
+    file: ras-deploy/tasks/python-unit-tests.yml
+    input_mapping: { repository-name: response-operations-social-ui-source }
   - put: create-redis
     resource: cf-cli-resource-preprod
     params:
@@ -212,23 +192,10 @@ jobs:
   - get: response-operations-social-ui-source
     passed: [response-operations-social-ui-preprod-deploy]
     trigger: true
-  - task: run tests
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source: {repository: python, tag: 3.6}
-      inputs:
-        - name: response-operations-social-ui-source
-      run:
-        path: sh
-        args:
-          - -exc
-          - |
-            cd response-operations-social-ui-source
-            pip install -U pipenv
-            pipenv install --dev
-            pipenv run pytest tests --cov-report term-missing --cov response_operations_social_ui --capture no
+  - get: ras-deploy
+  - task: run-unit-tests
+    file: ras-deploy/tasks/python-unit-tests.yml
+    input_mapping: { repository-name: response-operations-social-ui-source }
   - put: create-redis
     resource: cf-cli-resource-prod
     params:

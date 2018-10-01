@@ -1,0 +1,19 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: kennethreitz/pipenv
+
+inputs:
+- name: repository-name
+
+run:
+  path: sh
+  args:
+    - -exc
+    - |
+      cd repository-name
+      make build
+      make test
