@@ -2201,7 +2201,6 @@ jobs:
       environment_variables:
         <<: *latest_security_user
         <<: *latest_service_endpoints_for_python
-        RAS_SECURE_MESSAGING_JWT_SECRET: ((latest_jwt_secret))
         REDIS_SERVICE: ras-redis
         UAA_CLIENT_ID: 'response_operations_social'
         UAA_CLIENT_SECRET: ((latest_response_operations_social_client_secret))
