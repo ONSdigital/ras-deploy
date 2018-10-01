@@ -1675,7 +1675,7 @@ jobs:
         path: sh
         args:
         - './scripts/jenkins/add_client.sh'
-  - task: create-response_operations-client
+  - task: create-response-operations-client
     config:
       platform: linux
       image_resource:
@@ -1695,7 +1695,7 @@ jobs:
         path: sh
         args:
         - './scripts/jenkins/add_client.sh'
-  - task: create-response_operations_social-client
+  - task: create-response-operations-social-client
     config:
       platform: linux
       image_resource:
@@ -2539,7 +2539,7 @@ jobs:
         path: sh
         args:
         - './scripts/jenkins/add_client.sh'
-  - task: create-response_operations-client
+  - task: create-response-operations-client
     config:
       platform: linux
       image_resource:
@@ -2559,7 +2559,7 @@ jobs:
         path: sh
         args:
         - './scripts/jenkins/add_client.sh'
-  - task: create-response_operations_social-client
+  - task: create-response-operations-social-client
     config:
       platform: linux
       image_resource:
@@ -3315,7 +3315,7 @@ disabled-jobs:
         path: sh
         args:
         - './scripts/jenkins/add_client.sh'
-  - task: create-response_operations-client
+  - task: create-response-operations-client
     config:
       platform: linux
       image_resource:
@@ -4057,7 +4057,7 @@ disabled-jobs:
         path: sh
         args:
         - './scripts/jenkins/add_client.sh'
-  - task: create-response_operations-client
+  - task: create-response-operations-client
     config:
       platform: linux
       image_resource:
