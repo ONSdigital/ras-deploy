@@ -44,6 +44,7 @@ templates:
     - ras-frontstage-ci-deploy
     - django-oauth2-test-ci-deploy
     - response-operations-ui-ci-deploy
+    - response-operations-social-ui-ci-deploy
     - ras-secure-message-ci-deploy
     - ras-collection-instrument-ci-deploy
     - rm-action-service-ci-deploy
@@ -122,6 +123,8 @@ templates:
       RAS_SURVEY_SERVICE_PORT: '80'
       RESPONSE_OPERATIONS_UI_HOST: response-operations-ui-ci.apps.devtest.onsclofo.uk
       RESPONSE_OPERATIONS_UI_PORT: '80'
+      RESPONSE_OPERATIONS_SOCIAL_UI_HOST: response-operations-social-ui-ci.apps.devtest.onsclofo.uk
+      RESPONSE_OPERATIONS_SOCIAL_UI_PORT: '80'
       SAMPLE_SERVICE_HOST: rm-sample-service-ci.apps.devtest.onsclofo.uk
       SAMPLE_SERVICE_PORT: '80'
       SAMPLE_URL: http://rm-sample-service-ci.apps.devtest.onsclofo.uk
@@ -236,6 +239,7 @@ templates:
     - ras-frontstage-latest-deploy
     - django-oauth2-test-latest-deploy
     - response-operations-ui-latest-deploy
+    - response-operations-social-ui-latest-deploy
     - ras-secure-message-latest-deploy
     - ras-collection-instrument-latest-deploy
     - rm-action-service-latest-deploy
@@ -314,6 +318,8 @@ templates:
       RAS_SURVEY_SERVICE_PORT: '80'
       RESPONSE_OPERATIONS_UI_HOST: response-operations-ui-concourse-latest.apps.devtest.onsclofo.uk
       RESPONSE_OPERATIONS_UI_PORT: '80'
+      RESPONSE_OPERATIONS_SOCIAL_UI_HOST: response-operations-social-ui-concourse-latest.apps.devtest.onsclofo.uk
+      RESPONSE_OPERATIONS_SOCIAL_UI_PORT: '80'
       SAMPLE_SERVICE_HOST: rm-sample-service-concourse-latest.apps.devtest.onsclofo.uk
       SAMPLE_SERVICE_PORT: '80'
       SAMPLE_URL: http://rm-sample-service-concourse-latest.apps.devtest.onsclofo.uk
@@ -824,6 +830,11 @@ resources:
   source:
     uri: https://github.com/ONSdigital/response-operations-ui.git
 
+- name: response-operations-social-ui-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/response-operations-social-ui.git
+
 - name: rm-action-service-source
   type: git
   source:
@@ -1269,6 +1280,35 @@ jobs:
         UAA_CLIENT_ID: 'response_operations'
         UAA_CLIENT_SECRET: ((ci_response_operations_client_secret))
 
+- name: response-operations-social-ui-ci-deploy
+  serial_groups: [response-operations-social-ui-ci-deploy]
+  plan:
+  - get: response-operations-social-ui-source
+    trigger: true
+  - get: ci-teardown-timer
+    trigger: true
+    passed: [ci-teardown]
+  - put: create-redis
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: elasticache-broker
+      plan: small
+      service_instance: ras-redis
+      timeout: 1800
+      wait_for_service: true
+  - put: cf-resource-ci
+    params:
+      current_app_name: response-operations-social-ui-ci
+      manifest: response-operations-social-ui-source/manifest.yml
+      path: response-operations-social-ui-source
+      environment_variables:
+        <<: *ci_security_user
+        <<: *ci_service_endpoints_for_python
+        REDIS_SERVICE: ras-redis
+        UAA_CLIENT_ID: 'response_operations_social'
+        UAA_CLIENT_SECRET: ((ci_response_operations_social_client_secret))
+
 - name: rm-action-service-ci-deploy
   serial_groups: [rm-action-service-ci-deploy]
   plan:
@@ -1635,7 +1675,7 @@ jobs:
         path: sh
         args:
         - './scripts/jenkins/add_client.sh'
-  - task: create-response_operations-client
+  - task: create-response-operations-client
     config:
       platform: linux
       image_resource:
@@ -1648,6 +1688,26 @@ jobs:
         SPACE: ci
         CLIENT: response_operations
         PASSWORD: ((ci_response_operations_client_secret))
+        ADMIN_SECRET: ((ci_uaa_admin_secret))
+        UAA_URL: 'uaa-ci.apps.devtest.onsclofo.uk'
+      run:
+        dir: sdc-uaa-source
+        path: sh
+        args:
+        - './scripts/jenkins/add_client.sh'
+  - task: create-response-operations-social-client
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: kennethreitz/pipenv
+      inputs:
+        - name: sdc-uaa-source
+      params:
+        SPACE: ci
+        CLIENT: response_operations_social
+        PASSWORD: ((ci_response_operations_social_client_secret))
         ADMIN_SECRET: ((ci_uaa_admin_secret))
         UAA_URL: 'uaa-ci.apps.devtest.onsclofo.uk'
       run:
@@ -1700,6 +1760,9 @@ jobs:
     trigger: true
   - get: response-operations-ui-source
     passed: [response-operations-ui-ci-deploy]
+    trigger: true
+  - get: response-operations-social-ui-source
+    passed: [response-operations-social-ui-ci-deploy]
     trigger: true
   - get: ras-secure-message-source
     passed: [ras-secure-message-ci-deploy]
@@ -2115,6 +2178,33 @@ jobs:
         UAA_CLIENT_ID: 'response_operations'
         UAA_CLIENT_SECRET: ((latest_response_operations_client_secret))
 
+- name: response-operations-social-ui-latest-deploy
+  serial_groups: [response-operations-social-ui-latest-deploy]
+  plan:
+  - get: response-operations-social-ui-source
+    trigger: true
+    passed: [ci-rasrm-acceptance-tests]
+  - put: create-redis
+    resource: cf-cli-resource-latest
+    params:
+      command: create-service
+      service: elasticache-broker
+      plan: small
+      service_instance: ras-redis
+      timeout: 1800
+      wait_for_service: true
+  - put: cf-resource-latest
+    params:
+      current_app_name: response-operations-social-ui-concourse-latest
+      manifest: response-operations-social-ui-source/manifest.yml
+      path: response-operations-social-ui-source
+      environment_variables:
+        <<: *latest_security_user
+        <<: *latest_service_endpoints_for_python
+        REDIS_SERVICE: ras-redis
+        UAA_CLIENT_ID: 'response_operations_social'
+        UAA_CLIENT_SECRET: ((latest_response_operations_social_client_secret))
+
 - name: rm-action-service-latest-deploy
   serial_groups: [rm-action-service-latest-deploy]
   plan:
@@ -2449,7 +2539,7 @@ jobs:
         path: sh
         args:
         - './scripts/jenkins/add_client.sh'
-  - task: create-response_operations-client
+  - task: create-response-operations-client
     config:
       platform: linux
       image_resource:
@@ -2462,6 +2552,26 @@ jobs:
         SPACE: concourse-latest
         CLIENT: response_operations
         PASSWORD: ((latest_response_operations_client_secret))
+        ADMIN_SECRET: ((latest_uaa_admin_secret))
+        UAA_URL: 'uaa-concourse-latest.apps.devtest.onsclofo.uk'
+      run:
+        dir: sdc-uaa-source
+        path: sh
+        args:
+        - './scripts/jenkins/add_client.sh'
+  - task: create-response-operations-social-client
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: kennethreitz/pipenv
+      inputs:
+        - name: sdc-uaa-source
+      params:
+        SPACE: concourse-latest
+        CLIENT: response_operations_social
+        PASSWORD: ((latest_response_operations_social_client_secret))
         ADMIN_SECRET: ((latest_uaa_admin_secret))
         UAA_URL: 'uaa-concourse-latest.apps.devtest.onsclofo.uk'
       run:
@@ -2512,6 +2622,9 @@ jobs:
     trigger: true
   - get: response-operations-ui-source
     passed: [response-operations-ui-latest-deploy]
+    trigger: true
+  - get: response-operations-social-ui-source
+    passed: [response-operations-social-ui-latest-deploy]
     trigger: true
   - get: ras-secure-message-source
     passed: [ras-secure-message-latest-deploy]
@@ -3202,7 +3315,7 @@ disabled-jobs:
         path: sh
         args:
         - './scripts/jenkins/add_client.sh'
-  - task: create-response_operations-client
+  - task: create-response-operations-client
     config:
       platform: linux
       image_resource:
@@ -3944,7 +4057,7 @@ disabled-jobs:
         path: sh
         args:
         - './scripts/jenkins/add_client.sh'
-  - task: create-response_operations-client
+  - task: create-response-operations-client
     config:
       platform: linux
       image_resource:
