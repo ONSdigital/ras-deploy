@@ -1,1 +1,1 @@
-REDIS_SERVICE: ras-redis
+redis_service: ras-redis

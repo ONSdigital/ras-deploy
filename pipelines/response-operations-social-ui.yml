@@ -145,8 +145,8 @@ jobs:
         SECURITY_USER_NAME: ((latest_security_user_name))
         SECURITY_USER_PASSWORD: ((latest_security_user_password))
         REDIS_SERVICE: ras-redis
-      vars:
-        REDIS_SERVICE: ras-redis
+      vars_files: ras-deploy/vars/manifest-latest.yml
+
 
 - name: response-operations-social-ui-preprod-deploy
   serial: true
@@ -202,8 +202,7 @@ jobs:
         SECURITY_USER_NAME: ((preprod_security_user_name))
         SECURITY_USER_PASSWORD: ((preprod_security_user_password))
         REDIS_SERVICE: res-ops-redis
-      vars:
-        REDIS_SERVICE: res-ops-redis
+      vars_files: ras-deploy/vars/manifest-preprod.yml
 
 disabled-jobs:
 - name: response-operations-social-ui-prod-deploy
