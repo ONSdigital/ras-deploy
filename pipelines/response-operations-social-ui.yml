@@ -16,12 +16,13 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/response-operations-social-ui.git
+    branch: redis-configuration
 
 - name: ras-deploy
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-deploy.git
-    branch: master
+    branch: response-ops-social-prod
 
 - name: cf-resource-latest
   type: cf
@@ -57,9 +58,9 @@ resources:
 - name: cf-cli-resource-preprod
   type: cf-cli-resource
   source:
-    api: ((cloudfoundry_api))
-    username: ((cloudfoundry_email))
-    password: ((cloudfoundry_password))
+    api: ((preprod_cloudfoundry_api))
+    username: ((preprod_cloudfoundry_email))
+    password: ((preprod_cloudfoundry_password))
     org: rmras
     space: preprod
     skip_cert_check: true
@@ -73,9 +74,9 @@ disabled-resources:
 - name: cf-cli-resource-prod
   type: cf-cli-resource
   source:
-    api: ((cloudfoundry_api))
-    username: ((cloudfoundry_email))
-    password: ((cloudfoundry_password))
+    api: ((prod_cloudfoundry_api))
+    username: ((prod_cloudfoundry_email))
+    password: ((prod_cloudfoundry_password))
     org: rmras
     space: prod
     skip_cert_check: true
@@ -144,6 +145,8 @@ jobs:
         SECURITY_USER_NAME: ((latest_security_user_name))
         SECURITY_USER_PASSWORD: ((latest_security_user_password))
         REDIS_SERVICE: ras-redis
+      vars:
+        REDIS_SERVICE: ras-redis
 
 - name: response-operations-social-ui-preprod-deploy
   serial: true
@@ -165,7 +168,7 @@ jobs:
     resource: cf-cli-resource-preprod
     params:
       command: create-service
-      service: elasticache-broker
+      service: awselasticache-redis
       plan: small
       service_instance: res-ops-redis
       timeout: 1800
@@ -198,6 +201,8 @@ jobs:
         SAMPLE_PASSWORD: ((preprod_security_user_password))
         SECURITY_USER_NAME: ((preprod_security_user_name))
         SECURITY_USER_PASSWORD: ((preprod_security_user_password))
+        REDIS_SERVICE: res-ops-redis
+      vars:
         REDIS_SERVICE: res-ops-redis
 
 disabled-jobs:
