@@ -16,7 +16,6 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/response-operations-social-ui.git
-    branch: redis-configuration
 
 - name: ras-deploy
   type: git
@@ -145,8 +144,6 @@ jobs:
         SECURITY_USER_NAME: ((latest_security_user_name))
         SECURITY_USER_PASSWORD: ((latest_security_user_password))
         REDIS_SERVICE: ras-redis
-      vars_files: ras-deploy/vars/manifest-latest.yml
-
 
 - name: response-operations-social-ui-preprod-deploy
   serial: true
@@ -183,7 +180,7 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: response-operations-social-ui-preprod
-      manifest: response-operations-social-ui-source/manifest.yml
+      manifest: ras-deploy/manifests/response-operations-social-ui/manifest.yml
       path: response-operations-social-ui-source
       environment_variables:
         APP_SETTINGS: Config
@@ -202,7 +199,6 @@ jobs:
         SECURITY_USER_NAME: ((preprod_security_user_name))
         SECURITY_USER_PASSWORD: ((preprod_security_user_password))
         REDIS_SERVICE: res-ops-redis
-      vars_files: ras-deploy/vars/manifest-preprod.yml
 
 disabled-jobs:
 - name: response-operations-social-ui-prod-deploy
