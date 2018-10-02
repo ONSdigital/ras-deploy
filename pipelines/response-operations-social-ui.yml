@@ -43,15 +43,6 @@ resources:
     space: preprod
     skip_cert_check: true
 
-- name: cf-resource-prod
-  type: cf
-  source:
-    api: ((prod_cloudfoundry_api))
-    username: ((prod_cloudfoundry_email))
-    password: ((prod_cloudfoundry_password))
-    organization: rmras
-    space: prod
-    skip_cert_check: true
 
 - name: cf-cli-resource-latest
   type: cf-cli-resource
@@ -73,6 +64,12 @@ resources:
     space: preprod
     skip_cert_check: true
 
+- name: notify
+  type: slack-notification
+  source:
+    url: ((slack_webhook))
+
+disabled-resources:
 - name: cf-cli-resource-prod
   type: cf-cli-resource
   source:
@@ -83,10 +80,15 @@ resources:
     space: prod
     skip_cert_check: true
 
-- name: notify
-  type: slack-notification
+- name: cf-resource-prod
+  type: cf
   source:
-    url: ((slack_webhook))
+    api: ((prod_cloudfoundry_api))
+    username: ((prod_cloudfoundry_email))
+    password: ((prod_cloudfoundry_password))
+    organization: rmras
+    space: prod
+    skip_cert_check: true
 
 jobs:
 - name: response-operations-social-ui-latest-deploy
@@ -198,6 +200,7 @@ jobs:
         SECURITY_USER_PASSWORD: ((preprod_security_user_password))
         REDIS_SERVICE: res-ops-redis
 
+disabled-jobs:
 - name: response-operations-social-ui-prod-deploy
   serial: true
   plan:
