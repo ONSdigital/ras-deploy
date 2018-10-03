@@ -1361,7 +1361,7 @@ jobs:
       environment_variables:
         <<: *ci_security_user
         endpoints_enabled: 'false'
-        exportSchedule_cronExpression: '* * * * * *'
+        exportSchedule_cronExpression: '*/30 * * * * *'
         sftp_host: ((sftp_host))
         sftp_password: ((actionexporter_sftp_password))
         sftp_port: '22'
@@ -2252,7 +2252,7 @@ jobs:
       environment_variables:
         <<: *latest_security_user
         endpoints_enabled: 'false'
-        exportSchedule_cronExpression: '* * * * * *'
+        exportSchedule_cronExpression: '*/30 * * * * *'
         sftp_host: ((sftp_host))
         sftp_password: ((actionexporter_sftp_password))
         sftp_port: '22'
