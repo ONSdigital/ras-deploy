@@ -200,6 +200,18 @@ jobs:
         SECURITY_USER_NAME: ((preprod_security_user_name))
         SECURITY_USER_PASSWORD: ((preprod_security_user_password))
         REDIS_SERVICE: res-ops-redis
+  - put: map-route-vpn-domain
+    resource: cf-cli-resource-preprod
+    params:
+      command: map-route
+      app_name: response-operations-social-ui-preprod
+      domain: sdc-social-preprod.rmdev.onsdigital.uk
+  - put: map-route-internal-domain
+    resource: cf-cli-resource-preprod
+    params:
+      command: map-route
+      app_name: response-operations-social-ui-preprod
+      domain: sdc-social-preprod.ons.statistics.gov.uk
 
 disabled-jobs:
 - name: response-operations-social-ui-prod-deploy
@@ -256,3 +268,15 @@ disabled-jobs:
         SECURITY_USER_NAME: ((prod_security_user_name))
         SECURITY_USER_PASSWORD: ((prod_security_user_password))
         REDIS_SERVICE: res-ops-redis
+  - put: map-route-vpn-domain
+    resource: cf-cli-resource-prod
+    params:
+      command: map-route
+      app_name: response-operations-social-ui-prod
+      domain:
+  - put: map-route-internal-domain
+    resource: cf-cli-resource-prod
+    params:
+      command: map-route
+      app_name: response-operations-social-ui-prod
+      domain:
