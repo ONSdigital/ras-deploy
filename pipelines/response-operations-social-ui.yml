@@ -185,10 +185,10 @@ jobs:
       path: response-operations-social-ui-source
       environment_variables:
         APP_SETTINGS: Config
-        CASE_URL: http://rm-case-service-concourse-preprod.((preprod_cloudfoundry_apps_domain))
-        IAC_URL: http://iac-service-concourse-preprod.((preprod_cloudfoundry_apps_domain))
-        SAMPLE_URL: http://rm-sample-service-concourse-preprod.((preprod_cloudfoundry_apps_domain))
-        UAA_SERVICE_URL: http://uaa-concourse-preprod.((preprod_cloudfoundry_apps_domain))
+        CASE_URL: http://casesvc-preprod.((preprod_cloudfoundry_apps_domain))
+        IAC_URL: http://iacsvc-preprod.((preprod_cloudfoundry_apps_domain))
+        SAMPLE_URL: http://samplesvc-preprod.((preprod_cloudfoundry_apps_domain))
+        UAA_SERVICE_URL: http://uaa-preprod.((preprod_cloudfoundry_apps_domain))
         UAA_CLIENT_ID: 'response_operations_social'
         UAA_CLIENT_SECRET: ((preprod_response_operations_social_client_secret))
         CASE_USERNAME: ((preprod_security_user_name))
@@ -253,10 +253,10 @@ disabled-jobs:
       path: response-operations-social-ui-source
       environment_variables:
         APP_SETTINGS: Config
-        CASE_URL: http://rm-case-service-concourse-prod.((prod_cloudfoundry_apps_domain))
-        IAC_URL: http://iac-service-concourse-prod.((prod_cloudfoundry_apps_domain))
-        SAMPLE_URL: http://rm-sample-service-concourse-prod.((prod_cloudfoundry_apps_domain))
-        UAA_SERVICE_URL: http://uaa-concourse-prod.((prod_cloudfoundry_apps_domain))
+        CASE_URL: http://casesvc-prod.((prod_cloudfoundry_apps_domain))
+        IAC_URL: http://iacsvc-prod.((prod_cloudfoundry_apps_domain))
+        SAMPLE_URL: http://samplesvc-prod.((prod_cloudfoundry_apps_domain))
+        UAA_SERVICE_URL: http://uaa-prod.((prod_cloudfoundry_apps_domain))
         UAA_CLIENT_ID: 'response_operations_social'
         UAA_CLIENT_SECRET: ((prod_response_operations_social_client_secret))
         CASE_USERNAME: ((prod_security_user_name))
