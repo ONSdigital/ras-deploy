@@ -1823,6 +1823,11 @@ jobs:
     params:
       <<: *ci_security_user
       <<: *ci_service_endpoints_for_python
+      SFTP_HOST: ((sftp_host))
+      SFTP_PORT: '22'
+      SFTP_USERNAME: ((actionexporter_sftp_username))
+      SFTP_PASSWORD: ((actionexporter_sftp_password))
+      SFTP_DIR: BSD
       MAKE_TARGET: setup
   - task: rasrm-acceptance-tests
     on_failure:
@@ -1924,6 +1929,11 @@ jobs:
     params:
       <<: *ci_security_user
       <<: *ci_service_endpoints_for_python
+      SFTP_HOST: ((sftp_host))
+      SFTP_PORT: '22'
+      SFTP_USERNAME: ((actionexporter_sftp_username))
+      SFTP_PASSWORD: ((actionexporter_sftp_password))
+      SFTP_DIR: BSD
       MAKE_TARGET: setup
   - task: secure-messaging-acceptance-tests
     on_failure:
