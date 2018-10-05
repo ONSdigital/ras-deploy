@@ -1365,6 +1365,7 @@ jobs:
         sftp_host: ((sftp_host))
         sftp_password: ((actionexporter_sftp_password))
         sftp_port: '22'
+        sftp_directory: rasrm_pipeline/ci
         sftp_username: ((actionexporter_sftp_username))
         SWAGGER_SETTINGS_SWAGGER_UI_ACTIVE: 'true'
         LOGGING_LEVEL_uk.gov.ons.ctp.response.action.export.scheduled: WARN
@@ -1827,7 +1828,7 @@ jobs:
       SFTP_PORT: '22'
       SFTP_USERNAME: ((actionexporter_sftp_username))
       SFTP_PASSWORD: ((actionexporter_sftp_password))
-      SFTP_DIR: BSD
+      SFTP_DIR: rasrm_pipeline/ci
       MAKE_TARGET: setup
   - task: rasrm-acceptance-tests
     on_failure:
@@ -1845,7 +1846,7 @@ jobs:
       SFTP_PORT: '22'
       SFTP_USERNAME: ((actionexporter_sftp_username))
       SFTP_PASSWORD: ((actionexporter_sftp_password))
-      SFTP_DIR: BSD
+      SFTP_DIR: rasrm_pipeline/ci
       MAKE_TARGET: rasrm_acceptance_tests
 
 - name: ci-securemessage-acceptance-tests
@@ -1933,7 +1934,7 @@ jobs:
       SFTP_PORT: '22'
       SFTP_USERNAME: ((actionexporter_sftp_username))
       SFTP_PASSWORD: ((actionexporter_sftp_password))
-      SFTP_DIR: BSD
+      SFTP_DIR: rasrm_pipeline/ci
       MAKE_TARGET: setup
   - task: secure-messaging-acceptance-tests
     on_failure:
@@ -2266,6 +2267,7 @@ jobs:
         sftp_host: ((sftp_host))
         sftp_password: ((actionexporter_sftp_password))
         sftp_port: '22'
+        sftp_directory: rasrm_pipeline/latest
         sftp_username: ((actionexporter_sftp_username))
         LOGGING_LEVEL_uk.gov.ons.ctp.response.action.export.scheduled: WARN
 
@@ -2694,7 +2696,7 @@ jobs:
       SFTP_PORT: '22'
       SFTP_USERNAME: ((actionexporter_sftp_username))
       SFTP_PASSWORD: ((actionexporter_sftp_password))
-      SFTP_DIR: BSD
+      SFTP_DIR: rasrm_pipeline/latest
       MAKE_TARGET: acceptance_tests
 
 disabled-jobs:
