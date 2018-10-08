@@ -38,11 +38,16 @@ templates:
       SECURITY_USER_PASSWORD: ((ci_security_user_password))
       SURVEY_USERNAME: ((ci_security_user_name))
       SURVEY_PASSWORD: ((ci_security_user_password))
+      RAS_OAUTH_CLIENT_ID: ((ci_security_user_name))
+      RAS_OAUTH_CLIENT_SECRET: ((ci_security_user_password))
+      OAUTH_CLIENT_ID: ((ci_security_user_name))
+      OAUTH_CLIENT_SECRET: ((ci_security_user_password))
 
     all_services: &ci_all_services
     - ras-party-ci-deploy
     - ras-frontstage-ci-deploy
     - django-oauth2-test-ci-deploy
+    - ras-rm-auth-service-ci-deploy
     - response-operations-ui-ci-deploy
     - response-operations-social-ui-ci-deploy
     - ras-secure-message-ci-deploy
@@ -76,8 +81,8 @@ templates:
       COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-ci.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
       COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-ci.apps.devtest.onsclofo.uk
-      DJANGO_SERVICE_HOST: django-oauth2-test-ci.apps.devtest.onsclofo.uk
-      DJANGO_SERVICE_PORT: '80'
+      AUTH_SERVICE_HOST: ras-rm-auth-service-ci.apps.devtest.onsclofo.uk
+      AUTH_SERVICE_PORT: '80'
       FRONTSTAGE_SERVICE_HOST: ras-frontstage-ci.apps.devtest.onsclofo.uk
       FRONTSTAGE_SERVICE_PORT: '80'
       IAC_SERVICE_HOST: iac-service-ci.apps.devtest.onsclofo.uk
@@ -85,7 +90,7 @@ templates:
       IAC_URL: http://iac-service-ci.apps.devtest.onsclofo.uk
       NOTIFY_GATEWAY_SERVICE_HOST: rm-notify-gateway-ci.apps.devtest.onsclofo.uk
       NOTIFY_GATEWAY_SERVICE_PORT: '80'
-      OAUTH_URL: http://django-oauth2-test-ci.apps.devtest.onsclofo.uk
+      OAUTH_URL: http://ras-rm-auth-service-ci.apps.devtest.onsclofo.uk
       PARTY_SERVICE_HOST: ras-party-ci.apps.devtest.onsclofo.uk
       PARTY_SERVICE_PORT: '80'
       PARTY_URL: http://ras-party-ci.apps.devtest.onsclofo.uk
@@ -107,7 +112,7 @@ templates:
       RAS_COLLEX_SERVICE_PORT: '80'
       RAS_IAC_SERVICE_HOST: iac-service-ci.apps.devtest.onsclofo.uk
       RAS_IAC_SERVICE_PORT: '80'
-      RAS_OAUTH_SERVICE_HOST: django-oauth2-test-ci.apps.devtest.onsclofo.uk
+      RAS_OAUTH_SERVICE_HOST: ras-rm-auth-service-ci.apps.devtest.onsclofo.uk
       RAS_OAUTH_SERVICE_PORT: '80'
       RAS_PARTY_SERVICE_HOST: ras-party-ci.apps.devtest.onsclofo.uk
       RAS_PARTY_SERVICE_PORT: '80'
@@ -233,11 +238,16 @@ templates:
       SECURITY_USER_PASSWORD: ((latest_security_user_password))
       SURVEY_USERNAME: ((latest_security_user_name))
       SURVEY_PASSWORD: ((latest_security_user_password))
+      RAS_OAUTH_CLIENT_ID: ((latest_security_user_name))
+      RAS_OAUTH_CLIENT_SECRET: ((latest_security_user_password))
+      OAUTH_CLIENT_ID: ((latest_security_user_name))
+      OAUTH_CLIENT_SECRET: ((latest_security_user_password))
 
     all_services: &latest_all_services
     - ras-party-latest-deploy
     - ras-frontstage-latest-deploy
     - django-oauth2-test-latest-deploy
+    - ras-rm-auth-service-latest-deploy
     - response-operations-ui-latest-deploy
     - response-operations-social-ui-latest-deploy
     - ras-secure-message-latest-deploy
@@ -271,8 +281,8 @@ templates:
       COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-concourse-latest.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
       COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-concourse-latest.apps.devtest.onsclofo.uk
-      DJANGO_SERVICE_HOST: django-oauth2-test-concourse-latest.apps.devtest.onsclofo.uk
-      DJANGO_SERVICE_PORT: '80'
+      AUTH_SERVICE_HOST: ras-rm-auth-service-concourse-latest.apps.devtest.onsclofo.uk
+      AUTH_SERVICE_PORT: '80'
       FRONTSTAGE_SERVICE_HOST: ras-frontstage-concourse-latest.apps.devtest.onsclofo.uk
       FRONTSTAGE_SERVICE_PORT: '80'
       IAC_SERVICE_HOST: iac-service-concourse-latest.apps.devtest.onsclofo.uk
@@ -280,7 +290,7 @@ templates:
       IAC_URL: http://iac-service-concourse-latest.apps.devtest.onsclofo.uk
       NOTIFY_GATEWAY_SERVICE_HOST: rm-notify-gateway-concourse-latest.apps.devtest.onsclofo.uk
       NOTIFY_GATEWAY_SERVICE_PORT: '80'
-      OAUTH_URL: http://django-oauth2-test-concourse-latest.apps.devtest.onsclofo.uk
+      OAUTH_URL: http://ras-rm-auth-service-concourse-latest.apps.devtest.onsclofo.uk
       PARTY_SERVICE_HOST: ras-party-concourse-latest.apps.devtest.onsclofo.uk
       PARTY_SERVICE_PORT: '80'
       PARTY_URL: http://ras-party-concourse-latest.apps.devtest.onsclofo.uk
@@ -302,7 +312,7 @@ templates:
       RAS_COLLEX_SERVICE_PORT: '80'
       RAS_IAC_SERVICE_HOST: iac-service-concourse-latest.apps.devtest.onsclofo.uk
       RAS_IAC_SERVICE_PORT: '80'
-      RAS_OAUTH_SERVICE_HOST: django-oauth2-test-concourse-latest.apps.devtest.onsclofo.uk
+      RAS_OAUTH_SERVICE_HOST: ras-rm-auth-service-concourse-latest.apps.devtest.onsclofo.uk
       RAS_OAUTH_SERVICE_PORT: '80'
       RAS_PARTY_SERVICE_HOST: ras-party-concourse-latest.apps.devtest.onsclofo.uk
       RAS_PARTY_SERVICE_PORT: '80'
@@ -428,11 +438,15 @@ templates:
       SECURITY_USER_PASSWORD: ((preprod_security_user_password))
       SURVEY_USERNAME: ((preprod_security_user_name))
       SURVEY_PASSWORD: ((preprod_security_user_password))
+      RAS_OAUTH_CLIENT_ID: ((preprod_security_user_name))
+      RAS_OAUTH_CLIENT_SECRET: ((preprod_security_user_password))
+      OAUTH_CLIENT_ID: ((preprod_security_user_name))
+      OAUTH_CLIENT_SECRET: ((preprod_security_user_password))
 
     all_services: &preprod_all_services
     - ras-party-preprod-deploy
     - ras-frontstage-preprod-deploy
-    - django-oauth2-test-preprod-deploy
+    - ras-rm-auth-service-preprod-deploy
     - response-operations-ui-preprod-deploy
     - ras-secure-message-preprod-deploy
     - ras-collection-instrument-preprod-deploy
@@ -465,8 +479,8 @@ templates:
       COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-concourse-preprod.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
       COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-concourse-preprod.apps.devtest.onsclofo.uk
-      DJANGO_SERVICE_HOST: django-oauth2-test-concourse-preprod.apps.devtest.onsclofo.uk
-      DJANGO_SERVICE_PORT: '80'
+      AUTH_SERVICE_HOST: ras-rm-auth-service-concourse-preprod.apps.devtest.onsclofo.uk
+      AUTH_SERVICE_PORT: '80'
       FRONTSTAGE_SERVICE_HOST: ras-frontstage-concourse-preprod.apps.devtest.onsclofo.uk
       FRONTSTAGE_SERVICE_PORT: '80'
       IAC_SERVICE_HOST: iac-service-concourse-preprod.apps.devtest.onsclofo.uk
@@ -496,7 +510,7 @@ templates:
       RAS_COLLEX_SERVICE_PORT: '80'
       RAS_IAC_SERVICE_HOST: iac-service-concourse-preprod.apps.devtest.onsclofo.uk
       RAS_IAC_SERVICE_PORT: '80'
-      RAS_OAUTH_SERVICE_HOST: django-oauth2-test-concourse-preprod.apps.devtest.onsclofo.uk
+      RAS_OAUTH_SERVICE_HOST: ras-rm-auth-service-concourse-preprod.apps.devtest.onsclofo.uk
       RAS_OAUTH_SERVICE_PORT: '80'
       RAS_PARTY_SERVICE_HOST: ras-party-concourse-preprod.apps.devtest.onsclofo.uk
       RAS_PARTY_SERVICE_PORT: '80'
@@ -620,11 +634,16 @@ templates:
       SECURITY_USER_PASSWORD: ((prod_security_user_password))
       SURVEY_USERNAME: ((prod_security_user_name))
       SURVEY_PASSWORD: ((prod_security_user_password))
+      RAS_OAUTH_CLIENT_ID: ((prod_security_user_name))
+      RAS_OAUTH_CLIENT_SECRET: ((prod_security_user_password))
+      OAUTH_CLIENT_ID: ((prod_security_user_name))
+      OAUTH_CLIENT_SECRET: ((prod_security_user_password))
 
     all_services: &prod_all_services
     - ras-party-prod-deploy
     - ras-frontstage-prod-deploy
     - django-oauth2-test-prod-deploy
+    - ras-rm-auth-service-prod-deploy
     - response-operations-ui-prod-deploy
     - ras-secure-message-prod-deploy
     - ras-collection-instrument-prod-deploy
@@ -657,8 +676,8 @@ templates:
       COLLECTION_INSTRUMENT_SERVICE_HOST: ras-collection-instrument-concourse-prod.apps.devtest.onsclofo.uk
       COLLECTION_INSTRUMENT_SERVICE_PORT: '80'
       COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-concourse-prod.apps.devtest.onsclofo.uk
-      DJANGO_SERVICE_HOST: django-oauth2-test-concourse-prod.apps.devtest.onsclofo.uk
-      DJANGO_SERVICE_PORT: '80'
+      AUTH_SERVICE_HOST: ras-rm-auth-service-concourse-prod.apps.devtest.onsclofo.uk
+      AUTH_SERVICE_PORT: '80'
       FRONTSTAGE_SERVICE_HOST: ras-frontstage-concourse-prod.apps.devtest.onsclofo.uk
       FRONTSTAGE_SERVICE_PORT: '80'
       IAC_SERVICE_HOST: iac-service-concourse-prod.apps.devtest.onsclofo.uk
@@ -666,7 +685,7 @@ templates:
       IAC_URL: http://iac-service-concourse-prod.apps.devtest.onsclofo.uk
       NOTIFY_GATEWAY_SERVICE_HOST: rm-notify-gateway-concourse-prod.apps.devtest.onsclofo.uk
       NOTIFY_GATEWAY_SERVICE_PORT: '80'
-      OAUTH_URL: http://django-oauth2-test-concourse-prod.apps.devtest.onsclofo.uk
+      OAUTH_URL: http://ras-rm-auth-service-concourse-prod.apps.devtest.onsclofo.uk
       PARTY_SERVICE_HOST: ras-party-concourse-prod.apps.devtest.onsclofo.uk
       PARTY_SERVICE_PORT: '80'
       PARTY_URL: http://ras-party-concourse-prod.apps.devtest.onsclofo.uk
@@ -688,7 +707,7 @@ templates:
       RAS_COLLEX_SERVICE_PORT: '80'
       RAS_IAC_SERVICE_HOST: iac-service-concourse-prod.apps.devtest.onsclofo.uk
       RAS_IAC_SERVICE_PORT: '80'
-      RAS_OAUTH_SERVICE_HOST: django-oauth2-test-concourse-prod.apps.devtest.onsclofo.uk
+      RAS_OAUTH_SERVICE_HOST: ras-rm-auth-service-concourse-prod.apps.devtest.onsclofo.uk
       RAS_OAUTH_SERVICE_PORT: '80'
       RAS_PARTY_SERVICE_HOST: ras-party-concourse-prod.apps.devtest.onsclofo.uk
       RAS_PARTY_SERVICE_PORT: '80'
@@ -823,6 +842,12 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/django-oauth2-test.git
+    branch: master
+
+- name: ras-rm-auth-service-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-rm-auth-service.git
     branch: master
 
 - name: response-operations-ui-source
@@ -1169,8 +1194,6 @@ jobs:
         EQ_URL: 'https://eq-test/session?token='
         JSON_SECRET_KEYS: ((ci_json_secret_keys))
         JWT_SECRET: ((ci_jwt_secret))
-        OAUTH_CLIENT_ID: 'ons@ons.gov'
-        OAUTH_CLIENT_SECRET: 'password'
         SECRET_KEY: ((ci_enrolement_code_encryption_key))
 
 - name: django-oauth2-test-ci-deploy
@@ -1249,6 +1272,31 @@ jobs:
       CLOUDFOUNDRY_ORG: rmras
       CLOUDFOUNDRY_SPACE: ci
       APP_NAME: django-oauth2-test-ci
+
+- name: ras-rm-auth-service-ci-deploy
+  serial_groups: [ras-rm-auth-service-ci-deploy]
+  plan:
+  - get: ras-rm-auth-service-source
+    trigger: true
+  - get: ci-teardown-timer
+    trigger: true
+    passed: [ci-teardown]
+  - put: create-database
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: oauth-db
+      timeout: 300
+      wait_for_service: true
+  - put: cf-resource-ci
+    params:
+      current_app_name: ras-rm-auth-service-ci
+      manifest: ras-rm-auth-service-source/manifest.yml
+      path: ras-rm-auth-service-source
+      environment_variables:
+        <<: *ci_security_user
 
 - name: response-operations-ui-ci-deploy
   serial_groups: [response-operations-ui-ci-deploy]
@@ -1759,6 +1807,9 @@ jobs:
   - get: django-oauth2-test-source
     passed: [django-oauth2-test-ci-deploy]
     trigger: true
+  - get: ras-rm-auth-service-source
+    passed: [ras-rm-auth-service-ci-deploy]
+    trigger: true
   - get: response-operations-ui-source
     passed: [response-operations-ui-ci-deploy]
     trigger: true
@@ -1867,6 +1918,9 @@ jobs:
     trigger: true
   - get: django-oauth2-test-source
     passed: [django-oauth2-test-ci-deploy]
+    trigger: true
+  - get: ras-rm-auth-service-source
+    passed: [ras-rm-auth-service-ci-deploy]
     trigger: true
   - get: response-operations-ui-source
     passed: [response-operations-ui-ci-deploy]
@@ -2082,8 +2136,6 @@ jobs:
         EQ_URL: 'https://eq-test/session?token='
         JWT_SECRET: ((latest_jwt_secret))
         JSON_SECRET_KEYS: ((latest_json_secret_keys))
-        OAUTH_CLIENT_ID: 'ons@ons.gov'
-        OAUTH_CLIENT_SECRET: 'password'
         SECRET_KEY: ((latest_enrolement_code_encryption_key))
 
 - name: django-oauth2-test-latest-deploy
@@ -2160,6 +2212,29 @@ jobs:
       CLOUDFOUNDRY_ORG: rmras
       CLOUDFOUNDRY_SPACE: concourse-latest
       APP_NAME: django-oauth2-test-concourse-latest
+
+- name: ras-rm-auth-service-latest-deploy
+  serial_groups: [ras-rm-auth-service-latest-deploy]
+  plan:
+  - get: ras-rm-auth-service-source
+    trigger: true
+    passed: [ci-rasrm-acceptance-tests, ci-securemessage-acceptance-tests]
+  - put: create-database
+    resource: cf-cli-resource-latest
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: oauth-db
+      timeout: 300
+      wait_for_service: true
+  - put: cf-resource-latest
+    params:
+      current_app_name: ras-rm-auth-service-concourse-latest
+      manifest: ras-rm-auth-service-source/manifest.yml
+      path: ras-rm-auth-service-source
+      environment_variables:
+        <<: *latest_security_user
 
 - name: response-operations-ui-latest-deploy
   serial_groups: [response-operations-ui-latest-deploy]
@@ -2632,6 +2707,9 @@ jobs:
   - get: django-oauth2-test-source
     passed: [django-oauth2-test-latest-deploy]
     trigger: true
+  - get: ras-rm-auth-service-source
+    passed: [ras-rm-auth-service-latest-deploy]
+    trigger: true
   - get: response-operations-ui-source
     passed: [response-operations-ui-latest-deploy]
     trigger: true
@@ -2710,6 +2788,8 @@ disabled-jobs:
   - get: ras-frontstage-source
     passed: [latest-acceptance-tests]
   - get: django-oauth2-test-source
+    passed: [latest-acceptance-tests]
+  - get: ras-rm-auth-service-source
     passed: [latest-acceptance-tests]
   - get: response-operations-ui-source
     passed: [latest-acceptance-tests]
@@ -2875,8 +2955,6 @@ disabled-jobs:
         EQ_URL: 'https://eq-test/session?token='
         JSON_SECRET_KEYS: ((preprod_json_secret_keys))
         JWT_SECRET: ((preprod_jwt_secret))
-        OAUTH_CLIENT_ID: 'ons@ons.gov'
-        OAUTH_CLIENT_SECRET: 'password'
         SECRET_KEY: ((preprod_enrolement_code_encryption_key))
 
 - name: django-oauth2-test-preprod-deploy
@@ -2954,6 +3032,29 @@ disabled-jobs:
       CLOUDFOUNDRY_ORG: rmras
       CLOUDFOUNDRY_SPACE: concourse-preprod
       APP_NAME: django-oauth2-test-concourse-preprod
+
+- name: ras-rm-auth-service-preprod-deploy
+  serial_groups: [ras-rm-auth-service-preprod-deploy]
+  plan:
+  - get: ras-rm-auth-service-source
+    trigger: true
+    passed: [preprod-trigger]
+  - put: create-database
+    resource: cf-cli-resource-preprod
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: oauth-db
+      timeout: 300
+      wait_for_service: true
+  - put: cf-resource-preprod
+    params:
+      current_app_name: ras-rm-auth-service-concourse-preprod
+      manifest: ras-rm-auth-service-source/manifest.yml
+      path: ras-rm-auth-service-source
+      environment_variables:
+        <<: *preprod_security_user
 
 - name: response-operations-ui-preprod-deploy
   disable_manual_trigger: true
@@ -3387,6 +3488,9 @@ disabled-jobs:
   - get: django-oauth2-test-source
     passed: [django-oauth2-test-preprod-deploy]
     trigger: true
+  - get: ras-rm-auth-service-source
+    passed: [ras-rm-auth-service-preprod-deploy]
+    trigger: true
   - get: response-operations-ui-source
     passed: [response-operations-ui-preprod-deploy]
     trigger: true
@@ -3452,6 +3556,8 @@ disabled-jobs:
   - get: ras-frontstage-source
     passed: [preprod-smoke-tests]
   - get: django-oauth2-test-source
+    passed: [preprod-smoke-tests]
+  - get: ras-rm-auth-service-source
     passed: [preprod-smoke-tests]
   - get: response-operations-ui-source
     passed: [preprod-smoke-tests]
@@ -3617,8 +3723,6 @@ disabled-jobs:
         EQ_URL: 'https://eq-test/session?token='
         JSON_SECRET_KEYS: ((prod_json_secret_keys))
         JWT_SECRET: ((prod_jwt_secret))
-        OAUTH_CLIENT_ID: 'ons@ons.gov'
-        OAUTH_CLIENT_SECRET: 'password'
         SECRET_KEY: ((prod_enrolement_code_encryption_key))
 
 - name: django-oauth2-test-prod-deploy
@@ -3696,6 +3800,29 @@ disabled-jobs:
       CLOUDFOUNDRY_ORG: rmras
       CLOUDFOUNDRY_SPACE: concourse-prod
       APP_NAME: django-oauth2-test-concourse-prod
+
+- name: ras-rm-auth-service-prod-deploy
+  serial_groups: [ras-rm-auth-service-prod-deploy]
+  plan:
+  - get: ras-rm-auth-service-source
+    trigger: true
+    passed: [prod-trigger]
+  - put: create-database
+    resource: cf-cli-resource-prod
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: oauth-db
+      timeout: 300
+      wait_for_service: true
+  - put: cf-resource-prod
+    params:
+      current_app_name: ras-rm-auth-service-concourse-prod
+      manifest: ras-rm-auth-service-source/manifest.yml
+      path: ras-rm-auth-service-source
+      environment_variables:
+        <<: *prod_security_user
 
 - name: response-operations-ui-prod-deploy
   disable_manual_trigger: true
@@ -4128,6 +4255,9 @@ disabled-jobs:
     trigger: true
   - get: django-oauth2-test-source
     passed: [django-oauth2-test-prod-deploy]
+    trigger: true
+  - get: ras-rm-auth-service-source
+    passed: [ras-rm-auth-service-prod-deploy]
     trigger: true
   - get: response-operations-ui-source
     passed: [response-operations-ui-prod-deploy]
