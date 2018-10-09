@@ -238,6 +238,7 @@ jobs:
         SAMPLE_USERNAME: ((prod_security_user_name))
         SAMPLE_PASSWORD: ((prod_security_user_password))
         SECRET_KEY: ((prod_rh_secret_key))
+        URL_PATH_PREFIX: /myStudy
 
   - task: smoke-tests
     on_failure:
