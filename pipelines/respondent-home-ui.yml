@@ -16,6 +16,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/respondent-home-ui.git
+    branch: master
 
 - name: cf-resource-latest
   type: cf
@@ -173,6 +174,12 @@ jobs:
       command: map-route
       app_name: respondent-home-ui-preprod
       domain: rhpreprod.rmdev.onsdigital.uk
+  - put: map-route-ons-internal-domain
+    resource: cf-cli-resource-preprod
+    params:
+      app_name: respondent-home-ui-preprod
+      command: map-route
+      domain: ohs-alpha.onsdigital.uk
   - task: smoke-tests
     on_failure:
       put: notify
