@@ -142,7 +142,7 @@ jobs:
       environment_variables:
         HOST: 0.0.0.0
         LOG_LEVEL: INFO
-        ACCOUNT_SERVICE_URL: https://ohs-alpha.onsdigital.uk
+        ACCOUNT_SERVICE_URL: ((preprod_account_service_url))
         EQ_URL: https://eq.onsdigital.uk
         JSON_SECRET_KEYS: ((preprod_json_secret_keys))
         CASE_URL: http://casesvc-preprod.((preprod_cloudfoundry_apps_domain))
@@ -180,6 +180,13 @@ jobs:
       app_name: respondent-home-ui-preprod
       command: map-route
       domain: ohs-alpha.onsdigital.uk
+  - put: map-route-ons-external-preprod-domain
+    resource: cf-cli-resource-preprod
+    params:
+      app_name: respondent-home-ui-preprod
+      command: map-route
+      domain: ((preprod_domain))
+      path: ((preprod_path))
   - task: smoke-tests
     on_failure:
       put: notify
@@ -238,8 +245,15 @@ jobs:
         SAMPLE_USERNAME: ((prod_security_user_name))
         SAMPLE_PASSWORD: ((prod_security_user_password))
         SECRET_KEY: ((prod_rh_secret_key))
-        URL_PATH_PREFIX: /myStudy
+        URL_PATH_PREFIX: /mystudy
 
+  - put: map-route-ons-external-prod-domain
+    resource: cf-cli-resource-prod
+    params:
+      app_name: respondent-home-ui-prod
+      command: map-route
+      domain: ((prod_domain))
+      path: ((prod_path))
   - task: smoke-tests
     on_failure:
       put: notify
