@@ -16,7 +16,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/response-operations-social-ui.git
-    branch: preprod-manifest
+    branch: master
 
 - name: ras-deploy
   type: git
