@@ -70,7 +70,6 @@ resources:
   source:
     url: ((slack_webhook))
 
-disabled-resources:
 - name: cf-cli-resource-prod
   type: cf-cli-resource
   source:
@@ -215,7 +214,7 @@ jobs:
       app_name: response-operations-social-ui-preprod
       domain: sdc-social-preprod.ons.statistics.gov.uk
 
-disabled-jobs:
+
 - name: response-operations-social-ui-prod-deploy
   serial: true
   plan:
@@ -276,10 +275,10 @@ disabled-jobs:
     params:
       command: map-route
       app_name: response-operations-social-ui-prod
-      domain:
+      domain: sdc-social-prod.rmdev.onsdigital.uk
   - put: map-route-internal-domain
     resource: cf-cli-resource-prod
     params:
       command: map-route
       app_name: response-operations-social-ui-prod
-      domain:
+      domain: sdc-social.ons.statistics.gov.uk
