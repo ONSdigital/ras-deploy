@@ -84,7 +84,7 @@ jobs:
       environment_variables:
         HOST: 0.0.0.0
         LOG_LEVEL: INFO
-        ACCOUNT_SERVICE_URL: http://respondent-home-ui-latest.apps.devtest.onsclofo.uk
+        ACCOUNT_SERVICE_URL: http://respondent-home-ui-latest.apps.devtest.onsclofo.uk      # Remember to exclude all path prefixes here
         EQ_URL: https://staging-new-surveys.dev.eq.ons.digital
         JSON_SECRET_KEYS: ((latest_json_secret_keys))
         CASE_URL: http://rm-case-service-concourse-latest.apps.devtest.onsclofo.uk
@@ -119,6 +119,7 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: respondent-home-ui-source/ci/smoke_tests.yml
     params:
+      RESPONDENT_HOME_INTERNAL_URL: https://respondent-home-ui-latest.apps.devtest.onsclofo.uk
       RESPONDENT_HOME_URL: https://respondent-home-ui-latest.apps.devtest.onsclofo.uk
 
 - name: respondent-home-ui-preprod-deploy
@@ -142,7 +143,7 @@ jobs:
       environment_variables:
         HOST: 0.0.0.0
         LOG_LEVEL: INFO
-        ACCOUNT_SERVICE_URL: https://ohs-alpha.onsdigital.uk
+        ACCOUNT_SERVICE_URL: ((preprod_account_service_url))    # Remember to exclude all path prefixes here
         EQ_URL: https://eq.onsdigital.uk
         JSON_SECRET_KEYS: ((preprod_json_secret_keys))
         CASE_URL: http://casesvc-preprod.((preprod_cloudfoundry_apps_domain))
@@ -167,6 +168,7 @@ jobs:
         SAMPLE_USERNAME: ((preprod_security_user_name))
         SAMPLE_PASSWORD: ((preprod_security_user_password))
         SECRET_KEY: ((preprod_rh_secret_key))
+        URL_PATH_PREFIX: /((preprod_path))
 
   - put: map-route-vpn-domain
     resource: cf-cli-resource-preprod
@@ -180,6 +182,13 @@ jobs:
       app_name: respondent-home-ui-preprod
       command: map-route
       domain: ohs-alpha.onsdigital.uk
+  - put: map-route-ons-internal-preprod-domain
+    resource: cf-cli-resource-preprod
+    params:
+      app_name: respondent-home-ui-preprod
+      command: map-route
+      domain: ((preprod_domain))
+      path: ((preprod_path))
   - task: smoke-tests
     on_failure:
       put: notify
@@ -189,7 +198,9 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: respondent-home-ui-source/ci/smoke_tests.yml
     params:
-      RESPONDENT_HOME_URL: https://respondent-home-ui-preprod.((preprod_cloudfoundry_apps_domain))
+      RESPONDENT_HOME_INTERNAL_URL: https://respondent-home-ui-preprod.((preprod_cloudfoundry_apps_domain))
+      RESPONDENT_HOME_URL: https://((preprod_domain))
+      URL_PATH_PREFIX: /((preprod_path))
 
 - name: respondent-home-ui-prod-deploy
   serial: true
@@ -213,7 +224,7 @@ jobs:
         APP_SETTINGS: ProductionConfig
         HOST: 0.0.0.0
         LOG_LEVEL: INFO
-        ACCOUNT_SERVICE_URL: ((prod_account_service_url))
+        ACCOUNT_SERVICE_URL: ((prod_account_service_url))   # Remember to exclude all path prefixes here
         EQ_URL: https://eq.ons.gov.uk
         JSON_SECRET_KEYS: ((prod_json_secret_keys))
         CASE_URL: http://casesvc-prod.((prod_cloudfoundry_apps_domain))
@@ -238,8 +249,15 @@ jobs:
         SAMPLE_USERNAME: ((prod_security_user_name))
         SAMPLE_PASSWORD: ((prod_security_user_password))
         SECRET_KEY: ((prod_rh_secret_key))
-        URL_PATH_PREFIX: /myStudy
+        URL_PATH_PREFIX: /((prod_path))
 
+  - put: map-route-ons-external-prod-domain
+    resource: cf-cli-resource-prod
+    params:
+      app_name: respondent-home-ui-prod
+      command: map-route
+      domain: ((prod_domain))
+      path: ((prod_path))
   - task: smoke-tests
     on_failure:
       put: notify
@@ -249,4 +267,6 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: respondent-home-ui-source/ci/smoke_tests.yml
     params:
-      RESPONDENT_HOME_URL: https://respondent-home-ui-prod.((prod_cloudfoundry_apps_domain))
+      RESPONDENT_HOME_INTERNAL_URL: https://respondent-home-ui-prod.((prod_cloudfoundry_apps_domain))
+      RESPONDENT_HOME_URL: https://((prod_domain))
+      URL_PATH_PREFIX: /((prod_path))
