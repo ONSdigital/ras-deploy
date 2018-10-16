@@ -24,16 +24,6 @@ resources:
     uri: https://github.com/ONSdigital/ras-deploy.git
     branch: response-ops-social-prod
 
-- name: cf-resource-latest
-  type: cf
-  source:
-    api: ((cloudfoundry_api))
-    username: ((cloudfoundry_email))
-    password: ((cloudfoundry_password))
-    organization: rmras
-    space: concourse-latest
-    skip_cert_check: true
-
 - name: cf-resource-preprod
   type: cf
   source:
@@ -42,17 +32,6 @@ resources:
     password: ((preprod_cloudfoundry_password))
     organization: rmras
     space: preprod
-    skip_cert_check: true
-
-
-- name: cf-cli-resource-latest
-  type: cf-cli-resource
-  source:
-    api: ((cloudfoundry_api))
-    username: ((cloudfoundry_email))
-    password: ((cloudfoundry_password))
-    org: rmras
-    space: concourse-latest
     skip_cert_check: true
 
 - name: cf-cli-resource-preprod
@@ -64,11 +43,6 @@ resources:
     org: rmras
     space: preprod
     skip_cert_check: true
-
-- name: notify
-  type: slack-notification
-  source:
-    url: ((slack_webhook))
 
 - name: cf-cli-resource-prod
   type: cf-cli-resource
@@ -90,67 +64,16 @@ resources:
     space: prod
     skip_cert_check: true
 
-jobs:
-- name: response-operations-social-ui-latest-deploy
-  serial: true
-  plan:
-  - get: response-operations-social-ui-source
-    trigger: true
-  - get: ras-deploy
-  - task: run-unit-tests
-    file: ras-deploy/tasks/python-unit-tests.yml
-    input_mapping: { repository-name: response-operations-social-ui-source }
-    on_failure:
-      put: notify
-      params:
-        text:  |
-          Latest response-operations-social-ui unit tests failed. See build:
-          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-  - put: create-redis
-    resource: cf-cli-resource-latest
-    params:
-      command: create-service
-      service: elasticache-broker
-      plan: small
-      service_instance: ras-redis
-      timeout: 1800
-      wait_for_service: true
-  - put: push-app
-    resource: cf-resource-latest
-    on_failure:
-      put: notify
-      params:
-        text:  |
-          Latest response-operations-social-ui deployment failed. See build:
-          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-    params:
-      current_app_name: response-operations-social-ui-latest
-      manifest: response-operations-social-ui-source/manifest.yml
-      path: response-operations-social-ui-source
-      environment_variables:
-        APP_SETTINGS: Config
-        CASE_URL: http://rm-case-service-concourse-latest.apps.devtest.onsclofo.uk
-        IAC_URL: http://iac-service-concourse-latest.apps.devtest.onsclofo.uk
-        SAMPLE_URL: http://rm-sample-service-concourse-latest.apps.devtest.onsclofo.uk
-        REPORT_URL: http://rm-reporting-concourse-latest.apps.devtest.onsclofo.uk
-        UAA_SERVICE_URL: http://uaa-concourse-latest.apps.devtest.onsclofo.uk
-        UAA_CLIENT_ID: 'response_operations_social'
-        UAA_CLIENT_SECRET: ((latest_response_operations_social_client_secret))
-        CASE_USERNAME: ((latest_security_user_name))
-        CASE_PASSWORD: ((latest_security_user_password))
-        IAC_USERNAME: ((latest_security_user_name))
-        IAC_PASSWORD: ((latest_security_user_password))
-        SAMPLE_USERNAME: ((latest_security_user_name))
-        SAMPLE_PASSWORD: ((latest_security_user_password))
-        SECURITY_USER_NAME: ((latest_security_user_name))
-        SECURITY_USER_PASSWORD: ((latest_security_user_password))
-        REDIS_SERVICE: ras-redis
+- name: notify
+  type: slack-notification
+  source:
+    url: ((slack_webhook))
 
+jobs:
 - name: response-operations-social-ui-preprod-deploy
   serial: true
   plan:
   - get: response-operations-social-ui-source
-    passed: [response-operations-social-ui-latest-deploy]
     trigger: true
   - get: ras-deploy
   - task: run-unit-tests
