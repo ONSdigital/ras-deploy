@@ -249,7 +249,7 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: response-operations-social-ui-prod
-      manifest: response-operations-social-ui-source/manifest.yml
+      manifest: response-operations-social-ui-source/manifests/manifest-preprod.yml
       path: response-operations-social-ui-source
       environment_variables:
         APP_SETTINGS: Config
