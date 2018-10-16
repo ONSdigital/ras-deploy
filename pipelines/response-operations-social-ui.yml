@@ -133,7 +133,7 @@ jobs:
         CASE_URL: http://rm-case-service-concourse-latest.apps.devtest.onsclofo.uk
         IAC_URL: http://iac-service-concourse-latest.apps.devtest.onsclofo.uk
         SAMPLE_URL: http://rm-sample-service-concourse-latest.apps.devtest.onsclofo.uk
-        REPORTING_URL: http://rm-reporting-concourse-latest.apps.devtest.onsclofo.uk
+        REPORT_URL: http://rm-reporting-concourse-latest.apps.devtest.onsclofo.uk
         UAA_SERVICE_URL: http://uaa-concourse-latest.apps.devtest.onsclofo.uk
         UAA_CLIENT_ID: 'response_operations_social'
         UAA_CLIENT_SECRET: ((latest_response_operations_social_client_secret))
@@ -189,7 +189,7 @@ jobs:
         CASE_URL: http://casesvc-preprod.((preprod_cloudfoundry_apps_domain))
         IAC_URL: http://iacsvc-preprod.((preprod_cloudfoundry_apps_domain))
         SAMPLE_URL: http://samplesvc-preprod.((preprod_cloudfoundry_apps_domain))
-        REPORTING_URL: http://rm-reporting-preprod.((preprod_cloudfoundry_apps_domain))
+        REPORT_URL: http://rm-reporting-preprod.((preprod_cloudfoundry_apps_domain))
         UAA_SERVICE_URL: http://uaa-preprod.((preprod_cloudfoundry_apps_domain))
         UAA_CLIENT_ID: 'response_operations_social'
         UAA_CLIENT_SECRET: ((preprod_response_operations_social_client_secret))
@@ -258,7 +258,7 @@ disabled-jobs:
         CASE_URL: http://casesvc-prod.((prod_cloudfoundry_apps_domain))
         IAC_URL: http://iacsvc-prod.((prod_cloudfoundry_apps_domain))
         SAMPLE_URL: http://samplesvc-prod.((prod_cloudfoundry_apps_domain))
-        REPORTING_URL: http://rm-reporting.((prod_cloudfoundry_apps_domain))
+        REPORT_URL: http://rm-reporting.((prod_cloudfoundry_apps_domain))
         UAA_SERVICE_URL: http://uaa-prod.((prod_cloudfoundry_apps_domain))
         UAA_CLIENT_ID: 'response_operations_social'
         UAA_CLIENT_SECRET: ((prod_response_operations_social_client_secret))
