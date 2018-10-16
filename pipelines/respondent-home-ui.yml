@@ -119,6 +119,7 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: respondent-home-ui-source/ci/smoke_tests.yml
     params:
+      RESPONDENT_HOME_INTERNAL_URL: https://respondent-home-ui-latest.apps.devtest.onsclofo.uk
       RESPONDENT_HOME_URL: https://respondent-home-ui-latest.apps.devtest.onsclofo.uk
 
 - name: respondent-home-ui-preprod-deploy
@@ -197,7 +198,8 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: respondent-home-ui-source/ci/smoke_tests.yml
     params:
-      RESPONDENT_HOME_URL: https://respondent-home-ui-preprod.((preprod_cloudfoundry_apps_domain))
+      RESPONDENT_HOME_INTERNAL_URL: https://respondent-home-ui-preprod.((preprod_cloudfoundry_apps_domain))
+      RESPONDENT_HOME_URL: https://((preprod_domain))
       URL_PATH_PREFIX: /((preprod_path))
 
 - name: respondent-home-ui-prod-deploy
@@ -265,5 +267,6 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: respondent-home-ui-source/ci/smoke_tests.yml
     params:
-      RESPONDENT_HOME_URL: https://respondent-home-ui-prod.((prod_cloudfoundry_apps_domain))
+      RESPONDENT_HOME_INTERNAL_URL: https://respondent-home-ui-prod.((prod_cloudfoundry_apps_domain))
+      RESPONDENT_HOME_URL: https://((prod_domain))
       URL_PATH_PREFIX: /((prod_path))
