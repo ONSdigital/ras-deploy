@@ -214,7 +214,6 @@ jobs:
       app_name: response-operations-social-ui-preprod
       domain: sdc-social-preprod.ons.statistics.gov.uk
 
-
 - name: response-operations-social-ui-prod-deploy
   serial: true
   plan:
@@ -235,7 +234,7 @@ jobs:
     resource: cf-cli-resource-prod
     params:
       command: create-service
-      service: elasticache-broker
+      service: awselasticache-redis
       plan: small
       service_instance: res-ops-redis
       timeout: 1800
