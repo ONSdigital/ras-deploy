@@ -209,7 +209,7 @@ jobs:
     file: respondent-home-ui-source/ci/smoke_tests.yml
     params:
       RESPONDENT_HOME_INTERNAL_URL: https://respondent-home-ui-preprod.((preprod_cloudfoundry_apps_domain))
-      RESPONDENT_HOME_URL: https://((preprod_domain))
+      RESPONDENT_HOME_URL: https://respondent-home-ui-preprod.((preprod_cloudfoundry_apps_domain))
       URL_PATH_PREFIX: /((preprod_path))
 
 - name: respondent-home-ui-prod-deploy
