@@ -22,7 +22,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-deploy.git
-    branch: response-ops-social-prod
+    branch: master
 
 - name: cf-resource-preprod
   type: cf
