@@ -129,13 +129,13 @@ jobs:
     params:
       command: map-route
       app_name: response-operations-social-ui-preprod
-      domain: sdc-social-preprod.rmdev.onsdigital.uk
+      domain: ((preprod_vpn_domain))
   - put: map-route-internal-domain
     resource: cf-cli-resource-preprod
     params:
       command: map-route
       app_name: response-operations-social-ui-preprod
-      domain: sdc-social-preprod.ons.statistics.gov.uk
+      domain: ((preprod_internal_domain))
 
 - name: response-operations-social-ui-prod-deploy
   serial: true
@@ -197,10 +197,10 @@ jobs:
     params:
       command: map-route
       app_name: response-operations-social-ui-prod
-      domain: sdc-social-prod.rmdev.onsdigital.uk
+      domain: ((prod_vpn_domain))
   - put: map-route-internal-domain
     resource: cf-cli-resource-prod
     params:
       command: map-route
       app_name: response-operations-social-ui-prod
-      domain: sdc-social.ons.statistics.gov.uk
+      domain: ((prod_internal_domain))
