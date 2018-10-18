@@ -1,0 +1,206 @@
+---
+resource_types:
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+
+- name: cf-cli-resource
+  type: docker-image
+  source:
+    repository: nulldriver/cf-cli-resource
+    tag: latest
+
+resources:
+- name: response-operations-social-ui-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/response-operations-social-ui.git
+    branch: master
+
+- name: ras-deploy
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-deploy.git
+    branch: master
+
+- name: cf-resource-preprod
+  type: cf
+  source:
+    api: ((preprod_cloudfoundry_api))
+    username: ((preprod_cloudfoundry_email))
+    password: ((preprod_cloudfoundry_password))
+    organization: rmras
+    space: preprod
+    skip_cert_check: true
+
+- name: cf-cli-resource-preprod
+  type: cf-cli-resource
+  source:
+    api: ((preprod_cloudfoundry_api))
+    username: ((preprod_cloudfoundry_email))
+    password: ((preprod_cloudfoundry_password))
+    org: rmras
+    space: preprod
+    skip_cert_check: true
+
+- name: cf-cli-resource-prod
+  type: cf-cli-resource
+  source:
+    api: ((prod_cloudfoundry_api))
+    username: ((prod_cloudfoundry_email))
+    password: ((prod_cloudfoundry_password))
+    org: rmras
+    space: prod
+    skip_cert_check: true
+
+- name: cf-resource-prod
+  type: cf
+  source:
+    api: ((prod_cloudfoundry_api))
+    username: ((prod_cloudfoundry_email))
+    password: ((prod_cloudfoundry_password))
+    organization: rmras
+    space: prod
+    skip_cert_check: true
+
+- name: notify
+  type: slack-notification
+  source:
+    url: ((slack_webhook))
+
+jobs:
+- name: response-operations-social-ui-preprod-deploy
+  serial: true
+  plan:
+  - get: response-operations-social-ui-source
+    trigger: true
+  - get: ras-deploy
+  - task: run-unit-tests
+    file: ras-deploy/tasks/python-unit-tests.yml
+    input_mapping: { repository-name: response-operations-social-ui-source }
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Pre-production response-operations-social-ui unit tests failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  - put: create-redis
+    resource: cf-cli-resource-preprod
+    params:
+      command: create-service
+      service: awselasticache-redis
+      plan: small
+      service_instance: res-ops-redis
+      timeout: 1800
+      wait_for_service: true
+  - put: push-app
+    resource: cf-resource-preprod
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Pre-production response-operations-social-ui deployment failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    params:
+      current_app_name: response-operations-social-ui-preprod
+      manifest: response-operations-social-ui-source/manifests/manifest-prod.yml
+      path: response-operations-social-ui-source
+      environment_variables:
+        APP_SETTINGS: Config
+        CASE_URL: http://casesvc-preprod.((preprod_cloudfoundry_apps_domain))
+        IAC_URL: http://iacsvc-preprod.((preprod_cloudfoundry_apps_domain))
+        SAMPLE_URL: http://samplesvc-preprod.((preprod_cloudfoundry_apps_domain))
+        REPORT_URL: http://rm-reporting-preprod.((preprod_cloudfoundry_apps_domain))
+        UAA_SERVICE_URL: http://uaa-preprod.((preprod_cloudfoundry_apps_domain))
+        UAA_CLIENT_ID: 'response_operations_social'
+        UAA_CLIENT_SECRET: ((preprod_response_operations_social_client_secret))
+        CASE_USERNAME: ((preprod_security_user_name))
+        CASE_PASSWORD: ((preprod_security_user_password))
+        IAC_USERNAME: ((preprod_security_user_name))
+        IAC_PASSWORD: ((preprod_security_user_password))
+        SAMPLE_USERNAME: ((preprod_security_user_name))
+        SAMPLE_PASSWORD: ((preprod_security_user_password))
+        SECURITY_USER_NAME: ((preprod_security_user_name))
+        SECURITY_USER_PASSWORD: ((preprod_security_user_password))
+        REDIS_SERVICE: res-ops-redis
+  - put: map-route-vpn-domain
+    resource: cf-cli-resource-preprod
+    params:
+      command: map-route
+      app_name: response-operations-social-ui-preprod
+      domain: ((preprod_vpn_domain))
+  - put: map-route-internal-domain
+    resource: cf-cli-resource-preprod
+    params:
+      command: map-route
+      app_name: response-operations-social-ui-preprod
+      domain: ((preprod_internal_domain))
+
+- name: response-operations-social-ui-prod-deploy
+  serial: true
+  plan:
+  - get: response-operations-social-ui-source
+    passed: [response-operations-social-ui-preprod-deploy]
+    trigger: true
+  - get: ras-deploy
+  - task: run-unit-tests
+    file: ras-deploy/tasks/python-unit-tests.yml
+    input_mapping: { repository-name: response-operations-social-ui-source }
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Production response-operations-social-ui unit tests failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  - put: create-redis
+    resource: cf-cli-resource-prod
+    params:
+      command: create-service
+      service: awselasticache-redis
+      plan: small
+      service_instance: res-ops-redis
+      timeout: 1800
+      wait_for_service: true
+  - put: push-app
+    resource: cf-resource-prod
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Production response-operations-social-ui deployment failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    params:
+      current_app_name: response-operations-social-ui-prod
+      manifest: response-operations-social-ui-source/manifests/manifest-prod.yml
+      path: response-operations-social-ui-source
+      environment_variables:
+        APP_SETTINGS: Config
+        CASE_URL: http://casesvc-prod.((prod_cloudfoundry_apps_domain))
+        IAC_URL: http://iacsvc-prod.((prod_cloudfoundry_apps_domain))
+        SAMPLE_URL: http://samplesvc-prod.((prod_cloudfoundry_apps_domain))
+        REPORT_URL: http://rm-reporting.((prod_cloudfoundry_apps_domain))
+        UAA_SERVICE_URL: http://uaa-prod.((prod_cloudfoundry_apps_domain))
+        UAA_CLIENT_ID: 'response_operations_social'
+        UAA_CLIENT_SECRET: ((prod_response_operations_social_client_secret))
+        CASE_USERNAME: ((prod_security_user_name))
+        CASE_PASSWORD: ((prod_security_user_password))
+        IAC_USERNAME: ((prod_security_user_name))
+        IAC_PASSWORD: ((prod_security_user_password))
+        SAMPLE_USERNAME: ((prod_security_user_name))
+        SAMPLE_PASSWORD: ((prod_security_user_password))
+        SECURITY_USER_NAME: ((prod_security_user_name))
+        SECURITY_USER_PASSWORD: ((prod_security_user_password))
+        REDIS_SERVICE: res-ops-redis
+  - put: map-route-vpn-domain
+    resource: cf-cli-resource-prod
+    params:
+      command: map-route
+      app_name: response-operations-social-ui-prod
+      domain: ((prod_vpn_domain))
+  - put: map-route-internal-domain
+    resource: cf-cli-resource-prod
+    params:
+      command: map-route
+      app_name: response-operations-social-ui-prod
+      domain: ((prod_internal_domain))
