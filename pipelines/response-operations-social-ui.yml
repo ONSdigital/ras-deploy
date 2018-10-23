@@ -179,7 +179,7 @@ jobs:
         CASE_URL: http://casesvc-prod.((prod_cloudfoundry_apps_domain))
         IAC_URL: http://iacsvc-prod.((prod_cloudfoundry_apps_domain))
         SAMPLE_URL: http://samplesvc-prod.((prod_cloudfoundry_apps_domain))
-        REPORT_URL: http://rm-reporting.((prod_cloudfoundry_apps_domain))
+        REPORT_URL: http://rm-reporting-prod.((prod_cloudfoundry_apps_domain))
         UAA_SERVICE_URL: http://uaa-prod.((prod_cloudfoundry_apps_domain))
         UAA_CLIENT_ID: 'response_operations_social'
         UAA_CLIENT_SECRET: ((prod_response_operations_social_client_secret))
