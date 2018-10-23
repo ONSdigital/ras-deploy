@@ -179,6 +179,7 @@ jobs:
         SAMPLE_PASSWORD: ((preprod_security_user_password))
         SECRET_KEY: ((preprod_rh_secret_key))
         URL_PATH_PREFIX: /((preprod_path))
+        ANALYTICS_UA_ID: ((preprod_analytics_ua_id))
 
   - put: map-route-vpn-domain
     resource: cf-cli-resource-preprod
@@ -260,6 +261,7 @@ jobs:
         SAMPLE_PASSWORD: ((prod_security_user_password))
         SECRET_KEY: ((prod_rh_secret_key))
         URL_PATH_PREFIX: /((prod_path))
+        ANALYTICS_UA_ID: ((prod_analytics_ua_id))
 
   - put: map-route-ons-external-prod-domain
     resource: cf-cli-resource-prod
