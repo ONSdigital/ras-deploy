@@ -12,17 +12,25 @@ resource_types:
     tag: latest
 
 resources:
-- name: response-operations-social-ui-source
-  type: git
-  source:
-    uri: https://github.com/ONSdigital/response-operations-social-ui.git
-    branch: master
-
 - name: ras-deploy
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-deploy.git
     branch: master
+
+- name: response-operations-social-ui-pre-release
+  type: github-release
+  source:
+    user: ONSdigital
+    repository: response-operations-social-ui
+    release: false
+    pre_release: true
+
+- name: response-operations-social-ui-release
+  type: github-release
+  source:
+    user: ONSdigital
+    repository: response-operations-social-ui
 
 - name: cf-resource-preprod
   type: cf
@@ -70,15 +78,120 @@ resources:
     url: ((slack_webhook))
 
 jobs:
-- name: response-operations-social-ui-preprod-deploy
+- name: response-operations-social-ui-preprod-pre-release-deploy
   serial: true
+  serial_groups: [preprod_deploys]
   plan:
-  - get: response-operations-social-ui-source
+  - get: response-operations-social-ui-pre-release
     trigger: true
   - get: ras-deploy
+  - task: extract-source
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: alpine
+          tag: latest
+      inputs:
+      - name: response-operations-social-ui-pre-release
+      outputs:
+      - name: response-operations-social-ui-pre-release-source
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          tar -xzf response-operations-social-ui-pre-release/source.tar.gz -C response-operations-social-ui-pre-release-source --strip-components=1
   - task: run-unit-tests
     file: ras-deploy/tasks/python-unit-tests.yml
-    input_mapping: { repository-name: response-operations-social-ui-source }
+    input_mapping: { repository-name: response-operations-social-ui-pre-release-source }
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Pre-production pre-release response-operations-social-ui unit tests failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  - put: create-redis
+    resource: cf-cli-resource-preprod
+    params:
+      command: create-service
+      service: awselasticache-redis
+      plan: small
+      service_instance: res-ops-redis
+      timeout: 1800
+      wait_for_service: true
+  - put: push-app
+    resource: cf-resource-preprod
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Pre-production pre-release response-operations-social-ui deployment failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    params:
+      current_app_name: response-operations-social-ui-preprod
+      manifest: response-operations-social-ui-pre-release-source/manifests/manifest-prod.yml
+      path: response-operations-social-ui-pre-release-source
+      environment_variables:
+        APP_SETTINGS: Config
+        CASE_URL: http://casesvc-preprod.((preprod_cloudfoundry_apps_domain))
+        IAC_URL: http://iacsvc-preprod.((preprod_cloudfoundry_apps_domain))
+        SAMPLE_URL: http://samplesvc-preprod.((preprod_cloudfoundry_apps_domain))
+        REPORT_URL: http://rm-reporting-preprod.((preprod_cloudfoundry_apps_domain))
+        UAA_SERVICE_URL: http://uaa-preprod.((preprod_cloudfoundry_apps_domain))
+        UAA_CLIENT_ID: 'response_operations_social'
+        UAA_CLIENT_SECRET: ((preprod_response_operations_social_client_secret))
+        CASE_USERNAME: ((preprod_security_user_name))
+        CASE_PASSWORD: ((preprod_security_user_password))
+        IAC_USERNAME: ((preprod_security_user_name))
+        IAC_PASSWORD: ((preprod_security_user_password))
+        SAMPLE_USERNAME: ((preprod_security_user_name))
+        SAMPLE_PASSWORD: ((preprod_security_user_password))
+        SECURITY_USER_NAME: ((preprod_security_user_name))
+        SECURITY_USER_PASSWORD: ((preprod_security_user_password))
+        REDIS_SERVICE: res-ops-redis
+  - put: map-route-vpn-domain
+    resource: cf-cli-resource-preprod
+    params:
+      command: map-route
+      app_name: response-operations-social-ui-preprod
+      domain: ((preprod_vpn_domain))
+  - put: map-route-internal-domain
+    resource: cf-cli-resource-preprod
+    params:
+      command: map-route
+      app_name: response-operations-social-ui-preprod
+      domain: ((preprod_internal_domain))
+
+- name: response-operations-social-ui-preprod-deploy
+  serial: true
+  serial_groups: [preprod_deploys]
+  plan:
+  - get: response-operations-social-ui-release
+    trigger: true
+  - get: ras-deploy
+  - task: extract-source
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: alpine
+          tag: latest
+      inputs:
+      - name: response-operations-social-ui-release
+      outputs:
+      - name: response-operations-social-ui-release-source
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          tar -xzf response-operations-social-ui-release/source.tar.gz -C response-operations-social-ui-release-source --strip-components=1
+  - task: run-unit-tests
+    file: ras-deploy/tasks/python-unit-tests.yml
+    input_mapping: { repository-name: response-operations-social-ui-release-source }
     on_failure:
       put: notify
       params:
@@ -104,8 +217,8 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: response-operations-social-ui-preprod
-      manifest: response-operations-social-ui-source/manifests/manifest-prod.yml
-      path: response-operations-social-ui-source
+      manifest: response-operations-social-ui-release-source/manifests/manifest-prod.yml
+      path: response-operations-social-ui-release-source
       environment_variables:
         APP_SETTINGS: Config
         CASE_URL: http://casesvc-preprod.((preprod_cloudfoundry_apps_domain))
@@ -140,13 +253,31 @@ jobs:
 - name: response-operations-social-ui-prod-deploy
   serial: true
   plan:
-  - get: response-operations-social-ui-source
+  - get: response-operations-social-ui-release
     passed: [response-operations-social-ui-preprod-deploy]
     trigger: true
   - get: ras-deploy
+  - task: extract-source
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: alpine
+          tag: latest
+      inputs:
+      - name: response-operations-social-ui-release
+      outputs:
+      - name: response-operations-social-ui-release-source
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          tar -xzf response-operations-social-ui-release/source.tar.gz -C response-operations-social-ui-release-source --strip-components=1
   - task: run-unit-tests
     file: ras-deploy/tasks/python-unit-tests.yml
-    input_mapping: { repository-name: response-operations-social-ui-source }
+    input_mapping: { repository-name: response-operations-social-ui-release-source }
     on_failure:
       put: notify
       params:
@@ -172,8 +303,8 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: response-operations-social-ui-prod
-      manifest: response-operations-social-ui-source/manifests/manifest-prod.yml
-      path: response-operations-social-ui-source
+      manifest: response-operations-social-ui-release-source/manifests/manifest-prod.yml
+      path: response-operations-social-ui-release-source
       environment_variables:
         APP_SETTINGS: Config
         CASE_URL: http://casesvc-prod.((prod_cloudfoundry_apps_domain))
