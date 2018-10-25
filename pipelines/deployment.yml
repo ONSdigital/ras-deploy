@@ -1327,6 +1327,7 @@ jobs:
         REDIS_SERVICE: ras-redis
         UAA_CLIENT_ID: 'response_operations'
         UAA_CLIENT_SECRET: ((ci_response_operations_client_secret))
+	FEATURE_ENABLE_CLOSE_CONVERSATION: 'True'
 
 - name: response-operations-social-ui-ci-deploy
   serial_groups: [response-operations-social-ui-ci-deploy]
