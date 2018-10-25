@@ -23,5 +23,5 @@ run:
   - -exc
   - |
     mkdir -p .m2/repository
-    mvn --settings repository-name/.maven.settings.xml install -Ddockerfile.skip -Ddocker.skip -DskipITs -Dhttp.wait.skip -f repository-name/pom.xml -Dmaven.repo.local=.m2/repository
+    mvn --settings repository-name/.maven.settings.xml install -DdockerComposeSkip -Ddockerfile.skip -Ddocker.skip -DskipITs -Dhttp.wait.skip -f repository-name/pom.xml -Dmaven.repo.local=.m2/repository
     cp -r repository-name/target/ .
