@@ -84,6 +84,8 @@ jobs:
   plan:
   - get: response-operations-social-ui-pre-release
     trigger: true
+    params:
+      include_source_tarball: true
   - get: ras-deploy
   - task: extract-source-from-release-tarball
     file: ras-deploy/tasks/extract-source-from-release.yml
@@ -156,6 +158,8 @@ jobs:
   plan:
   - get: response-operations-social-ui-release
     trigger: true
+    params:
+      include_source_tarball: true
   - get: ras-deploy
   - task: extract-source-from-release-tarball
     file: ras-deploy/tasks/extract-source-from-release.yml
@@ -228,6 +232,8 @@ jobs:
   - get: response-operations-social-ui-release
     passed: [response-operations-social-ui-preprod-deploy]
     trigger: true
+    params:
+      include_source_tarball: true
   - get: ras-deploy
   - task: extract-source-from-release-tarball
     file: ras-deploy/tasks/extract-source-from-release.yml
