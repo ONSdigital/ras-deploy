@@ -18,6 +18,12 @@ resources:
     uri: https://github.com/ONSdigital/respondent-home-ui.git
     branch: master
 
+- name: ras-deploy
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-deploy.git
+    branch: master
+
 - name: respondent-home-ui-release
   type: github-release
   source:
@@ -99,7 +105,7 @@ jobs:
       put: notify
       params:
         text:  |
-          Latest respondent-home-ui deployment failed. See build:
+          Latest space respondent-home-ui deployment failed. See build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: respondent-home-ui-latest
@@ -139,7 +145,7 @@ jobs:
       put: notify
       params:
         text:  |
-          Latest smoke tests failed. Check the build:
+          Latest space respondent-home-ui smoke tests failed. Check the build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: respondent-home-ui-source/ci/smoke_tests.yml
     params:
@@ -154,24 +160,11 @@ jobs:
     trigger: true
     params:
       include_source_tarball: true
-  - task: extract-release-source
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: alpine
-          tag: latest
-      inputs:
-      - name: respondent-home-ui-pre-release
-      outputs:
-      - name: respondent-home-ui-pre-release-source
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          tar -xzf respondent-home-ui-pre-release/source.tar.gz -C respondent-home-ui-pre-release-source --strip-components=1
+  - get: ras-deploy
+  - task: extract-source-from-release-tarball
+    file: ras-deploy/tasks/extract-source-from-release.yml
+    input_mapping: { release-resource: respondent-home-ui-pre-release }
+    output_mapping: { release-source: respondent-home-ui-pre-release-source }
   - put: push-app
     resource: cf-resource-preprod
     on_failure:
@@ -182,8 +175,8 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: respondent-home-ui-preprod
-      manifest: rrespondent-home-ui-release-source/manifest.yml
-      path: respondent-home-ui-release-source
+      manifest: respondent-home-ui-pre-release-source/manifest.yml
+      path: respondent-home-ui-pre-release-source
       environment_variables:
         HOST: 0.0.0.0
         LOG_LEVEL: INFO
@@ -239,7 +232,7 @@ jobs:
       put: notify
       params:
         text:  |
-          Pre-production smoke tests failed. Check the build:
+          Pre-production respondent-home-ui smoke tests failed. Check the build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: respondent-home-ui-release-source/ci/smoke_tests.yml
     params:
@@ -255,24 +248,11 @@ jobs:
     trigger: true
     params:
       include_source_tarball: true
-  - task: extract-release-source
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: alpine
-          tag: latest
-      inputs:
-      - name: respondent-home-ui-release
-      outputs:
-      - name: respondent-home-ui-release-source
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          tar -xzf respondent-home-ui-release/source.tar.gz -C respondent-home-ui-release-source --strip-components=1
+  - get: ras-deploy
+  - task: extract-source-from-release-tarball
+    file: ras-deploy/tasks/extract-source-from-release.yml
+    input_mapping: { release-resource: respondent-home-ui-release }
+    output_mapping: { release-source: respondent-home-ui-release-source }
   - put: push-app
     resource: cf-resource-preprod
     on_failure:
@@ -340,7 +320,7 @@ jobs:
       put: notify
       params:
         text:  |
-          Pre-production smoke tests failed. Check the build:
+          Pre-production respondent-home-ui smoke tests failed. Check the build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: respondent-home-ui-release-source/ci/smoke_tests.yml
     params:
@@ -356,24 +336,11 @@ jobs:
     trigger: true
     params:
       include_source_tarball: true
-  - task: extract-release-source
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: alpine
-          tag: latest
-      inputs:
-      - name: respondent-home-ui-release
-      outputs:
-      - name: respondent-home-ui-release-source
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          tar -xzf respondent-home-ui-release/source.tar.gz -C respondent-home-ui-release-source --strip-components=1
+  - get: ras-deploy
+  - task: extract-source-from-release-tarball
+    file: ras-deploy/tasks/extract-source-from-release.yml
+    input_mapping: { release-resource: respondent-home-ui-release }
+    output_mapping: { release-source: respondent-home-ui-release-source }
   - put: push-app
     resource: cf-resource-prod
     on_failure:
@@ -430,7 +397,7 @@ jobs:
       put: notify
       params:
         text:  |
-          Production smoke tests failed. Check the build:
+          Production respondent-home-ui smoke tests failed. Check the build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: respondent-home-ui-release-source/ci/smoke_tests.yml
     params:
