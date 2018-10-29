@@ -85,24 +85,10 @@ jobs:
   - get: response-operations-social-ui-pre-release
     trigger: true
   - get: ras-deploy
-  - task: extract-source
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: alpine
-          tag: latest
-      inputs:
-      - name: response-operations-social-ui-pre-release
-      outputs:
-      - name: response-operations-social-ui-pre-release-source
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          tar -xzf response-operations-social-ui-pre-release/source.tar.gz -C response-operations-social-ui-pre-release-source --strip-components=1
+  - task: extract-source-from-release-tarball
+    file: ras-deploy/tasks/extract-source-from-release.yml
+    input_mapping: { release-resource: response-operations-social-ui-pre-release }
+    output_mapping: { release-source: response-operations-social-ui-pre-release-source }
   - task: run-unit-tests
     file: ras-deploy/tasks/python-unit-tests.yml
     input_mapping: { repository-name: response-operations-social-ui-pre-release-source }
@@ -171,24 +157,10 @@ jobs:
   - get: response-operations-social-ui-release
     trigger: true
   - get: ras-deploy
-  - task: extract-source
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: alpine
-          tag: latest
-      inputs:
-      - name: response-operations-social-ui-release
-      outputs:
-      - name: response-operations-social-ui-release-source
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          tar -xzf response-operations-social-ui-release/source.tar.gz -C response-operations-social-ui-release-source --strip-components=1
+  - task: extract-source-from-release-tarball
+    file: ras-deploy/tasks/extract-source-from-release.yml
+    input_mapping: { release-resource: response-operations-social-ui-release }
+    output_mapping: { release-source: response-operations-social-ui-release-source }
   - task: run-unit-tests
     file: ras-deploy/tasks/python-unit-tests.yml
     input_mapping: { repository-name: response-operations-social-ui-release-source }
@@ -257,24 +229,10 @@ jobs:
     passed: [response-operations-social-ui-preprod-deploy]
     trigger: true
   - get: ras-deploy
-  - task: extract-source
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: alpine
-          tag: latest
-      inputs:
-      - name: response-operations-social-ui-release
-      outputs:
-      - name: response-operations-social-ui-release-source
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          tar -xzf response-operations-social-ui-release/source.tar.gz -C response-operations-social-ui-release-source --strip-components=1
+  - task: extract-source-from-release-tarball
+    file: ras-deploy/tasks/extract-source-from-release.yml
+    input_mapping: { release-resource: response-operations-social-ui-release }
+    output_mapping: { release-source: response-operations-social-ui-release-source }
   - task: run-unit-tests
     file: ras-deploy/tasks/python-unit-tests.yml
     input_mapping: { repository-name: response-operations-social-ui-release-source }
