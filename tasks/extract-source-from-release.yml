@@ -1,15 +1,19 @@
 ---
 platform: linux
- image_resource:
+
+image_resource:
   type: docker-image
   source:
     repository: alpine
     tag: latest
- inputs:
+
+inputs:
 - name: release-resource
- outputs:
+
+outputs:
 - name: release-source
- run:
+
+run:
   path: sh
   args:
   - -exc
