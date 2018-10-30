@@ -21,7 +21,7 @@ resources:
 - name: response-operations-social-ui-pre-release
   type: github-release
   source:
-    user: ONSdigital
+    owner: ONSdigital
     repository: response-operations-social-ui
     release: false
     pre_release: true
@@ -29,7 +29,7 @@ resources:
 - name: response-operations-social-ui-release
   type: github-release
   source:
-    user: ONSdigital
+    owner: ONSdigital
     repository: response-operations-social-ui
 
 - name: cf-resource-preprod
