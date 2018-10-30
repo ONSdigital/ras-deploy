@@ -27,13 +27,13 @@ resources:
 - name: respondent-home-ui-release
   type: github-release
   source:
-    user: ONSdigital
+    owner: ONSdigital
     repository: respondent-home-ui
 
 - name: respondent-home-ui-pre-release
   type: github-release
   source:
-    user: ONSdigital
+    owner: ONSdigital
     repository: respondent-home-ui
     release: false
     pre_release: true
