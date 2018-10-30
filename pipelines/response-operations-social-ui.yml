@@ -23,6 +23,7 @@ resources:
   source:
     owner: ONSdigital
     repository: response-operations-social-ui
+    access_token: ((github_access_token))
     release: false
     pre_release: true
 
@@ -31,6 +32,7 @@ resources:
   source:
     owner: ONSdigital
     repository: response-operations-social-ui
+    access_token: ((github_access_token))
 
 - name: cf-resource-preprod
   type: cf
