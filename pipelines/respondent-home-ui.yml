@@ -29,12 +29,14 @@ resources:
   source:
     owner: ONSdigital
     repository: respondent-home-ui
+    access_token: ((github_access_token))
 
 - name: respondent-home-ui-pre-release
   type: github-release
   source:
     owner: ONSdigital
     repository: respondent-home-ui
+    access_token: ((github_access_token))
     release: false
     pre_release: true
 
