@@ -4,8 +4,7 @@ CI/CD pipeline for RAS/RM services.
 
 ## Description
 
-This pipeline is based off the Concourse Demo pipeline and uses the same approach to triggering deployments and the 
-use of Cloudfoundry spaces.  For more details, see the [Concourse Demo pipeline README](https://github.com/ONSdigital/concourse-demo-pipeline).
+This pipeline is based off the Concourse Demo pipeline and uses the same approach to triggering deployments and the use of Cloudfoundry spaces.  For more details, see the [Concourse Demo pipeline README](https://github.com/ONSdigital/concourse-demo-pipeline).
 
 ## Maintaining pipelines
 The pipeline or task files (which could live in the services repository) will need to be updated whenever there is a change
@@ -35,6 +34,18 @@ Filename: `pipelines/performance.yml`
 
 This pipeline deploys the required RAS and RM services to a Cloud Foundry for load testing.
 
+### Respondent Home UI Pipeline
+
+Filename: `pipelines/respondent-home-ui.yml`
+
+This pipelines deploys and runs smoke tests on the respondent-home-ui service in devtest latest space from commits to master and in preproduction and production from github releases. It also deploys pre-release flagged releases to preproduction only.
+
+### Response Operations Social UI Pipeline
+
+Filename: `pipelines/response-operations-social-ui.yml`
+
+This pipelines deploys the response-operations-social-ui service to preproduction and production from github releases. It also deploys pre-release flagged releases to preproduction only.
+
 ## Deploying pipeline
 
 See [here](https://digitaleq.atlassian.net/wiki/spaces/RASB/pages/458358937/RAS+RM+Concourse+Pipeline)
@@ -52,14 +63,14 @@ It is recommended that you make a copy of these files in that folder removing th
 
 ### Job failed in pipeline
 Sometimes a job might fail in the pipeline. You should first try to identify the problem by:
- 
+
 * Looking at the logs from the failing job in the Concourse UI
 * Looking at the logs from the application(s) in Cloud Foundry / Docker
 * Trying to replicate the issue locally with Docker
- 
-If you're still unable to resolve the problem then you can **'hijack'** into the container of the failing job in Concourse. 
 
-In this example, we'll look at failing acceptance tests in the CI space of the pipeline. 
+If you're still unable to resolve the problem then you can **'hijack'** into the container of the failing job in Concourse.
+
+In this example, we'll look at failing acceptance tests in the CI space of the pipeline.
 
 1. Using the Concourse fly CLI to connect to the ci-acceptance-tests job:
     ```
