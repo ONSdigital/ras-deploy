@@ -18,6 +18,28 @@ resources:
     uri: https://github.com/ONSdigital/respondent-home-ui.git
     branch: master
 
+- name: ras-deploy
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-deploy.git
+    branch: master
+
+- name: respondent-home-ui-release
+  type: github-release
+  source:
+    owner: ONSdigital
+    repository: respondent-home-ui
+    access_token: ((github_access_token))
+
+- name: respondent-home-ui-pre-release
+  type: github-release
+  source:
+    owner: ONSdigital
+    repository: respondent-home-ui
+    access_token: ((github_access_token))
+    release: false
+    pre_release: true
+
 - name: cf-resource-latest
   type: cf
   source:
@@ -85,7 +107,7 @@ jobs:
       put: notify
       params:
         text:  |
-          Latest respondent-home-ui deployment failed. See build:
+          Latest space respondent-home-ui deployment failed. See build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: respondent-home-ui-latest
@@ -125,19 +147,26 @@ jobs:
       put: notify
       params:
         text:  |
-          Latest smoke tests failed. Check the build:
+          Latest space respondent-home-ui smoke tests failed. Check the build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: respondent-home-ui-source/ci/smoke_tests.yml
     params:
       RESPONDENT_HOME_INTERNAL_URL: https://respondent-home-ui-latest.apps.devtest.onsclofo.uk
       RESPONDENT_HOME_URL: https://respondent-home-ui-latest.apps.devtest.onsclofo.uk
 
-- name: respondent-home-ui-preprod-deploy
+- name: respondent-home-ui-preprod-pre-release-deploy
   serial: true
+  serial_groups: [preprod_deploys]
   plan:
-  - get: respondent-home-ui-source
-    passed: [respondent-home-ui-latest-deploy]
+  - get: respondent-home-ui-pre-release
     trigger: true
+    params:
+      include_source_tarball: true
+  - get: ras-deploy
+  - task: extract-source-from-release-tarball
+    file: ras-deploy/tasks/extract-source-from-release.yml
+    input_mapping: { release-resource: respondent-home-ui-pre-release }
+    output_mapping: { release-source: respondent-home-ui-pre-release-source }
   - put: push-app
     resource: cf-resource-preprod
     on_failure:
@@ -148,8 +177,8 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: respondent-home-ui-preprod
-      manifest: respondent-home-ui-source/manifest.yml
-      path: respondent-home-ui-source
+      manifest: respondent-home-ui-pre-release-source/manifest.yml
+      path: respondent-home-ui-pre-release-source
       environment_variables:
         HOST: 0.0.0.0
         LOG_LEVEL: INFO
@@ -205,9 +234,97 @@ jobs:
       put: notify
       params:
         text:  |
-          Pre-production smoke tests failed. Check the build:
+          Pre-production respondent-home-ui smoke tests failed. Check the build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-    file: respondent-home-ui-source/ci/smoke_tests.yml
+    file: respondent-home-ui-release-source/ci/smoke_tests.yml
+    params:
+      RESPONDENT_HOME_INTERNAL_URL: https://respondent-home-ui-preprod.((preprod_cloudfoundry_apps_domain))
+      RESPONDENT_HOME_URL: https://respondent-home-ui-preprod.((preprod_cloudfoundry_apps_domain))
+      URL_PATH_PREFIX: /((preprod_path))
+
+- name: respondent-home-ui-preprod-deploy
+  serial: true
+  serial_groups: [preprod_deploys]
+  plan:
+  - get: respondent-home-ui-release
+    trigger: true
+    params:
+      include_source_tarball: true
+  - get: ras-deploy
+  - task: extract-source-from-release-tarball
+    file: ras-deploy/tasks/extract-source-from-release.yml
+    input_mapping: { release-resource: respondent-home-ui-release }
+    output_mapping: { release-source: respondent-home-ui-release-source }
+  - put: push-app
+    resource: cf-resource-preprod
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Pre-production respondent-home-ui deployment failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    params:
+      current_app_name: respondent-home-ui-preprod
+      manifest: respondent-home-ui-release-source/manifest.yml
+      path: respondent-home-ui-release-source
+      environment_variables:
+        HOST: 0.0.0.0
+        LOG_LEVEL: INFO
+        ACCOUNT_SERVICE_URL: ((preprod_account_service_url))    # Remember to exclude all path prefixes here
+        EQ_URL: https://eq.onsdigital.uk
+        JSON_SECRET_KEYS: ((preprod_json_secret_keys))
+        CASE_URL: http://casesvc-preprod.((preprod_cloudfoundry_apps_domain))
+        CASE_USERNAME: ((preprod_security_user_name))
+        CASE_PASSWORD: ((preprod_security_user_password))
+        COLLECTION_EXERCISE_URL: http://collectionexercisesvc-preprod.((preprod_cloudfoundry_apps_domain))
+        COLLECTION_EXERCISE_USERNAME: ((preprod_security_user_name))
+        COLLECTION_EXERCISE_PASSWORD: ((preprod_security_user_password))
+        COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-preprod.((preprod_cloudfoundry_apps_domain))
+        COLLECTION_INSTRUMENT_USERNAME: ((preprod_security_user_name))
+        COLLECTION_INSTRUMENT_PASSWORD: ((preprod_security_user_password))
+        IAC_URL: http://iacsvc-preprod.((preprod_cloudfoundry_apps_domain))
+        IAC_USERNAME: ((preprod_security_user_name))
+        IAC_PASSWORD: ((preprod_security_user_password))
+        PARTY_URL: http://ras-party-service-preprod.((preprod_cloudfoundry_apps_domain))
+        PARTY_USERNAME: ((preprod_security_user_name))
+        PARTY_PASSWORD: ((preprod_security_user_password))
+        SURVEY_URL: http://surveysvc-preprod.((preprod_cloudfoundry_apps_domain))
+        SURVEY_USERNAME: ((preprod_security_user_name))
+        SURVEY_PASSWORD: ((preprod_security_user_password))
+        SAMPLE_URL: http://samplesvc-preprod.((preprod_cloudfoundry_apps_domain))
+        SAMPLE_USERNAME: ((preprod_security_user_name))
+        SAMPLE_PASSWORD: ((preprod_security_user_password))
+        SECRET_KEY: ((preprod_rh_secret_key))
+        URL_PATH_PREFIX: /((preprod_path))
+        ANALYTICS_UA_ID: ((preprod_analytics_ua_id))
+
+  - put: map-route-vpn-domain
+    resource: cf-cli-resource-preprod
+    params:
+      command: map-route
+      app_name: respondent-home-ui-preprod
+      domain: rhpreprod.rmdev.onsdigital.uk
+  - put: map-route-ons-internal-domain
+    resource: cf-cli-resource-preprod
+    params:
+      app_name: respondent-home-ui-preprod
+      command: map-route
+      domain: ohs-alpha.onsdigital.uk
+  - put: map-route-ons-internal-preprod-domain
+    resource: cf-cli-resource-preprod
+    params:
+      app_name: respondent-home-ui-preprod
+      command: map-route
+      domain: ((preprod_domain))
+      path: ((preprod_path))
+  - task: smoke-tests
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Pre-production respondent-home-ui smoke tests failed. Check the build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    file: respondent-home-ui-release-source/ci/smoke_tests.yml
     params:
       RESPONDENT_HOME_INTERNAL_URL: https://respondent-home-ui-preprod.((preprod_cloudfoundry_apps_domain))
       RESPONDENT_HOME_URL: https://respondent-home-ui-preprod.((preprod_cloudfoundry_apps_domain))
@@ -216,9 +333,16 @@ jobs:
 - name: respondent-home-ui-prod-deploy
   serial: true
   plan:
-  - get: respondent-home-ui-source
+  - get: respondent-home-ui-release
     passed: [respondent-home-ui-preprod-deploy]
     trigger: true
+    params:
+      include_source_tarball: true
+  - get: ras-deploy
+  - task: extract-source-from-release-tarball
+    file: ras-deploy/tasks/extract-source-from-release.yml
+    input_mapping: { release-resource: respondent-home-ui-release }
+    output_mapping: { release-source: respondent-home-ui-release-source }
   - put: push-app
     resource: cf-resource-prod
     on_failure:
@@ -229,8 +353,8 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: respondent-home-ui-prod
-      manifest: respondent-home-ui-source/manifest.yml
-      path: respondent-home-ui-source
+      manifest: respondent-home-ui-release-source/manifest.yml
+      path: respondent-home-ui-release-source
       environment_variables:
         APP_SETTINGS: ProductionConfig
         HOST: 0.0.0.0
@@ -275,9 +399,9 @@ jobs:
       put: notify
       params:
         text:  |
-          Production smoke tests failed. Check the build:
+          Production respondent-home-ui smoke tests failed. Check the build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-    file: respondent-home-ui-source/ci/smoke_tests.yml
+    file: respondent-home-ui-release-source/ci/smoke_tests.yml
     params:
       RESPONDENT_HOME_INTERNAL_URL: https://respondent-home-ui-prod.((prod_cloudfoundry_apps_domain))
       RESPONDENT_HOME_URL: https://((prod_domain))
