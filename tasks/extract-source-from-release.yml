@@ -1,0 +1,21 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: alpine
+    tag: latest
+
+inputs:
+- name: release-resource
+
+outputs:
+- name: release-source
+
+run:
+  path: sh
+  args:
+  - -exc
+  - |
+    tar -xzf release-resource/source.tar.gz -C release-source --strip-components=1
