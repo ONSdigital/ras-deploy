@@ -6,6 +6,11 @@ resource_types:
     repository: nulldriver/cf-cli-resource
     tag: latest
 
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+
 resources:
 - name: sdc-responses-dashboard-source
   type: git
@@ -68,6 +73,11 @@ resources:
     space: prod
     skip_cert_check: true
 
+- name: notify
+  type: slack-notification
+  source:
+    url: ((slack_webhook))
+
 jobs:
 - name: sdc-responses-dashboard-latest-deploy
   serial: true
@@ -93,6 +103,13 @@ jobs:
         REPORTING_URL: http://rm-reporting.apps.devtest.onsclofo.uk
         AUTH_USERNAME: ((latest_security_user_name))
         AUTH_PASSWORD: ((latest_security_user_password))
+  on_failure:
+    put: notify
+    params:
+      text:  |
+        Devtest Latest space responses-dashboard deploy failed. See build:
+        $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+
 
 - name: sdc-responses-dashboard-preprod-deploy
   serial: true
@@ -133,6 +150,12 @@ jobs:
       app_name: sdc-responses-dashboard-preprod
       domain: ((preprod_vpn_domain))
       path: dashboard
+  on_failure:
+    put: notify
+    params:
+      text:  |
+        Preprod responses-dashboard deploy failed. See build:
+        $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
 - name: sdc-responses-dashboard-prod-deploy
   serial: true
@@ -173,3 +196,9 @@ jobs:
       app_name: sdc-responses-dashboard-prod
       domain: ((prod_vpn_domain))
       path: dashboard
+  on_failure:
+    put: notify
+    params:
+      text:  |
+        Production responses-dashboard deploy failed. See build:
+        $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
