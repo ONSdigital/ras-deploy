@@ -126,6 +126,7 @@ jobs:
       environment_variables:
         APP_SETTINGS: Config
         CASE_URL: http://casesvc-preprod.((preprod_cloudfoundry_apps_domain))
+        COLLECTION_EXERCISE_URL: http://collectionexercisesvc-preprod.((preprod_cloudfoundry_apps_domain))
         IAC_URL: http://iacsvc-preprod.((preprod_cloudfoundry_apps_domain))
         SAMPLE_URL: http://samplesvc-preprod.((preprod_cloudfoundry_apps_domain))
         REPORT_URL: http://rm-reporting-preprod.((preprod_cloudfoundry_apps_domain))
@@ -134,6 +135,8 @@ jobs:
         UAA_CLIENT_SECRET: ((preprod_response_operations_social_client_secret))
         CASE_USERNAME: ((preprod_security_user_name))
         CASE_PASSWORD: ((preprod_security_user_password))
+        COLLECTION_EXERCISE_USERNAME: ((preprod_security_user_name))
+        COLLECTION_EXERCISE_PASSWORD: ((preprod_security_user_password))
         IAC_USERNAME: ((preprod_security_user_name))
         IAC_PASSWORD: ((preprod_security_user_password))
         SAMPLE_USERNAME: ((preprod_security_user_name))
@@ -200,6 +203,7 @@ jobs:
       environment_variables:
         APP_SETTINGS: Config
         CASE_URL: http://casesvc-preprod.((preprod_cloudfoundry_apps_domain))
+        COLLECTION_EXERCISE_URL: http://collectionexercisesvc-preprod.((preprod_cloudfoundry_apps_domain))
         IAC_URL: http://iacsvc-preprod.((preprod_cloudfoundry_apps_domain))
         SAMPLE_URL: http://samplesvc-preprod.((preprod_cloudfoundry_apps_domain))
         REPORT_URL: http://rm-reporting-preprod.((preprod_cloudfoundry_apps_domain))
@@ -208,6 +212,8 @@ jobs:
         UAA_CLIENT_SECRET: ((preprod_response_operations_social_client_secret))
         CASE_USERNAME: ((preprod_security_user_name))
         CASE_PASSWORD: ((preprod_security_user_password))
+        COLLECTION_EXERCISE_USERNAME: ((preprod_security_user_name))
+        COLLECTION_EXERCISE_PASSWORD: ((preprod_security_user_password))
         IAC_USERNAME: ((preprod_security_user_name))
         IAC_PASSWORD: ((preprod_security_user_password))
         SAMPLE_USERNAME: ((preprod_security_user_name))
@@ -274,6 +280,7 @@ jobs:
       environment_variables:
         APP_SETTINGS: Config
         CASE_URL: http://casesvc-prod.((prod_cloudfoundry_apps_domain))
+        COLLECTION_EXERCISE_URL: http://collectionexercisesvc-prod.((prod_cloudfoundry_apps_domain))
         IAC_URL: http://iacsvc-prod.((prod_cloudfoundry_apps_domain))
         SAMPLE_URL: http://samplesvc-prod.((prod_cloudfoundry_apps_domain))
         REPORT_URL: http://rm-reporting-prod.((prod_cloudfoundry_apps_domain))
@@ -282,6 +289,8 @@ jobs:
         UAA_CLIENT_SECRET: ((prod_response_operations_social_client_secret))
         CASE_USERNAME: ((prod_security_user_name))
         CASE_PASSWORD: ((prod_security_user_password))
+        COLLECTION_EXERCISE_USERNAME: ((prod_security_user_name))
+        COLLECTION_EXERCISE_PASSWORD: ((prod_security_user_password))
         IAC_USERNAME: ((prod_security_user_name))
         IAC_PASSWORD: ((prod_security_user_password))
         SAMPLE_USERNAME: ((prod_security_user_name))
