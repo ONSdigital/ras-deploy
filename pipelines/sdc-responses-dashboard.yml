@@ -171,9 +171,9 @@ jobs:
         HOST: 0.0.0.0
         LOGGING_LEVEL: DEBUG
         REPORTING_REFRESH_CYCLE_IN_SECONDS: "600"
-        COLLECTION_EXERCISE_URL: http://collectionexercisesvc.((prod_cloudfoundry_apps_domain))
-        SURVEY_URL: http://surveysvc.((prod_cloudfoundry_apps_domain))
-        REPORTING_URL: http://rm-reporting.((prod_cloudfoundry_apps_domain))
+        COLLECTION_EXERCISE_URL: http://collectionexercisesvc-prod.((prod_cloudfoundry_apps_domain))
+        SURVEY_URL: http://surveysvc-prod.((prod_cloudfoundry_apps_domain))
+        REPORTING_URL: http://rm-reporting-prod.((prod_cloudfoundry_apps_domain))
         AUTH_USERNAME: ((prod_security_user_name))
         AUTH_PASSWORD: ((prod_security_user_password))
   - put: map-route-ons-internal-domain
