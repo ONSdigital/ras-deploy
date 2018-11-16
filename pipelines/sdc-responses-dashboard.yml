@@ -118,9 +118,6 @@ jobs:
     passed: [sdc-responses-dashboard-latest-deploy]
     trigger: true
   - get: ras-deploy
-  - task: run-unit-tests
-    file: ras-deploy/tasks/python-unit-tests.yml
-    input_mapping: { repository-name: sdc-responses-dashboard-source }
   - put: push-app
     resource: cf-resource-preprod
     params:
@@ -164,9 +161,6 @@ jobs:
     passed: [sdc-responses-dashboard-preprod-deploy]
     trigger: true
   - get: ras-deploy
-  - task: run-unit-tests
-    file: ras-deploy/tasks/python-unit-tests.yml
-    input_mapping: { repository-name: sdc-responses-dashboard-source }
   - put: push-app
     resource: cf-resource-prod
     params:
