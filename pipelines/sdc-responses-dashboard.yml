@@ -85,15 +85,17 @@ jobs:
   - get: sdc-responses-dashboard-source
     trigger: true
   - get: ras-deploy
+  - task: run-yarn-compile
+    file: sdc-responses-dashboard-source/yarn-compile-task.yml
   - task: run-unit-tests
     file: ras-deploy/tasks/python-unit-tests.yml
-    input_mapping: { repository-name: sdc-responses-dashboard-source }
+    input_mapping: { repository-name: compiled-sdc-responses-dashboard-source }
   - put: push-app
     resource: cf-resource-latest
     params:
       current_app_name: sdc-responses-dashboard-latest
-      manifest: sdc-responses-dashboard-source/manifest.yml
-      path: sdc-responses-dashboard-source
+      manifest: compiled-sdc-responses-dashboard-source/manifest.yml
+      path: compiled-sdc-responses-dashboard-source
       environment_variables:
         HOST: 0.0.0.0
         LOGGING_LEVEL: DEBUG
@@ -117,13 +119,14 @@ jobs:
   - get: sdc-responses-dashboard-source
     passed: [sdc-responses-dashboard-latest-deploy]
     trigger: true
-  - get: ras-deploy
+  - task: run-yarn-compile
+    file: sdc-responses-dashboard-source/yarn-compile-task.yml
   - put: push-app
     resource: cf-resource-preprod
     params:
       current_app_name: sdc-responses-dashboard-preprod
-      manifest: sdc-responses-dashboard-source/manifest.yml
-      path: sdc-responses-dashboard-source
+      manifest: compiled-sdc-responses-dashboard-source/manifest.yml
+      path: compiled-sdc-responses-dashboard-source
       environment_variables:
         HOST: 0.0.0.0
         LOGGING_LEVEL: DEBUG
@@ -160,13 +163,14 @@ jobs:
   - get: sdc-responses-dashboard-source
     passed: [sdc-responses-dashboard-preprod-deploy]
     trigger: true
-  - get: ras-deploy
+  - task: run-yarn-compile
+    file: sdc-responses-dashboard-source/yarn-compile-task.yml
   - put: push-app
     resource: cf-resource-prod
     params:
       current_app_name: sdc-responses-dashboard-prod
-      manifest: sdc-responses-dashboard-source/manifest.yml
-      path: sdc-responses-dashboard-source
+      manifest: compiled-sdc-responses-dashboard-source/manifest.yml
+      path: compiled-sdc-responses-dashboard-source
       environment_variables:
         HOST: 0.0.0.0
         LOGGING_LEVEL: DEBUG
