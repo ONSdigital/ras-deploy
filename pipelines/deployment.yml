@@ -1899,6 +1899,9 @@ jobs:
       SFTP_PASSWORD: ((actionexporter_sftp_password))
       SFTP_DIR: rasrm_pipeline/ci
       MAKE_TARGET: rasrm_acceptance_tests
+      UAA_PORT: '80'
+      UAA_CLIENT_ID: ((ci_uaa_id))
+      UAA_SECRET: ((ci_uaa_admin_secret))
 
 - name: ci-securemessage-acceptance-tests
   serial_groups:
@@ -2776,6 +2779,9 @@ jobs:
       SFTP_PASSWORD: ((actionexporter_sftp_password))
       SFTP_DIR: rasrm_pipeline/latest
       MAKE_TARGET: acceptance_tests
+      UAA_PORT: '80'
+      UAA_CLIENT_ID: ((latest_uaa_id))
+      UAA_SECRET: ((latest_uaa_admin_secret))
 
 disabled-jobs:
 - name: preprod-trigger
