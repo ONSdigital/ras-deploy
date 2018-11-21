@@ -1900,7 +1900,7 @@ jobs:
       SFTP_DIR: rasrm_pipeline/ci
       MAKE_TARGET: rasrm_acceptance_tests
       UAA_PORT: '80'
-      UAA_CLIENT_ID: ((ci_uaa_id))
+      UAA_CLIENT_ID: ((ci_uaa_admin_id))
       UAA_SECRET: ((ci_uaa_admin_secret))
 
 - name: ci-securemessage-acceptance-tests
@@ -2006,6 +2006,9 @@ jobs:
       <<: *ci_security_user
       <<: *ci_service_endpoints_for_python
       MAKE_TARGET: secure_messaging_acceptance_tests
+      UAA_PORT: '80'
+      UAA_CLIENT_ID: ((ci_uaa_admin_id))
+      UAA_SECRET: ((ci_uaa_admin_secret))
 
 
 ### START latest SPACE DEPLOYMENTS
@@ -2780,7 +2783,7 @@ jobs:
       SFTP_DIR: rasrm_pipeline/latest
       MAKE_TARGET: acceptance_tests
       UAA_PORT: '80'
-      UAA_CLIENT_ID: ((latest_uaa_id))
+      UAA_CLIENT_ID: ((latest_uaa_admin_id))
       UAA_SECRET: ((latest_uaa_admin_secret))
 
 disabled-jobs:
