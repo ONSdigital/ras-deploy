@@ -236,7 +236,8 @@ jobs:
         text:  |
           Pre-production respondent-home-ui smoke tests failed. Check the build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-    file: respondent-home-ui-release-source/ci/smoke_tests.yml
+    file: respondent-home-ui-pre-release-source/ci/smoke_tests.yml
+    input_mapping: { respondent-home-ui-source: respondent-home-ui-pre-release-source }
     params:
       RESPONDENT_HOME_INTERNAL_URL: https://respondent-home-ui-preprod.((preprod_cloudfoundry_apps_domain))
       RESPONDENT_HOME_URL: https://respondent-home-ui-preprod.((preprod_cloudfoundry_apps_domain))
@@ -325,6 +326,7 @@ jobs:
           Pre-production respondent-home-ui smoke tests failed. Check the build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: respondent-home-ui-release-source/ci/smoke_tests.yml
+    input_mapping: { respondent-home-ui-source: respondent-home-ui-release-source }
     params:
       RESPONDENT_HOME_INTERNAL_URL: https://respondent-home-ui-preprod.((preprod_cloudfoundry_apps_domain))
       RESPONDENT_HOME_URL: https://respondent-home-ui-preprod.((preprod_cloudfoundry_apps_domain))
@@ -402,6 +404,7 @@ jobs:
           Production respondent-home-ui smoke tests failed. Check the build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: respondent-home-ui-release-source/ci/smoke_tests.yml
+    input_mapping: { respondent-home-ui-source: respondent-home-ui-release-source }
     params:
       RESPONDENT_HOME_INTERNAL_URL: https://respondent-home-ui-prod.((prod_cloudfoundry_apps_domain))
       RESPONDENT_HOME_URL: https://((prod_domain))
