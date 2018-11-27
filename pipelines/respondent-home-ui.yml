@@ -127,7 +127,7 @@ jobs:
       command: create-service
       service: elasticache-broker
       plan: small
-      service_instance: rh-ui-redis
+      service_instance: ras-redis
       timeout: 1800
       wait_for_service: true
   - put: push-app
@@ -163,7 +163,7 @@ jobs:
         PARTY_URL: http://ras-party-concourse-latest.apps.devtest.onsclofo.uk
         PARTY_USERNAME: ((latest_security_user_name))
         PARTY_PASSWORD: ((latest_security_user_password))
-        REDIS_SERVICE: rh-ui-redis
+        REDIS_SERVICE: ras-redis
         SURVEY_URL: http://rm-survey-service-concourse-latest.apps.devtest.onsclofo.uk
         SURVEY_USERNAME: ((latest_security_user_name))
         SURVEY_PASSWORD: ((latest_security_user_password))
@@ -203,7 +203,7 @@ jobs:
       command: create-service
       service: awselasticache-redis
       plan: small
-      service_instance: rh-ui-redis
+      service_instance: ras-redis
       timeout: 1800
       wait_for_service: true
   - put: push-app
@@ -239,7 +239,7 @@ jobs:
         PARTY_URL: http://ras-party-service-preprod.((preprod_cloudfoundry_apps_domain))
         PARTY_USERNAME: ((preprod_security_user_name))
         PARTY_PASSWORD: ((preprod_security_user_password))
-        REDIS_SERVICE: rh-ui-redis
+        REDIS_SERVICE: ras-redis
         SURVEY_URL: http://surveysvc-preprod.((preprod_cloudfoundry_apps_domain))
         SURVEY_USERNAME: ((preprod_security_user_name))
         SURVEY_PASSWORD: ((preprod_security_user_password))
@@ -302,7 +302,7 @@ jobs:
       command: create-service
       service: awselasticache-redis
       plan: small
-      service_instance: rh-ui-redis
+      service_instance: ras-redis
       timeout: 1800
       wait_for_service: true
   - put: push-app
@@ -338,7 +338,7 @@ jobs:
         PARTY_URL: http://ras-party-service-preprod.((preprod_cloudfoundry_apps_domain))
         PARTY_USERNAME: ((preprod_security_user_name))
         PARTY_PASSWORD: ((preprod_security_user_password))
-        REDIS_SERVICE: rh-ui-redis
+        REDIS_SERVICE: ras-redis
         SURVEY_URL: http://surveysvc-preprod.((preprod_cloudfoundry_apps_domain))
         SURVEY_USERNAME: ((preprod_security_user_name))
         SURVEY_PASSWORD: ((preprod_security_user_password))
@@ -401,7 +401,7 @@ jobs:
       command: create-service
       service: awselasticache-redis
       plan: small
-      service_instance: rh-ui-redis
+      service_instance: ras-redis
       timeout: 1800
       wait_for_service: true
   - put: push-app
@@ -438,7 +438,7 @@ jobs:
         PARTY_URL: http://ras-party-service-prod.((prod_cloudfoundry_apps_domain))
         PARTY_USERNAME: ((prod_security_user_name))
         PARTY_PASSWORD: ((prod_security_user_password))
-        REDIS_SERVICE: rh-ui-redis
+        REDIS_SERVICE: ras-redis
         SURVEY_URL: http://surveysvc-prod.((prod_cloudfoundry_apps_domain))
         SURVEY_USERNAME: ((prod_security_user_name))
         SURVEY_PASSWORD: ((prod_security_user_password))
