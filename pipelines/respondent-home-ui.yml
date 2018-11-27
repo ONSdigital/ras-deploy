@@ -125,7 +125,7 @@ jobs:
     resource: cf-cli-resource-latest
     params:
       command: create-service
-      service: awselasticache-redis
+      service: elasticache-broker
       plan: small
       service_instance: rh-ui-redis
       timeout: 1800
