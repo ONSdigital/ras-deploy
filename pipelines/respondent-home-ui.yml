@@ -216,7 +216,7 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: respondent-home-ui-preprod
-      manifest: respondent-home-ui-pre-release-source/manifest.yml
+      manifest: respondent-home-ui-release-source/manifests/manifest-prod.yml
       path: respondent-home-ui-pre-release-source
       environment_variables:
         HOST: 0.0.0.0
@@ -315,7 +315,7 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: respondent-home-ui-preprod
-      manifest: respondent-home-ui-release-source/manifest.yml
+      manifest: respondent-home-ui-release-source/manifests/manifest-prod.yml
       path: respondent-home-ui-release-source
       environment_variables:
         HOST: 0.0.0.0
@@ -414,7 +414,7 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: respondent-home-ui-prod
-      manifest: respondent-home-ui-release-source/manifest.yml
+      manifest: respondent-home-ui-release-source/manifests/manifest-prod.yml
       path: respondent-home-ui-release-source
       environment_variables:
         APP_SETTINGS: ProductionConfig
