@@ -203,7 +203,7 @@ jobs:
       command: create-service
       service: awselasticache-redis
       plan: small
-      service_instance: ras-redis
+      service_instance: res-ops-redis
       timeout: 1800
       wait_for_service: true
   - put: push-app
@@ -239,7 +239,7 @@ jobs:
         PARTY_URL: http://ras-party-service-preprod.((preprod_cloudfoundry_apps_domain))
         PARTY_USERNAME: ((preprod_security_user_name))
         PARTY_PASSWORD: ((preprod_security_user_password))
-        REDIS_SERVICE: ras-redis
+        REDIS_SERVICE: res-ops-redis
         SURVEY_URL: http://surveysvc-preprod.((preprod_cloudfoundry_apps_domain))
         SURVEY_USERNAME: ((preprod_security_user_name))
         SURVEY_PASSWORD: ((preprod_security_user_password))
@@ -302,7 +302,7 @@ jobs:
       command: create-service
       service: awselasticache-redis
       plan: small
-      service_instance: ras-redis
+      service_instance: res-ops-redis
       timeout: 1800
       wait_for_service: true
   - put: push-app
@@ -338,7 +338,7 @@ jobs:
         PARTY_URL: http://ras-party-service-preprod.((preprod_cloudfoundry_apps_domain))
         PARTY_USERNAME: ((preprod_security_user_name))
         PARTY_PASSWORD: ((preprod_security_user_password))
-        REDIS_SERVICE: ras-redis
+        REDIS_SERVICE: res-ops-redis
         SURVEY_URL: http://surveysvc-preprod.((preprod_cloudfoundry_apps_domain))
         SURVEY_USERNAME: ((preprod_security_user_name))
         SURVEY_PASSWORD: ((preprod_security_user_password))
@@ -401,7 +401,7 @@ jobs:
       command: create-service
       service: awselasticache-redis
       plan: small
-      service_instance: ras-redis
+      service_instance: res-ops-redis
       timeout: 1800
       wait_for_service: true
   - put: push-app
@@ -438,7 +438,7 @@ jobs:
         PARTY_URL: http://ras-party-service-prod.((prod_cloudfoundry_apps_domain))
         PARTY_USERNAME: ((prod_security_user_name))
         PARTY_PASSWORD: ((prod_security_user_password))
-        REDIS_SERVICE: ras-redis
+        REDIS_SERVICE: res-ops-redis
         SURVEY_URL: http://surveysvc-prod.((prod_cloudfoundry_apps_domain))
         SURVEY_USERNAME: ((prod_security_user_name))
         SURVEY_PASSWORD: ((prod_security_user_password))
