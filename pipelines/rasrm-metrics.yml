@@ -1,0 +1,34 @@
+---
+resources:
+- name: ras-rm-metrics-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-rm-metrics.git
+    branch: deploy_app
+
+- name: cf-resource-latest
+  type: cf
+  source:
+    api: ((cloudfoundry_api))
+    username: ((cloudfoundry_email))
+    password: ((cloudfoundry_password))
+    organization: rmras
+    space: concourse-latest
+    skip_cert_check: true
+
+jobs:
+- name: ras-rm-metrics-latest-deploy
+  serial: true
+  plan:
+  - get: ras-rm-metrics-source
+    trigger: true
+  - put: push-app
+    resource: cf-resource-latest
+    params:
+      current_app_name: rasrm-metrics-latest
+      manifest: ras-rm-metrics-source/manifest.yml
+      path: ras-rm-metrics-source
+      environment_variables:
+        LOG_LEVEL: INFO
+        SCHEDULER_FREQUENCY: "15"
+
