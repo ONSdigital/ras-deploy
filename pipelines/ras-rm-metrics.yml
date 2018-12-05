@@ -48,15 +48,15 @@ resources:
     space: preprod
     skip_cert_check: true
 
-# - name: cf-resource-prod
-#   type: cf
-#   source:
-#     api: ((prod_cloudfoundry_api))
-#     username: ((prod_cloudfoundry_email))
-#     password: ((prod_cloudfoundry_password))
-#     organization: rmras
-#     space: prod
-#     skip_cert_check: true
+- name: cf-resource-prod
+  type: cf
+  source:
+    api: ((prod_cloudfoundry_api))
+    username: ((prod_cloudfoundry_email))
+    password: ((prod_cloudfoundry_password))
+    organization: rmras
+    space: prod
+    skip_cert_check: true
 
 - name: notify
   type: slack-notification
@@ -135,35 +135,35 @@ jobs:
     params:
       TARGET_URL: https://ras-rm-metrics-preprod.((preprod_cloudfoundry_apps_domain))/info
 
-# - name: ras-rm-metrics-prod-deploy
-#   serial: true
-#   plan:
-#   - get: ras-rm-metrics-source
-#     passed: [ras-rm-metrics-preprod-deploy]
-#     trigger: true
-#   - put: push-app
-#     resource: cf-resource-prod
-#     on_failure:
-#       put: notify
-#       params:
-#         text:  |
-#           Production ras-rm-metrics deployment failed. See build:
-#           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-#     params:
-#       current_app_name: ras-rm-metrics-prod
-#       manifest: ras-rm-metrics-source/manifest.yml
-#       path: ras-rm-metrics-source
-#       environment_variables:
-#         SCHEDULER_FREQUENCY: '15'
-#         RABBITMQ_SERVICE_NAME: rabbitmq
-#
-#   - task: smoke-tests
-#     on_failure:
-#       put: notify
-#       params:
-#         text:  |
-#           Production smoke tests failed. Check the build:
-#           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-#     file: ras-rm-metrics-source/ci/smoke_tests.yml
-#     params:
-#       TARGET_URL: https://ras-rm-metrics-prod.((prod_cloudfoundry_apps_domain))/info
+- name: ras-rm-metrics-prod-deploy
+  serial: true
+  plan:
+  - get: ras-rm-metrics-source
+    passed: [ras-rm-metrics-preprod-deploy]
+    trigger: true
+  - put: push-app
+    resource: cf-resource-prod
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Production ras-rm-metrics deployment failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    params:
+      current_app_name: ras-rm-metrics-prod
+      manifest: ras-rm-metrics-source/manifest.yml
+      path: ras-rm-metrics-source
+      environment_variables:
+        SCHEDULER_FREQUENCY: '15'
+        RABBITMQ_SERVICE_NAME: rabbitmq
+
+  - task: smoke-tests
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Production smoke tests failed. Check the build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    file: ras-rm-metrics-source/ci/smoke_test.yml
+    params:
+      TARGET_URL: https://ras-rm-metrics-prod.((prod_cloudfoundry_apps_domain))/info
