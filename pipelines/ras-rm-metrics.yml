@@ -16,7 +16,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-rm-metrics.git
-    branch: deploy_app
+    branch: master
 
 - name: cf-resource-latest
   type: cf
