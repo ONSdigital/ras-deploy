@@ -33,8 +33,6 @@ resources:
     owner: ONSdigital
     repository: rm-survey-service
     access_token: ((github_access_token))
-    release: true
-    pre_release: false
 
 - name: cf-resource-preprod
   type: cf
@@ -50,8 +48,8 @@ resources:
   type: cf
   source:
     api: ((prod_cloudfoundry_api))
-    username: ((cloudfoundry_email))
-    password: ((cloudfoundry_password))
+    username: ((prod_cloudfoundry_email))
+    password: ((prod_cloudfoundry_password))
     organization: rmras
     space: prod
     skip_cert_check: true
