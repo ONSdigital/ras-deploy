@@ -1,0 +1,165 @@
+---
+resource_types:
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+
+- name: cf-cli-resource
+  type: docker-image
+  source:
+    repository: nulldriver/cf-cli-resource
+    tag: latest
+
+resources:
+- name: ras-deploy
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-deploy.git
+    branch: master
+
+- name: survey-service-pre-release
+  type: github-release
+  source:
+    owner: ONSdigital
+    repository: rm-survey-service
+    access_token: ((github_access_token))
+    release: false
+    pre_release: true
+
+- name: survey-service-release
+  type: github-release
+  source:
+    owner: ONSdigital
+    repository: rm-survey-service
+    access_token: ((github_access_token))
+    release: true
+    pre_release: false
+
+- name: cf-resource-preprod
+  type: cf
+  source:
+    api: ((preprod_cloudfoundry_api))
+    username: ((cloudfoundry_email))
+    password: ((cloudfoundry_password))
+    organization: rmras
+    space: preprod
+    skip_cert_check: true
+
+- name: cf-resource-prod
+  type: cf
+  source:
+    api: ((prod_cloudfoundry_api))
+    username: ((cloudfoundry_email))
+    password: ((cloudfoundry_password))
+    organization: rmras
+    space: prod
+    skip_cert_check: true
+
+- name: notify
+  type: slack-notification
+  source:
+    url: ((slack_webhook))
+
+jobs:
+- name: survey-service-preprod-pre-release-deploy
+  serial: true
+  serial_groups: [preprod_deploys]
+  plan:
+  - get: survey-service-pre-release
+    trigger: true
+    params: 
+      include_source_tarball: true
+  - get: ras-deploy
+  - task: extract-source-from-release-tarball
+    file: ras-deploy/tasks/extract-source-from-release.yml
+    input_mapping: { release-resource: survey-service-pre-release }
+    output_mapping: { release-source: survey-service-pre-release-source }
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: golang
+      inputs:
+        - name: survey-service-pre-release-source
+      outputs:
+        - name: rm-survey-service-build
+          path: rm-survey-service
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mkdir -p /go/src/github.com/ONSdigital/
+          cp -r survey-service-pre-release-source /go/src/github.com/ONSdigital/rm-survey-service
+          make -C /go/src/github.com/ONSdigital/rm-survey-service
+          cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
+  - put: push-app
+    resource: cf-resource-preprod
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Pre-production pre-release survey-service deployment failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    params:
+      current_app_name: surveysvc-preprod
+      manifest: survey-service-pre-release-source/manifest-preprod.yml
+      path: rm-survey-service-build
+      environment_variables:
+        MIGRATION_SOURCE: ((preprod_survey_migration_source))
+        security_user_name: ((preprod_security_user_name))
+        security_user_password: ((preprod_security_user_password))
+
+- name: survey-service-prod-deploy
+  serial: true
+  serial_groups: [prod_deploys]
+  plan:
+  - get: survey-service-release
+    trigger: true
+    params:
+      include_source_tarball: true
+  - get: ras-deploy
+  - task: extract-source-from-release-tarball
+    file: ras-deploy/tasks/extract-source-from-release.yml
+    input_mapping: { release-resource: survey-service-release }
+    output_mapping: { release-source: survey-service-release-source }
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: golang
+      inputs:
+        - name: survey-service-release-source
+      outputs:
+        - name: rm-survey-service-build
+          path: rm-survey-service
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          mkdir -p /go/src/github.com/ONSdigital/
+          cp -r survey-service-release-source /go/src/github.com/ONSdigital/rm-survey-service
+          make -C /go/src/github.com/ONSdigital/rm-survey-service
+          cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
+  - put: push-app
+    resource: cf-resource-prod
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Production survey-service deployment failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    params:
+      current_app_name: surveysvc-prod
+      manifest: survey-service-release-source/manifest-prod.yml
+      path: rm-survey-service-build
+      environment_variables:
+        MIGRATION_SOURCE: ((prod_survey_migration_source))
+        security_user_name: ((prod_security_user_name))
+        security_user_password: ((prod_security_user_password))
