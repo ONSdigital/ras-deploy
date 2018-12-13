@@ -38,16 +38,6 @@ resources:
     space: preprod
     skip_cert_check: true
 
-- name: cf-cli-resource-preprod
-  type: cf-cli-resource
-  source:
-    api: ((preprod_cloudfoundry_api))
-    username: ((preprod_cloudfoundry_email))
-    password: ((preprod_cloudfoundry_password))
-    org: rmras
-    space: preprod
-    skip_cert_check: true
-
 - name: cf-resource-prod
   type: cf
   source:
@@ -117,13 +107,6 @@ jobs:
       environment_variables:
         SCHEDULER_FREQUENCY: '15'
         RABBITMQ_SERVICE_NAME: rabbitmq
-
-  - put: map-route-vpn-domain
-    resource: cf-cli-resource-preprod
-    params:
-      command: map-route
-      app_name: ras-rm-metrics-preprod
-      domain: rhpreprod.rmdev.onsdigital.uk
   - task: smoke-tests
     on_failure:
       put: notify
