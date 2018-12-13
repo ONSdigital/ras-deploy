@@ -80,7 +80,7 @@ jobs:
       put: notify
       params:
         text:  |
-          Latest smoke tests failed. Check the build:
+          Latest ras-rm-metrics smoke tests failed. Check the build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: ras-rm-metrics-source/ci/smoke_test.yml
     params:
@@ -112,7 +112,7 @@ jobs:
       put: notify
       params:
         text:  |
-          Pre-production smoke tests failed. Check the build:
+          Pre-production ras-rm-metrics smoke tests failed. Check the build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: ras-rm-metrics-source/ci/smoke_test.yml
     params:
@@ -145,7 +145,7 @@ jobs:
       put: notify
       params:
         text:  |
-          Production smoke tests failed. Check the build:
+          Production ras-rm-metrics smoke tests failed. Check the build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     file: ras-rm-metrics-source/ci/smoke_test.yml
     params:
