@@ -246,7 +246,7 @@ jobs:
     input_mapping: { release-resource: sdc-responses-dashboard-release }
     output_mapping: { release-source: sdc-responses-dashboard-release-source }
   - task: run-yarn-compile
-    file: sdc-responses-dashboard-source/yarn-compile-task.yml
+    file: sdc-responses-dashboard-release-source/yarn-compile-task.yml
     input_mapping: { sdc-responses-dashboard-source: sdc-responses-dashboard-release-source }
   - put: push-app
     resource: cf-resource-prod
