@@ -134,6 +134,8 @@ jobs:
   plan:
   - get: sdc-responses-dashboard-pre-release
     trigger: true
+    params:
+      include_source_tarball: true
   - get: ras-deploy
   - task: extract-source-from-release-tarball
     file: ras-deploy/tasks/extract-source-from-release.yml
@@ -184,6 +186,8 @@ jobs:
   plan:
   - get: sdc-responses-dashboard-release
     trigger: true
+    params:
+      include_source_tarball: true
   - get: ras-deploy
   - task: extract-source-from-release-tarball
     file: ras-deploy/tasks/extract-source-from-release.yml
@@ -234,6 +238,8 @@ jobs:
   - get: sdc-responses-dashboard-release
     passed: [sdc-responses-dashboard-preprod-deploy]
     trigger: true
+    params:
+      include_source_tarball: true
   - get: ras-deploy
   - task: extract-source-from-release-tarball
     file: ras-deploy/tasks/extract-source-from-release.yml
