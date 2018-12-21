@@ -23,6 +23,22 @@ resources:
     uri: https://github.com/ONSdigital/ras-deploy.git
     branch: master
 
+- name: sdc-responses-dashboard-release
+  type: github-release
+  source:
+    owner: ONSdigital
+    repository: sdc-responses-dashboard
+    access_token: ((github_access_token))
+
+- name: sdc-responses-dashboard-pre-release
+  type: github-release
+  source:
+    owner: ONSdigital
+    repository: sdc-responses-dashboard
+    access_token: ((github_access_token))
+    release: false
+    pre_release: true
+
 - name: cf-resource-latest
   type: cf
   source:
@@ -112,15 +128,70 @@ jobs:
         Devtest Latest space responses-dashboard deploy failed. See build:
         $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
+- name: sdc-responses-dashboard-preprod-pre-release-deploy
+  serial: true
+  serial_groups: [preprod_deploys]
+  plan:
+  - get: sdc-responses-dashboard-pre-release
+    trigger: true
+  - get: ras-deploy
+  - task: extract-source-from-release-tarball
+    file: ras-deploy/tasks/extract-source-from-release.yml
+    input_mapping: { release-resource: sdc-responses-dashboard-pre-release }
+    output_mapping: { release-source: sdc-responses-dashboard-release-source }
+  - task: run-yarn-compile
+    file: sdc-responses-dashboard-release-source/yarn-compile-task.yml
+    input_mapping: { sdc-responses-dashboard-source: sdc-responses-dashboard-release-source }
+  - put: push-app
+    resource: cf-resource-preprod
+    params:
+      current_app_name: sdc-responses-dashboard-preprod
+      manifest: compiled-sdc-responses-dashboard-source/manifest.yml
+      path: compiled-sdc-responses-dashboard-source
+      environment_variables:
+        HOST: 0.0.0.0
+        LOGGING_LEVEL: DEBUG
+        REPORTING_REFRESH_CYCLE_IN_SECONDS: "600"
+        COLLECTION_EXERCISE_URL: http://collectionexercisesvc-preprod.((preprod_cloudfoundry_apps_domain))
+        SURVEY_URL: http://surveysvc-preprod.((preprod_cloudfoundry_apps_domain))
+        REPORTING_URL: http://rm-reporting-preprod.((preprod_cloudfoundry_apps_domain))
+        AUTH_USERNAME: ((preprod_security_user_name))
+        AUTH_PASSWORD: ((preprod_security_user_password))
+  - put: map-route-ons-internal-domain
+    resource: cf-cli-resource-preprod
+    params:
+      command: map-route
+      app_name: sdc-responses-dashboard-preprod
+      domain: ((preprod_internal_domain))
+      path: dashboard
+  - put: map-route-ons-vpn-domain
+    resource: cf-cli-resource-preprod
+    params:
+      command: map-route
+      app_name: sdc-responses-dashboard-preprod
+      domain: ((preprod_vpn_domain))
+      path: dashboard
+  on_failure:
+    put: notify
+    params:
+      text:  |
+        Preprod responses-dashboard deploy failed. See build:
+        $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
 - name: sdc-responses-dashboard-preprod-deploy
   serial: true
+  serial_groups: [preprod_deploys]
   plan:
-  - get: sdc-responses-dashboard-source
-    passed: [sdc-responses-dashboard-latest-deploy]
+  - get: sdc-responses-dashboard-release
     trigger: true
+  - get: ras-deploy
+  - task: extract-source-from-release-tarball
+    file: ras-deploy/tasks/extract-source-from-release.yml
+    input_mapping: { release-resource: sdc-responses-dashboard-release }
+    output_mapping: { release-source: sdc-responses-dashboard-release-source }
   - task: run-yarn-compile
-    file: sdc-responses-dashboard-source/yarn-compile-task.yml
+    file: sdc-responses-dashboard-release-source/yarn-compile-task.yml
+    input_mapping: { sdc-responses-dashboard-source: sdc-responses-dashboard-release-source }
   - put: push-app
     resource: cf-resource-preprod
     params:
@@ -160,11 +231,17 @@ jobs:
 - name: sdc-responses-dashboard-prod-deploy
   serial: true
   plan:
-  - get: sdc-responses-dashboard-source
+  - get: sdc-responses-dashboard-release
     passed: [sdc-responses-dashboard-preprod-deploy]
     trigger: true
+  - get: ras-deploy
+  - task: extract-source-from-release-tarball
+    file: ras-deploy/tasks/extract-source-from-release.yml
+    input_mapping: { release-resource: sdc-responses-dashboard-release }
+    output_mapping: { release-source: sdc-responses-dashboard-release-source }
   - task: run-yarn-compile
     file: sdc-responses-dashboard-source/yarn-compile-task.yml
+    input_mapping: { sdc-responses-dashboard-source: sdc-responses-dashboard-release-source }
   - put: push-app
     resource: cf-resource-prod
     params:
