@@ -16,6 +16,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/sdc-responses-dashboard.git
+    branch: use-file-for-static-assets-version
 
 - name: ras-deploy
   type: git
@@ -142,7 +143,7 @@ jobs:
     input_mapping: { release-resource: sdc-responses-dashboard-pre-release }
     output_mapping: { release-source: sdc-responses-dashboard-release-source }
   - task: run-yarn-compile
-    file: sdc-responses-dashboard-release-source/yarn-compile-task.yml
+    file: sdc-responses-dashboard-release-source/yarn-compile-task-release.yml
     input_mapping: { sdc-responses-dashboard-source: sdc-responses-dashboard-release-source }
   - put: push-app
     resource: cf-resource-preprod
@@ -194,7 +195,7 @@ jobs:
     input_mapping: { release-resource: sdc-responses-dashboard-release }
     output_mapping: { release-source: sdc-responses-dashboard-release-source }
   - task: run-yarn-compile
-    file: sdc-responses-dashboard-release-source/yarn-compile-task.yml
+    file: sdc-responses-dashboard-release-source/yarn-compile-task-release.yml
     input_mapping: { sdc-responses-dashboard-source: sdc-responses-dashboard-release-source }
   - put: push-app
     resource: cf-resource-preprod
@@ -246,7 +247,7 @@ jobs:
     input_mapping: { release-resource: sdc-responses-dashboard-release }
     output_mapping: { release-source: sdc-responses-dashboard-release-source }
   - task: run-yarn-compile
-    file: sdc-responses-dashboard-release-source/yarn-compile-task.yml
+    file: sdc-responses-dashboard-release-source/yarn-compile-task-release.yml
     input_mapping: { sdc-responses-dashboard-source: sdc-responses-dashboard-release-source }
   - put: push-app
     resource: cf-resource-prod
