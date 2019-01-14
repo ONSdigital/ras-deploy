@@ -211,12 +211,6 @@ resources:
     uri: https://github.com/ONSdigital/ras-deploy.git
     branch: master
 
-- name: ras-rm-metrics-source
-  type: git
-  source:
-    uri: https://github.com/ONSdigital/ras-rm-metrics
-    branch: master
-
 - name: ras-rm-performance-tests
   type: git
   source:
@@ -1163,21 +1157,6 @@ jobs:
   - task: check-status-of-apps
     file: ras-deploy/tasks/cloudfoundry-scripts/health_check.yml
 
-- name: ras-rm-metrics-deploy
-  serial: true
-  plan:
-  - get: ras-rm-metrics-source
-    trigger: true
-  - put: push-app
-    resource: cf-resource-((performance_cloudfoundry_space))
-    params:
-      current_app_name: ras-rm-metrics-((performance_cloudfoundry_space))
-      manifest: ras-rm-metrics-source/manifest.yml
-      path: ras-rm-metrics-source
-      environment_variables:
-        SCHEDULER_FREQUENCY: '15'
-        RABBITMQ_SERVICE_NAME: rabbitmq
-
 groups:
 - name: pipeline
   jobs:
@@ -1203,7 +1182,6 @@ groups:
 - name: support
   jobs:
   - sdc-mock-gov-notify-deploy
-  - ras-rm-metric-deploy
 - name: status
   jobs:
   - platform-status

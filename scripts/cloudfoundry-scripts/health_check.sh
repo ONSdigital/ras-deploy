@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 set -e
 
-#sdc-mock-gov-notify-sit
+#sdc-mock-gov-notify-perf
 
 APPS=$(
 cat <<EOM
-ras-party-sit
-ras-secure-message-sit
-rm-notify-gateway-sit
-django-oauth2-test-sit
-response-operations-ui-sit
-iac-service-sit
-rm-action-service-sit
-ras-collection-instrument-sit
-uaa-sit
-rm-survey-service-sit
-rm-sdx-gateway-sit
-rm-case-service-sit
-rm-collection-exercise-service-sit
-rm-sample-service-sit
+ras-party-perf
+ras-secure-message-perf
+rm-notify-gateway-perf
+django-oauth2-test-perf
+response-operations-ui-perf
+iac-service-perf
+rm-action-service-perf
+ras-collection-instrument-perf
+uaa-perf
+rm-survey-service-perf
+rm-sdx-gateway-perf
+rm-case-service-perf
+rm-collection-exercise-service-perf
+rm-sample-service-perf
 EOM
 )
 
