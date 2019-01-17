@@ -1299,6 +1299,7 @@ jobs:
         <<: *ci_security_user
 
 - name: response-operations-ui-ci-deploy
+  serial: true
   serial_groups: [response-operations-ui-ci-deploy]
   plan:
   - get: response-operations-ui-source
@@ -1306,6 +1307,19 @@ jobs:
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
+  - task: build-script-task
+    config:
+      platform: linux
+      inputs:
+        - name: response-operations-ui-source
+      image_resource:
+        type: docker-image
+        source: {repository: node}
+      run:
+        path: sh
+        args:
+          - -exc
+          - ./response-operations-ui-source/build_script.sh
   - put: create-redis
     resource: cf-cli-resource-ci
     params:
