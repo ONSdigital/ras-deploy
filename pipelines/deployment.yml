@@ -812,7 +812,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-deploy.git
-    branch: res-ops-build-script
+    branch: master
 
 - name: ras-party-source
   type: git
@@ -1302,16 +1302,17 @@ jobs:
   serial: true
   serial_groups: [response-operations-ui-ci-deploy]
   plan:
+  - get: ras-deploy
   - get: response-operations-ui-source
     trigger: true
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
-  - get: ras-deploy
   - task: build-script-task
     config:
       platform: linux
       inputs:
+        - name: ras-deploy
         - name: response-operations-ui-source
       outputs:
         - name: response-operations-ui-dest
@@ -1324,10 +1325,10 @@ jobs:
           - -exc
           - |
             cd response-operations-ui-source
-            ../ras-deploy/scripts/build_script.sh
+            ../ras-deploy/scripts/response-operations-ui/build_script.sh
             cd ..
             cp -r response-operations-ui-source/* response-operations-ui-dest
-            echo "//thisworked" >> response-operations-ui-dest/response_operations_ui/static/css/main.css
+            echo "// Built on: $(date -R)" >> response-operations-ui-dest/response_operations_ui/static/css/main.css
   - put: create-redis
     resource: cf-cli-resource-ci
     params:
