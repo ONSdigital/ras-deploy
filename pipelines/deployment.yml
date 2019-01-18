@@ -1312,6 +1312,8 @@ jobs:
       platform: linux
       inputs:
         - name: response-operations-ui-source
+      outputs:
+        - name: response-operations-ui-dest
       image_resource:
         type: docker-image
         source: {repository: node}
@@ -1319,7 +1321,19 @@ jobs:
         path: sh
         args:
           - -exc
-          - ./response-operations-ui-source/build_script.sh
+          - |
+            cd response-operations-ui-source
+            pwd
+            rm response_operations_ui/static/css/main.css
+            echo "//thisworked" >> response_operations_ui/static/css/main.css
+            node -v && npm -v
+            npm install --unsafe-perms
+            npm rebuild node-sass
+            npm run gulp build
+            cd ..
+            pwd
+            cp -r response-operations-ui-source/* response-operations-ui-dest
+            echo "//thisworked" >> response-operations-ui-dest/response_operations_ui/static/css/main.css
   - put: create-redis
     resource: cf-cli-resource-ci
     params:
@@ -1332,8 +1346,8 @@ jobs:
   - put: cf-resource-ci
     params:
       current_app_name: response-operations-ui-ci
-      manifest: response-operations-ui-source/manifest.yml
-      path: response-operations-ui-source
+      manifest: response-operations-ui-dest/manifest.yml
+      path: response-operations-ui-dest
       environment_variables:
         <<: *ci_security_user
         <<: *ci_service_endpoints_for_python
