@@ -812,7 +812,7 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-deploy.git
-    branch: master
+    branch: res-ops-build-script
 
 - name: ras-party-source
   type: git
@@ -1307,6 +1307,7 @@ jobs:
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
+  - get: ras-deploy
   - task: build-script-task
     config:
       platform: linux
@@ -1323,15 +1324,8 @@ jobs:
           - -exc
           - |
             cd response-operations-ui-source
-            pwd
-            rm response_operations_ui/static/css/main.css
-            echo "//thisworked" >> response_operations_ui/static/css/main.css
-            node -v && npm -v
-            npm install --unsafe-perms
-            npm rebuild node-sass
-            npm run gulp build
+            ../ras-deploy/scripts/build_script.sh
             cd ..
-            pwd
             cp -r response-operations-ui-source/* response-operations-ui-dest
             echo "//thisworked" >> response-operations-ui-dest/response_operations_ui/static/css/main.css
   - put: create-redis
