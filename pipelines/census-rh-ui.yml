@@ -1,0 +1,340 @@
+---
+resource_types:
+- name: cf-cli-resource
+  type: docker-image
+  source:
+    repository: nulldriver/cf-cli-resource
+    tag: latest
+
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+
+resources:
+- name: census-rh-ui-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/census-rh-ui.git
+    branch: master
+
+- name: ras-deploy
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-deploy.git
+    branch: master
+
+- name: census-rh-ui-release
+  type: github-release
+  source:
+    owner: ONSdigital
+    repository: census-rh-ui
+    access_token: ((github_access_token))
+
+- name: census-rh-ui-pre-release
+  type: github-release
+  source:
+    owner: ONSdigital
+    repository: census-rh-ui
+    access_token: ((github_access_token))
+    release: false
+    pre_release: true
+
+- name: cf-resource-latest
+  type: cf
+  source:
+    api: ((cloudfoundry_api))
+    username: ((cloudfoundry_email))
+    password: ((cloudfoundry_password))
+    organization: rmras
+    space: concourse-latest
+    skip_cert_check: true
+
+#- name: cf-cli-resource-latest
+#  type: cf-cli-resource
+#  source:
+#    api: ((cloudfoundry_api))
+#    username: ((cloudfoundry_email))
+#    password: ((cloudfoundry_password))
+#    organization: rmras
+#    space: concourse-latest
+#    skip_cert_check: true
+
+- name: cf-resource-preprod
+  type: cf
+  source:
+    api: ((preprod_cloudfoundry_api))
+    username: ((preprod_cloudfoundry_email))
+    password: ((preprod_cloudfoundry_password))
+    organization: rmras
+    space: preprod
+    skip_cert_check: true
+
+- name: cf-cli-resource-preprod
+  type: cf-cli-resource
+  source:
+    api: ((preprod_cloudfoundry_api))
+    username: ((preprod_cloudfoundry_email))
+    password: ((preprod_cloudfoundry_password))
+    org: rmras
+    space: preprod
+    skip_cert_check: true
+#
+- name: notify
+  type: slack-notification
+  source:
+    url: ((slack_webhook))
+
+jobs:
+- name: census-rh-ui-latest-deploy
+  serial: true
+  plan:
+  - get: census-rh-ui-source
+    trigger: true
+    #  - get: ras-deploy
+    #  - task: run-unit-tests
+    #   file: ras-deploy/tasks/python-unit-tests.yml
+    #    input_mapping: { repository-name: respondent-home-ui-source }
+    #    on_failure:
+    #      put: notify
+    #      params:
+    #          text: |
+    #            Latest space respondent-home-ui unit tests failed. See build:
+    #            $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+#  - put: create-redis
+#    resource: cf-cli-resource-latest
+#    params:
+#      command: create-service
+#      service: elasticache-broker
+#      plan: small
+#      service_instance: ras-redis
+#      timeout: 1800
+#      wait_for_service: true
+  - put: push-app
+    resource: cf-resource-latest
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Latest space census-respondent-home-ui deployment failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    params:
+      current_app_name: census-rh-ui-latest
+      manifest: census-rh-ui-source/manifest.yml
+      path: census-rh-ui-source
+      environment_variables:
+        HOST: 0.0.0.0
+        LOG_LEVEL: INFO
+        ACCOUNT_SERVICE_URL: http://census-rh-ui-concourse-latest.apps.devtest.onsclofo.uk      # Remember to exclude all path prefixes here
+        EQ_URL: https://staging-new-surveys.dev.eq.ons.digital
+        JSON_SECRET_KEYS: ((latest_json_secret_keys))
+        CASE_URL: http://rm-case-service-concourse-latest.apps.devtest.onsclofo.uk
+        CASE_USERNAME: ((latest_security_user_name))
+        CASE_PASSWORD: ((latest_security_user_password))
+        COLLECTION_EXERCISE_URL: http://rm-collection-exercise-service-concourse-latest.apps.devtest.onsclofo.uk
+        COLLECTION_EXERCISE_USERNAME: ((latest_security_user_name))
+        COLLECTION_EXERCISE_PASSWORD: ((latest_security_user_password))
+        COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-concourse-latest.apps.devtest.onsclofo.uk
+        COLLECTION_INSTRUMENT_USERNAME: ((latest_security_user_name))
+        COLLECTION_INSTRUMENT_PASSWORD: ((latest_security_user_password))
+        IAC_URL: http://iac-service-concourse-latest.apps.devtest.onsclofo.uk
+        IAC_USERNAME: ((latest_security_user_name))
+        IAC_PASSWORD: ((latest_security_user_password))
+        REDIS_SERVICE: ras-redis
+        SURVEY_URL: http://rm-survey-service-concourse-latest.apps.devtest.onsclofo.uk
+        SURVEY_USERNAME: ((latest_security_user_name))
+        SURVEY_PASSWORD: ((latest_security_user_password))
+        SAMPLE_URL: http://rm-sample-service-concourse-latest.apps.devtest.onsclofo.uk
+        SAMPLE_USERNAME: ((latest_security_user_name))
+        SAMPLE_PASSWORD: ((latest_security_user_password))
+        SECRET_KEY: ((latest_rh_secret_key))
+
+        #  - task: smoke-tests
+        # on_failure:
+        # put: notify
+        # params:
+        #   text:  |
+        #     Latest space respondent-home-ui smoke tests failed. Check the build:
+        #      $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+        # file: respondent-home-ui-source/ci/smoke_tests.yml
+        # params:
+        # RESPONDENT_HOME_INTERNAL_URL: https://census-respondent-home-ui-latest.apps.devtest.onsclofo.uk
+        # RESPONDENT_HOME_URL: https://census-respondent-home-ui-latest.apps.devtest.onsclofo.uk
+
+- name: census-rh-ui-preprod-pre-release-deploy
+  serial: true
+  serial_groups: [preprod_deploys]
+  plan:
+  - get: census-rh-ui-pre-release
+    trigger: true
+    params:
+      include_source_tarball: true
+  - get: ras-deploy
+  - task: extract-source-from-release-tarball
+    file: ras-deploy/tasks/extract-source-from-release.yml
+    input_mapping: { release-resource: census-rh-ui-pre-release }
+    output_mapping: { release-source: census-rh-ui-pre-release-source }
+  - put: create-redis
+    resource: cf-cli-resource-preprod
+    params:
+      command: create-service
+      service: awselasticache-redis
+      plan: small
+      service_instance: res-ops-redis
+      timeout: 1800
+      wait_for_service: true
+  - put: push-app
+    resource: cf-resource-preprod
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Pre-production census-rh-ui deployment failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    params:
+      current_app_name: census-rh-ui-preprod
+      manifest: census-rh-ui-pre-release-source/manifests/manifest-prod.yml
+      path: census-rh-ui-pre-release-source
+      environment_variables:
+        HOST: 0.0.0.0
+        LOG_LEVEL: INFO
+        ACCOUNT_SERVICE_URL: ((preprod_account_service_url))    # Remember to exclude all path prefixes here
+        EQ_URL: https://eq.onsdigital.uk
+        JSON_SECRET_KEYS: ((preprod_json_secret_keys))
+        CASE_URL: http://casesvc-preprod.((preprod_cloudfoundry_apps_domain))
+        CASE_USERNAME: ((preprod_security_user_name))
+        CASE_PASSWORD: ((preprod_security_user_password))
+        COLLECTION_EXERCISE_URL: http://collectionexercisesvc-preprod.((preprod_cloudfoundry_apps_domain))
+        COLLECTION_EXERCISE_USERNAME: ((preprod_security_user_name))
+        COLLECTION_EXERCISE_PASSWORD: ((preprod_security_user_password))
+        COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-preprod.((preprod_cloudfoundry_apps_domain))
+        COLLECTION_INSTRUMENT_USERNAME: ((preprod_security_user_name))
+        COLLECTION_INSTRUMENT_PASSWORD: ((preprod_security_user_password))
+        IAC_URL: http://iacsvc-preprod.((preprod_cloudfoundry_apps_domain))
+        IAC_USERNAME: ((preprod_security_user_name))
+        IAC_PASSWORD: ((preprod_security_user_password))
+        REDIS_SERVICE: res-ops-redis
+        SURVEY_URL: http://surveysvc-preprod.((preprod_cloudfoundry_apps_domain))
+        SURVEY_USERNAME: ((preprod_security_user_name))
+        SURVEY_PASSWORD: ((preprod_security_user_password))
+        SAMPLE_URL: http://samplesvc-preprod.((preprod_cloudfoundry_apps_domain))
+        SAMPLE_USERNAME: ((preprod_security_user_name))
+        SAMPLE_PASSWORD: ((preprod_security_user_password))
+        SECRET_KEY: ((preprod_rh_secret_key))
+        ANALYTICS_UA_ID: ((preprod_analytics_ua_id))
+
+  - put: map-route-vpn-domain
+    resource: cf-cli-resource-preprod
+    params:
+      command: map-route
+      app_name: census-rh-ui-preprod
+      domain: censusrh.rmdev.onsdigital.uk
+  - put: map-route-ons-internal-domain
+    resource: cf-cli-resource-preprod
+    params:
+      app_name: census-rh-ui-preprod
+      command: map-route
+      domain: census.onsdigital.uk
+#  - task: smoke-tests
+#    on_failure:
+#      put: notify
+#      params:
+#        text:  |
+#          Pre-production respondent-home-ui smoke tests failed. Check the build:
+#          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+#    file: respondent-home-ui-pre-release-source/ci/smoke_tests.yml
+#    input_mapping: { respondent-home-ui-source: respondent-home-ui-pre-release-source }
+#    params:
+#      RESPONDENT_HOME_INTERNAL_URL: https://respondent-home-ui-preprod.((preprod_cloudfoundry_apps_domain))
+#      RESPONDENT_HOME_URL: https://respondent-home-ui-preprod.((preprod_cloudfoundry_apps_domain))
+#      URL_PATH_PREFIX: /((preprod_path))
+
+- name: census-rh-ui-preprod-deploy
+  serial: true
+  serial_groups: [preprod_deploys]
+  plan:
+  - get: census-rh-ui-release
+    trigger: true
+    params:
+      include_source_tarball: true
+  - get: ras-deploy
+  - task: extract-source-from-release-tarball
+    file: ras-deploy/tasks/extract-source-from-release.yml
+    input_mapping: { release-resource: census-rh-ui-release }
+    output_mapping: { release-source: census-rh-ui-release-source }
+  - put: create-redis
+    resource: cf-cli-resource-preprod
+    params:
+      command: create-service
+      service: awselasticache-redis
+      plan: small
+      service_instance: res-ops-redis
+      timeout: 1800
+      wait_for_service: true
+  - put: push-app
+    resource: cf-resource-preprod
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Pre-production census-rh-ui deployment failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    params:
+      current_app_name: census-rh-ui-preprod
+      manifest: census-rh-ui-release-source/manifests/manifest-prod.yml
+      path: census-rh-ui-release-source
+      environment_variables:
+        HOST: 0.0.0.0
+        LOG_LEVEL: INFO
+        ACCOUNT_SERVICE_URL: ((preprod_account_service_url))    # Remember to exclude all path prefixes here
+        EQ_URL: https://eq.onsdigital.uk
+        JSON_SECRET_KEYS: ((preprod_json_secret_keys))
+        CASE_URL: http://casesvc-preprod.((preprod_cloudfoundry_apps_domain))
+        CASE_USERNAME: ((preprod_security_user_name))
+        CASE_PASSWORD: ((preprod_security_user_password))
+        COLLECTION_EXERCISE_URL: http://collectionexercisesvc-preprod.((preprod_cloudfoundry_apps_domain))
+        COLLECTION_EXERCISE_USERNAME: ((preprod_security_user_name))
+        COLLECTION_EXERCISE_PASSWORD: ((preprod_security_user_password))
+        COLLECTION_INSTRUMENT_URL: http://ras-collection-instrument-preprod.((preprod_cloudfoundry_apps_domain))
+        COLLECTION_INSTRUMENT_USERNAME: ((preprod_security_user_name))
+        COLLECTION_INSTRUMENT_PASSWORD: ((preprod_security_user_password))
+        IAC_URL: http://iacsvc-preprod.((preprod_cloudfoundry_apps_domain))
+        IAC_USERNAME: ((preprod_security_user_name))
+        IAC_PASSWORD: ((preprod_security_user_password))
+        REDIS_SERVICE: res-ops-redis
+        SURVEY_URL: http://surveysvc-preprod.((preprod_cloudfoundry_apps_domain))
+        SURVEY_USERNAME: ((preprod_security_user_name))
+        SURVEY_PASSWORD: ((preprod_security_user_password))
+        SAMPLE_URL: http://samplesvc-preprod.((preprod_cloudfoundry_apps_domain))
+        SAMPLE_USERNAME: ((preprod_security_user_name))
+        SAMPLE_PASSWORD: ((preprod_security_user_password))
+        SECRET_KEY: ((preprod_rh_secret_key))
+        ANALYTICS_UA_ID: ((preprod_analytics_ua_id))
+
+  - put: map-route-vpn-domain
+    resource: cf-cli-resource-preprod
+    params:
+      command: map-route
+      app_name: census-rh-ui-preprod
+      domain: censusrh.rmdev.onsdigital.uk
+  - put: map-route-ons-internal-domain
+    resource: cf-cli-resource-preprod
+    params:
+      app_name: census-rh-ui-preprod
+      command: map-route
+      domain: census.onsdigital.uk
+#  - task: smoke-tests
+#    on_failure:
+#      put: notify
+#      params:
+#        text:  |
+#          Pre-production respondent-home-ui smoke tests failed. Check the build:
+#          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+#    file: census-rh-ui-release-source/ci/smoke_tests.yml
+#    input_mapping: { census-rh-ui-source: census-rh-ui-release-source }
+#    params:
+#      RESPONDENT_HOME_INTERNAL_URL: https://census-rh-ui-preprod.((preprod_cloudfoundry_apps_domain))
+#      RESPONDENT_HOME_URL: https://census-rh-ui-preprod.((preprod_cloudfoundry_apps_domain))
+#      URL_PATH_PREFIX: /((preprod_path))
+
+
