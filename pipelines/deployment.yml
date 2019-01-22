@@ -1299,13 +1299,36 @@ jobs:
         <<: *ci_security_user
 
 - name: response-operations-ui-ci-deploy
+  serial: true
   serial_groups: [response-operations-ui-ci-deploy]
   plan:
+  - get: ras-deploy
   - get: response-operations-ui-source
     trigger: true
   - get: ci-teardown-timer
     trigger: true
     passed: [ci-teardown]
+  - task: build-script-task
+    config:
+      platform: linux
+      inputs:
+        - name: ras-deploy
+        - name: response-operations-ui-source
+      outputs:
+        - name: response-operations-ui-dest
+      image_resource:
+        type: docker-image
+        source: {repository: node}
+      run:
+        path: sh
+        args:
+          - -exc
+          - |
+            cd response-operations-ui-source
+            ../ras-deploy/scripts/response-operations-ui/build_script.sh
+            cd ..
+            cp -r response-operations-ui-source/* response-operations-ui-dest
+            echo "// Built on: $(date -R)" >> response-operations-ui-dest/response_operations_ui/static/css/main.css
   - put: create-redis
     resource: cf-cli-resource-ci
     params:
@@ -1318,8 +1341,8 @@ jobs:
   - put: cf-resource-ci
     params:
       current_app_name: response-operations-ui-ci
-      manifest: response-operations-ui-source/manifest.yml
-      path: response-operations-ui-source
+      manifest: response-operations-ui-dest/manifest.yml
+      path: response-operations-ui-dest
       environment_variables:
         <<: *ci_security_user
         <<: *ci_service_endpoints_for_python
@@ -2243,11 +2266,34 @@ jobs:
         <<: *latest_security_user
 
 - name: response-operations-ui-latest-deploy
+  serial: true
   serial_groups: [response-operations-ui-latest-deploy]
   plan:
+  - get: ras-deploy
   - get: response-operations-ui-source
     trigger: true
     passed: [ci-rasrm-acceptance-tests, ci-securemessage-acceptance-tests]
+  - task: build-script-task
+    config:
+      platform: linux
+      inputs:
+        - name: ras-deploy
+        - name: response-operations-ui-source
+      outputs:
+        - name: response-operations-ui-dest
+      image_resource:
+        type: docker-image
+        source: {repository: node}
+      run:
+        path: sh
+        args:
+          - -exc
+          - |
+            cd response-operations-ui-source
+            ../ras-deploy/scripts/response-operations-ui/build_script.sh
+            cd ..
+            cp -r response-operations-ui-source/* response-operations-ui-dest
+            echo "// Built on: $(date -R)" >> response-operations-ui-dest/response_operations_ui/static/css/main.css
   - put: create-redis
     resource: cf-cli-resource-latest
     params:
@@ -2261,7 +2307,7 @@ jobs:
     params:
       current_app_name: response-operations-ui-concourse-latest
       manifest: response-operations-ui-source/manifest.yml
-      path: response-operations-ui-source
+      path: response-operations-ui-dest
       environment_variables:
         <<: *latest_security_user
         <<: *latest_service_endpoints_for_python
