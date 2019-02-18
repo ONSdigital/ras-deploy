@@ -1214,40 +1214,6 @@ jobs:
       service_instance: oauth-db
       timeout: 300
       wait_for_service: true
-  # Create git_info file for info end point
-  - task: git-info
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: paasmule/curl-ssl-git
-          tag: "latest"
-      inputs:
-        - name: django-oauth2-test-source
-      outputs:
-        - name: django-oauth2-test-source-git-info
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          cd django-oauth2-test-source
-          branch=$(git rev-parse --abbrev-ref HEAD)
-          url=$(git config --get remote.origin.url)
-          commit=$(git rev-parse HEAD)
-          repo=$(basename `git rev-parse --show-toplevel`)
-          when=`date --utc +%FT%TZ`
-          output=git_info
-          echo '{' > ${output}
-          echo   \"origin\": \"${url}\", >> ${output}
-          echo   \"commit\": \"${commit}\", >> ${output}
-          echo   \"branch\": \"${branch}\", >> ${output}
-          echo   \"name\": \"${repo}\", >> ${output}
-          echo   \"built\": \"${when}\" >> ${output}
-          echo '}' >> ${output}
-          cd ..
-          cp -r django-oauth2-test-source/* django-oauth2-test-source-git-info
   - put: cf-resource-ci
     params:
       current_app_name: django-oauth2-test-ci
