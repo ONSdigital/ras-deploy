@@ -1217,8 +1217,8 @@ jobs:
   - put: cf-resource-ci
     params:
       current_app_name: django-oauth2-test-ci
-      manifest: django-oauth2-test-source-git-info/manifest.yml
-      path: django-oauth2-test-source-git-info
+      manifest: django-oauth2-test-source/manifest.yml
+      path: django-oauth2-test-source
       environment_variables:
         <<: *ci_security_user
         CSRF_ENABLED: 'True'
@@ -2152,8 +2152,8 @@ jobs:
   - put: cf-resource-latest
     params:
       current_app_name: django-oauth2-test-concourse-latest
-      manifest: django-oauth2-test-source-git-info/manifest.yml
-      path: django-oauth2-test-source-git-info
+      manifest: django-oauth2-test-source/manifest.yml
+      path: django-oauth2-test-source
       environment_variables:
         <<: *latest_security_user
         CSRF_ENABLED: 'True'
@@ -2964,8 +2964,8 @@ disabled-jobs:
   - put: cf-resource-preprod
     params:
       current_app_name: django-oauth2-test-concourse-preprod
-      manifest: django-oauth2-test-source-git-info/manifest.yml
-      path: django-oauth2-test-source-git-info
+      manifest: django-oauth2-test-source/manifest.yml
+      path: django-oauth2-test-source
       environment_variables:
         <<: *preprod_security_user
         CSRF_ENABLED: 'True'
@@ -3698,8 +3698,8 @@ disabled-jobs:
   - put: cf-resource-prod
     params:
       current_app_name: django-oauth2-test-concourse-prod
-      manifest: django-oauth2-test-source-git-info/manifest.yml
-      path: django-oauth2-test-source-git-info
+      manifest: django-oauth2-test-source/manifest.yml
+      path: django-oauth2-test-source
       environment_variables:
         <<: *prod_security_user
         CSRF_ENABLED: 'True'
