@@ -1214,45 +1214,11 @@ jobs:
       service_instance: oauth-db
       timeout: 300
       wait_for_service: true
-  # Create git_info file for info end point
-  - task: git-info
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: paasmule/curl-ssl-git
-          tag: "latest"
-      inputs:
-        - name: django-oauth2-test-source
-      outputs:
-        - name: django-oauth2-test-source-git-info
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          cd django-oauth2-test-source
-          branch=$(git rev-parse --abbrev-ref HEAD)
-          url=$(git config --get remote.origin.url)
-          commit=$(git rev-parse HEAD)
-          repo=$(basename `git rev-parse --show-toplevel`)
-          when=`date --utc +%FT%TZ`
-          output=git_info
-          echo '{' > ${output}
-          echo   \"origin\": \"${url}\", >> ${output}
-          echo   \"commit\": \"${commit}\", >> ${output}
-          echo   \"branch\": \"${branch}\", >> ${output}
-          echo   \"name\": \"${repo}\", >> ${output}
-          echo   \"built\": \"${when}\" >> ${output}
-          echo '}' >> ${output}
-          cd ..
-          cp -r django-oauth2-test-source/* django-oauth2-test-source-git-info
   - put: cf-resource-ci
     params:
       current_app_name: django-oauth2-test-ci
-      manifest: django-oauth2-test-source-git-info/manifest.yml
-      path: django-oauth2-test-source-git-info
+      manifest: django-oauth2-test-source/manifest.yml
+      path: django-oauth2-test-source
       environment_variables:
         <<: *ci_security_user
         CSRF_ENABLED: 'True'
@@ -2183,45 +2149,11 @@ jobs:
       service_instance: oauth-db
       timeout: 300
       wait_for_service: true
-  # Create git_info file for info end point
-  - task: git-info
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: paasmule/curl-ssl-git
-          tag: "latest"
-      inputs:
-        - name: django-oauth2-test-source
-      outputs:
-        - name: django-oauth2-test-source-git-info
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          cd django-oauth2-test-source
-          branch=$(git rev-parse --abbrev-ref HEAD)
-          url=$(git config --get remote.origin.url)
-          commit=$(git rev-parse HEAD)
-          repo=$(basename `git rev-parse --show-toplevel`)
-          when=`date --utc +%FT%TZ`
-          output=git_info
-          echo '{' > ${output}
-          echo   \"origin\": \"${url}\", >> ${output}
-          echo   \"commit\": \"${commit}\", >> ${output}
-          echo   \"branch\": \"${branch}\", >> ${output}
-          echo   \"name\": \"${repo}\", >> ${output}
-          echo   \"built\": \"${when}\" >> ${output}
-          echo '}' >> ${output}
-          cd ..
-          cp -r django-oauth2-test-source/* django-oauth2-test-source-git-info
   - put: cf-resource-latest
     params:
       current_app_name: django-oauth2-test-concourse-latest
-      manifest: django-oauth2-test-source-git-info/manifest.yml
-      path: django-oauth2-test-source-git-info
+      manifest: django-oauth2-test-source/manifest.yml
+      path: django-oauth2-test-source
       environment_variables:
         <<: *latest_security_user
         CSRF_ENABLED: 'True'
@@ -3029,45 +2961,11 @@ disabled-jobs:
       service_instance: oauth-db
       timeout: 300
       wait_for_service: true
-  # Create git_info file for info end point
-  - task: git-info
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: paasmule/curl-ssl-git
-          tag: "latest"
-      inputs:
-        - name: django-oauth2-test-source
-      outputs:
-        - name: django-oauth2-test-source-git-info
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          cd django-oauth2-test-source
-          branch=$(git rev-parse --abbrev-ref HEAD)
-          url=$(git config --get remote.origin.url)
-          commit=$(git rev-parse HEAD)
-          repo=$(basename `git rev-parse --show-toplevel`)
-          when=`date --utc +%FT%TZ`
-          output=git_info
-          echo '{' > ${output}
-          echo   \"origin\": \"${url}\", >> ${output}
-          echo   \"commit\": \"${commit}\", >> ${output}
-          echo   \"branch\": \"${branch}\", >> ${output}
-          echo   \"name\": \"${repo}\", >> ${output}
-          echo   \"built\": \"${when}\" >> ${output}
-          echo '}' >> ${output}
-          cd ..
-          cp -r django-oauth2-test-source/* django-oauth2-test-source-git-info
   - put: cf-resource-preprod
     params:
       current_app_name: django-oauth2-test-concourse-preprod
-      manifest: django-oauth2-test-source-git-info/manifest.yml
-      path: django-oauth2-test-source-git-info
+      manifest: django-oauth2-test-source/manifest.yml
+      path: django-oauth2-test-source
       environment_variables:
         <<: *preprod_security_user
         CSRF_ENABLED: 'True'
@@ -3797,45 +3695,11 @@ disabled-jobs:
       service_instance: oauth-db
       timeout: 300
       wait_for_service: true
-  # Create git_info file for info end point
-  - task: git-info
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: paasmule/curl-ssl-git
-          tag: "latest"
-      inputs:
-        - name: django-oauth2-test-source
-      outputs:
-        - name: django-oauth2-test-source-git-info
-      run:
-        path: sh
-        args:
-        - -exc
-        - |
-          cd django-oauth2-test-source
-          branch=$(git rev-parse --abbrev-ref HEAD)
-          url=$(git config --get remote.origin.url)
-          commit=$(git rev-parse HEAD)
-          repo=$(basename `git rev-parse --show-toplevel`)
-          when=`date --utc +%FT%TZ`
-          output=git_info
-          echo '{' > ${output}
-          echo   \"origin\": \"${url}\", >> ${output}
-          echo   \"commit\": \"${commit}\", >> ${output}
-          echo   \"branch\": \"${branch}\", >> ${output}
-          echo   \"name\": \"${repo}\", >> ${output}
-          echo   \"built\": \"${when}\" >> ${output}
-          echo '}' >> ${output}
-          cd ..
-          cp -r django-oauth2-test-source/* django-oauth2-test-source-git-info
   - put: cf-resource-prod
     params:
       current_app_name: django-oauth2-test-concourse-prod
-      manifest: django-oauth2-test-source-git-info/manifest.yml
-      path: django-oauth2-test-source-git-info
+      manifest: django-oauth2-test-source/manifest.yml
+      path: django-oauth2-test-source
       environment_variables:
         <<: *prod_security_user
         CSRF_ENABLED: 'True'
