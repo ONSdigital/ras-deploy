@@ -70,7 +70,7 @@ jobs:
   plan:
   - get: survey-service-pre-release
     trigger: true
-    params: 
+    params:
       include_source_tarball: true
   - get: ras-deploy
   - task: extract-source-from-release-tarball
@@ -86,18 +86,16 @@ jobs:
           repository: golang
       inputs:
         - name: survey-service-pre-release-source
-      outputs:
-        - name: rm-survey-service-build
-          path: rm-survey-service
       run:
         path: sh
         args:
         - -exc
         - |
-          mkdir -p /go/src/github.com/ONSdigital/
-          cp -r survey-service-pre-release-source /go/src/github.com/ONSdigital/rm-survey-service
-          make -C /go/src/github.com/ONSdigital/rm-survey-service
-          cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
+          # Keep the source where it is. No need to move under the GOPATH as
+          # we're using `go modules` that operate outside. Dependencies are
+          # pulled in when `go build` is run in `make`
+          cd survey-service-pre-release-source
+          make
   - put: push-app
     resource: cf-resource-preprod
     on_failure:
@@ -109,7 +107,7 @@ jobs:
     params:
       current_app_name: surveysvc-preprod
       manifest: survey-service-pre-release-source/manifest-preprod.yml
-      path: rm-survey-service-build
+      path: survey-service-pre-release-source
       environment_variables:
         MIGRATION_SOURCE: ((preprod_survey_migration_source))
         security_user_name: ((preprod_security_user_name))
@@ -137,21 +135,18 @@ jobs:
           repository: golang
       inputs:
         - name: survey-service-release-source
-      outputs:
-        - name: rm-survey-service-build
-          path: rm-survey-service
       run:
         path: sh
         args:
         - -exc
         - |
-          mkdir -p /go/src/github.com/ONSdigital/
-          cp -r survey-service-release-source /go/src/github.com/ONSdigital/rm-survey-service
-          make -C /go/src/github.com/ONSdigital/rm-survey-service
-          cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
+          # Keep the source where it is. No need to move under the GOPATH as
+          # we're using `go modules` that operate outside. Dependencies are
+          # pulled in when `go build` is run in `make`
+          cd survey-service-release-source
+          make
   - put: push-app
     resource: cf-resource-prod
-
     on_failure:
       put: notify
       params:
@@ -161,7 +156,7 @@ jobs:
     params:
       current_app_name: surveysvc-prod
       manifest: survey-service-release-source/manifest-prod.yml
-      path: rm-survey-service-build
+      path: rm-survey-service-source
       environment_variables:
         MIGRATION_SOURCE: ((prod_survey_migration_source))
         security_user_name: ((prod_security_user_name))
