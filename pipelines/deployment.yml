@@ -1647,6 +1647,7 @@ jobs:
     params:
       current_app_name: rm-survey-service-ci
       manifest: survey-service/manifest.yml
+      path: survey-service
       environment_variables:
         <<: *ci_security_user
         MIGRATION_SOURCE: 'file://db-migrations'
