@@ -1632,6 +1632,8 @@ jobs:
             repository: golang
         inputs:
           - name: rm-survey-service-source
+        outputs:
+          - name: survey-service
         run:
           path: sh
           args:
@@ -1639,11 +1641,12 @@ jobs:
           - |
             cd rm-survey-service-source
             make
+            cp manifest-preprod.yml ../survey-service
+            cp build/linux-amd64/bin/main ../survey-service/main
   - put: cf-resource-ci
     params:
       current_app_name: rm-survey-service-ci
-      manifest: rm-survey-service-source/manifest.yml
-      path: rm-survey-service-source
+      manifest: survey-service/manifest.yml
       environment_variables:
         <<: *ci_security_user
         MIGRATION_SOURCE: 'file://db-migrations'
