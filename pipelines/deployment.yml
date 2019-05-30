@@ -1639,10 +1639,8 @@ jobs:
           args:
           - -exc
           - |
-            cd rm-survey-service-source
-            make
-            cp manifest.yml ../survey-service
-            cp build/linux-amd64/bin/main ../survey-service/main
+            cp -r rm-survey-service-source/* survey-service
+            make -C survey-service
   - put: cf-resource-ci
     params:
       current_app_name: rm-survey-service-ci
@@ -2541,18 +2539,20 @@ jobs:
             repository: golang
         inputs:
           - name: rm-survey-service-source
+        outputs:
+          - name: survey-service
         run:
           path: sh
           args:
           - -exc
           - |
-            cd rm-survey-service-source
-            make
+            cp -r rm-survey-service-source/* survey-service
+            make -C survey-service
   - put: cf-resource-latest
     params:
       current_app_name: rm-survey-service-concourse-latest
-      manifest: rm-survey-service-source/manifest.yml
-      path: rm-survey-service-source
+      manifest: survey-service/manifest.yml
+      path: survey-service
       environment_variables:
         <<: *latest_security_user
         MIGRATION_SOURCE: 'file://db-migrations'
@@ -3340,18 +3340,20 @@ disabled-jobs:
             repository: golang
         inputs:
           - name: rm-survey-service-source
+        outputs:
+          - name: survey-service
         run:
           path: sh
           args:
           - -exc
           - |
-            cd rm-survey-service-source
-            make
+            cp -r rm-survey-service-source/* survey-service
+            make -C survey-service
   - put: cf-resource-preprod
     params:
       current_app_name: rm-survey-service-concourse-preprod
-      manifest: rm-survey-service-source/manifest.yml
-      path: rm-survey-service-source
+      manifest: survey-service/manifest.yml
+      path: survey-service
       environment_variables:
         <<: *preprod_security_user
         MIGRATION_SOURCE: 'file://db-migrations'
@@ -4103,18 +4105,20 @@ disabled-jobs:
             repository: golang
         inputs:
           - name: rm-survey-service-source
+        outputs:
+          - name: survey-service
         run:
           path: sh
           args:
           - -exc
           - |
-            cd rm-survey-service-source
-            make
+            cp -r rm-survey-service-source/* survey-service
+            make -C survey-service
   - put: cf-resource-prod
     params:
       current_app_name: rm-survey-service-concourse-prod
-      manifest: rm-survey-service-source/manifest.yml
-      path: rm-survey-service-source
+      manifest: survey-service/manifest.yml
+      path: survey-service
       environment_variables:
         <<: *prod_security_user
         MIGRATION_SOURCE: 'file://db-migrations'
