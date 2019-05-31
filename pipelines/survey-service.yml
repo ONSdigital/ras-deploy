@@ -86,16 +86,15 @@ jobs:
           repository: golang
       inputs:
         - name: survey-service-pre-release-source
+      outputs:
+        - name: survey-service
       run:
         path: sh
         args:
         - -exc
         - |
-          # Keep the source where it is. No need to move under the GOPATH as
-          # we're using `go modules` that operate outside. Dependencies are
-          # pulled in when `go build` is run in `make`
-          cd survey-service-pre-release-source
-          make
+          cp -r survey-service-pre-release-source/* survey-service
+          make -C survey-service
   - put: push-app
     resource: cf-resource-preprod
     on_failure:
@@ -106,8 +105,8 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: surveysvc-preprod
-      manifest: survey-service-pre-release-source/manifest-preprod.yml
-      path: survey-service-pre-release-source
+      manifest: survey-service/manifest-preprod.yml
+      path: survey-service
       environment_variables:
         MIGRATION_SOURCE: ((preprod_survey_migration_source))
         security_user_name: ((preprod_security_user_name))
@@ -135,16 +134,15 @@ jobs:
           repository: golang
       inputs:
         - name: survey-service-release-source
+      outputs:
+        - name: survey-service
       run:
         path: sh
         args:
         - -exc
         - |
-          # Keep the source where it is. No need to move under the GOPATH as
-          # we're using `go modules` that operate outside. Dependencies are
-          # pulled in when `go build` is run in `make`
-          cd survey-service-release-source
-          make
+          cp -r survey-service-release-source/* survey-service
+          make -C survey-service
   - put: push-app
     resource: cf-resource-prod
     on_failure:
@@ -155,8 +153,8 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: surveysvc-prod
-      manifest: survey-service-release-source/manifest-prod.yml
-      path: rm-survey-service-source
+      manifest: survey-service/manifest-prod.yml
+      path: survey-service
       environment_variables:
         MIGRATION_SOURCE: ((prod_survey_migration_source))
         security_user_name: ((prod_security_user_name))
