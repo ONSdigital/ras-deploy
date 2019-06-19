@@ -1622,22 +1622,19 @@ jobs:
         inputs:
           - name: rm-survey-service-source
         outputs:
-          - name: rm-survey-service-build
-            path: rm-survey-service
+          - name: survey-service
         run:
           path: sh
           args:
           - -exc
           - |
-            mkdir -p /go/src/github.com/ONSdigital/
-            cp -r rm-survey-service-source /go/src/github.com/ONSdigital/rm-survey-service
-            make -C /go/src/github.com/ONSdigital/rm-survey-service
-            cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
+            cp -r rm-survey-service-source/* survey-service
+            make -C survey-service
   - put: cf-resource-ci
     params:
       current_app_name: rm-survey-service-ci
-      manifest: rm-survey-service-source/manifest.yml
-      path: rm-survey-service-build
+      manifest: survey-service/manifest.yml
+      path: survey-service
       environment_variables:
         <<: *ci_security_user
         MIGRATION_SOURCE: 'file://db-migrations'
@@ -2521,22 +2518,19 @@ jobs:
         inputs:
           - name: rm-survey-service-source
         outputs:
-          - name: rm-survey-service-build
-            path: rm-survey-service
+          - name: survey-service
         run:
           path: sh
           args:
           - -exc
           - |
-            mkdir -p /go/src/github.com/ONSdigital/
-            cp -r rm-survey-service-source /go/src/github.com/ONSdigital/rm-survey-service
-            make -C /go/src/github.com/ONSdigital/rm-survey-service
-            cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
+            cp -r rm-survey-service-source/* survey-service
+            make -C survey-service
   - put: cf-resource-latest
     params:
       current_app_name: rm-survey-service-concourse-latest
-      manifest: rm-survey-service-source/manifest.yml
-      path: rm-survey-service-build
+      manifest: survey-service/manifest.yml
+      path: survey-service
       environment_variables:
         <<: *latest_security_user
         MIGRATION_SOURCE: 'file://db-migrations'
@@ -3291,22 +3285,19 @@ disabled-jobs:
         inputs:
           - name: rm-survey-service-source
         outputs:
-          - name: rm-survey-service-build
-            path: rm-survey-service
+          - name: survey-service
         run:
           path: sh
           args:
           - -exc
           - |
-            mkdir -p /go/src/github.com/ONSdigital/
-            cp -r rm-survey-service-source /go/src/github.com/ONSdigital/rm-survey-service
-            make -C /go/src/github.com/ONSdigital/rm-survey-service
-            cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
+            cp -r rm-survey-service-source/* survey-service
+            make -C survey-service
   - put: cf-resource-preprod
     params:
       current_app_name: rm-survey-service-concourse-preprod
-      manifest: rm-survey-service-source/manifest.yml
-      path: rm-survey-service-build
+      manifest: survey-service/manifest.yml
+      path: survey-service
       environment_variables:
         <<: *preprod_security_user
         MIGRATION_SOURCE: 'file://db-migrations'
@@ -4025,22 +4016,19 @@ disabled-jobs:
         inputs:
           - name: rm-survey-service-source
         outputs:
-          - name: rm-survey-service-build
-            path: rm-survey-service
+          - name: survey-service
         run:
           path: sh
           args:
           - -exc
           - |
-            mkdir -p /go/src/github.com/ONSdigital/
-            cp -r rm-survey-service-source /go/src/github.com/ONSdigital/rm-survey-service
-            make -C /go/src/github.com/ONSdigital/rm-survey-service
-            cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
+            cp -r rm-survey-service-source/* survey-service
+            make -C survey-service
   - put: cf-resource-prod
     params:
       current_app_name: rm-survey-service-concourse-prod
-      manifest: rm-survey-service-source/manifest.yml
-      path: rm-survey-service-build
+      manifest: survey-service/manifest.yml
+      path: survey-service
       environment_variables:
         <<: *prod_security_user
         MIGRATION_SOURCE: 'file://db-migrations'

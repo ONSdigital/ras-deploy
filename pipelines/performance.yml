@@ -847,15 +847,13 @@ jobs:
           args:
           - -exc
           - |
-            mkdir -p /go/src/github.com/ONSdigital/
-            cp -r rm-survey-service-source /go/src/github.com/ONSdigital/rm-survey-service
-            make -C /go/src/github.com/ONSdigital/rm-survey-service
-            cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
+            cd rm-survey-service-source
+            make
   - put: cf-resource-((performance_cloudfoundry_space))
     params:
       current_app_name: rm-survey-service-((performance_cloudfoundry_space))
       manifest: rm-survey-service-source/manifest.yml
-      path: rm-survey-service-build
+      path: rm-survey-service-source
       environment_variables:
         <<: *performance_security_user
         MIGRATION_SOURCE: 'file://db-migrations'

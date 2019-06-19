@@ -70,7 +70,7 @@ jobs:
   plan:
   - get: survey-service-pre-release
     trigger: true
-    params: 
+    params:
       include_source_tarball: true
   - get: ras-deploy
   - task: extract-source-from-release-tarball
@@ -87,17 +87,14 @@ jobs:
       inputs:
         - name: survey-service-pre-release-source
       outputs:
-        - name: rm-survey-service-build
-          path: rm-survey-service
+        - name: survey-service
       run:
         path: sh
         args:
         - -exc
         - |
-          mkdir -p /go/src/github.com/ONSdigital/
-          cp -r survey-service-pre-release-source /go/src/github.com/ONSdigital/rm-survey-service
-          make -C /go/src/github.com/ONSdigital/rm-survey-service
-          cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
+          cp -r survey-service-pre-release-source/* survey-service
+          make -C survey-service
   - put: push-app
     resource: cf-resource-preprod
     on_failure:
@@ -108,8 +105,8 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: surveysvc-preprod
-      manifest: survey-service-pre-release-source/manifest-preprod.yml
-      path: rm-survey-service-build
+      manifest: survey-service/manifest-preprod.yml
+      path: survey-service
       environment_variables:
         MIGRATION_SOURCE: ((preprod_survey_migration_source))
         security_user_name: ((preprod_security_user_name))
@@ -138,20 +135,16 @@ jobs:
       inputs:
         - name: survey-service-release-source
       outputs:
-        - name: rm-survey-service-build
-          path: rm-survey-service
+        - name: survey-service
       run:
         path: sh
         args:
         - -exc
         - |
-          mkdir -p /go/src/github.com/ONSdigital/
-          cp -r survey-service-release-source /go/src/github.com/ONSdigital/rm-survey-service
-          make -C /go/src/github.com/ONSdigital/rm-survey-service
-          cp -r /go/src/github.com/ONSdigital/rm-survey-service/ .
+          cp -r survey-service-release-source/* survey-service
+          make -C survey-service
   - put: push-app
     resource: cf-resource-prod
-
     on_failure:
       put: notify
       params:
@@ -160,8 +153,8 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: surveysvc-prod
-      manifest: survey-service-release-source/manifest-prod.yml
-      path: rm-survey-service-build
+      manifest: survey-service/manifest-prod.yml
+      path: survey-service
       environment_variables:
         MIGRATION_SOURCE: ((prod_survey_migration_source))
         security_user_name: ((prod_security_user_name))
