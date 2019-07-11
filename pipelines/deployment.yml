@@ -52,27 +52,27 @@ templates:
     - response-operations-social-ui-ci-deploy
     - ras-secure-message-ci-deploy
     - ras-collection-instrument-ci-deploy
-    - rm-action-service-ci-deploy
-    - rm-actionexporter-service-ci-deploy
-    - rm-case-service-ci-deploy
-    - rm-collection-exercise-ci-deploy
+    - actionsvc-ci-deploy
+    - actionexportersvc-ci-deploy
+    - casesvc-ci-deploy
+    - collectionexercisesvc-ci-deploy
     - rm-comms-template-service-ci-deploy
-    - iac-service-ci-deploy
-    - rm-notify-gateway-ci-deploy
-    - rm-sample-service-ci-deploy
-    - rm-sdx-gateway-ci-deploy
-    - rm-survey-service-ci-deploy
-    - sdc-uaa-ci-deploy
+    - iacsvc-ci-deploy
+    - notifygatewaysvc-ci-deploy
+    - samplesvc-ci-deploy
+    - sdxgatewaysvc-ci-deploy
+    - surveysvc-ci-deploy
+    - uaa-ci-deploy
 
     service_endpoints_for_python: &ci_service_endpoints_for_python
       ACCOUNT_SERVICE_URL: http://ras-frontstage-ci.apps.devtest.onsclofo.uk
-      ACTION_SERVICE_HOST: rm-action-service-ci.apps.devtest.onsclofo.uk
+      ACTION_SERVICE_HOST: actionsvc-ci.apps.devtest.onsclofo.uk
       ACTION_SERVICE_PORT: '80'
-      ACTION_EXPORTER_HOST: rm-actionexporter-service-ci.apps.devtest.onsclofo.uk
+      ACTION_EXPORTER_HOST: actionexportersvc-ci.apps.devtest.onsclofo.uk
       ACTION_EXPORTER_PORT: '80'
-      CASE_SERVICE_HOST: rm-case-service-ci.apps.devtest.onsclofo.uk
+      CASE_SERVICE_HOST: casesvc-ci.apps.devtest.onsclofo.uk
       CASE_SERVICE_PORT: '80'
-      CASE_URL: http://rm-case-service-ci.apps.devtest.onsclofo.uk
+      CASE_URL: http://casesvc-ci.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_SERVICE_HOST: rm-collection-exercise-service-ci.apps.devtest.onsclofo.uk
       COLLECTION_EXERCISE_SERVICE_PORT: '80'
       COLLECTION_EXERCISE_HOST: rm-collection-exercise-service-ci.apps.devtest.onsclofo.uk
@@ -85,32 +85,32 @@ templates:
       AUTH_SERVICE_PORT: '80'
       FRONTSTAGE_SERVICE_HOST: ras-frontstage-ci.apps.devtest.onsclofo.uk
       FRONTSTAGE_SERVICE_PORT: '80'
-      IAC_SERVICE_HOST: iac-service-ci.apps.devtest.onsclofo.uk
+      IAC_SERVICE_HOST: iacsvc-ci.apps.devtest.onsclofo.uk
       IAC_SERVICE_PORT: '80'
-      IAC_URL: http://iac-service-ci.apps.devtest.onsclofo.uk
-      NOTIFY_GATEWAY_SERVICE_HOST: rm-notify-gateway-ci.apps.devtest.onsclofo.uk
+      IAC_URL: http://iacsvc-ci.apps.devtest.onsclofo.uk
+      NOTIFY_GATEWAY_SERVICE_HOST: notifygatewaysvc-ci.apps.devtest.onsclofo.uk
       NOTIFY_GATEWAY_SERVICE_PORT: '80'
       OAUTH_URL: http://ras-rm-auth-service-ci.apps.devtest.onsclofo.uk
       PARTY_SERVICE_HOST: ras-party-ci.apps.devtest.onsclofo.uk
       PARTY_SERVICE_PORT: '80'
       PARTY_URL: http://ras-party-ci.apps.devtest.onsclofo.uk
-      RM_CASE_SERVICE_HOST: rm-case-service-ci.apps.devtest.onsclofo.uk
+      RM_CASE_SERVICE_HOST: casesvc-ci.apps.devtest.onsclofo.uk
       RM_CASE_SERVICE_PORT: '80'
       RM_COMMS_TEMPLATE_SERVICE_HOST: rm-comms-template-service-ci.apps.devtest.onsclofo.uk
       RM_COMMS_TEMPLATE_SERVICE_PORT: '80'
       RM_COLLECTION_EXERCISE_SERVICE_HOST: rm-collection-exercise-service-ci.apps.devtest.onsclofo.uk
       RM_COLLECTION_EXERCISE_SERVICE_PORT: '80'
-      RM_IAC_SERVICE_HOST: iac-service-ci.apps.devtest.onsclofo.uk
+      RM_IAC_SERVICE_HOST: iacsvc-ci.apps.devtest.onsclofo.uk
       RM_IAC_SERVICE_PORT: '80'
-      RM_SAMPLE_SERVICE_HOST: rm-sample-service-ci.apps.devtest.onsclofo.uk
+      RM_SAMPLE_SERVICE_HOST: samplesvc-ci.apps.devtest.onsclofo.uk
       RM_SAMPLE_SERVICE_PORT: '80'
-      RM_SURVEY_SERVICE_HOST: rm-survey-service-ci.apps.devtest.onsclofo.uk
+      RM_SURVEY_SERVICE_HOST: surveysvc-ci.apps.devtest.onsclofo.uk
       RM_SURVEY_SERVICE_PORT: '80'
-      RAS_CASE_SERVICE_HOST: rm-case-service-ci.apps.devtest.onsclofo.uk
+      RAS_CASE_SERVICE_HOST: casesvc-ci.apps.devtest.onsclofo.uk
       RAS_CASE_SERVICE_PORT: '80'
       RAS_COLLEX_SERVICE_HOST: rm-collection-exercise-service-ci.apps.devtest.onsclofo.uk
       RAS_COLLEX_SERVICE_PORT: '80'
-      RAS_IAC_SERVICE_HOST: iac-service-ci.apps.devtest.onsclofo.uk
+      RAS_IAC_SERVICE_HOST: iacsvc-ci.apps.devtest.onsclofo.uk
       RAS_IAC_SERVICE_PORT: '80'
       RAS_OAUTH_SERVICE_HOST: ras-rm-auth-service-ci.apps.devtest.onsclofo.uk
       RAS_OAUTH_SERVICE_PORT: '80'
@@ -124,28 +124,28 @@ templates:
       RAS_SECURE_MESSAGE_SERVICE_PORT: '80'
       RAS_SECURE_MESSAGING_SERVICE_HOST: ras-secure-message-ci.apps.devtest.onsclofo.uk
       RAS_SECURE_MESSAGING_SERVICE_PORT: '80'
-      RAS_SURVEY_SERVICE_HOST: rm-survey-service-ci.apps.devtest.onsclofo.uk
+      RAS_SURVEY_SERVICE_HOST: surveysvc-ci.apps.devtest.onsclofo.uk
       RAS_SURVEY_SERVICE_PORT: '80'
       RESPONSE_OPERATIONS_UI_HOST: response-operations-ui-ci.apps.devtest.onsclofo.uk
       RESPONSE_OPERATIONS_UI_PORT: '80'
       RESPONSE_OPERATIONS_SOCIAL_UI_HOST: response-operations-social-ui-ci.apps.devtest.onsclofo.uk
       RESPONSE_OPERATIONS_SOCIAL_UI_PORT: '80'
-      SAMPLE_SERVICE_HOST: rm-sample-service-ci.apps.devtest.onsclofo.uk
+      SAMPLE_SERVICE_HOST: samplesvc-ci.apps.devtest.onsclofo.uk
       SAMPLE_SERVICE_PORT: '80'
-      SAMPLE_URL: http://rm-sample-service-ci.apps.devtest.onsclofo.uk
+      SAMPLE_URL: http://samplesvc-ci.apps.devtest.onsclofo.uk
       SECURE_MESSAGE_SERVICE_HOST: ras-secure-message-ci.apps.devtest.onsclofo.uk
       SECURE_MESSAGE_SERVICE_PORT: '80'
       SECURE_MESSAGE_URL: http://ras-secure-message-ci.apps.devtest.onsclofo.uk
-      SURVEY_SERVICE_HOST: rm-survey-service-ci.apps.devtest.onsclofo.uk
+      SURVEY_SERVICE_HOST: surveysvc-ci.apps.devtest.onsclofo.uk
       SURVEY_SERVICE_PORT: '80'
-      SURVEY_URL: http://rm-survey-service-ci.apps.devtest.onsclofo.uk
+      SURVEY_URL: http://surveysvc-ci.apps.devtest.onsclofo.uk
       UAA_SERVICE_URL: http://uaa-ci.apps.devtest.onsclofo.uk
 
     service_endpoints_for_java: &ci_service_endpoints_for_java
-      actionSvc_connectionConfig_host: 'rm-action-service-ci.apps.devtest.onsclofo.uk'
+      actionSvc_connectionConfig_host: 'actionsvc-ci.apps.devtest.onsclofo.uk'
       actionSvc_connectionConfig_port: '80'
       actionSvc_connectionConfig_scheme: 'http'
-      caseSvc_connectionConfig_host: 'rm-case-service-ci.apps.devtest.onsclofo.uk'
+      caseSvc_connectionConfig_host: 'casesvc-ci.apps.devtest.onsclofo.uk'
       caseSvc_connectionConfig_port: '80'
       caseSvc_connectionConfig_scheme: 'http'
       collectionExerciseSvc_connectionConfig_host: 'rm-collection-exercise-service-ci.apps.devtest.onsclofo.uk'
@@ -154,16 +154,16 @@ templates:
       collectionInstrumentSvc_connectionConfig_host: 'ras-collection-instrument-ci.apps.devtest.onsclofo.uk'
       collectionInstrumentSvc_connectionConfig_port: '80'
       collectionInstrumentSvc_connectionConfig_scheme: 'http'
-      internetAccessCodeSvc_connectionConfig_host: 'iac-service-ci.apps.devtest.onsclofo.uk'
+      internetAccessCodeSvc_connectionConfig_host: 'iacsvc-ci.apps.devtest.onsclofo.uk'
       internetAccessCodeSvc_connectionConfig_port: '80'
       internetAccessCodeSvc_connectionConfig_scheme: 'http'
       partySvc_connectionConfig_host: 'ras-party-ci.apps.devtest.onsclofo.uk'
       partySvc_connectionConfig_port: '80'
       partySvc_connectionConfig_scheme: 'http'
-      sampleSvc_connectionConfig_host: 'rm-sample-service-ci.apps.devtest.onsclofo.uk'
+      sampleSvc_connectionConfig_host: 'samplesvc-ci.apps.devtest.onsclofo.uk'
       sampleSvc_connectionConfig_port: '80'
       sampleSvc_connectionConfig_scheme: 'http'
-      surveySvc_connectionConfig_host: 'rm-survey-service-ci.apps.devtest.onsclofo.uk'
+      surveySvc_connectionConfig_host: 'surveysvc-ci.apps.devtest.onsclofo.uk'
       surveySvc_connectionConfig_port: '80'
       surveySvc_connectionConfig_scheme: 'http'
 
@@ -636,7 +636,7 @@ jobs:
         RAS_NOTIFY_CONFIRM_PASSWORD_CHANGE_TEMPLATE: ba41c152-ad96-4255-9456-9e42de83f510
         RAS_NOTIFY_EMAIL_VERIFICATION_TEMPLATE: 53c59576-8c3b-4298-99d1-b245ddd28500
         RAS_NOTIFY_REQUEST_PASSWORD_CHANGE_TEMPLATE: c45c59ff-7771-4de4-a66b-ce50b108390a
-        RAS_NOTIFY_SERVICE_URL: http://rm-notify-gateway-ci.apps.devtest.onsclofo.uk/emails/
+        RAS_NOTIFY_SERVICE_URL: http://notifygatewaysvc-ci.apps.devtest.onsclofo.uk/emails/
 
 - name: ras-secure-message-ci-deploy
   serial_groups: [ras-secure-message-ci-deploy]
@@ -668,7 +668,7 @@ jobs:
         NOTIFICATION_API_KEY: ((test_notify_api_key))
         NOTIFICATION_TEMPLATE_ID: 'f6404844-a994-428c-a5d7-45a4e1cfff4b'
         NOTIFY_VIA_GOV_NOTIFY: '1'
-        RM_NOTIFY_GATEWAY_URL: 'http://rm-notify-gateway-ci.apps.devtest.onsclofo.uk/emails/'
+        RM_NOTIFY_GATEWAY_URL: 'http://notifygatewaysvc-ci.apps.devtest.onsclofo.uk/emails/'
         RAS_SM_PATH: '/home/vcap/app'
         SERVICE_ID: 'ce3674b1-7b08-4377-a6a7-05b5722d4ea5'
         UAA_URL: 'http://uaa-ci.apps.devtest.onsclofo.uk'
@@ -897,8 +897,8 @@ jobs:
         UAA_CLIENT_ID: 'response_operations_social'
         UAA_CLIENT_SECRET: ((ci_response_operations_social_client_secret))
 
-- name: rm-action-service-ci-deploy
-  serial_groups: [rm-action-service-ci-deploy]
+- name: actionsvc-ci-deploy
+  serial_groups: [actionsvc-ci-deploy]
   plan:
   - get: rm-action-service-source
     trigger: true
@@ -915,7 +915,7 @@ jobs:
       input_mapping: { repository-name: rm-action-service-source }
   - put: cf-resource-ci
     params:
-      current_app_name: rm-action-service-ci
+      current_app_name: actionsvc-ci
       manifest: rm-action-service-source/manifest-no-envs.yml
       path: target/actionsvc*.jar
       environment_variables:
@@ -925,8 +925,8 @@ jobs:
         planExecution_delayMilliSeconds: '10000'
         SWAGGER_SETTINGS_SWAGGER_UI_ACTIVE: 'true'
 
-- name: rm-actionexporter-service-ci-deploy
-  serial_groups: [rm-actionexporter-service-ci-deploy]
+- name: actionexportersvc-ci-deploy
+  serial_groups: [actionexportersvc-ci-deploy]
   plan:
   - get: rm-actionexporter-service-source
     trigger: true
@@ -943,7 +943,7 @@ jobs:
       input_mapping: { repository-name: rm-actionexporter-service-source }
   - put: cf-resource-ci
     params:
-      current_app_name: rm-actionexporter-service-ci
+      current_app_name: actionexportersvc-ci
       manifest: rm-actionexporter-service-source/manifest.yml
       path: target/actionexportersvc*.jar
       environment_variables:
@@ -958,8 +958,8 @@ jobs:
         SWAGGER_SETTINGS_SWAGGER_UI_ACTIVE: 'true'
         LOGGING_LEVEL_uk.gov.ons.ctp.response.action.export.scheduled: WARN
 
-- name: rm-case-service-ci-deploy
-  serial_groups: [rm-case-service-ci-deploy]
+- name: casesvc-ci-deploy
+  serial_groups: [casesvc-ci-deploy]
   plan:
   - get: rm-case-service-source
     trigger: true
@@ -976,7 +976,7 @@ jobs:
       input_mapping: { repository-name: rm-case-service-source }
   - put: cf-resource-ci
     params:
-      current_app_name: rm-case-service-ci
+      current_app_name: casesvc-ci
       manifest: rm-case-service-source/manifest-no-envs.yml
       path: target/casesvc*.jar
       environment_variables:
@@ -985,8 +985,8 @@ jobs:
         endpoints_enabled: 'false'
         SWAGGER_SETTINGS_SWAGGER_UI_ACTIVE: 'true'
 
-- name: rm-collection-exercise-ci-deploy
-  serial_groups: [rm-collection-exercise-ci-deploy]
+- name: collectionexercisesvc-ci-deploy
+  serial_groups: [collectionexercisesvc-ci-deploy]
   plan:
   - get: rm-collection-exercise-service-source
     trigger: true
@@ -1039,8 +1039,8 @@ jobs:
       environment_variables:
         <<: *ci_security_user
 
-- name: iac-service-ci-deploy
-  serial_groups: [iac-service-ci-deploy]
+- name: iacsvc-ci-deploy
+  serial_groups: [iacsvc-ci-deploy]
   plan:
   - get: iac-service-source
     trigger: true
@@ -1055,7 +1055,7 @@ jobs:
       input_mapping: { repository-name: iac-service-source }
   - put: cf-resource-ci
     params:
-      current_app_name: iac-service-ci
+      current_app_name: iacsvc-ci
       manifest: iac-service-source/manifest-no-envs.yml
       path: target/iacsvc*.jar
       environment_variables:
@@ -1064,8 +1064,8 @@ jobs:
         endpoints_enabled: 'false'
         SWAGGER_SETTINGS_SWAGGER_UI_ACTIVE: 'true'
 
-- name: rm-notify-gateway-ci-deploy
-  serial_groups: [rm-notify-gateway-ci-deploy]
+- name: notifygatewaysvc-ci-deploy
+  serial_groups: [notifygatewaysvc-ci-deploy]
   plan:
   - get: rm-notify-gateway-source
     trigger: true
@@ -1081,7 +1081,7 @@ jobs:
       input_mapping: { repository-name: rm-notify-gateway-source }
   - put: cf-resource-ci
     params:
-      current_app_name: rm-notify-gateway-ci
+      current_app_name: notifygatewaysvc-ci
       manifest: rm-notify-gateway-source/manifest.yml
       path: target/notifygatewaysvc*.jar
       environment_variables:
@@ -1093,8 +1093,8 @@ jobs:
         notify_onsSurveysRasEmailReminderTemplateId: '19a0aa89-797f-4a34-ad54-267fd581f2ef'
         SWAGGER_SETTINGS_SWAGGER_UI_ACTIVE: 'true'
 
-- name: rm-sample-service-ci-deploy
-  serial_groups: [rm-sample-service-ci-deploy]
+- name: samplesvc-ci-deploy
+  serial_groups: [samplesvc-ci-deploy]
   plan:
   - get: rm-sample-service-source
     trigger: true
@@ -1111,7 +1111,7 @@ jobs:
       input_mapping: { repository-name: rm-sample-service-source }
   - put: cf-resource-ci
     params:
-      current_app_name: rm-sample-service-ci
+      current_app_name: samplesvc-ci
       manifest: rm-sample-service-source/manifest-no-envs.yml
       path: target/samplesvc*.jar
       environment_variables:
@@ -1128,8 +1128,8 @@ jobs:
         LOGGING_LEVEL_uk.gov.ons.ctp.common.distributed: INFO
         SWAGGER_SETTINGS_SWAGGER_UI_ACTIVE: 'true'
 
-- name: rm-sdx-gateway-ci-deploy
-  serial_groups: [rm-sdx-gateway-ci-deploy]
+- name: sdxgatewaysvc-ci-deploy
+  serial_groups: [sdxgatewaysvc-ci-deploy]
   plan:
   - get: rm-sdx-gateway-source
     trigger: true
@@ -1145,7 +1145,7 @@ jobs:
       input_mapping: { repository-name: rm-sdx-gateway-source }
   - put: cf-resource-ci
     params:
-      current_app_name: rm-sdx-gateway-ci
+      current_app_name: sdxgatewaysvc-ci
       manifest: rm-sdx-gateway-source/manifest.yml
       path: target/sdxgatewaysvc*.jar
       environment_variables:
@@ -1153,8 +1153,8 @@ jobs:
         endpoints_enabled: 'false'
         SWAGGER_SETTINGS_SWAGGER_UI_ACTIVE: 'true'
 
-- name: rm-survey-service-ci-deploy
-  serial_groups: [rm-survey-service-ci-deploy]
+- name: surveysvc-ci-deploy
+  serial_groups: [surveysvc-ci-deploy]
   plan:
   - get: rm-survey-service-source
     trigger: true
@@ -1183,15 +1183,15 @@ jobs:
             make -C survey-service
   - put: cf-resource-ci
     params:
-      current_app_name: rm-survey-service-ci
+      current_app_name: surveysvc-ci
       manifest: survey-service/manifest.yml
       path: survey-service
       environment_variables:
         <<: *ci_security_user
         MIGRATION_SOURCE: 'file://db-migrations'
 
-- name: sdc-uaa-ci-deploy
-  serial_groups: [sdc-uaa-ci-deploy]
+- name: uaa-ci-deploy
+  serial_groups: [uaa-ci-deploy]
   plan:
   - get: sdc-uaa-source
     trigger: true
@@ -1238,7 +1238,7 @@ jobs:
           cp -r sdc-uaa-source/* sdc-uaa-build
   - put: cf-resource-ci
     params:
-      current_app_name: sdc-uaa-ci
+      current_app_name: uaa-ci
       manifest: sdc-uaa-build/uaa-cf-application.yml
       #### EXTRACT ME ####
   - task: create-secure-message-client
@@ -1360,37 +1360,37 @@ jobs:
     passed: [ras-collection-instrument-ci-deploy]
     trigger: true
   - get: rm-action-service-source
-    passed: [rm-action-service-ci-deploy]
+    passed: [actionsvc-ci-deploy]
     trigger: true
   - get: rm-actionexporter-service-source
-    passed: [rm-actionexporter-service-ci-deploy]
+    passed: [actionexportersvc-ci-deploy]
     trigger: true
   - get: rm-case-service-source
-    passed: [rm-case-service-ci-deploy]
+    passed: [casesvc-ci-deploy]
     trigger: true
   - get: rm-collection-exercise-service-source
-    passed: [rm-collection-exercise-ci-deploy]
+    passed: [collectionexercisesvc-ci-deploy]
     trigger: true
   - get: rm-comms-template-service-source
     passed: [rm-comms-template-service-ci-deploy]
     trigger: true
   - get: iac-service-source
-    passed: [iac-service-ci-deploy]
+    passed: [iacsvc-ci-deploy]
     trigger: true
   - get: rm-notify-gateway-source
-    passed: [rm-notify-gateway-ci-deploy]
+    passed: [notifygatewaysvc-ci-deploy]
     trigger: true
   - get: rm-sample-service-source
-    passed: [rm-sample-service-ci-deploy]
+    passed: [samplesvc-ci-deploy]
     trigger: true
   - get: rm-sdx-gateway-source
-    passed: [rm-sdx-gateway-ci-deploy]
+    passed: [sdxgatewaysvc-ci-deploy]
     trigger: true
   - get: rm-survey-service-source
-    passed: [rm-survey-service-ci-deploy]
+    passed: [surveysvc-ci-deploy]
     trigger: true
   - get: sdc-uaa-source
-    passed: [sdc-uaa-ci-deploy]
+    passed: [uaa-ci-deploy]
     trigger: true
   - task: get-cf-database-uris
     file: ras-deploy/tasks/get_database_uris.yml
@@ -1472,37 +1472,37 @@ jobs:
     passed: [ras-collection-instrument-ci-deploy]
     trigger: true
   - get: rm-action-service-source
-    passed: [rm-action-service-ci-deploy]
+    passed: [actionsvc-ci-deploy]
     trigger: true
   - get: rm-actionexporter-service-source
-    passed: [rm-actionexporter-service-ci-deploy]
+    passed: [actionexportersvc-ci-deploy]
     trigger: true
   - get: rm-case-service-source
-    passed: [rm-case-service-ci-deploy]
+    passed: [casesvc-ci-deploy]
     trigger: true
   - get: rm-collection-exercise-service-source
-    passed: [rm-collection-exercise-ci-deploy]
+    passed: [collectionexercisesvc-ci-deploy]
     trigger: true
   - get: rm-comms-template-service-source
     passed: [rm-comms-template-service-ci-deploy]
     trigger: true
   - get: iac-service-source
-    passed: [iac-service-ci-deploy]
+    passed: [iacsvc-ci-deploy]
     trigger: true
   - get: rm-notify-gateway-source
-    passed: [rm-notify-gateway-ci-deploy]
+    passed: [notifygatewaysvc-ci-deploy]
     trigger: true
   - get: rm-sample-service-source
-    passed: [rm-sample-service-ci-deploy]
+    passed: [samplesvc-ci-deploy]
     trigger: true
   - get: rm-sdx-gateway-source
-    passed: [rm-sdx-gateway-ci-deploy]
+    passed: [sdxgatewaysvc-ci-deploy]
     trigger: true
   - get: rm-survey-service-source
-    passed: [rm-survey-service-ci-deploy]
+    passed: [surveysvc-ci-deploy]
     trigger: true
   - get: sdc-uaa-source
-    passed: [sdc-uaa-ci-deploy]
+    passed: [uaa-ci-deploy]
     trigger: true
   - task: get-cf-database-uris
     file: ras-deploy/tasks/get_database_uris.yml
@@ -2046,7 +2046,7 @@ jobs:
     params:
       current_app_name: rm-sdx-gateway-concourse-latest
       manifest: rm-sdx-gateway-source/manifest.yml
-      path: target/sdxgatewaysvc*.jar
+      path: target/sdxgatewaysvc-ci*.jar
       environment_variables:
         <<: *latest_security_user
         endpoints_enabled: 'false'
