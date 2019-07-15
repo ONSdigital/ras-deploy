@@ -21,6 +21,7 @@ retry_setup_env_var () {
 
     if [ $counter -gt 3 ]
     then
+      echo "Couldn't get the database URI for $SERVICE_PREFIX"
       exit 1
     fi
 
@@ -29,7 +30,7 @@ retry_setup_env_var () {
   done
 }
 
-retry_setup_env_var DATABASE_URI rm-case-service-
+retry_setup_env_var DATABASE_URI casesvc-
 retry_setup_env_var PARTY_DATABASE_URI ras-party-
 retry_setup_env_var AUTH_DATABASE_URI django-oauth2-test-
 retry_setup_env_var SECURE_MESSAGE_DATABASE_URI ras-secure-message-
