@@ -95,7 +95,7 @@ jobs:
 
 - name: auth-service-prod-deploy
   serial: true
-  serial_groups: [preprod_deploys]
+  serial_groups: [prod_deploys]
   plan:
   - get: auth-service-release
     trigger: true
@@ -112,10 +112,10 @@ jobs:
       put: notify
       params:
         text:  |
-          Pre-production auth-service deployment failed. See build:
+          Production auth-service deployment failed. See build:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
-      current_app_name: authsvc-preprod
+      current_app_name: authsvc-prod
       manifest: auth-service-release-source/manifest-prod.yml
       path: auth-service-release-source
       environment_variables:
