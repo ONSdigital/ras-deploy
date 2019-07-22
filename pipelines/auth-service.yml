@@ -67,8 +67,8 @@ jobs:
           $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
     params:
       current_app_name: authsvc-preprod
-      manifest: ras-rm-auth-service/manifest-preprod.yml
-      path: ras-rm-auth-service
+      manifest: auth-service-pre-release-source/manifest-preprod.yml
+      path: auth-service-pre-release-source
       environment_variables:
         SECURITY_USER_NAME: ((preprod_security_user_name))
         SECURITY_USER_PASSWORD: ((preprod_security_user_password))
