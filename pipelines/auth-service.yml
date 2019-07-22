@@ -28,6 +28,16 @@ resources:
     pre_release: true
     tag_filter: "v?(\\d+\\.\\d+\\.\\d+(?:_[a-zA-Z0-9]+)?)"
 
+- name: auth-service-release
+  type: github-release
+  source:
+    owner: ONSdigital
+    repository: ras-rm-auth-service
+    access_token: ((github_access_token))
+    release: true
+    pre_release: false
+    tag_filter: "v?(\\d+\\.\\d+\\.\\d+(?:_[a-zA-Z0-9]+)?)"
+
 - name: cf-resource-preprod
   type: cf
   source:
@@ -36,6 +46,16 @@ resources:
     password: ((preprod_cloudfoundry_password))
     organization: rmras
     space: preprod
+    skip_cert_check: true
+
+- name: cf-resource-prod
+  type: cf
+  source:
+    api: ((prod_cloudfoundry_api))
+    username: ((prod_cloudfoundry_email))
+    password: ((prod_cloudfoundry_password))
+    organization: rmras
+    space: prod
     skip_cert_check: true
 
 - name: notify
@@ -73,3 +93,31 @@ jobs:
         SECURITY_USER_NAME: ((preprod_security_user_name))
         SECURITY_USER_PASSWORD: ((preprod_security_user_password))
 
+- name: auth-service-prod-deploy
+  serial: true
+  serial_groups: [preprod_deploys]
+  plan:
+  - get: auth-service-release
+    trigger: true
+    params:
+      include_source_tarball: true
+  - get: ras-deploy
+  - task: extract-source-from-release-tarball
+    file: ras-deploy/tasks/extract-source-from-release.yml
+    input_mapping: { release-resource: auth-service-release }
+    output_mapping: { release-source: auth-service-release-source }
+  - put: cf-resource-latest
+    resource: cf-resource-prod
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Pre-production auth-service deployment failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    params:
+      current_app_name: authsvc-preprod
+      manifest: auth-service-release-source/manifest-prod.yml
+      path: auth-service-release-source
+      environment_variables:
+        SECURITY_USER_NAME: ((prod_security_user_name))
+        SECURITY_USER_PASSWORD: ((prod_security_user_password))
