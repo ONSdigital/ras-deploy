@@ -1,0 +1,76 @@
+---
+resource_types:
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+
+- name: cf-cli-resource
+  type: docker-image
+  source:
+    repository: nulldriver/cf-cli-resource
+    tag: latest
+
+resources:
+- name: ras-deploy
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-deploy.git
+    branch: master
+
+- name: auth-service-pre-release
+  type: github-release
+  source:
+    owner: ONSdigital
+    repository: ras-rm-auth-service
+    access_token: ((github_access_token))
+    release: false
+    pre_release: true
+    tag_filter: "v?(\\d+\\.\\d+\\.\\d+(?:_[a-zA-Z0-9]+)?)"
+
+- name: cf-resource-preprod
+  type: cf
+  source:
+    api: ((preprod_cloudfoundry_api))
+    username: ((preprod_cloudfoundry_email))
+    password: ((preprod_cloudfoundry_password))
+    organization: rmras
+    space: preprod
+    skip_cert_check: true
+
+
+- name: notify
+  type: slack-notification
+  source:
+    url: ((slack_webhook))
+
+jobs:
+- name: auth-service-preprod-pre-release-deploy
+  serial: true
+  serial_groups: [preprod_deploys]
+  plan:
+  - get: auth-service-pre-release
+    trigger: true
+    params:
+      include_source_tarball: true
+  - get: ras-deploy
+  - task: extract-source-from-release-tarball
+    file: ras-deploy/tasks/extract-source-from-release.yml
+    input_mapping: { release-resource: auth-service-pre-release }
+    output_mapping: { release-source: auth-service-pre-release-source }
+  - put: cf-resource-latest
+    resource: cf-resource-preprod
+    on_failure:
+      put: notify
+      params:
+        text:  |
+          Pre-production auth-service deployment failed. See build:
+          $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    params:
+      current_app_name: authsvc-preprod
+      manifest: auth-service-pre-release-source/manifest.yml
+      path: auth-service-pre-release-source
+      environment_variables:
+        SECURITY_USER_NAME: ((preprod_security_user_name))
+        SECURITY_USER_PASSWORD: ((preprod_security_user_password))
+
