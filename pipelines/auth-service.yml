@@ -98,7 +98,7 @@ jobs:
   serial_groups: [prod_deploys]
   plan:
   - get: auth-service-release
-    trigger: true
+    trigger: false
     params:
       include_source_tarball: true
   - get: ras-deploy
