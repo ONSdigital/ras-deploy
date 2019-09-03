@@ -45,6 +45,9 @@ templates:
 
     all_services: &ci_all_services
     - ras-party-ci-deploy
+    - ras-rabbit-adaptor-service-deploy
+    - rm-reporting-ci-deploy
+    - ras-maintenance-ci-deploy
     - ras-frontstage-ci-deploy
     - django-oauth2-test-ci-deploy
     - ras-rm-auth-service-ci-deploy
@@ -245,6 +248,9 @@ templates:
 
     all_services: &latest_all_services
     - ras-party-latest-deploy
+    - ras-rabbit-adaptor-service-deploy
+    - rm-reporting-ci-deploy
+    - ras-maintenance-ci-deploy
     - ras-frontstage-latest-deploy
     - django-oauth2-test-latest-deploy
     - ras-rm-auth-service-latest-deploy
@@ -424,6 +430,12 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/ras-party.git
+    branch: master
+
+- name: ras-rabbit-adaptor-service-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-rabbit-adaptor-service.git
     branch: master
 
 - name: ras-secure-message-source
@@ -637,6 +649,83 @@ jobs:
         RAS_NOTIFY_EMAIL_VERIFICATION_TEMPLATE: 53c59576-8c3b-4298-99d1-b245ddd28500
         RAS_NOTIFY_REQUEST_PASSWORD_CHANGE_TEMPLATE: c45c59ff-7771-4de4-a66b-ce50b108390a
         RAS_NOTIFY_SERVICE_URL: http://notifygatewaysvc-ci.apps.devtest.onsclofo.uk/emails/
+
+- name: ras-rabbit-adaptor-service-ci-deploy
+  serial_groups: [ras-rabbit-adaptor-service-ci-deploy]
+  plan:
+  - get: ras-rabbit-adaptor-service-source
+    trigger: true
+  - get: ci-teardown-timer
+    trigger: true
+    passed: [ci-teardown]
+  - put: create-rm-rabbitmq
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: rabbitmq
+      plan: standard
+      service_instance: rm-rabbitmq
+      timeout: 1800
+      wait_for_service: true
+  - put: push-app
+    resource: cf-resource-ci
+    params:
+      current_app_name: ci-rabbit-adapter-ci # Note: adapter spelt with 'er' where all the others are 'or'
+      manifest: ras-rabbit-adaptor-service-source/manifest.yml
+      path: ras-rabbit-adaptor-service-source
+      environment_variables:
+        <<: *ci_security_user
+        <<: *ci_service_endpoints_for_python
+        CI_SECRETS: ((ci_json_rabbit_adaptor_secret_keys))
+        COLLEX_ID: 'cfc6c8a4-109b-41f8-822f-5b7c0e25f850' # TODO: Find a valid collex_id in ci
+        EXCHANGE_TYPE: 'topic'
+        RABBIT_EXCHANGE: 'messages'
+        RABBIT_QUARANTINE_QUEUE: 'Seft.CollectionInstruments.Quarantine'
+        RABBIT_QUEUE: 'Seft.CollectionInstruments'
+        RABBIT_URL: ((ci_rabbit_adaptor_rabbit_url))
+
+- name: rm-reporting-ci-deploy
+  serial_groups: [rm-reporting-ci-deploy]
+  plan:
+  - get: rm-reporting-source
+    trigger: true
+  - get: ci-teardown-timer
+    trigger: true
+    passed: [ci-teardown]
+  - put: create-database
+    resource: cf-cli-resource-ci
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: secure-message-db
+      timeout: 300
+      wait_for_service: true
+  - put: push-app
+    resource: cf-resource-ci
+    params:
+      current_app_name: rm-reporting-ci
+      manifest: rm-reporting-source/manifest.yml
+      path: rm-reporting-source
+      environment_variables:
+        <<: *ci_security_user
+
+- name: ras-maintenance-ci-deploy
+  serial_groups: [ras-maintenance-ci-deploy]
+  plan:
+  - get: ras-maintenance-source
+    trigger: true
+  - get: ci-teardown-timer
+    trigger: true
+    passed: [ci-teardown]
+  - put: push-app
+    resource: cf-resource-ci
+    params:
+      current_app_name: ras-maintenance-ci
+      manifest: ras-maintenance-source/manifest.yml
+      path: ras-maintenance-source
+      environment_variables:
+        MAINTENANCE_TEMPLATE: ((maintenance_template))
 
 - name: ras-secure-message-ci-deploy
   serial_groups: [ras-secure-message-ci-deploy]
@@ -1324,6 +1413,7 @@ jobs:
         path: sh
         args:
         - './scripts/jenkins/add_user.sh'
+
 ### END CI DEPLOYMENTS
 
 - name: ci-rasrm-acceptance-tests
@@ -1577,6 +1667,74 @@ jobs:
         RAS_NOTIFY_EMAIL_VERIFICATION_TEMPLATE: 53c59576-8c3b-4298-99d1-b245ddd28500
         RAS_NOTIFY_REQUEST_PASSWORD_CHANGE_TEMPLATE: c45c59ff-7771-4de4-a66b-ce50b108390a
         RAS_NOTIFY_SERVICE_URL: http://notifygatewaysvc-latest.apps.devtest.onsclofo.uk/emails/
+
+- name: ras-rabbit-adaptor-service-latest-deploy
+  serial_groups: [ras-rabbit-adaptor-service-latest-deploy]
+  plan:
+  - get: ras-rabbit-adaptor-service-source
+    trigger: true
+  - put: create-rm-rabbitmq
+    resource: cf-cli-resource-latest
+    params:
+      command: create-service
+      service: rabbitmq
+      plan: standard
+      service_instance: rm-rabbitmq
+      timeout: 1800
+      wait_for_service: true
+  - put: push-app
+    resource: cf-resource-ci
+    params:
+      current_app_name: ci-rabbit-adapter-latest # Note: adapter spelt with 'er' where all the others are 'or'
+      manifest: ras-rabbit-adaptor-service-source/manifest.yml
+      path: ras-rabbit-adaptor-service-source
+      environment_variables:
+        <<: *latest_security_user
+        <<: *latest_service_endpoints_for_python
+        CI_SECRETS: ((latest_json_rabbit_adaptor_secret_keys))
+        COLLEX_ID: 'cfc6c8a4-109b-41f8-822f-5b7c0e25f850' # TODO: Find a valid collex_id in latest
+        EXCHANGE_TYPE: 'topic'
+        RABBIT_EXCHANGE: 'messages'
+        RABBIT_QUARANTINE_QUEUE: 'Seft.CollectionInstruments.Quarantine'
+        RABBIT_QUEUE: 'Seft.CollectionInstruments'
+        RABBIT_URL: ((ci_rabbit_adaptor_rabbit_url))
+
+- name: rm-reporting-latest-deploy
+  serial_groups: [rm-reporting-latest-deploy]
+  plan:
+  - get: rm-reporting-source
+    trigger: true
+  - put: create-database
+    resource: cf-cli-resource-latest
+    params:
+      command: create-service
+      service: rds
+      plan: shared-psql
+      service_instance: secure-message-db
+      timeout: 300
+      wait_for_service: true
+  - put: push-app
+    resource: cf-resource-latest
+    params:
+      current_app_name: rm-reporting-latest
+      manifest: rm-reporting-source/manifest.yml
+      path: rm-reporting-source
+      environment_variables:
+        <<: *latest_security_user
+
+- name: ras-maintenance-latest-deploy
+  serial_groups: [ras-maintenance-latest-deploy]
+  plan:
+  - get: ras-maintenance-source
+    trigger: true
+  - put: push-app
+    resource: cf-resource-latest
+    params:
+      current_app_name: ras-maintenance-latest
+      manifest: ras-maintenance-source/manifest.yml
+      path: ras-maintenance-source
+      environment_variables:
+        MAINTENANCE_TEMPLATE: ((maintenance_template))
 
 - name: ras-secure-message-latest-deploy
   serial_groups: [ras-secure-message-latest-deploy]
