@@ -45,7 +45,7 @@ templates:
 
     all_services: &ci_all_services
     - ras-party-ci-deploy
-    - ras-rabbit-adaptor-service-deploy
+    - ras-rabbit-adaptor-service-ci-deploy
     - rm-reporting-ci-deploy
     - ras-maintenance-ci-deploy
     - ras-frontstage-ci-deploy
@@ -248,9 +248,9 @@ templates:
 
     all_services: &latest_all_services
     - ras-party-latest-deploy
-    - ras-rabbit-adaptor-service-deploy
-    - rm-reporting-ci-deploy
-    - ras-maintenance-ci-deploy
+    - ras-rabbit-adaptor-service-latest-deploy
+    - rm-reporting-latest-deploy
+    - ras-maintenance-latest-deploy
     - ras-frontstage-latest-deploy
     - django-oauth2-test-latest-deploy
     - ras-rm-auth-service-latest-deploy
@@ -725,7 +725,7 @@ jobs:
       manifest: ras-maintenance-source/manifest.yml
       path: ras-maintenance-source
       environment_variables:
-        MAINTENANCE_TEMPLATE: ((maintenance_template))
+        MAINTENANCE_TEMPLATE: ((ci_maintenance_template))
 
 - name: ras-secure-message-ci-deploy
   serial_groups: [ras-secure-message-ci-deploy]
@@ -1734,7 +1734,7 @@ jobs:
       manifest: ras-maintenance-source/manifest.yml
       path: ras-maintenance-source
       environment_variables:
-        MAINTENANCE_TEMPLATE: ((maintenance_template))
+        MAINTENANCE_TEMPLATE: ((latest_maintenance_template))
 
 - name: ras-secure-message-latest-deploy
   serial_groups: [ras-secure-message-latest-deploy]
