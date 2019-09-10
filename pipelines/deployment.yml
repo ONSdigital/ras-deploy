@@ -677,7 +677,7 @@ jobs:
         <<: *ci_security_user
         <<: *ci_service_endpoints_for_python
         CI_SECRETS: ((ci_json_rabbit_adaptor_secret_keys))
-        COLLEX_ID: 'cfc6c8a4-109b-41f8-822f-5b7c0e25f850' # TODO: Find a valid collex_id in ci
+        COLLEX_ID: 'a9ef1f12-23f4-413e-938c-8078df1bb170'
         EXCHANGE_TYPE: 'topic'
         RABBIT_EXCHANGE: 'messages'
         RABBIT_QUARANTINE_QUEUE: 'Seft.CollectionInstruments.Quarantine'
@@ -1692,7 +1692,7 @@ jobs:
         <<: *latest_security_user
         <<: *latest_service_endpoints_for_python
         CI_SECRETS: ((latest_json_rabbit_adaptor_secret_keys))
-        COLLEX_ID: 'cfc6c8a4-109b-41f8-822f-5b7c0e25f850' # TODO: Find a valid collex_id in latest
+        COLLEX_ID: '3f93d816-424c-4a3f-9d0b-4f58a286bc20'
         EXCHANGE_TYPE: 'topic'
         RABBIT_EXCHANGE: 'messages'
         RABBIT_QUARANTINE_QUEUE: 'Seft.CollectionInstruments.Quarantine'
