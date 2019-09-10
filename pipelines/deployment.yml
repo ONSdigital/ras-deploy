@@ -1492,6 +1492,15 @@ jobs:
   - get: sdc-uaa-source
     passed: [uaa-ci-deploy]
     trigger: true
+  - get: ras-maintenance-source
+    passed: [ras-maintenance-ci-deploy]
+    trigger: true
+  - get: rm-reporting-source
+    passed: [rm-reporting-ci-deploy]
+    trigger: true
+  - get: ras-rabbit-adaptor-service-source
+    passed: [ras-rabbit-adaptor-service-ci-deploy]
+    trigger: true
   - task: get-cf-database-uris
     file: ras-deploy/tasks/get_database_uris.yml
     params:
@@ -1604,6 +1613,15 @@ jobs:
   - get: sdc-uaa-source
     passed: [uaa-ci-deploy]
     trigger: true
+  - get: ras-maintenance-source
+    passed: [ras-maintenance-ci-deploy]
+    trigger: true
+  - get: rm-reporting-source
+    passed: [rm-reporting-ci-deploy]
+    trigger: true
+  - get: ras-rabbit-adaptor-service-source
+    passed: [ras-rabbit-adaptor-service-ci-deploy]
+    trigger: true
   - task: get-cf-database-uris
     file: ras-deploy/tasks/get_database_uris.yml
     params:
@@ -1683,6 +1701,7 @@ jobs:
   plan:
   - get: ras-rabbit-adaptor-service-source
     trigger: true
+    passed: [ci-rasrm-acceptance-tests, ci-securemessage-acceptance-tests]
   - put: create-rm-rabbitmq
     resource: cf-cli-resource-latest
     params:
@@ -1693,7 +1712,7 @@ jobs:
       timeout: 1800
       wait_for_service: true
   - put: push-app
-    resource: cf-resource-ci
+    resource: cf-resource-latest
     params:
       current_app_name: ci-rabbit-adapter-latest # Note: adapter spelt with 'er' where all the others are 'or'
       manifest: ras-rabbit-adaptor-service-source/manifest.yml
@@ -1714,6 +1733,7 @@ jobs:
   plan:
   - get: rm-reporting-source
     trigger: true
+    passed: [ci-rasrm-acceptance-tests, ci-securemessage-acceptance-tests]
   - put: create-database
     resource: cf-cli-resource-latest
     params:
@@ -1737,6 +1757,7 @@ jobs:
   plan:
   - get: ras-maintenance-source
     trigger: true
+    passed: [ci-rasrm-acceptance-tests, ci-securemessage-acceptance-tests]
   - put: push-app
     resource: cf-resource-latest
     params:
