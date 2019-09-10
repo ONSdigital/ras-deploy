@@ -682,7 +682,7 @@ jobs:
         RABBIT_EXCHANGE: 'messages'
         RABBIT_QUARANTINE_QUEUE: 'Seft.CollectionInstruments.Quarantine'
         RABBIT_QUEUE: 'Seft.CollectionInstruments'
-        RABBIT_URL: ((ci_rabbit_adaptor_rabbit_url))
+        RABBIT_URL: ((ci_rabbitmq_amqp_survey_response))
 
 - name: rm-reporting-ci-deploy
   serial_groups: [rm-reporting-ci-deploy]
@@ -1691,13 +1691,13 @@ jobs:
       environment_variables:
         <<: *latest_security_user
         <<: *latest_service_endpoints_for_python
-        CI_SECRETS: ((preprod_json_secret_keys)) # Using preprod as CI/Latest don't exist in SDX
+        CI_SECRETS: ((preprod_json_secret_keys)) # Sharing preprod as CI/Latest don't exist in SDX
         COLLEX_ID: '3f93d816-424c-4a3f-9d0b-4f58a286bc20'
         EXCHANGE_TYPE: 'topic'
         RABBIT_EXCHANGE: 'messages'
         RABBIT_QUARANTINE_QUEUE: 'Seft.CollectionInstruments.Quarantine'
         RABBIT_QUEUE: 'Seft.CollectionInstruments'
-        RABBIT_URL: ((ci_rabbit_adaptor_rabbit_url))
+        RABBIT_URL: ((latest_rabbitmq_amqp_survey_response))
 
 - name: rm-reporting-latest-deploy
   serial_groups: [rm-reporting-latest-deploy]
