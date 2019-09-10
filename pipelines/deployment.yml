@@ -543,6 +543,16 @@ resources:
   type: git
   source:
     uri: https://github.com/ONSdigital/sdc-uaa.git
+
+- name: rm-reporting-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/rm-reporting.git
+
+- name: ras-maintenance-source
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-maintenance-page.git
 ### END MICROSERVICE REPOS
 
 - name: rasrm-acceptance-tests-source
