@@ -676,7 +676,7 @@ jobs:
       environment_variables:
         <<: *ci_security_user
         <<: *ci_service_endpoints_for_python
-        CI_SECRETS: ((ci_json_rabbit_adaptor_secret_keys))
+        CI_SECRETS: ((preprod_json_secret_keys)) # Sharing preprod as CI/Latest don't exist in SDX
         COLLEX_ID: 'a9ef1f12-23f4-413e-938c-8078df1bb170'
         EXCHANGE_TYPE: 'topic'
         RABBIT_EXCHANGE: 'messages'
@@ -1691,7 +1691,7 @@ jobs:
       environment_variables:
         <<: *latest_security_user
         <<: *latest_service_endpoints_for_python
-        CI_SECRETS: ((latest_json_rabbit_adaptor_secret_keys))
+        CI_SECRETS: ((preprod_json_secret_keys)) # Using preprod as CI/Latest don't exist in SDX
         COLLEX_ID: '3f93d816-424c-4a3f-9d0b-4f58a286bc20'
         EXCHANGE_TYPE: 'topic'
         RABBIT_EXCHANGE: 'messages'
