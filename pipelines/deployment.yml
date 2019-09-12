@@ -708,7 +708,7 @@ jobs:
       command: create-service
       service: rds
       plan: shared-psql
-      service_instance: rm-reporting-db
+      service_instance: reporting-db
       timeout: 300
       wait_for_service: true
   - put: push-app
@@ -1740,7 +1740,7 @@ jobs:
       command: create-service
       service: rds
       plan: shared-psql
-      service_instance: rm-reporting-db
+      service_instance: reporting-db
       timeout: 300
       wait_for_service: true
   - put: push-app
