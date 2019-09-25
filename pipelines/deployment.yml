@@ -966,6 +966,9 @@ jobs:
         REDIS_SERVICE: ras-redis
         UAA_CLIENT_ID: 'response_operations'
         UAA_CLIENT_SECRET: ((ci_response_operations_client_secret))
+        RAS_NOTIFY_CONFIRM_PASSWORD_CHANGE_TEMPLATE: 83bbcdeb-8152-4d48-9cf2-5010f0db0ee0
+        RAS_NOTIFY_REQUEST_PASSWORD_CHANGE_TEMPLATE: ae702d67-901e-4bd1-bbcc-585335a1fa84
+        RAS_NOTIFY_SERVICE_URL: http://notifygatewaysvc-ci.apps.devtest.onsclofo.uk/emails/
 
 - name: response-operations-social-ui-ci-deploy
   serial_groups: [response-operations-social-ui-ci-deploy]
@@ -1984,6 +1987,9 @@ jobs:
         REDIS_SERVICE: ras-redis
         UAA_CLIENT_ID: 'response_operations'
         UAA_CLIENT_SECRET: ((latest_response_operations_client_secret))
+        RAS_NOTIFY_CONFIRM_PASSWORD_CHANGE_TEMPLATE: 83bbcdeb-8152-4d48-9cf2-5010f0db0ee0
+        RAS_NOTIFY_REQUEST_PASSWORD_CHANGE_TEMPLATE: ae702d67-901e-4bd1-bbcc-585335a1fa84
+        RAS_NOTIFY_SERVICE_URL: http://notifygatewaysvc-latest.apps.devtest.onsclofo.uk/emails/
 
 - name: response-operations-social-ui-latest-deploy
   serial_groups: [response-operations-social-ui-latest-deploy]
