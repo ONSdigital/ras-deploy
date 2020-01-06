@@ -1,0 +1,69 @@
+resources:
+- name: ras-deploy
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-deploy.git
+    branch: kubernetes
+    paths:
+      - pipelines/cluster.yml
+
+- name: terraform-dockerfile
+  type: git
+  source:
+    uri: https://github.com/ONSdigital/ras-deploy.git
+    branch: kubernetes
+    paths:
+      - pipelines/Dockerfile
+
+- name: terraform-docker-image
+  type: docker-image
+  source:
+    repository: eu.gcr.io/ons-gcr-rmrasbs/terraform-deploy
+    tag: 0.12.16
+    username: _json_key
+    password: ((service_account_json))
+
+jobs:
+- name: create-terraform-image
+  serial-groups: [terraform-dockerfile]
+  plan:
+  - get: terraform-dockerfile
+    trigger: true
+  - get: terraform-docker-image
+  - task: generate tag file
+    config:
+      platform: linux
+      type: docker-image
+      source:
+        repository: alpine
+      outputs:
+        - tagfile
+      run:
+        path: /bin/sh
+        args: ["echo", "0.12.16", ">", "tagfile/tag"]
+  - put: terraform-docker-image
+    params:
+      build: terraform-dockerfile/pipelines
+      tag_file: tagfile/tag
+
+- name: deploy-cluster
+  serial-groups: [terraform-dockerfile]
+  plan:
+  - get: ras-deploy
+    trigger: true
+  - task: extract-source-from-release-tarball
+    config:
+      platform: linux
+      type: docker-image
+      source:
+        repository: eu.gcr.io/ons-gcr-rmrasbs/terraform-deploy
+        username: _json_key
+        password: ((service_account_json))
+      inputs:
+        - ras-deploy
+      run: 
+        path: /bin/sh
+        args: 
+          - |
+            cd ras-deploy
+            terraform --help
